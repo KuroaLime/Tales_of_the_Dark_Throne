@@ -3,6 +3,10 @@
 #include<random>
 #include <deque>
 #include <vector>
+
+#include"CStage.h"
+#include"Title_Stage.h"
+
 #pragma comment(lib, "msimg32.lib")
 
 HINSTANCE g_hInst;
@@ -44,48 +48,103 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	return Message.wParam;
 }
 
+#define TileStage 0
+#define GameStage 1
+
+CStage* g_Stage = nullptr;
+int g_curStageNum =1000;
+
+void ChangeStage(HWND hWnd,int NextStage) {
+	if (g_curStageNum == NextStage)
+		return;
+
+	delete g_Stage;
+	g_Stage = nullptr;
+
+	if (NextStage == TileStage) {
+		g_Stage = new Title_Stage;
+	}
+	else if (NextStage == GameStage) {
+
+	}
+
+	if (g_Stage != nullptr) {
+		g_Stage->Init(hWnd);
+	}
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
-	HDC hDC;
+	HDC hDC, hMemDC, hMemDC1;
+	HBITMAP hOld;
+	static HBITMAP hBit;
 	HBRUSH hBrush, oldBrush;
 	static int CLK_X, CLK_Y;
 	static RECT rects;
 
+	
+
 	switch (uMsg) {
 	case WM_CREATE:
+		
 		hDC = GetDC(hWnd);
 		srand((unsigned int)time(NULL));
 		GetClientRect(hWnd, &rects);
+		
+		ChangeStage(hWnd, 0);
 
-
+		hBit = CreateCompatibleBitmap(hDC, rects.right, rects.bottom);
+		
+		SetTimer(hWnd, 1, 50, NULL);
+		ReleaseDC(hWnd, hDC);
 		break;
 	case WM_LBUTTONDOWN:
-		break;
 	case WM_LBUTTONUP:
-		break;
 	case WM_RBUTTONDOWN:
-		break;
 	case WM_RBUTTONUP:
-		break;
 	case WM_LBUTTONDBLCLK:
-		InvalidateRect(hWnd, NULL, TRUE);
-		break;
 	case WM_MOUSEMOVE:
-		break;
-	case WM_TIMER:
-		break;
 	case WM_KEYDOWN:
-		break;
 	case WM_CHAR:
+		if(g_Stage != nullptr)
+			g_Stage->Input(hWnd, uMsg, wParam, lParam);
 		break;
 	case WM_COMMAND:
 		break;
+	case WM_TIMER:
+		hDC = GetDC(hWnd);
+		hMemDC = CreateCompatibleDC(hDC);
+		hMemDC1 = CreateCompatibleDC(hDC);
+
+		HBITMAP hOldBit;
+		hOldBit = (HBITMAP)SelectObject(hMemDC1, hBit);
+
+		hBrush = CreateSolidBrush(RGB(255, 255,255));
+		FillRect(hMemDC1, &rects, hBrush);
+
+		if (g_Stage != nullptr)
+		{
+			g_Stage->Update(hWnd);
+			g_Stage->Draw(hMemDC, hMemDC1);
+		}
+		
+		DeleteObject(hBrush);
+		SelectObject(hMemDC1, hOldBit);
+		DeleteDC(hMemDC);
+		DeleteDC(hMemDC1);
+		ReleaseDC(hWnd, hDC);
+		InvalidateRect(hWnd, NULL, FALSE);
+		break;
 	case WM_PAINT:
 		hDC = BeginPaint(hWnd, &ps);
+		hMemDC = CreateCompatibleDC(hDC);
 
+		hOld = (HBITMAP)SelectObject(hMemDC, hBit);
+		BitBlt(hDC, 0, 0, rects.right, rects.bottom, hMemDC, 0, 0, SRCCOPY);
 
+		SelectObject(hMemDC, hOld);
+		DeleteDC(hMemDC);
 		EndPaint(hWnd, &ps);
 		return 0;
 	case WM_DESTROY:

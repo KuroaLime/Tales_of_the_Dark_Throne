@@ -3,6 +3,7 @@
 
 class CStage {
 public:
+
 	virtual ~CStage() {};
 
 	virtual void Init(HWND hWnd) = 0;
