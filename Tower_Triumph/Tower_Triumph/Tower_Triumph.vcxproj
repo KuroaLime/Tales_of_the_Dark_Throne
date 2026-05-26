@@ -127,7 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AButton.cpp" />
     <ClCompile Include="Framework.cpp" />
+    <ClCompile Include="Title_Stage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AButton.h" />
+    <ClInclude Include="CStage.h" />
+    <ClInclude Include="Title_Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

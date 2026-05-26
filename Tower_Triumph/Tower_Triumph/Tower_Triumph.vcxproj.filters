@@ -13,10 +13,39 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Actor">
+      <UniqueIdentifier>{b6dde3a4-2dc1-434e-ba5c-26c7479856df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Actor">
+      <UniqueIdentifier>{89ca6156-2b1a-4bc9-8edb-ede4c168e047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Stage">
+      <UniqueIdentifier>{799c7661-6f4f-465e-ba62-ea7c8b06bab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Stage">
+      <UniqueIdentifier>{f7a24d69-5f2e-4e9f-9664-ff4e1173d998}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Framework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="AButton.cpp">
+      <Filter>소스 파일\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Title_Stage.cpp">
+      <Filter>소스 파일\Stage</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AButton.h">
+      <Filter>헤더 파일\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="CStage.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Title_Stage.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
