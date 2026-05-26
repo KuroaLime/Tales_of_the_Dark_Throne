@@ -14,16 +14,16 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="소스 파일\Actor">
-      <UniqueIdentifier>{b6dde3a4-2dc1-434e-ba5c-26c7479856df}</UniqueIdentifier>
+      <UniqueIdentifier>{bdc381f9-e16b-4354-8748-051c4034f18f}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Actor">
-      <UniqueIdentifier>{89ca6156-2b1a-4bc9-8edb-ede4c168e047}</UniqueIdentifier>
+      <UniqueIdentifier>{ad8790ca-5da0-4478-9e2a-c42ebad5c46a}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Stage">
-      <UniqueIdentifier>{799c7661-6f4f-465e-ba62-ea7c8b06bab3}</UniqueIdentifier>
+      <UniqueIdentifier>{7b93de70-b0ca-49dc-b1b7-2c58fea76b74}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Stage">
-      <UniqueIdentifier>{f7a24d69-5f2e-4e9f-9664-ff4e1173d998}</UniqueIdentifier>
+      <UniqueIdentifier>{29df7ce3-77c8-479d-b6e5-5c645f22ccd2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
