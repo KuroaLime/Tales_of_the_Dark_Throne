@@ -6,24 +6,23 @@ Title_Stage::Title_Stage() {
 
 }
 void Title_Stage::Init(HWND hWnd) {
-	StartButton.SetLocation(200, 200);
-	//StartButton.SetFrame();
-	SettingButton.SetLocation(200, 300);
-	//SettingButton.SetFrame();
-	EndButton.SetLocation(200, 400);
-	//EndButton.SetFrame();
+	Buttons.resize(buttonCount);
+	int i = 0;
+	for(auto& a : Buttons)
+	{
+		a.SetLocation(200, 200 + i * 100);
+		i++;
+	}
 
-	SeletionButton = 0;
+	SelectionButton = 0;
 }
 void Title_Stage::Update(HWND hWnd) {
-	StartButton.Update();
-	SettingButton.Update();
-	EndButton.Update();
+	for (auto& a: Buttons)
+		a.Update();
 }
 void Title_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
-	StartButton.Draw(hMemDC, hMemDC1);
-	SettingButton.Draw(hMemDC, hMemDC1);
-	EndButton.Draw(hMemDC, hMemDC1);
+	for (auto& a : Buttons)
+		a.Draw(hMemDC, hMemDC1);
 }
 void Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	static int CLK_X, CLK_Y;
@@ -41,9 +40,17 @@ void Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_MOUSEMOVE:
 		CLK_X = LOWORD(lParam);
 		CLK_Y = HIWORD(lParam);
-		StartButton.bCollision(CLK_X, CLK_Y);
-		SettingButton.bCollision(CLK_X, CLK_Y);
-		EndButton.bCollision(CLK_X, CLK_Y);
+		for (int i = 0; i < buttonCount; i++)
+		{
+			if (Buttons[i].bCollision(CLK_X, CLK_Y)) {
+				Buttons[SelectionButton].SetIsPointed(false);
+				SelectionButton = i;
+				Buttons[SelectionButton].SetIsPointed(true);
+			}
+			else if(Buttons[i].GetIsPointed()) {
+				Buttons[SelectionButton].SetIsPointed(false);
+			}
+		}
 		break;
 	case WM_KEYDOWN:
 		if(wParam == VK_ESCAPE)
@@ -51,16 +58,16 @@ void Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			SendMessage(hWnd, WM_CLOSE, 0, 0);
 		}
 		else if (wParam == VK_UP) {
-
-		}
-		else if (wParam == VK_LEFT) {
-
+			Buttons[SelectionButton].SetIsPointed(false);
+			SelectionButton = (SelectionButton - 1);
+			if (SelectionButton < 0)
+				SelectionButton = buttonCount - 1;
+			Buttons[SelectionButton].SetIsPointed(true);
 		}
 		else if (wParam == VK_DOWN) {
-
-		}
-		else if (wParam == VK_RIGHT) {
-
+			Buttons[SelectionButton].SetIsPointed(false);
+			SelectionButton = (SelectionButton + 1) % buttonCount;
+			Buttons[SelectionButton].SetIsPointed(true);
 		}
 		break;
 	case WM_CHAR:

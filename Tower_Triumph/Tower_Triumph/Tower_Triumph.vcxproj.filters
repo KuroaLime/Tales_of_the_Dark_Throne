@@ -22,7 +22,13 @@
     <Filter Include="소스 파일\Stage">
       <UniqueIdentifier>{7b93de70-b0ca-49dc-b1b7-2c58fea76b74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Stage">
+    <Filter Include="소스 파일\Actor\Button">
+      <UniqueIdentifier>{023dd03e-09e5-4c96-be0d-993a610781a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Actor\Button">
+      <UniqueIdentifier>{476692bd-479d-44d8-8ee5-fecf726ea86c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Actor\Stage">
       <UniqueIdentifier>{29df7ce3-77c8-479d-b6e5-5c645f22ccd2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -30,25 +36,25 @@
     <ClCompile Include="Framework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="AButton.cpp">
-      <Filter>소스 파일\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Title_Stage.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="AButton.cpp">
+      <Filter>소스 파일\Actor\Button</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AButton.h">
-      <Filter>헤더 파일\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="CStage.h">
-      <Filter>헤더 파일\Stage</Filter>
+      <Filter>헤더 파일\Actor\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Title_Stage.h">
-      <Filter>헤더 파일\Stage</Filter>
+      <Filter>헤더 파일\Actor\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Structure.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AButton.h">
+      <Filter>헤더 파일\Actor\Button</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

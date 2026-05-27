@@ -43,13 +43,20 @@ void AButton::Draw(HDC hMemDC, HDC hMemDC1) {
 	
 	//SelectObject(hMemDC1, temp);
 }
-
-void AButton::bCollision(int MouseX, int MouseY) {
+void AButton::SetIsPointed(bool New) {
+	if (New) IsPointed = true;
+	else IsPointed = false;
+}
+bool AButton::GetIsPointed() {
+	return IsPointed;
+}
+bool AButton::bCollision(int MouseX, int MouseY) {
 	RECT rects = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
 	if ((rects.left < MouseX && MouseX < rects.right) && rects.top < MouseY && MouseY < rects.bottom) {
-		IsPointed = true;
+		return true;
+
 	}
-	else IsPointed = false;
+	return false;
 }
 void AButton::bClick() {
 	if (IsPointed) {

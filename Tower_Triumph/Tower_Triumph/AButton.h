@@ -25,7 +25,9 @@ public:
 
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
 
-	virtual void bCollision(int MouseX, int MouseY);
+	virtual void SetIsPointed(bool New);
+	virtual bool GetIsPointed();
+	virtual bool bCollision(int MouseX, int MouseY);
 	virtual void bClick();
 	virtual void Update();
 

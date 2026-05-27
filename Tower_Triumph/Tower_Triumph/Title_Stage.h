@@ -1,14 +1,16 @@
 #pragma once
 #include"CStage.h"
 #include"AButton.h"
+
+#define buttonCount 3
+
 class Title_Stage : public CStage
 {
 private:
-	AButton StartButton;
-	AButton SettingButton;
-	AButton EndButton;
+	std::vector<AButton> Buttons;
+	
 
-	int SeletionButton;
+	int SelectionButton;
 public:
 	Title_Stage();
 	virtual void Init(HWND hWnd);
