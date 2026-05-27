@@ -11,8 +11,13 @@ void Title_Stage::Init(HWND hWnd) {
 	for(auto& a : Buttons)
 	{
 		a.SetLocation(200, 200 + i * 100);
+		a.SetButtonID(i);
 		i++;
 	}
+
+	Buttons[0].SetTargetPointID(MAP_STAGE); //START
+	Buttons[1].SetTargetPointID(MAP_STAGE); //SETTING
+	Buttons[2].SetTargetPointID(GAME_END); //END
 
 	SelectionButton = 0;
 }
@@ -24,14 +29,30 @@ void Title_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
 	for (auto& a : Buttons)
 		a.Draw(hMemDC, hMemDC1);
 }
-void Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+void Title_Stage::Comp_NextStage(int ID) {
+
+}
+int Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	static int CLK_X, CLK_Y;
 	switch (uMsg) {
 	case WM_LBUTTONDOWN:
 		CLK_X = LOWORD(lParam);
 		CLK_Y = HIWORD(lParam);
+		for (int i = 0; i < buttonCount; i++)
+		{
+			Buttons[i].bClick();
+		}
 		break;
 	case WM_LBUTTONUP:
+		for (int i = 0; i < buttonCount; i++)
+		{
+			if (Buttons[i].GetbClick()) {
+
+				Buttons[i].SetbClick(false);
+				return Buttons[i].GetTargetPointID();
+			}
+		}
 		break;
 	case WM_RBUTTONDOWN:
 		break;
@@ -73,4 +94,5 @@ void Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_CHAR:
 		break;
 	}
+	return -2;
 }

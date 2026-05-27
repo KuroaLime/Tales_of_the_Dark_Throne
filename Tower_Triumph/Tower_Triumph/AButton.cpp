@@ -64,6 +64,12 @@ void AButton::bClick() {
 		else isClicked = true;
 	}
 }
+bool AButton::GetbClick() {
+	return isClicked;
+}
+void AButton::SetbClick(bool New) {
+	isClicked = New;
+}
 void AButton::Update() {
 	//애니메이션 등등
 }
@@ -74,4 +80,18 @@ void AButton::SetLocation(int nX, int nY) {
 }
 Location AButton::GetLocation() {
 	return Loc;
+}
+
+
+void AButton::SetButtonID(int New) {
+	ButtonID = New;
+}
+int AButton::GetButtonID() {
+	return ButtonID;
+}
+void AButton::SetTargetPointID(int New) {
+	TargetPointID = New;
+}
+int AButton::GetTargetPointID() {
+	return TargetPointID;
 }

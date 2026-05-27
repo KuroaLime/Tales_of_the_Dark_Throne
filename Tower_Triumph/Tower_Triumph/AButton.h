@@ -8,6 +8,8 @@
 class AButton
 {
 protected:
+	int ButtonID;
+	int TargetPointID;
 	Location Loc;
 	BuSIZE Size;
 	bool IsPointed;
@@ -31,7 +33,16 @@ public:
 	virtual void bClick();
 	virtual void Update();
 
+	bool GetbClick();
+	void SetbClick(bool New);
+
 	void SetLocation(int nX, int nY);
 	Location GetLocation();
+
+	void SetButtonID(int New);
+	int GetButtonID();
+
+	void SetTargetPointID(int New);
+	int GetTargetPointID();
 };
 

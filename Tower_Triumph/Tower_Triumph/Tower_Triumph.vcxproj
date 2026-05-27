@@ -125,11 +125,13 @@
   <ItemGroup>
     <ClCompile Include="AButton.cpp" />
     <ClCompile Include="Framework.cpp" />
+    <ClCompile Include="Map_Stage.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AButton.h" />
     <ClInclude Include="CStage.h" />
+    <ClInclude Include="Map_Stage.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Title_Stage.h" />
   </ItemGroup>

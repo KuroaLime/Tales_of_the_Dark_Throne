@@ -16,6 +16,8 @@ public:
 	virtual void Init(HWND hWnd);
 	virtual void Update(HWND hWnd);
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
-	virtual void Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	virtual void Comp_NextStage(int ID);
 };
 

@@ -42,6 +42,9 @@
     <ClCompile Include="AButton.cpp">
       <Filter>소스 파일\Actor\Button</Filter>
     </ClCompile>
+    <ClCompile Include="Map_Stage.cpp">
+      <Filter>소스 파일\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CStage.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="AButton.h">
       <Filter>헤더 파일\Actor\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Map_Stage.h">
+      <Filter>헤더 파일\Actor\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

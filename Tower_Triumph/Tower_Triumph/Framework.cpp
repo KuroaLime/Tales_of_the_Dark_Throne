@@ -48,8 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	return Message.wParam;
 }
 
-#define TileStage 0
-#define GameStage 1
+
 
 CStage* g_Stage = nullptr;
 int g_curStageNum =1000;
@@ -61,13 +60,15 @@ void ChangeStage(HWND hWnd,int NextStage) {
 	delete g_Stage;
 	g_Stage = nullptr;
 
-	if (NextStage == TileStage) {
+	if (NextStage == TITLE_STAGE) {
 		g_Stage = new Title_Stage;
 	}
-	else if (NextStage == GameStage) {
+	else if (NextStage == MAP_STAGE) {
 
 	}
-
+	else if (NextStage == GAME_END) {
+		SendMessage(hWnd, WM_CLOSE, 0, 0);
+	}
 	if (g_Stage != nullptr) {
 		g_Stage->Init(hWnd);
 	}
@@ -108,7 +109,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 	case WM_CHAR:
 		if(g_Stage != nullptr)
-			g_Stage->Input(hWnd, uMsg, wParam, lParam);
+		{
+			int NextStage= g_Stage->Input(hWnd, uMsg, wParam, lParam);
+			if (NextStage != -2) {
+				ChangeStage(hWnd, NextStage);
+			}
+		}
 		break;
 	case WM_COMMAND:
 		break;
