@@ -1,11 +1,21 @@
 #include "Title_Stage.h"
-
+#include "resource.h"
 
 Title_Stage::Title_Stage() {
 	
 
 }
-void Title_Stage::Init(HWND hWnd) {
+void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
+	GetClientRect(hWnd, &rects);
+
+	hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
+	GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+
+	Loc.first.x = rects.right / 2;
+	Loc.first.y = rects.bottom / 2;
+	Loc.second.sX = BackgroundInfo.bmWidth/ 2;
+	Loc.second.sY = BackgroundInfo.bmHeight / 2;
+
 	Buttons.resize(buttonCount);
 	int i = 0;
 	for(auto& a : Buttons)
@@ -26,6 +36,11 @@ void Title_Stage::Update(HWND hWnd) {
 		a.Update();
 }
 void Title_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
+
+	HBITMAP hOld = (HBITMAP)SelectObject(hMemDC1, hBitBackground);
+	TransparentBlt(hMemDC, Loc.first.x - Loc.second.sX, Loc.first.y - Loc.second.sY, BackgroundInfo.bmWidth, BackgroundInfo.bmHeight, hMemDC1, 0, 0, BackgroundInfo.bmWidth, BackgroundInfo.bmHeight, RGB(255, 255, 255));
+	SelectObject(hMemDC1, hOld);
+
 	for (auto& a : Buttons)
 		a.Draw(hMemDC, hMemDC1);
 }

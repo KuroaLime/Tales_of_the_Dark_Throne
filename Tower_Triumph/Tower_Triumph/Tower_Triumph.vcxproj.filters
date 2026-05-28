@@ -31,6 +31,18 @@
     <Filter Include="헤더 파일\Actor\Stage">
       <UniqueIdentifier>{29df7ce3-77c8-479d-b6e5-5c645f22ccd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\System">
+      <UniqueIdentifier>{914c15cf-899e-4b40-83b2-7552d7f66192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\System\Camera">
+      <UniqueIdentifier>{3715cb47-15b4-4a2b-86b5-d8bef5e6a4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\System">
+      <UniqueIdentifier>{853dff25-ee3a-4a2e-8ece-497b30c7e063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\System\Camera">
+      <UniqueIdentifier>{ac1ca258-a9d1-4223-a254-e454a99eb050}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Framework.cpp">
@@ -44,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="Map_Stage.cpp">
       <Filter>소스 파일\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="ACamera.cpp">
+      <Filter>소스 파일\System\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,5 +77,21 @@
     <ClInclude Include="Map_Stage.h">
       <Filter>헤더 파일\Actor\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ACamera.h">
+      <Filter>헤더 파일\System\Camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Source\SMap\background\Test00.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

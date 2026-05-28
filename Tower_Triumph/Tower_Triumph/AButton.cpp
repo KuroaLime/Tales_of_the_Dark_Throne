@@ -38,7 +38,7 @@ void AButton::Draw(HDC hMemDC, HDC hMemDC1) {
 		bBrush = CreateSolidBrush(RGB(0, 255, 0));
 	}
 		RECT rects = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-		FillRect(hMemDC1, &rects, bBrush);
+		FillRect(hMemDC, &rects, bBrush);
 		DeleteObject(bBrush);
 	
 	//SelectObject(hMemDC1, temp);

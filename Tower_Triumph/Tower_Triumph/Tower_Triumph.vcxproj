@@ -124,16 +124,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AButton.cpp" />
+    <ClCompile Include="ACamera.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Map_Stage.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AButton.h" />
+    <ClInclude Include="ACamera.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="Map_Stage.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Title_Stage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Source\SMap\background\Test00.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,14 +6,14 @@
 
 #include"CStage.h"
 #include"Title_Stage.h"
-
+#include"Map_Stage.h"
 #pragma comment(lib, "msimg32.lib")
 
 HINSTANCE g_hInst;
 
 
 int Win_x = 1280;
-int Win_y = 1024;
+int Win_y = 720;
 
 LPCTSTR lpszClass = L"My Window Class";
 LPCTSTR lpszWindowName = L"Window Programming 2";
@@ -64,13 +64,13 @@ void ChangeStage(HWND hWnd,int NextStage) {
 		g_Stage = new Title_Stage;
 	}
 	else if (NextStage == MAP_STAGE) {
-
+		g_Stage = new Map_Stage;
 	}
 	else if (NextStage == GAME_END) {
 		SendMessage(hWnd, WM_CLOSE, 0, 0);
 	}
 	if (g_Stage != nullptr) {
-		g_Stage->Init(hWnd);
+		g_Stage->Init(hWnd,g_hInst);
 	}
 }
 
@@ -97,7 +97,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		hBit = CreateCompatibleBitmap(hDC, rects.right, rects.bottom);
 		
-		SetTimer(hWnd, 1, 50, NULL);
+		SetTimer(hWnd, 1, 16, NULL);
 		ReleaseDC(hWnd, hDC);
 		break;
 	case WM_LBUTTONDOWN:
@@ -124,7 +124,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		hMemDC1 = CreateCompatibleDC(hDC);
 
 		HBITMAP hOldBit;
-		hOldBit = (HBITMAP)SelectObject(hMemDC1, hBit);
+		hOldBit = (HBITMAP)SelectObject(hMemDC, hBit);
 
 		hBrush = CreateSolidBrush(RGB(255, 255,255));
 		FillRect(hMemDC1, &rects, hBrush);

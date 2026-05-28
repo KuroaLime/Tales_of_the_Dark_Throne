@@ -13,11 +13,12 @@ private:
 	int SelectionButton;
 public:
 	Title_Stage();
-	virtual void Init(HWND hWnd);
+	virtual void Init(HWND hWnd, HINSTANCE const g_hInst);
 	virtual void Update(HWND hWnd);
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
 	virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	virtual void Comp_NextStage(int ID);
+	virtual void BackgroundMove(int x, int y) {};
 };
 
