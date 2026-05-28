@@ -124,7 +124,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AButton.cpp" />
+<<<<<<< Updated upstream
     <ClCompile Include="ACamera.cpp" />
+=======
+    <ClCompile Include="Character.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Map_Stage.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
@@ -134,7 +138,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AButton.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="ACamera.h" />
+=======
+    <ClInclude Include="Character.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="CStage.h" />
     <ClInclude Include="Map_Stage.h" />
     <ClInclude Include="resource.h" />
