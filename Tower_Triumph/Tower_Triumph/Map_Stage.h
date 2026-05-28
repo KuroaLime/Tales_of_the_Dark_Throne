@@ -3,14 +3,18 @@
 #include"AButton.h"
 #include"ACamera.h"
 
-#define buttonCount 3
+#define buttonCount 5
 
+const Location ButtonLocs[buttonCount] = { {-200,0},{200,},{0,200},{0,-200},{0,0} };
 
 class Map_Stage : public CStage
 {
 private:
 	
 	ACamera* Camera;
+
+	std::vector<AButton> Buttons;
+
 	int SelectionButton;
 public:
 	Map_Stage();

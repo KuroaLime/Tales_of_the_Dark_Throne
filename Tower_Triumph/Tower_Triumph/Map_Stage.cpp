@@ -1,4 +1,4 @@
-ï»¿#include "Map_Stage.h"
+#include "Map_Stage.h"
 #include "resource.h"
 
 Map_Stage::Map_Stage() {
@@ -21,21 +21,37 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	Loc.second.sX = BackgroundInfo.bmWidth / 2;
 	Loc.second.sY = BackgroundInfo.bmHeight / 2;
 
-	//íƒ€ì¼ í¬ê¸°
+	//Å¸ÀÏ Å©±â
 	TILE_SIZE = 64;
-	//íƒ€ì¼ ê°œìˆ˜
+	//Å¸ÀÏ °³¼ö
 	W = BackgroundInfo.bmWidth / TILE_SIZE;
 	H = BackgroundInfo.bmHeight / TILE_SIZE;
 	Baord.resize(H, std::vector<Tile>(W));
 
+	Buttons.resize(buttonCount);
+	int i = 0;
+	for (auto& a : Buttons)
+	{
+		a.SetLocation(BackgroundInfo.bmWidth / 2 + ButtonLocs[i].x, BackgroundInfo.bmHeight / 2 + ButtonLocs[i].y);
+		a.SetButtonID(i);
+		i++;
+	}
+
+	Buttons[0].SetTargetPointID(MAP_STAGE); //»óÁ¡
+	Buttons[1].SetTargetPointID(MAP_STAGE); //½ºÅ×ÀÌÁö1
+	Buttons[2].SetTargetPointID(MAP_STAGE); //½ºÅ×ÀÌÁö2
+	Buttons[3].SetTargetPointID(MAP_STAGE); //½ºÅ×ÀÌÁö3
+	Buttons[4].SetTargetPointID(MAP_STAGE); //½ºÅ×ÀÌÁö4
+
 	SelectionButton = 0;
 }
 void Map_Stage::Update(HWND hWnd) {
-
+	for (auto& a : Buttons)
+		a.Update();
 	Camera->Update(W, H, TILE_SIZE, 1280, 720);
 }
 
-//TESTìš© ë³´ë“œ ê·¸ë¦¬ê¸° ì½”ë“œ
+//TEST¿ë º¸µå ±×¸®±â ÄÚµå
 void DrawGrid(HDC hDC, int width, int height, int tileSIZE, int offsetX, int offsetY) {
 	HPEN hGridPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
 	HPEN hOldPen = (HPEN)SelectObject(hDC, hGridPen);
@@ -97,7 +113,7 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
 		{
-			//ë©”ë‰´
+			//¸Ş´º
 		}
 		else if (wParam == VK_UP) {
 			if (gridY > 0)

@@ -43,6 +43,18 @@
     <Filter Include="헤더 파일\System\Camera">
       <UniqueIdentifier>{ac1ca258-a9d1-4223-a254-e454a99eb050}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\UI">
+      <UniqueIdentifier>{d2c58cc3-3523-42af-a8cb-c508a0bf755b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\UI">
+      <UniqueIdentifier>{919f2e4d-8e7d-45a0-8a22-cf17d070129d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\UI\MAP">
+      <UniqueIdentifier>{788ac51d-b2d9-4820-9c2d-b1e007f4f350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\UI\MAP">
+      <UniqueIdentifier>{af2370e3-2e4b-429b-bfa8-735e88696088}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Framework.cpp">
@@ -59,6 +71,15 @@
     </ClCompile>
     <ClCompile Include="ACamera.cpp">
       <Filter>소스 파일\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="UDefaultUI.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UCanvasPanel.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UCanvasPanelSlot.cpp">
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="ACamera.h">
       <Filter>헤더 파일\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="UDefaultUI.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UCanvasPanel.h">
+      <Filter>헤더 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UCanvasPanelSlot.h">
+      <Filter>헤더 파일\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
