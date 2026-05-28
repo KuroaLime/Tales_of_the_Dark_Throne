@@ -1,0 +1,174 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU
+BEGIN
+    POPUP "File"
+    BEGIN
+        MENUITEM "New File",                    ID_FILE_NEWFILE
+        MENUITEM "Save",                        ID_FILE_SAVE
+        MENUITEM "Load",                        ID_FILE_LOAD
+        MENUITEM "Quit",                        ID_FILE_QUIT
+    END
+    POPUP "Edit"
+    BEGIN
+        MENUITEM "Insert",                      ID_EDIT_INSERT
+        MENUITEM "Delete",                      ID_EDIT_DELETE
+        MENUITEM "Default Setting",             ID_EDIT_DEFAULTSETTING
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 310, 177
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "맵 기본 정보 입력"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,199,156,50,14
+    PUSHBUTTON      "취소",IDCANCEL,253,156,50,14
+    LTEXT           "맵 가로 크기 입력(x :)",IDC_DEFAULTSETTING_STATIC_X,19,45,78,10
+    LTEXT           "*맵을 만들기 이전에 해당하는 게임의 최대 맵 크기를 입력해주세요.",IDC_STATIC,14,16,196,8
+    LTEXT           "맵 세로 크기 입력(y: )",IDC_DEFAULTSETTING_STATIC_Y,163,43,66,8
+    EDITTEXT        IDC_DEFAULTSETTING_EDIT_X,104,41,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DEFAULTSETTING_EDIT_Y,249,42,40,14,ES_AUTOHSCROLL
+    LTEXT           "맵 이름:",IDC_DEFAULTSETTING_STATIC_NAME,19,28,25,8
+    LTEXT           "타일 가로 크기(TILE_W: )",IDC_DEFAULTSETTING_TILE_W,20,69,78,10
+    LTEXT           "타일 세로 크기(TILE_H: )",IDC_DEFAULTSETTING_TILE_H,163,67,80,14
+    EDITTEXT        IDC_DEFAULTSETTING_EDIT_TILE_W,104,66,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DEFAULTSETTING_EDIT_TILE_H,249,65,40,14,ES_AUTOHSCROLL
+END
+
+IDD_PALETTE DIALOGEX 0, 0, 309, 198
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "나가기",ID_OUT,242,170,50,14
+    PUSHBUTTON      "MOVABLE_NORMAL",IDC_TILE_MOVABLE_NORMAL,17,33,87,20
+    PUSHBUTTON      "MOVABLE_LAVA",IDC_TILE_MOVABLE_LAVA,109,34,85,19
+    PUSHBUTTON      "MOVABLE_DARK",IDC_TILE_MOVABLE_DARK,198,34,86,20
+    PUSHBUTTON      "MOVABLE_LIGHT",IDC_TILE_MOVABLE_LIGHT,17,59,84,20
+    LTEXT           "1. 타일 선택",IDC_STATIC,15,16,37,8
+    PUSHBUTTON      "UNMOVABLE",IDC_TILE_UNMOVABLE,109,59,85,20
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 303
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 170
+    END
+
+    IDD_PALETTE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_PALETTE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP2             BITMAP                  "Bitamp\\Background\\House.bmp"
+
+#endif    // 한국어(대한민국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

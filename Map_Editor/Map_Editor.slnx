@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Map_Editor/Map_Editor.vcxproj" Id="4c4e6ea5-2f1a-4b80-b752-fc236aeeb1f2" />
+</Solution>
