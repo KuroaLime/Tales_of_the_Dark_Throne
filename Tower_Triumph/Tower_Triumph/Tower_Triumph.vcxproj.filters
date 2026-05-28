@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -31,7 +31,6 @@
     <Filter Include="헤더 파일\Actor\Stage">
       <UniqueIdentifier>{29df7ce3-77c8-479d-b6e5-5c645f22ccd2}</UniqueIdentifier>
     </Filter>
-<<<<<<< Updated upstream
     <Filter Include="소스 파일\System">
       <UniqueIdentifier>{914c15cf-899e-4b40-83b2-7552d7f66192}</UniqueIdentifier>
     </Filter>
@@ -55,13 +54,12 @@
     </Filter>
     <Filter Include="헤더 파일\UI\MAP">
       <UniqueIdentifier>{af2370e3-2e4b-429b-bfa8-735e88696088}</UniqueIdentifier>
-=======
+    </Filter>
     <Filter Include="헤더 파일\Character">
       <UniqueIdentifier>{3deacd80-4489-4e3c-98d8-52e89f711b41}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Character">
       <UniqueIdentifier>{da13db1a-97b9-44dd-af02-366913d4e1ba}</UniqueIdentifier>
->>>>>>> Stashed changes
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +75,11 @@
     <ClCompile Include="Map_Stage.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
-<<<<<<< Updated upstream
     <ClCompile Include="ACamera.cpp">
       <Filter>소스 파일\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>소스 파일\Character</Filter>
     </ClCompile>
     <ClCompile Include="UDefaultUI.cpp">
       <Filter>소스 파일\UI</Filter>
@@ -89,10 +89,6 @@
     </ClCompile>
     <ClCompile Include="UCanvasPanelSlot.cpp">
       <Filter>소스 파일\UI</Filter>
-=======
-    <ClCompile Include="Character.cpp">
-      <Filter>소스 파일\Character</Filter>
->>>>>>> Stashed changes
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -111,12 +107,14 @@
     <ClInclude Include="Map_Stage.h">
       <Filter>헤더 파일\Actor\Stage</Filter>
     </ClInclude>
-<<<<<<< Updated upstream
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ACamera.h">
       <Filter>헤더 파일\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>헤더 파일\Character</Filter>
     </ClInclude>
     <ClInclude Include="UDefaultUI.h">
       <Filter>헤더 파일\UI</Filter>
@@ -137,10 +135,5 @@
     <Image Include="Source\SMap\background\Test00.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-=======
-    <ClInclude Include="Character.h">
-      <Filter>헤더 파일\Character</Filter>
-    </ClInclude>
->>>>>>> Stashed changes
   </ItemGroup>
 </Project>
