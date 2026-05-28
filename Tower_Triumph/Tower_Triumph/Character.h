@@ -5,6 +5,8 @@
 #include <string>
 #include "Structure.h"
 
+#pragma comment(lib, "Msimg32.lib")
+
 // =====================================================
 // Character.h
 // 캐릭터 기본 데이터 / 애니메이션 / 전투 관련 인터페이스
