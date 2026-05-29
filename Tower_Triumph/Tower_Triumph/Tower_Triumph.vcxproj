@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="AButton.cpp" />
     <ClCompile Include="ACamera.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Map_Stage.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="AButton.h" />
     <ClInclude Include="ACamera.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="Map_Stage.h" />
     <ClInclude Include="resource.h" />
