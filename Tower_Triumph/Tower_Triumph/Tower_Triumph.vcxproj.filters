@@ -72,13 +72,13 @@
     <ClCompile Include="ACamera.cpp">
       <Filter>소스 파일\System\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="UDefaultUI.cpp">
+    <ClCompile Include="Widget.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
     <ClCompile Include="UCanvasPanel.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
-    <ClCompile Include="UCanvasPanelSlot.cpp">
+    <ClCompile Include="UContainerWidget.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,13 +104,13 @@
     <ClInclude Include="ACamera.h">
       <Filter>헤더 파일\System\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="UDefaultUI.h">
+    <ClInclude Include="Widget.h">
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="UCanvasPanel.h">
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
-    <ClInclude Include="UCanvasPanelSlot.h">
+    <ClInclude Include="UContainerWidget.h">
       <Filter>헤더 파일\UI</Filter>
     </ClInclude>
   </ItemGroup>

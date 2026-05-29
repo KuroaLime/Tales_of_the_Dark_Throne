@@ -129,8 +129,8 @@
     <ClCompile Include="Map_Stage.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
     <ClCompile Include="UCanvasPanel.cpp" />
-    <ClCompile Include="UCanvasPanelSlot.cpp" />
-    <ClCompile Include="UDefaultUI.cpp" />
+    <ClCompile Include="UContainerWidget.cpp" />
+    <ClCompile Include="Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AButton.h" />
@@ -141,8 +141,8 @@
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Title_Stage.h" />
     <ClInclude Include="UCanvasPanel.h" />
-    <ClInclude Include="UCanvasPanelSlot.h" />
-    <ClInclude Include="UDefaultUI.h" />
+    <ClInclude Include="UContainerWidget.h" />
+    <ClInclude Include="Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

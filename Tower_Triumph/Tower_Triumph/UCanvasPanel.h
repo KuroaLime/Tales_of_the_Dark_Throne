@@ -1,14 +1,21 @@
 #pragma once
-#include "UCanvasPanelSlot.h"
+#include "Widget.h"
 #include<vector>
 
-class UCanvasPanel
+class UCanvasPanel : public UWidget
 {
 protected:
-	std::vector<UCanvasPanelSlot*> Slots;
+	std::vector<class UContainerWidget*> Containers;
 public:
-	UCanvasPanelSlot* AddChildSlot(class UDefaultUI content);
+	virtual void Init() override;
+	virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
+	virtual void Update() override;
+	
+	
+	bool OnMouseEnter();
+	bool OnMouseHover();
+	bool OnMouseEnd();
 
-	virtual void Draw();
+	void AddChildWindow(UContainerWidget content);
 };
 
