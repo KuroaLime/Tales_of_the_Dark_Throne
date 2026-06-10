@@ -1,585 +1,462 @@
 #pragma once
 
 #include <Windows.h>
-#include <vector>
 #include <string>
-#include <algorithm>
-#include "Structure.h"
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include <utility>
 
+#include "Structure.h"
 #pragma comment(lib, "Msimg32.lib")
 
-// ½ºÇÁ¶óÀÌÆ® ½ÃÆ®
+// ============================================================
+// Character Sprite ì„¤ì •
+// ============================================================
+
+// ìºë¦­í„° ìŠ¤í”„ë¼ì´íŠ¸ëŠ” ì¢Œìš° ë°©í–¥ë§Œ ì‚¬ìš©í•œë‹¤.
+// ì‹¤ì œ BMPëŠ” 1í–‰ 4í”„ë ˆì„ êµ¬ì¡°ë¡œ ì‚¬ìš©í•œë‹¤.
+//
+// ì˜ˆ)
+// Warrior_Idle.bmp
+// [0][1][2][3]
+//
+// í”„ë ˆì„ í¬ê¸°ëŠ” Character.cppì—ì„œ BMP ì‹¤ì œ í¬ê¸°ë¥¼ ì´ìš©í•´ ìë™ ê³„ì‚°í•œë‹¤.
+// frameW = ì „ì²´ BMP ê°€ë¡œ / CHARACTER_SHEET_COL
+// frameH = ì „ì²´ BMP ì„¸ë¡œ / CHARACTER_SHEET_ROW
 #define CHARACTER_SHEET_COL 4
-#define CHARACTER_SHEET_ROW 3
+#define CHARACTER_SHEET_ROW 1
 
-#define CHARACTER_FRAME_WIDTH  362
-#define CHARACTER_FRAME_HEIGHT 362
-
+// TransparentBltì—ì„œ ì‚¬ìš©í•  íˆ¬ëª… ì»¬ëŸ¬í‚¤
+// BMP ë°°ê²½ì€ ë°˜ë“œì‹œ ìˆœìˆ˜ ë§ˆì  íƒ€ RGB(255, 0, 255)ì—¬ì•¼ í•œë‹¤.
 #define CHARACTER_TRANSPARENT_COLOR RGB(255, 0, 255)
 
-// -----------------------------------------------------
-// Á÷¾÷
-// -----------------------------------------------------
+
+// ============================================================
+// Character Class
+// ìºë¦­í„° ì§ì—… êµ¬ë¶„
+// ============================================================
+
 enum class ECharacterClass
 {
-    Warrior,    // Àü»ç
-    Archer,     // ±Ã¼ö
-    Mage        // ¸¶¹ı»ç
+	Warrior,
+	Archer,
+	Mage
 };
 
-// -----------------------------------------------------
-// Ä³¸¯ÅÍ »óÅÂ
-// -----------------------------------------------------
+
+// ============================================================
+// Character State
+// ìºë¦­í„°ì˜ í˜„ì¬ í–‰ë™ ìƒíƒœ
+// ============================================================
+
 enum class ECharacterState
 {
-    Idle,       // ´ë±â
-    Walk,       // °È±â
-    Attack,     // ÀÏ¹İ °ø°İ
-    Defend,     // ¹æ¾î
-    Skill,      // ½ºÅ³ »ç¿ë
-    Hit,        // ÇÇ°İ
-    Dead        // »ç¸Á
+	Idle,
+	Walk,
+	Attack,
+	Defend,
+	Skill,
+	Hit,
+	Dead
 };
 
-// -----------------------------------------------------
-// ¹æÇâ
-// ÁÂ/¿ì´Â Draw¿¡¼­ ÁÂ¿ì ¹İÀü Ã³¸®
-// -----------------------------------------------------
+
+// ============================================================
+// Direction
+// í˜„ì¬ ìºë¦­í„°/ëª¬ìŠ¤í„° ìŠ¤í”„ë¼ì´íŠ¸ êµ¬ì¡°ì— ë§ì¶° ì¢Œìš° ë°©í–¥ë§Œ ì‚¬ìš©í•œë‹¤.
+// ì›ë³¸ ìŠ¤í”„ë¼ì´íŠ¸ê°€ í•œìª½ ë°©í–¥ë§Œ ìˆì–´ë„ ë°˜ëŒ€ ë°©í–¥ì€ Drawì—ì„œ ë°˜ì „í•œë‹¤.
+// ============================================================
+
 enum class EDirection
 {
-    Down,       // Á¤¸é / ¾Æ·¡
-    Left,       // ¿ŞÂÊ
-    Right,      // ¿À¸¥ÂÊ
-    Up          // ÈÄ¸é / À§
+	Left,
+	Right
 };
 
-// -----------------------------------------------------
-// ¼Ó¼º
-// -----------------------------------------------------
+
+// ============================================================
+// Element
+// ì†ì„± êµ¬ë¶„
+// ============================================================
+
 enum class EElement
 {
-    None,
-
-    Fire,       // ºÒ
-    Water,      // ¹°
-    Grass,      // Ç®
-
-    Light,      // ºû
-    Dark,       // ¾îµÒ
-
-    Heal        // È¸º¹ °è¿­
+	None,
+	Fire,
+	Water,
+	Grass,
+	Light,
+	Dark,
+	Heal
 };
 
-// -----------------------------------------------------
-// Àåºñ ºÎÀ§
-// ¹«±â / ¹æ¾î±¸ / Àå½Å±¸´Â ½Ã°£ ³²À¸¸é
-// -----------------------------------------------------
+
+// ============================================================
+// Equip Part
+// ì¥ë¹„ ë¶€ìœ„ êµ¬ë¶„
+// ============================================================
+
 enum class EEquipPart
 {
-    Weapon,
-    Armor,
-    Accessory
+	Weapon,
+	Armor,
+	Accessory
 };
 
-// -----------------------------------------------------
-// ½ºÅÈ
-// HP / MP / STR / INT / DEF / SPD
-// -----------------------------------------------------
-struct CharacterStat
-{
-    int MaxHP;
-    int CurHP;
 
-    int MaxMP;
-    int CurMP;
+// ============================================================
+// CharacterEquipment
+// ìºë¦­í„° ì¥ë¹„ ID ì €ì¥
+// ì‹¤ì œ ì•„ì´í…œ ì •ë³´ëŠ” Item ë°ì´í„°ì—ì„œ IDë¡œ ì°¸ì¡°í•˜ëŠ” ë°©ì‹
+// ============================================================
 
-    int STR;
-    int INT;
-    int DEF;
-    int SPD;
-
-    CharacterStat()
-    {
-        MaxHP = 100;
-        CurHP = 100;
-
-        MaxMP = 30;
-        CurMP = 30;
-
-        STR = 10;
-        INT = 10;
-        DEF = 5;
-        SPD = 10;
-    }
-};
-
-// -----------------------------------------------------
-// Àåºñ Á¤º¸
-// ÀÏ´Ü Item Å¬·¡½º¸¦ ¾ÆÁ÷ ¾È ¸¸µé¾úÀ¸¹Ç·Î ID·Î¸¸ ¿¬°á
-// -----------------------------------------------------
 struct CharacterEquipment
 {
-    int WeaponID;
-    int ArmorID;
-    int AccessoryID;
+	class AArmor* Helmet;
+	class AArmor* Armor;
+	class AArmor* Pants;
+	class AArmor* Weapon;
+	class AArmor* Accessory;
 
-    CharacterEquipment()
-    {
-        WeaponID = -1;
-        ArmorID = -1;
-        AccessoryID = -1;
-    }
+	CharacterEquipment()
+		: Helmet(nullptr), Armor(nullptr), Pants(nullptr), Weapon(nullptr), Accessory(nullptr)
+	{
+	}
 };
 
-// -----------------------------------------------------
-// Ä³¸¯ÅÍ Å¬·¡½º
-// -----------------------------------------------------
+
+// ============================================================
+// Character Class
+// SRPG ì „íˆ¬ë§µ ìœ„ì— ë°°ì¹˜ë˜ëŠ” í”Œë ˆì´ì–´ ìœ ë‹›
+// ============================================================
+
 class Character
 {
 private:
-    // ------------------------------
-    // ±âº» Á¤º¸
-    // ------------------------------
-    int CharacterID;
+	// ------------------------------------------------------------
+	// ê¸°ë³¸ ì •ë³´
+	// ------------------------------------------------------------
+	int CharacterID;
 
-    ECharacterClass ClassType;
-    ECharacterState State;
-    EDirection Direction;
-    EElement Element;
+	ECharacterClass ClassType;
+	ECharacterState State;
+	EDirection Direction;
+	EElement Element;
 
-    CharacterStat Stat;
-    CharacterEquipment Equip;
+	std::wstring Name;
 
-    int Level;
-    int Exp;
-    int Money;
+	// ------------------------------------------------------------
+	// ì„±ì¥ ë° ì „íˆ¬ ì •ë³´
+	// ------------------------------------------------------------
+	CharacterStat Stat;
+	CharacterEquipment Equip;
 
-    std::vector<int> LearnedSkillIDs;
+	int Level;
+	int Exp;
+	int Money;
 
-    // ------------------------------
-    // À§Ä¡ Á¤º¸
-    // GridPos: Å¸ÀÏ ÁÂÇ¥
-    // PixelPos: È­¸é Ãâ·Â ÁÂÇ¥
-    // ------------------------------
-    Location GridPos;
-    Location PixelPos;
+	std::vector<int> LearnedSkillIDs;
 
-    // ------------------------------
-    // Á÷¾÷º° °íÁ¤°ª
-    // ¹æ¾î °è¼ö / AP
-    // ------------------------------
-    int AP;
-    float DefendRate;
+	// ì´ë™ ê°€ëŠ¥ ë²”ìœ„
+	int AP;
 
-    // ------------------------------
-    // ¾Ö´Ï¸ŞÀÌ¼Ç Á¤º¸
-    // ------------------------------
-    int CurFrame;
-    int MaxFrame;
+	// ë°©ì–´ ìƒíƒœì¼ ë•Œ ë°›ëŠ” í”¼í•´ ë¹„ìœ¨
+	// ì˜ˆ: 0.5fë©´ í”¼í•´ 50% ê°ì†Œ
+	float DefendRate;
 
-    int AniTick;
-    int AniDelay;
+	// ------------------------------------------------------------
+	// ìœ„ì¹˜ ì •ë³´
+	// GridPos    : íƒ€ì¼ ì¢Œí‘œ
+	// PixelPos   : ì‹¤ì œ í™”ë©´ ì¶œë ¥ ì¢Œí‘œ
+	// WorldPixel : ì¹´ë©”ë¼ ì ìš© ì „ ë§µ ë‚´ë¶€ í”½ì…€ ì¢Œí‘œ
+	// ------------------------------------------------------------
+	Location GridPos;
+	Location PixelPos;
 
-    bool IsActionEnd;
+	bool IsMoving;
 
-    // ------------------------------
-    // ½ºÇÁ¶óÀÌÆ®
-    // »óÅÂº° BMP
-    // Idle / Walk / Attack / Defend / Skill / Hit / Dead
-    // ------------------------------
-    HBITMAP hSpriteIdle;
-    HBITMAP hSpriteWalk;
-    HBITMAP hSpriteAttack;
-    HBITMAP hSpriteDefend;
-    HBITMAP hSpriteSkill;
-    HBITMAP hSpriteHit;
-    HBITMAP hSpriteDead;
+	float WorldPixelX;
+	float WorldPixelY;
 
-    BITMAP SpriteInfoIdle;
-    BITMAP SpriteInfoWalk;
-    BITMAP SpriteInfoAttack;
-    BITMAP SpriteInfoDefend;
-    BITMAP SpriteInfoSkill;
-    BITMAP SpriteInfoHit;
-    BITMAP SpriteInfoDead;
+	float TargetPixelX;
+	float TargetPixelY;
+
+	int TargetGridX;
+	int TargetGridY;
+
+	float MoveSpeed;
+
+	// ------------------------------------------------------------
+	// ì• ë‹ˆë©”ì´ì…˜ ì •ë³´
+	// ------------------------------------------------------------
+	int CurFrame;
+	int MaxFrame;
+	int AniTick;
+	int AniDelay;
+
+	bool IsActionEnd;
+
+	// ------------------------------------------------------------
+	// ìŠ¤í”„ë¼ì´íŠ¸ í•¸ë“¤
+	//
+	// íŒŒì¼ëª… ì˜ˆ:
+	// Resource\\Warrior_Idle.bmp
+	// Resource\\Warrior_Walk.bmp
+	// Resource\\Warrior_Attack.bmp
+	// Resource\\Warrior_Defend.bmp
+	// Resource\\Warrior_Skill.bmp
+	// Resource\\Warrior_Hit.bmp
+	// Resource\\Warrior_Dead.bmp
+	//
+	// ê° BMPëŠ” 1í–‰ 4í”„ë ˆì„ êµ¬ì¡°ë¥¼ ê¸°ë³¸ìœ¼ë¡œ í•œë‹¤.
+	// ------------------------------------------------------------
+	HBITMAP hSpriteIdle;
+	HBITMAP hSpriteWalk;
+	HBITMAP hSpriteAttack;
+	HBITMAP hSpriteDefend;
+	HBITMAP hSpriteSkill;
+	HBITMAP hSpriteHit;
+	HBITMAP hSpriteDead;
+
+	BITMAP SpriteInfoIdle;
+	BITMAP SpriteInfoWalk;
+	BITMAP SpriteInfoAttack;
+	BITMAP SpriteInfoDefend;
+	BITMAP SpriteInfoSkill;
+	BITMAP SpriteInfoHit;
+	BITMAP SpriteInfoDead;
 
 private:
-    // ÇöÀç »óÅÂ¿¡ ¸Â´Â ºñÆ®¸Ê ¹İÈ¯
-    HBITMAP GetCurrentSprite() const;
-    BITMAP GetCurrentSpriteInfo() const;
+	// ------------------------------------------------------------
+	// ë‚´ë¶€ ë³´ì¡° í•¨ìˆ˜
+	// ------------------------------------------------------------
 
-    // ¹æÇâ¿¡ µû¸¥ ½ºÇÁ¶óÀÌÆ® ½ÃÆ® Çà ¹øÈ£ ¹İÈ¯
-    int GetDirectionRow() const;
+	// í˜„ì¬ Stateì— ë§ëŠ” HBITMAP ë°˜í™˜
+	HBITMAP GetCurrentSprite() const;
 
-    // ÁÂ¿ì ¹İÀüÀÌ ÇÊ¿äÇÑÁö ÆÇ´Ü
-    bool IsNeedFlip() const;
+	// í˜„ì¬ Stateì— ë§ëŠ” BITMAP ì •ë³´ ë°˜í™˜
+	const BITMAP* GetCurrentSpriteInfo() const;
 
-    // »óÅÂº° ÃÖ´ë ÇÁ·¹ÀÓ ¼³Á¤
-    void UpdateMaxFrameByState();
+	// ìºë¦­í„°ëŠ” 1í–‰ ìŠ¤í”„ë¼ì´íŠ¸ë§Œ ì‚¬ìš©í•˜ë¯€ë¡œ í•­ìƒ 0ì„ ë°˜í™˜
+	int GetDirectionRow() const;
 
-    // Á÷¾÷º° ±âº»°ª ¼¼ÆÃ
-    void InitClassValue();
+	// ì¢Œìš° ë°˜ì „ ì¶œë ¥ì´ í•„ìš”í•œì§€ í™•ì¸
+	// ê¸°ë³¸ ê°€ì •: ì›ë³¸ ìŠ¤í”„ë¼ì´íŠ¸ëŠ” ì™¼ìª½ ë°©í–¥ ê¸°ì¤€
+	// Right ë°©í–¥ì´ë©´ ë°˜ì „í•œë‹¤.
+	bool IsNeedFlip() const;
 
-    // BMP ÇÏ³ª ·Îµå
-    bool LoadBitmapFromFile(const wchar_t* filePath, HBITMAP& outBitmap, BITMAP& outInfo);
+	// í˜„ì¬ Stateì— ë§ê²Œ MaxFrame ì„¤ì •
+	void UpdateMaxFrameByState();
+
+	// ì§ì—…ë³„ ê¸°ë³¸ ìŠ¤íƒ¯/AP/ë°©ì–´ ê³„ìˆ˜ ì„¤ì •
+	void InitClassValue();
+
+	// íŒŒì¼ ê²½ë¡œì—ì„œ BMP ë¡œë“œ
+	HBITMAP LoadBitmapFromFile(const std::wstring& filePath, BITMAP* outInfo);
+
+	// ì§ì—…ì— ë”°ë¥¸ íŒŒì¼ëª… ì ‘ë‘ì–´ ë°˜í™˜
+	std::wstring GetCharacterPrefix() const;
 
 public:
-    Character();
-    ~Character();
+	// ------------------------------------------------------------
+	// ìƒì„± / í•´ì œ
+	// ------------------------------------------------------------
+	Character();
+	~Character();
 
-    // ------------------------------
-    // ÃÊ±âÈ­ / ÇØÁ¦
-    // ------------------------------
-    void Init(ECharacterClass newClass, int gridX, int gridY);
-    void Release();
+	// HBITMAPì„ ë“¤ê³  ìˆìœ¼ë¯€ë¡œ ë³µì‚¬ ê¸ˆì§€
+	Character(const Character& other) = delete;
+	Character& operator=(const Character& other) = delete;
 
-    // Ä³¸¯ÅÍ Á÷¾÷¿¡ ¸Â´Â ½ºÇÁ¶óÀÌÆ® ·Îµå
-    bool LoadSprites(const std::wstring& folderPath);
+	// vector ì‚¬ìš©ì„ ëŒ€ë¹„í•œ ì´ë™ ìƒì„±/ëŒ€ì…
+	Character(Character&& other) noexcept;
+	Character& operator=(Character&& other) noexcept;
 
-    // ------------------------------
-    // °»½Å / Ãâ·Â
-    // ------------------------------
-    void Update();
-    void Draw(HDC hMemDC, HDC hBackDC);
+	void Init(ECharacterClass classType, int gridX, int gridY);
+	void Release();
 
-    // ------------------------------
-    // »óÅÂ / ¹æÇâ
-    // ------------------------------
-    void SetState(ECharacterState newState);
-    ECharacterState GetState() const;
+	// ------------------------------------------------------------
+	// ìŠ¤í”„ë¼ì´íŠ¸
+	// ------------------------------------------------------------
 
-    void SetDirection(EDirection newDirection);
-    EDirection GetDirection() const;
+	// folderPath ì˜ˆ:
+	// L"Resource"
+	//
+	// ì‹¤ì œ íŒŒì¼ ì˜ˆ:
+	// Resource\\Warrior_Idle.bmp
+	// Resource\\Archer_Idle.bmp
+	// Resource\\Mage_Idle.bmp
+	bool LoadSprites(const std::wstring& folderPath);
 
-    bool GetIsActionEnd() const;
-    void SetIsActionEnd(bool newValue);
+	// ìƒíƒœì°½/í„´ UIì—ì„œ Idle ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ì§ì ‘ ì°¸ì¡°í•  ë•Œ ì‚¬ìš©
+	HBITMAP GetSpriteIdle() const;
 
-    // ------------------------------
-    // À§Ä¡
-    // ------------------------------
-    void SetGridPos(int x, int y);
-    Location GetGridPos() const;
+	// ------------------------------------------------------------
+	// ì—…ë°ì´íŠ¸ / ì¶œë ¥
+	// ------------------------------------------------------------
+	void Update();
 
-    void SetPixelPos(int x, int y);
-    Location GetPixelPos() const;
+	// ê¸°ì¡´ ì½”ë“œ í˜¸í™˜ìš© 2ì¸ì Draw
+	// ë‚´ë¶€ì—ì„œ 4ì¸ì Drawë¥¼ drawW=0, drawH=0ìœ¼ë¡œ í˜¸ì¶œí•œë‹¤.
+	void Draw(HDC hMemDC, HDC hMemDC1);
 
-    // ------------------------------
-    // ±âº» Á¤º¸
-    // ------------------------------
-    void SetCharacterID(int id);
-    int GetCharacterID() const;
+	// hMemDC  : ì‹¤ì œ ì¶œë ¥ ëŒ€ìƒ ë°±ë²„í¼ DC
+	// hMemDC1 : ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ SelectObjectí•  ì„ì‹œ DC
+	//
+	// drawW, drawH:
+	// ë§µ ìœ„ì— ì‹¤ì œë¡œ ì¶œë ¥í•  í¬ê¸°
+	// ì˜ˆ: TILE_SIZE, TILE_SIZE + 16
+	void Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH);
 
-    ECharacterClass GetClassType() const;
+	// ------------------------------------------------------------
+	// ìƒíƒœ
+	// ------------------------------------------------------------
+	void SetState(ECharacterState newState);
+	ECharacterState GetState() const;
 
-    void SetElement(EElement newElement);
-    EElement GetElement() const;
+	void SetDirection(EDirection newDirection);
+	EDirection GetDirection() const;
 
-    // ------------------------------
-    // ½ºÅÈ / ¼ºÀå
-    // ------------------------------
-    CharacterStat GetStat() const;
-    void SetStat(const CharacterStat& newStat);
+	bool GetIsActionEnd() const;
+	void SetIsActionEnd(bool value);
 
-    int GetLevel() const;
-    void SetLevel(int newLevel);
+	// ------------------------------------------------------------
+	// ID / ì´ë¦„ / ì§ì—… / ì†ì„±
+	// ------------------------------------------------------------
+	void SetCharacterID(int id);
+	int GetCharacterID() const;
 
-    int GetExp() const;
-    void AddExp(int addExp);
+	void SetName(const std::wstring& newName);
+	std::wstring GetName() const;
 
-    int GetMoney() const;
-    void AddMoney(int addMoney);
-    bool UseMoney(int useMoney);
+	ECharacterClass GetClassType() const;
 
-    // ------------------------------
-    // Àåºñ
-    // ------------------------------
-    CharacterEquipment GetEquipment() const;
-    void SetEquipment(const CharacterEquipment& newEquip);
+	void SetElement(EElement newElement);
+	EElement GetElement() const;
 
-    void SetWeaponID(int itemID);
-    void SetArmorID(int itemID);
-    void SetAccessoryID(int itemID);
+	// ------------------------------------------------------------
+	// ìœ„ì¹˜
+	// ------------------------------------------------------------
+	void SetGridPos(int gx, int gy);
+	Location GetGridPos() const;
 
-    // ------------------------------
-    // ½ºÅ³
-    // ------------------------------
-    void AddSkillID(int skillID);
-    bool HasSkillID(int skillID) const;
-    std::vector<int> GetLearnedSkillIDs() const;
+	void SetPixelPos(int px, int py);
+	Location GetPixelPos() const;
 
-    // ------------------------------
-    // ÀÌµ¿ °ü·Ã
-    // ------------------------------
-    int GetAP() const;
-    void SetAP(int newAP);
+	// GridPosë¥¼ WorldPixel ì¢Œí‘œì™€ ë™ê¸°í™”
+	void SyncWorldPixelToGrid(int tileSize);
 
-    // ¸ñÇ¥ Å¸ÀÏÀÌ ÀÌµ¿ ¹üÀ§ ¾ÈÀÎÁö È®ÀÎ
-    bool IsInMoveRange(int targetX, int targetY) const;
+	// ì´ë™ ì¤‘ì´ë©´ WorldPixel ìœ„ì¹˜ ë°˜í™˜
+	// ì´ë™ ì¤‘ì´ ì•„ë‹ˆë©´ GridPos * tileSize ìœ„ì¹˜ ë°˜í™˜
+	Location GetWorldPixelPos(int tileSize) const;
 
-    // ½ÇÁ¦ ÀÌµ¿Àº ³ªÁß¿¡ A* ºÙÀÌ±â Àü±îÁö °£´Ü ÀÌµ¿À¸·Î Ã³¸® °¡´É
-    void MoveToGrid(int targetX, int targetY);
+	// ëª©í‘œ íƒ€ì¼ê¹Œì§€ Walk ìƒíƒœë¡œ ì´ë™ ì‹œì‘
+	bool StartMoveToGrid(int targetX, int targetY, int tileSize);
 
-    // ------------------------------
-    // °ø°İ / ¹æ¾î / ÇÇ°İ
-    // ------------------------------
-    bool IsAlive() const;
+	bool GetIsMoving() const;
 
-    // targetÀÌ °ø°İ ¹üÀ§ ¾ÈÀÎÁö È®ÀÎ
-    bool IsInAttackRange(const Character& target) const;
+	// ê¸°ì¡´ ì¦‰ì‹œ ì´ë™ìš© í•¨ìˆ˜
+	// ì• ë‹ˆë©”ì´ì…˜ ì—†ì´ GridPosë§Œ ë°”ë¡œ ë°”ê¾¸ê³  ì‹¶ì„ ë•Œ ì‚¬ìš©
+	bool MoveToGrid(int targetX, int targetY);
 
-    // ÀÏ¹İ °ø°İ µ¥¹ÌÁö °è»ê
-    int CalcAttackDamage(const Character& target) const;
+	// ------------------------------------------------------------
+	// ìŠ¤íƒ¯
+	// ------------------------------------------------------------
+	CharacterStat GetStat() const;
+	void SetStat(const CharacterStat& newStat);
 
-    // ½ºÅ³ µ¥¹ÌÁö °è»ê
-    int CalcSkillDamage(const Character& target, int skillID) const;
+	int GetHP() const;
+	int GetMaxHP() const;
 
-    // ÇÇÇØ ¹Ş±â
-    void GetDamage(int damage);
+	int GetMP() const;
+	int GetMaxMP() const;
 
-    // ¹æ¾î »óÅÂ ÇÇÇØ °¨¼ÒÀ²
-    float GetDefendRate() const;
-    void SetDefendRate(float newRate);
+	int GetLevel() const;
+	void SetLevel(int newLevel);
+
+	int GetExp() const;
+	void AddExp(int addExp);
+
+	int GetMoney() const;
+	void AddMoney(int addMoney);
+	bool UseMoney(int useMoney);
+
+	int GetAP() const;
+	void SetAP(int newAP);
+
+	// ------------------------------------------------------------
+	// í„´ í–‰ë™ ê¸°ë¡
+	// ------------------------------------------------------------
+	bool HasMoved() const { return bHasMoved; }
+	void SetHasMoved(bool value) { bHasMoved = value; }
+
+	bool HasActed() const { return bHasActed; }
+	void SetHasActed(bool value) { bHasActed = value; }
+
+	void ResetTurnState() { bHasMoved = false; bHasActed = false; }
+
+private:
+	bool bHasMoved;
+	bool bHasActed;
+
+public:
+	// ------------------------------------------------------------
+	// ì¥ë¹„
+	// ------------------------------------------------------------
+	CharacterEquipment GetEquipment() const;
+	void SetEquipment(const CharacterEquipment& newEquipment);
+
+	void SetWeaponID(int itemID);
+	void SetArmorID(int itemID);
+	void SetAccessoryID(int itemID);
+
+	// ------------------------------------------------------------
+	// ìŠ¤í‚¬
+	// ------------------------------------------------------------
+	void AddSkillID(int skillID);
+	bool HasSkillID(int skillID) const;
+	std::vector<int> GetLearnedSkillIDs() const;
+
+	// ------------------------------------------------------------
+	// ì „íˆ¬ íŒì •
+	// ------------------------------------------------------------
+
+	// ì‚´ì•„ìˆëŠ”ì§€ í™•ì¸
+	bool IsAlive() const;
+
+	// ëª©í‘œ íƒ€ì¼ì´ ì´ë™ ë²”ìœ„ ì•ˆì¸ì§€ í™•ì¸
+	// SRPGì‹ ë§ˆë¦„ëª¨ ë²”ìœ„ ê¸°ì¤€
+	bool IsInMoveRange(int targetX, int targetY) const;
+
+	// ëŒ€ìƒ ìºë¦­í„°ê°€ ê³µê²© ë²”ìœ„ ì•ˆì¸ì§€ í™•ì¸
+	bool IsInAttackRange(const Character& target) const;
+
+	// ì¢Œí‘œ ê¸°ì¤€ ê³µê²© ë²”ìœ„ íŒì •
+	bool IsInAttackRangeByGrid(int targetX, int targetY) const;
+
+	// ì¼ë°˜ ê³µê²© ë°ë¯¸ì§€ ê³„ì‚°
+	int CalcAttackDamage(const Character& target) const;
+
+	// ìŠ¤í‚¬ ë°ë¯¸ì§€ ê³„ì‚°
+	// í˜„ì¬ëŠ” ì„ì‹œ ê³µì‹ìœ¼ë¡œ INT ê¸°ë°˜ ì²˜ë¦¬
+	int CalcSkillDamage(const Character& target) const;
+
+	// í”¼í•´ ë°›ê¸°
+	void GetDamage(int damage);
+
+	// ì‚¬ë§ ì²˜ë¦¬
+	void Die();
+
+	// ë°©ì–´ í”¼í•´ ë¹„ìœ¨
+	float GetDefendRate() const;
+	void SetDefendRate(float rate);
+
+	// ------------------------------------------------------------
+	// ë°©í–¥ ë³´ì¡°
+	// ------------------------------------------------------------
+
+	// í˜„ì¬ ìºë¦­í„° ê¸°ì¤€ìœ¼ë¡œ ëª©í‘œ ì¢Œí‘œ ë°©í–¥ì„ ë°”ë¼ë³´ë„ë¡ ì„¤ì •
+	// ì¢Œìš° ë°©í–¥ë§Œ ì‚¬ìš©í•œë‹¤.
+	void LookAtGrid(int targetX, int targetY);
 };
-
-/*
-============================================================
- Character.h ¼³¸í
-============================================================
-
-[»ó¼ö Á¤ÀÇ]
-
-CHARACTER_SHEET_COL
- -> ½ºÇÁ¶óÀÌÆ® ½ÃÆ®ÀÇ °¡·Î ÇÁ·¹ÀÓ °³¼ö(4¿­)
-
-CHARACTER_SHEET_ROW
- -> ½ºÇÁ¶óÀÌÆ® ½ÃÆ®ÀÇ ¼¼·Î ¹æÇâ °³¼ö(3Çà)
-
-CHARACTER_FRAME_WIDTH
- -> ÇÑ ÇÁ·¹ÀÓÀÇ °¡·Î Å©±â(362)
-
-CHARACTER_FRAME_HEIGHT
- -> ÇÑ ÇÁ·¹ÀÓÀÇ ¼¼·Î Å©±â(362
-
-CHARACTER_TRANSPARENT_COLOR
- -> TransparentBlt¿¡¼­ Åõ¸í»öÀ¸·Î »ç¿ëÇÒ ÄÃ·¯Å°(RGB(255, 0, 255), ¼ø¼ö ¸¶Á¨Å¸)
-
-============================================================
-
-[Enum ±¸¼º]
-
-ECharacterClass
- -> Ä³¸¯ÅÍÀÇ Á÷¾÷À» ±¸ºĞ(Warrior, Archer, Mage)
-
-ECharacterState
- -> Ä³¸¯ÅÍÀÇ ÇöÀç Çàµ¿ »óÅÂ¸¦ ±¸ºĞ(Idle, Walk, Attack, Defend, Skill, Hit, Dead)
-
-EDirection
- -> Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâÀ» ±¸ºĞ(Down, Left, Right(¹İÀüÇØ¼­ »ç¿ë), Up)
-
-EElement
- -> Ä³¸¯ÅÍ ¶Ç´Â °ø°İÀÇ ¼Ó¼ºÀ» ±¸ºĞ(None, Fire, Water, Grass, Light, Dark, Heal)
-
-EEquipPart
- -> Àåºñ ºÎÀ§(Weapon, Armor, Accessory)
-
-============================================================
-
-[Struct ³»ºÎ ±¸¼º]
-
-CharacterStat-> Ä³¸¯ÅÍÀÇ ÀüÅõ ½ºÅÈ
- - MaxHP : ÃÖ´ë Ã¼·Â
- - HP    : ÇöÀç Ã¼·Â
- - MaxMP : ÃÖ´ë ¸¶³ª
- - MP    : ÇöÀç ¸¶³ª
- - STR   : Èû, ÀÏ¹İ °ø°İ°ú HP ¼ºÀå¿¡ »ç¿ë
- - INT   : Áö´É, ¸¶¹ı °ø°İ°ú MP ¼ºÀå¿¡ »ç¿ë
- - DEF   : ¹æ¾î·Â, ¹Ş´Â ÇÇÇØ °¨¼Ò¿¡ »ç¿ë
- - SPD   : ¼Óµµ, ÅÏ ¼ø¼­ °è»ê¿¡ »ç¿ë
-
- ±âº»°ª
- - MaxHP = 100
- - HP    = 100
- - MaxMP = 30
- - MP    = 30
- - STR   = 10
- - INT   = 10
- - DEF   = 5
- - SPD   = 10
-
-
-CharacterEquipment
- -> Ä³¸¯ÅÍ°¡ Âø¿ë ÁßÀÎ Àåºñ ID -> ½ÇÁ¦ ¾ÆÀÌÅÛ Á¤º¸´Â Item µ¥ÀÌÅÍ¿¡¼­ ID¸¦ ÅëÇØ ÂüÁ¶ÇÏ´Â ¹æ½Ä
- - WeaponID    : Âø¿ë ÁßÀÎ ¹«±â ID
- - ArmorID     : Âø¿ë ÁßÀÎ ¹æ¾î±¸ ID
- - AccessoryID : Âø¿ë ÁßÀÎ Àå½Å±¸ ID
-
- ±âº»°ª
- - WeaponID    = -1
- - ArmorID     = -1
- - AccessoryID = -1
-
- -1Àº ÀåÂøÇÑ Àåºñ°¡ ¾ø´Ù´Â ÀÇ¹Ì
-
-============================================================
-
-[Character Å¬·¡½º ³»ºÎ µ¥ÀÌÅÍ ±¸¼º]
-
- - CharacterID : Ä³¸¯ÅÍ °íÀ¯ ¹øÈ£
- - ClassType   : Ä³¸¯ÅÍ Á÷¾÷
- - State       : ÇöÀç Çàµ¿ »óÅÂ
- - Direction   : ÇöÀç ¹Ù¶óº¸´Â ¹æÇâ
- - Element     : Ä³¸¯ÅÍ ¼Ó¼º
- - Stat            : HP, MP, STR, INT, DEF, SPD ÀúÀå
- - Equip           : Âø¿ë Àåºñ ID ÀúÀå
- - Level           : ÇöÀç ·¹º§
- - Exp             : ÇöÀç °æÇèÄ¡
- - Money           : º¸À¯ µ·
- - LearnedSkillIDs : ½ÀµæÇÑ ½ºÅ³ ID ¸ñ·Ï
- - GridPos  : Å¸ÀÏ ÁÂÇ¥
- - PixelPos : ½ÇÁ¦ È­¸é Ãâ·Â ÁÂÇ¥
- - AP         : ÀÌµ¿ °¡´É ¹üÀ§
- - DefendRate : ¹æ¾î »óÅÂÀÏ ¶§ ¹Ş´Â ÇÇÇØ ºñÀ²
- - CurFrame    : ÇöÀç ¾Ö´Ï¸ŞÀÌ¼Ç ÇÁ·¹ÀÓ
- - MaxFrame    : ÇöÀç »óÅÂÀÇ ÃÖ´ë ÇÁ·¹ÀÓ ¼ö
- - AniTick     : ¾Ö´Ï¸ŞÀÌ¼Ç ½Ã°£ ´©Àû°ª
- - AniDelay    : ÇÁ·¹ÀÓ ÀüÈ¯ Áö¿¬°ª
- - IsActionEnd : °ø°İ/½ºÅ³/ÇÇ°İ/»ç¸Á µîÀÇ µ¿ÀÛ ¿Ï·á ¿©ºÎ
- - hSpriteIdle   : ´ë±â ½ºÇÁ¶óÀÌÆ®
- - hSpriteWalk   : °È±â ½ºÇÁ¶óÀÌÆ®
- - hSpriteAttack : °ø°İ ½ºÇÁ¶óÀÌÆ®
- - hSpriteDefend : ¹æ¾î ½ºÇÁ¶óÀÌÆ®
- - hSpriteSkill  : ½ºÅ³ ½ºÇÁ¶óÀÌÆ®
- - hSpriteHit    : ÇÇ°İ ½ºÇÁ¶óÀÌÆ®
- - hSpriteDead   : »ç¸Á ½ºÇÁ¶óÀÌÆ®
-
- - SpriteInfoIdle ~ SpriteInfoDead
-   °¢ BMPÀÇ Á¤º¸ ÀúÀå¿ë BITMAP ±¸Á¶Ã¼
-
-============================================================
-
-[Private ÇÔ¼ö ¿ªÇÒ]
-
-GetCurrentSprite() -> ÇöÀç State °ª¿¡ ¸Â´Â HBITMAPÀ» ¹İÈ¯
-
-GetCurrentSpriteInfo() -> ÇöÀç State °ª¿¡ ¸Â´Â BITMAP Á¤º¸¸¦ ¹İÈ¯
-
-GetDirectionRow() -> ÇöÀç Direction °ª¿¡ µû¶ó ½ºÇÁ¶óÀÌÆ® ½ÃÆ®¿¡¼­ »ç¿ëÇÒ Çà ¹øÈ£¸¦ ¹İÈ¯
- -> Down = 0, Left/Right = 1, Up = 2
-
-IsNeedFlip() -> ÇöÀç ¹æÇâ¿¡¼­ ÁÂ¿ì ¹İÀü Ãâ·ÂÀÌ ÇÊ¿äÇÑÁö ÆÇ´Ü
-    -> Ãø¸é ½ºÇÁ¶óÀÌÆ®¸¦ ÇÑ ¹æÇâ ±âÁØÀ¸·Î µÎ°í ¹İ´ë ¹æÇâÀº ¹İÀüÇØ¼­ »ç¿ë
-
-UpdateMaxFrameByState() -> ÇöÀç »óÅÂ¿¡ ¸Â°Ô MaxFrame °ªÀ» ¼³Á¤(4ÇÁ·¹ÀÓ)
-
-InitClassValue() -> Á÷¾÷º° ±âº» ½ºÅÈ, AP, ¹æ¾î °è¼ö¸¦ ¼³Á¤
-
-LoadBitmapFromFile() -> ÆÄÀÏ °æ·Î¸¦ ¹Ş¾Æ BMP¸¦ HBITMAP ÇüÅÂ·Î ·Îµå
- -> LoadImageW¿Í LR_LOADFROMFILEÀ» »ç¿ëÇÑ´Ù.
-
-============================================================
-
-[Public ÇÔ¼ö ¿ªÇÒ]
-
-Character() -> ±âº»°ª ÃÊ±âÈ­
-
-~Character() -> Release()¸¦ È£ÃâÇÏ¿© BMP ÇÚµéÀ» Á¤¸®
-
-Init() -> Ä³¸¯ÅÍ Á÷¾÷, ÃÊ±â Å¸ÀÏ À§Ä¡, ±âº» »óÅÂ¸¦ ¼³Á¤(Á÷¾÷º° ±âº»°ªµµ ÇÔ²² ¼³Á¤)
-
-Release() -> ·ÎµåµÈ BMP ÇÚµéÀ» DeleteObject·Î ÇØÁ¦ÇÑ´Ù.
-
-LoadSprites() -> Á÷¾÷¿¡ ¸Â´Â BMP ½ºÇÁ¶óÀÌÆ® ÆÄÀÏµéÀ» Resource Æú´õ¿¡¼­ ·Îµå
-
-Update() -> ¾Ö´Ï¸ŞÀÌ¼Ç ÇÁ·¹ÀÓÀ» °»½Å(HP°¡ 0 ÀÌÇÏÀÌ¸é Dead »óÅÂ·Î ÀüÈ¯)
-
-Draw() -> ÇöÀç »óÅÂ, ¹æÇâ, ÇÁ·¹ÀÓ¿¡ ¸Â´Â ½ºÇÁ¶óÀÌÆ®¸¦ È­¸é¿¡ Ãâ·Â
-    -> TransparentBlt¸¦ »ç¿ëÇÏ¿© ¼ø¼ö ¸¶Á¨Å¸ ¹è°æÀ» Åõ¸í Ã³¸®
-
-SetState() -> Ä³¸¯ÅÍ »óÅÂ¸¦ º¯°æ (»óÅÂ º¯°æ ½Ã ÇÁ·¹ÀÓÀ» 0À¸·Î ÃÊ±âÈ­)
-
-GetState() -> ÇöÀç Ä³¸¯ÅÍ »óÅÂ¸¦ ¹İÈ¯
-
-SetDirection() -> Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâÀ» ¼³Á¤
-
-GetDirection() -> ÇöÀç Ä³¸¯ÅÍ ¹æÇâÀ» ¹İÈ¯
-
-GetIsActionEnd() -> ÇöÀç Çàµ¿ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³µ´ÂÁö ¹İÈ¯
-
-SetIsActionEnd() -> Çàµ¿ ¿Ï·á ¿©ºÎ °ªÀ» Á÷Á¢ ¼³Á¤
-
-SetGridPos() -> Ä³¸¯ÅÍÀÇ Å¸ÀÏ ÁÂÇ¥¸¦ ¼³Á¤
-
-GetGridPos() -> Ä³¸¯ÅÍÀÇ Å¸ÀÏ ÁÂÇ¥¸¦ ¹İÈ¯
-
-SetPixelPos() -> Ä³¸¯ÅÍÀÇ È­¸é Ãâ·Â ÁÂÇ¥¸¦ ¼³Á¤
-
-GetPixelPos() -> Ä³¸¯ÅÍÀÇ È­¸é Ãâ·Â ÁÂÇ¥¸¦ ¹İÈ¯
-
-SetCharacterID() -> Ä³¸¯ÅÍ °íÀ¯ ID¸¦ ¼³Á¤
-
-GetCharacterID() -> Ä³¸¯ÅÍ °íÀ¯ ID¸¦ ¹İÈ¯
-
-GetClassType() -> Ä³¸¯ÅÍ Á÷¾÷À» ¹İÈ¯
-
-SetElement() -> Ä³¸¯ÅÍ ¼Ó¼ºÀ» ¼³Á¤
-
-GetElement() -> Ä³¸¯ÅÍ ¼Ó¼ºÀ» ¹İÈ¯
-
-GetStat() -> Ä³¸¯ÅÍÀÇ ÇöÀç ½ºÅÈ ±¸Á¶Ã¼¸¦ ¹İÈ¯
-
-SetStat() -> Ä³¸¯ÅÍ ½ºÅÈ ±¸Á¶Ã¼¸¦ ¿ÜºÎ °ªÀ¸·Î º¯°æ
-
-GetLevel() -> ÇöÀç ·¹º§À» ¹İÈ¯
-
-SetLevel() -> ÇöÀç ·¹º§À» ¼³Á¤
-
-GetExp() -> ÇöÀç °æÇèÄ¡¸¦ ¹İÈ¯
-
-AddExp() -> °æÇèÄ¡¸¦ Ãß°¡(ÀÏÁ¤ °æÇèÄ¡ ÀÌ»óÀÌ¸é ·¹º§¾÷ Ã³¸®)
-
-GetMoney() -> ÇöÀç º¸À¯ µ·À» ¹İÈ¯
-
-AddMoney() -> µ·À» Ãß°¡
-
-UseMoney() -> µ·À» »ç¿ë(º¸À¯ µ·ÀÌ ºÎÁ·ÇÏ¸é false¸¦ ¹İÈ¯)
-
-GetEquipment() -> ÇöÀç Àåºñ ID ±¸Á¶Ã¼¸¦ ¹İÈ¯
-
-SetEquipment() -> Àåºñ ID ±¸Á¶Ã¼¸¦ ¿ÜºÎ °ªÀ¸·Î º¯°æ
-
-SetWeaponID() -> ¹«±â ID¸¦ ¼³Á¤
-
-SetArmorID() -> ¹æ¾î±¸ ID¸¦ ¼³Á¤
-
-SetAccessoryID() -> Àå½Å±¸ ID¸¦ ¼³Á¤
-
-AddSkillID() -> ½Àµæ ½ºÅ³ ID¸¦ Ãß°¡(ÀÌ¹Ì Á¸ÀçÇÏ´Â ½ºÅ³ÀÌ¸é Áßº¹ Ãß°¡ÇÏÁö ¾ÊÀ½)
-
-HasSkillID() -> ÇØ´ç ½ºÅ³ ID¸¦ °¡Áö°í ÀÖ´ÂÁö È®ÀÎ
-
-GetLearnedSkillIDs() -> ½ÀµæÇÑ ½ºÅ³ ID ¸ñ·ÏÀ» ¹İÈ¯
-
-GetAP() -> ÇöÀç ÀÌµ¿ °¡´É ¹üÀ§ AP¸¦ ¹İÈ¯
-
-SetAP() -> ÀÌµ¿ °¡´É ¹üÀ§ AP¸¦ ¼³Á¤
-
-IsInMoveRange() -> ¸ñÇ¥ Å¸ÀÏÀÌ ÇöÀç Ä³¸¯ÅÍÀÇ ÀÌµ¿ ¹üÀ§ ¾È¿¡ ÀÖ´ÂÁö È®ÀÎ
-
-MoveToGrid() -> ¸ñÇ¥ Å¸ÀÏ·Î ÀÌµ¿(ÇöÀç ÀÌµ¿ ¹üÀ§ ¾ÈÀÏ ¶§ GridPos¸¸ º¯°æ)
-
-IsAlive() -> ÇöÀç HP°¡ 0º¸´Ù Å«Áö È®ÀÎ
-
-IsInAttackRange() -> ´ë»ó Ä³¸¯ÅÍ°¡ °ø°İ ¹üÀ§ ¾È¿¡ ÀÖ´ÂÁö È®ÀÎ
-
-CalcAttackDamage() -> STR ±â¹İ ÀÏ¹İ °ø°İ µ¥¹ÌÁö¸¦ °è»ê
-
-CalcSkillDamage() -> INT ±â¹İ ½ºÅ³ µ¥¹ÌÁö¸¦ °è»ê(ÇöÀç´Â ÀÓ½Ã °ø½Ä)
-
-GetDamage() -> Ä³¸¯ÅÍ°¡ ÇÇÇØ¸¦ ¹Ş´Â Ã³¸®
- -> ¹æ¾î »óÅÂÀÌ¸é ÇÇÇØ¸¦ DefendRate¸¸Å­ °¨¼Ò
- -> HP°¡ 0 ÀÌÇÏ°¡ µÇ¸é Dead »óÅÂ·Î º¯°æ
-
-GetDefendRate() -> ÇöÀç ¹æ¾î ÇÇÇØ ºñÀ²À» ¹İÈ¯ÇÑ´Ù.
-
-SetDefendRate() -> ¹æ¾î ÇÇÇØ ºñÀ²À» ¼³Á¤(0.0 ~ 1.0)
-*/

@@ -7,6 +7,7 @@
 #include"CStage.h"
 #include"Title_Stage.h"
 #include"Map_Stage.h"
+#include"Battle_Stage.h"
 #pragma comment(lib, "msimg32.lib")
 
 HINSTANCE g_hInst;
@@ -65,6 +66,9 @@ void ChangeStage(HWND hWnd,int NextStage) {
 	}
 	else if (NextStage == MAP_STAGE) {
 		g_Stage = new Map_Stage;
+	}
+	else if (NextStage == BATTLE_STAGE) {
+		g_Stage = new Battle_Stage;
 	}
 	else if (NextStage == GAME_END) {
 		SendMessage(hWnd, WM_CLOSE, 0, 0);
@@ -126,20 +130,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP hOldBit;
 		hOldBit = (HBITMAP)SelectObject(hMemDC, hBit);
 
-		hBrush = CreateSolidBrush(RGB(255, 255,255));
-		FillRect(hMemDC1, &rects, hBrush);
+		hBrush = CreateSolidBrush(RGB(255, 255, 255));
+		FillRect(hMemDC, &rects, hBrush);
 
 		if (g_Stage != nullptr)
 		{
 			g_Stage->Update(hWnd);
 			g_Stage->Draw(hMemDC, hMemDC1);
 		}
-		
+
 		DeleteObject(hBrush);
-		SelectObject(hMemDC1, hOldBit);
+
+		SelectObject(hMemDC, hOldBit);
+
 		DeleteDC(hMemDC);
 		DeleteDC(hMemDC1);
 		ReleaseDC(hWnd, hDC);
+
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 	case WM_PAINT:

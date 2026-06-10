@@ -1,18 +1,24 @@
 #pragma once
 #include"CStage.h"
-#include"AButton.h"
-
-#define buttonCount 3
+#include"UCanvasPanel.h"
+#include"UContainerWidget.h"
+#include"UButton.h"
+#include"USettingPopup.h"
 
 class Title_Stage : public CStage
 {
 private:
-	std::vector<AButton> Buttons;
-	
+	UCanvasPanel mainHUD;
+	UContainerWidget* menuGroup;
+	USettingPopup* settingPopup;
 
-	int SelectionButton;
+	UButton* btnStart;
+	UButton* btnSetting;
+	UButton* btnEnd;
+
 public:
 	Title_Stage();
+	virtual ~Title_Stage();
 	virtual void Init(HWND hWnd, HINSTANCE const g_hInst);
 	virtual void Update(HWND hWnd);
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);

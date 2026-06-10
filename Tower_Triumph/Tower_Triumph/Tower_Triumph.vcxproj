@@ -102,6 +102,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,34 +125,78 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AActor.cpp" />
+    <ClCompile Include="AArmor.cpp" />
     <ClCompile Include="AButton.cpp" />
     <ClCompile Include="ACamera.cpp" />
+    <ClCompile Include="AItemBase.cpp" />
+    <ClCompile Include="AUsable.cpp" />
+    <ClCompile Include="Battle_Stage.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Map_Stage.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="TeamManager.cpp" />
     <ClCompile Include="Title_Stage.cpp" />
+    <ClCompile Include="UButton.cpp" />
     <ClCompile Include="UCanvasPanel.cpp" />
     <ClCompile Include="UContainerWidget.cpp" />
+    <ClCompile Include="UImage.cpp" />
+    <ClCompile Include="ULocationIndicator.cpp" />
+    <ClCompile Include="UMainMenuPopup.cpp" />
+    <ClCompile Include="UMouseMark.cpp" />
+    <ClCompile Include="URegionInfoPopup.cpp" />
+    <ClCompile Include="URegionMarker.cpp" />
+    <ClCompile Include="UExitConfirmPopup.cpp" />
+    <ClCompile Include="USettingPopup.cpp" />
+    <ClCompile Include="UTurnCharacterInfo.cpp" />
+    <ClCompile Include="UTurnOrderPanel.cpp" />
+    <ClCompile Include="STurnTimeline.cpp" />
+    <ClCompile Include="UBattleActionMenu.cpp" />
     <ClCompile Include="Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AActor.h" />
+    <ClInclude Include="AArmor.h" />
     <ClInclude Include="AButton.h" />
     <ClInclude Include="ACamera.h" />
+    <ClInclude Include="AItemBase.h" />
+    <ClInclude Include="AUsable.h" />
+    <ClInclude Include="Battle_Stage.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="Map_Stage.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Structure.h" />
+    <ClInclude Include="TeamManager.h" />
     <ClInclude Include="Title_Stage.h" />
+    <ClInclude Include="UButton.h" />
     <ClInclude Include="UCanvasPanel.h" />
     <ClInclude Include="UContainerWidget.h" />
+    <ClInclude Include="UImage.h" />
+    <ClInclude Include="ULocationIndicator.h" />
+    <ClInclude Include="UMainMenuPopup.h" />
+    <ClInclude Include="UMouseMark.h" />
+    <ClInclude Include="URegionInfoPopup.h" />
+    <ClInclude Include="URegionMarker.h" />
+    <ClInclude Include="UExitConfirmPopup.h" />
+    <ClInclude Include="USettingPopup.h" />
+    <ClInclude Include="UTurnCharacterInfo.h" />
+    <ClInclude Include="UTurnOrderPanel.h" />
+    <ClInclude Include="STurnTimeline.h" />
+    <ClInclude Include="UBattleActionMenu.h" />
     <ClInclude Include="Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\Source\BMP\UI\Map_Stage\MouseCusor.bmp" />
+    <Image Include="Source\MouseCursor\MouseCusor.bmp" />
+    <Image Include="Source\SMap\background\panda.bmp" />
     <Image Include="Source\SMap\background\Test00.bmp" />
+    <Image Include="Source\SMap\background\Test01.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

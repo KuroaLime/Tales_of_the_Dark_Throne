@@ -26,7 +26,7 @@ void ACamera::Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int W
     g_CamX += (targetX - g_CamX) * 0.1f;
     g_CamY += (targetY - g_CamY) * 0.1f;
 }
-void ACamera::SetPointGrid(int x, int y) {
+void ACamera::SetPointGrid(float x, float y) {
     PointGridX = x;
     PointGridY = y;
 }

@@ -7,15 +7,16 @@
 #define GAME_END -1
 #define TITLE_STAGE 0
 #define MAP_STAGE 1
+#define BATTLE_STAGE 2
 
 
 class CStage {
 protected:
 
 	std::vector<std::vector<Tile>> Baord;
-	//Å¸ÀÏ Å©±â
+	//Å¸ï¿½ï¿½ Å©ï¿½ï¿½
 	int TILE_SIZE = 64;
-	//Å¸ÀÏ °³¼ö
+	//Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int W;
 	int H;
 	HBITMAP hBitBackground;
@@ -23,6 +24,9 @@ protected:
 	std::pair<Location,BuSIZE> Loc;
 
 	RECT rects;
+
+	int CurStageID;
+	int NextStageID;
 public:
 
 	virtual ~CStage() {};

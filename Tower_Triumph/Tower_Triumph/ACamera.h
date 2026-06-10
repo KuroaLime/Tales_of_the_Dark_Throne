@@ -13,7 +13,7 @@ public:
 	virtual void Reset();
 	virtual void Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT);
 	
-	void SetPointGrid(int x , int y);
+	void SetPointGrid(float x, float y);
 	std::pair<float, float> Getg_Cam();
 	std::pair<float, float> GetPointGrid();
 

@@ -1,19 +1,24 @@
 #pragma once
 #include"Widget.h"
-#include"vector"
+#include <vector>
+
 class UContainerWidget : public UWidget
 {
 protected:
 	std::vector<UWidget*> Contents;
 
-	int AniCount;
-	int CurAni;
-	std::vector<HBITMAP> bBackgorundBitmap;
-	std::vector<BITMAP> bBackgroundMapinfo;
 public:
+    UContainerWidget();
+    virtual ~UContainerWidget();
+
 	virtual void Init() override;
 	virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
 	virtual void Update() override;
+	virtual void UpdateMouseHover(int MouseX, int MouseY) override;
 	virtual UWidget* FindWidgetUnderMouse(int MouseX, int MouseY) override;
+
+	void AddChild(UWidget* NewChild);
+    void RemoveChild(UWidget* Child, bool bDelete = true);
+    void ClearChildren(bool bDelete = true);
 };
 

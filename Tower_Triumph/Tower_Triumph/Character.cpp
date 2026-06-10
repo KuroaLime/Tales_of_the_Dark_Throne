@@ -1,925 +1,1392 @@
 #include "Character.h"
 
+// ============================================================
+// ÏÉùÏÑ±Ïûê / ÏÜåÎ©∏Ïûê
+// ============================================================
+
 Character::Character()
 {
-    CharacterID = -1;
+	CharacterID = -1;
 
-    ClassType = ECharacterClass::Warrior;
-    State = ECharacterState::Idle;
-    Direction = EDirection::Down;
-    Element = EElement::None;
+	ClassType = ECharacterClass::Warrior;
+	State = ECharacterState::Idle;
+	Direction = EDirection::Left;
+	Element = EElement::None;
 
-    Level = 1;
-    Exp = 0;
-    Money = 0;
+	Name = L"";
 
-    GridPos.x = 0;
-    GridPos.y = 0;
+	Level = 1;
+	Exp = 0;
+	Money = 0;
 
-    PixelPos.x = 0;
-    PixelPos.y = 0;
+	AP = 3;
+	DefendRate = 0.5f;
 
-    AP = 3;
-    DefendRate = 0.5f;
+	GridPos.x = 0;
+	GridPos.y = 0;
 
-    CurFrame = 0;
-    MaxFrame = 4;
+	PixelPos.x = 0;
+	PixelPos.y = 0;
 
-    AniTick = 0;
-    AniDelay = 8;
+	IsMoving = false;
 
-    IsActionEnd = false;
+	WorldPixelX = 0.0f;
+	WorldPixelY = 0.0f;
 
-    hSpriteIdle = NULL;
-    hSpriteWalk = NULL;
-    hSpriteAttack = NULL;
-    hSpriteDefend = NULL;
-    hSpriteSkill = NULL;
-    hSpriteHit = NULL;
-    hSpriteDead = NULL;
+	TargetPixelX = 0.0f;
+	TargetPixelY = 0.0f;
 
-    ZeroMemory(&SpriteInfoIdle, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoWalk, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoAttack, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoDefend, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
-    ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
+	TargetGridX = 0;
+	TargetGridY = 0;
+
+	MoveSpeed = 8.0f;
+
+	CurFrame = 0;
+	MaxFrame = CHARACTER_SHEET_COL;
+	AniTick = 0;
+	AniDelay = 8;
+
+	IsActionEnd = false;
+
+	hSpriteIdle = NULL;
+	hSpriteWalk = NULL;
+	hSpriteAttack = NULL;
+	hSpriteDefend = NULL;
+	hSpriteSkill = NULL;
+	hSpriteHit = NULL;
+	hSpriteDead = NULL;
+
+	ZeroMemory(&SpriteInfoIdle, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoWalk, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoAttack, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoDefend, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
 }
 
 Character::~Character()
 {
-    Release();
+	Release();
 }
 
-// =====================================================
-// √ ±‚»≠ / «ÿ¡¶
-// =====================================================
+// ============================================================
+// Ïù¥Îèô ÏÉùÏÑ±Ïûê / Ïù¥Îèô ÎåÄÏûÖ Ïó∞ÏÇ∞Ïûê
+// HBITMAP Ï§ëÎ≥µ ÏÇ≠Ï†ú Î∞©ÏßÄÏö©
+// ============================================================
 
-void Character::Init(ECharacterClass newClass, int gridX, int gridY)
+Character::Character(Character&& other) noexcept
 {
-    ClassType = newClass;
+	CharacterID = other.CharacterID;
 
-    State = ECharacterState::Idle;
-    Direction = EDirection::Down;
-    Element = EElement::None;
+	ClassType = other.ClassType;
+	State = other.State;
+	Direction = other.Direction;
+	Element = other.Element;
 
-    Level = 1;
-    Exp = 0;
-    Money = 0;
+	Name = std::move(other.Name);
 
-    GridPos.x = gridX;
-    GridPos.y = gridY;
+	Stat = other.Stat;
+	Equip = other.Equip;
 
-    // ¿œ¥‹ ±‚∫ª∞™
-    PixelPos.x = gridX;
-    PixelPos.y = gridY;
+	Level = other.Level;
+	Exp = other.Exp;
+	Money = other.Money;
 
-    CurFrame = 0;
-    MaxFrame = 4;
-    AniTick = 0;
-    AniDelay = 8;
-    IsActionEnd = false;
+	LearnedSkillIDs = std::move(other.LearnedSkillIDs);
 
-    LearnedSkillIDs.clear();
+	AP = other.AP;
+	DefendRate = other.DefendRate;
 
-    InitClassValue();
+	GridPos = other.GridPos;
+	PixelPos = other.PixelPos;
+
+	IsMoving = other.IsMoving;
+
+	WorldPixelX = other.WorldPixelX;
+	WorldPixelY = other.WorldPixelY;
+
+	TargetPixelX = other.TargetPixelX;
+	TargetPixelY = other.TargetPixelY;
+
+	TargetGridX = other.TargetGridX;
+	TargetGridY = other.TargetGridY;
+
+	MoveSpeed = other.MoveSpeed;
+
+	CurFrame = other.CurFrame;
+	MaxFrame = other.MaxFrame;
+	AniTick = other.AniTick;
+	AniDelay = other.AniDelay;
+
+	IsActionEnd = other.IsActionEnd;
+
+	hSpriteIdle = other.hSpriteIdle;
+	hSpriteWalk = other.hSpriteWalk;
+	hSpriteAttack = other.hSpriteAttack;
+	hSpriteDefend = other.hSpriteDefend;
+	hSpriteSkill = other.hSpriteSkill;
+	hSpriteHit = other.hSpriteHit;
+	hSpriteDead = other.hSpriteDead;
+
+	SpriteInfoIdle = other.SpriteInfoIdle;
+	SpriteInfoWalk = other.SpriteInfoWalk;
+	SpriteInfoAttack = other.SpriteInfoAttack;
+	SpriteInfoDefend = other.SpriteInfoDefend;
+	SpriteInfoSkill = other.SpriteInfoSkill;
+	SpriteInfoHit = other.SpriteInfoHit;
+	SpriteInfoDead = other.SpriteInfoDead;
+
+	other.hSpriteIdle = NULL;
+	other.hSpriteWalk = NULL;
+	other.hSpriteAttack = NULL;
+	other.hSpriteDefend = NULL;
+	other.hSpriteSkill = NULL;
+	other.hSpriteHit = NULL;
+	other.hSpriteDead = NULL;
+}
+
+Character& Character::operator=(Character&& other) noexcept
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+
+	Release();
+
+	CharacterID = other.CharacterID;
+
+	ClassType = other.ClassType;
+	State = other.State;
+	Direction = other.Direction;
+	Element = other.Element;
+
+	Name = std::move(other.Name);
+
+	Stat = other.Stat;
+	Equip = other.Equip;
+
+	Level = other.Level;
+	Exp = other.Exp;
+	Money = other.Money;
+
+	LearnedSkillIDs = std::move(other.LearnedSkillIDs);
+
+	AP = other.AP;
+	DefendRate = other.DefendRate;
+
+	GridPos = other.GridPos;
+	PixelPos = other.PixelPos;
+
+	IsMoving = other.IsMoving;
+
+	WorldPixelX = other.WorldPixelX;
+	WorldPixelY = other.WorldPixelY;
+
+	TargetPixelX = other.TargetPixelX;
+	TargetPixelY = other.TargetPixelY;
+
+	TargetGridX = other.TargetGridX;
+	TargetGridY = other.TargetGridY;
+
+	MoveSpeed = other.MoveSpeed;
+
+	CurFrame = other.CurFrame;
+	MaxFrame = other.MaxFrame;
+	AniTick = other.AniTick;
+	AniDelay = other.AniDelay;
+
+	IsActionEnd = other.IsActionEnd;
+
+	hSpriteIdle = other.hSpriteIdle;
+	hSpriteWalk = other.hSpriteWalk;
+	hSpriteAttack = other.hSpriteAttack;
+	hSpriteDefend = other.hSpriteDefend;
+	hSpriteSkill = other.hSpriteSkill;
+	hSpriteHit = other.hSpriteHit;
+	hSpriteDead = other.hSpriteDead;
+
+	SpriteInfoIdle = other.SpriteInfoIdle;
+	SpriteInfoWalk = other.SpriteInfoWalk;
+	SpriteInfoAttack = other.SpriteInfoAttack;
+	SpriteInfoDefend = other.SpriteInfoDefend;
+	SpriteInfoSkill = other.SpriteInfoSkill;
+	SpriteInfoHit = other.SpriteInfoHit;
+	SpriteInfoDead = other.SpriteInfoDead;
+
+	other.hSpriteIdle = NULL;
+	other.hSpriteWalk = NULL;
+	other.hSpriteAttack = NULL;
+	other.hSpriteDefend = NULL;
+	other.hSpriteSkill = NULL;
+	other.hSpriteHit = NULL;
+	other.hSpriteDead = NULL;
+
+	return *this;
+}
+
+// ============================================================
+// Ï¥àÍ∏∞Ìôî / Ìï¥Ï†ú
+// ============================================================
+
+void Character::Init(ECharacterClass classType, int gridX, int gridY)
+{
+	ClassType = classType;
+
+	State = ECharacterState::Idle;
+	Direction = EDirection::Left;
+	Element = EElement::None;
+
+	GridPos.x = gridX;
+	GridPos.y = gridY;
+
+	PixelPos.x = 0;
+	PixelPos.y = 0;
+
+	IsMoving = false;
+
+	WorldPixelX = 0.0f;
+	WorldPixelY = 0.0f;
+
+	TargetPixelX = 0.0f;
+	TargetPixelY = 0.0f;
+
+	TargetGridX = gridX;
+	TargetGridY = gridY;
+
+	MoveSpeed = 8.0f;
+
+	CurFrame = 0;
+	MaxFrame = CHARACTER_SHEET_COL;
+	AniTick = 0;
+	AniDelay = 8;
+
+	IsActionEnd = false;
+
+	Level = 1;
+	Exp = 0;
+	Money = 0;
+
+	LearnedSkillIDs.clear();
+
+	bHasMoved = false;
+	bHasActed = false;
+
+	InitClassValue();
 }
 
 void Character::Release()
 {
-    if (hSpriteIdle)
-    {
-        DeleteObject(hSpriteIdle);
-        hSpriteIdle = NULL;
-    }
+	HBITMAP handles[7] =
+	{
+		hSpriteIdle,
+		hSpriteWalk,
+		hSpriteAttack,
+		hSpriteDefend,
+		hSpriteSkill,
+		hSpriteHit,
+		hSpriteDead
+	};
 
-    if (hSpriteWalk)
-    {
-        DeleteObject(hSpriteWalk);
-        hSpriteWalk = NULL;
-    }
+	for (int i = 0; i < 7; ++i)
+	{
+		if (handles[i] == NULL)
+		{
+			continue;
+		}
 
-    if (hSpriteAttack)
-    {
-        DeleteObject(hSpriteAttack);
-        hSpriteAttack = NULL;
-    }
+		bool alreadyDeleted = false;
 
-    if (hSpriteDefend)
-    {
-        DeleteObject(hSpriteDefend);
-        hSpriteDefend = NULL;
-    }
+		for (int j = 0; j < i; ++j)
+		{
+			if (handles[i] == handles[j])
+			{
+				alreadyDeleted = true;
+				break;
+			}
+		}
 
-    if (hSpriteSkill)
-    {
-        DeleteObject(hSpriteSkill);
-        hSpriteSkill = NULL;
-    }
+		if (!alreadyDeleted)
+		{
+			DeleteObject(handles[i]);
+		}
+	}
 
-    if (hSpriteHit)
-    {
-        DeleteObject(hSpriteHit);
-        hSpriteHit = NULL;
-    }
+	hSpriteIdle = NULL;
+	hSpriteWalk = NULL;
+	hSpriteAttack = NULL;
+	hSpriteDefend = NULL;
+	hSpriteSkill = NULL;
+	hSpriteHit = NULL;
+	hSpriteDead = NULL;
 
-    if (hSpriteDead)
-    {
-        DeleteObject(hSpriteDead);
-        hSpriteDead = NULL;
-    }
+	ZeroMemory(&SpriteInfoIdle, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoWalk, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoAttack, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoDefend, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
 }
 
-// =====================================================
-// ¡˜æ˜∫∞ ±‚∫ª∞™
-// =====================================================
+// ============================================================
+// ÏßÅÏóÖÎ≥Ñ Í∏∞Î≥∏Í∞í
+// ============================================================
 
 void Character::InitClassValue()
 {
-    switch (ClassType)
-    {
-    case ECharacterClass::Warrior:
-        AP = 3;
-        DefendRate = 0.45f;
+	switch (ClassType)
+	{
+	case ECharacterClass::Warrior:
+		Stat.MaxHP = 130;
+		Stat.CurHP = 130;
 
-        Stat.MaxHP = 130;
-        Stat.CurHP = Stat.MaxHP;
+		Stat.MaxMP = 20;
+		Stat.CurMP = 20;
 
-        Stat.MaxMP = 20;
-        Stat.CurMP = Stat.MaxMP;
+		Stat.STR = 18;
+		Stat.INT = 5;
+		Stat.DEF = 12;
+		Stat.SPD = 7;
 
-        Stat.STR = 16;
-        Stat.INT = 5;
-        Stat.DEF = 12;
-        Stat.SPD = 8;
-        break;
+		AP = 3;
+		DefendRate = 0.5f;
+		Element = EElement::None;
+		break;
 
-    case ECharacterClass::Archer:
-        AP = 4;
-        DefendRate = 0.65f;
+	case ECharacterClass::Archer:
+		Stat.MaxHP = 90;
+		Stat.CurHP = 90;
 
-        Stat.MaxHP = 100;
-        Stat.CurHP = Stat.MaxHP;
+		Stat.MaxMP = 30;
+		Stat.CurMP = 30;
 
-        Stat.MaxMP = 25;
-        Stat.CurMP = Stat.MaxMP;
+		Stat.STR = 14;
+		Stat.INT = 8;
+		Stat.DEF = 7;
+		Stat.SPD = 12;
 
-        Stat.STR = 13;
-        Stat.INT = 7;
-        Stat.DEF = 8;
-        Stat.SPD = 13;
-        break;
+		AP = 4;
+		DefendRate = 0.65f;
+		Element = EElement::Grass;
+		break;
 
-    case ECharacterClass::Mage:
-        AP = 3;
-        DefendRate = 0.75f;
+	case ECharacterClass::Mage:
+		Stat.MaxHP = 75;
+		Stat.CurHP = 75;
 
-        Stat.MaxHP = 80;
-        Stat.CurHP = Stat.MaxHP;
+		Stat.MaxMP = 70;
+		Stat.CurMP = 70;
 
-        Stat.MaxMP = 60;
-        Stat.CurMP = Stat.MaxMP;
+		Stat.STR = 6;
+		Stat.INT = 20;
+		Stat.DEF = 5;
+		Stat.SPD = 8;
 
-        Stat.STR = 5;
-        Stat.INT = 17;
-        Stat.DEF = 5;
-        Stat.SPD = 9;
-        break;
-    }
+		AP = 3;
+		DefendRate = 0.7f;
+		Element = EElement::Fire;
+		break;
+
+	default:
+		Stat.MaxHP = 100;
+		Stat.CurHP = 100;
+
+		Stat.MaxMP = 30;
+		Stat.CurMP = 30;
+
+		Stat.STR = 10;
+		Stat.INT = 10;
+		Stat.DEF = 5;
+		Stat.SPD = 10;
+
+		AP = 3;
+		DefendRate = 0.5f;
+		Element = EElement::None;
+		break;
+	}
 }
 
-// =====================================================
-// Ω∫«¡∂Û¿Ã∆Æ ∑ŒµÂ
-// =====================================================
+// ============================================================
+// Ïä§ÌîÑÎùºÏù¥Ìä∏ Î°úÎìú
+// ============================================================
 
-bool Character::LoadBitmapFromFile(const wchar_t* filePath, HBITMAP& outBitmap, BITMAP& outInfo)
+HBITMAP Character::LoadBitmapFromFile(const std::wstring& filePath, BITMAP* outInfo)
 {
-    outBitmap = (HBITMAP)LoadImageW(
-        NULL,
-        filePath,
-        IMAGE_BITMAP,
-        0,
-        0,
-        LR_LOADFROMFILE | LR_CREATEDIBSECTION
-    );
+	HBITMAP hBitmap = (HBITMAP)LoadImageW(
+		NULL,
+		filePath.c_str(),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_LOADFROMFILE | LR_CREATEDIBSECTION
+	);
 
-    if (outBitmap == NULL)
-    {
-        ZeroMemory(&outInfo, sizeof(BITMAP));
-        return false;
-    }
+	if (hBitmap != NULL && outInfo != nullptr)
+	{
+		GetObject(hBitmap, sizeof(BITMAP), outInfo);
+	}
 
-    GetObject(outBitmap, sizeof(BITMAP), &outInfo);
-    return true;
+	return hBitmap;
+}
+
+std::wstring Character::GetCharacterPrefix() const
+{
+	switch (ClassType)
+	{
+	case ECharacterClass::Warrior:
+		return L"Warrior";
+
+	case ECharacterClass::Archer:
+		return L"Archer";
+
+	case ECharacterClass::Mage:
+		return L"Mage";
+
+	default:
+		return L"Character";
+	}
 }
 
 bool Character::LoadSprites(const std::wstring& folderPath)
 {
-    Release();
+	Release();
 
-    std::wstring prefix;
+	std::wstring basePath = folderPath;
 
-    switch (ClassType)
-    {
-    case ECharacterClass::Warrior:
-        prefix = L"Warrior";
-        break;
+	if (!basePath.empty())
+	{
+		wchar_t lastChar = basePath[basePath.length() - 1];
 
-    case ECharacterClass::Archer:
-        prefix = L"Archer";
-        break;
+		if (lastChar != L'\\' && lastChar != L'/')
+		{
+			basePath += L"\\";
+		}
+	}
 
-    case ECharacterClass::Mage:
-        prefix = L"Mage";
-        break;
-    }
+	std::wstring prefix = GetCharacterPrefix();
 
-    std::wstring basePath = folderPath;
+	hSpriteIdle = LoadBitmapFromFile(basePath + prefix + L"_Idle.bmp", &SpriteInfoIdle);
+	hSpriteWalk = LoadBitmapFromFile(basePath + prefix + L"_Walk.bmp", &SpriteInfoWalk);
+	hSpriteAttack = LoadBitmapFromFile(basePath + prefix + L"_Attack.bmp", &SpriteInfoAttack);
+	hSpriteDefend = LoadBitmapFromFile(basePath + prefix + L"_Defend.bmp", &SpriteInfoDefend);
+	hSpriteSkill = LoadBitmapFromFile(basePath + prefix + L"_Skill.bmp", &SpriteInfoSkill);
+	hSpriteHit = LoadBitmapFromFile(basePath + prefix + L"_Hit.bmp", &SpriteInfoHit);
+	hSpriteDead = LoadBitmapFromFile(basePath + prefix + L"_Dead.bmp", &SpriteInfoDead);
 
-    if (!basePath.empty())
-    {
-        wchar_t lastChar = basePath[basePath.length() - 1];
+	if (hSpriteIdle == NULL)
+	{
+		return false;
+	}
 
-        if (lastChar != L'/' && lastChar != L'\\')
-        {
-            basePath += L"\\";
-        }
-    }
-
-    bool result = true;
-
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Idle.bmp").c_str(), hSpriteIdle, SpriteInfoIdle);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Walk.bmp").c_str(), hSpriteWalk, SpriteInfoWalk);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Attack.bmp").c_str(), hSpriteAttack, SpriteInfoAttack);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Defend.bmp").c_str(), hSpriteDefend, SpriteInfoDefend);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Skill.bmp").c_str(), hSpriteSkill, SpriteInfoSkill);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Hit.bmp").c_str(), hSpriteHit, SpriteInfoHit);
-    result &= LoadBitmapFromFile((basePath + prefix + L"_Dead.bmp").c_str(), hSpriteDead, SpriteInfoDead);
-
-    return result;
+	return true;
 }
 
-// =====================================================
-// «ˆ¿Á ªÛ≈¬ Ω∫«¡∂Û¿Ã∆Æ æÚ±‚
-// =====================================================
+HBITMAP Character::GetSpriteIdle() const
+{
+	return hSpriteIdle;
+}
+
+// ============================================================
+// ÌòÑÏû¨ ÏÉÅÌÉúÏóê ÎßûÎäî Ïä§ÌîÑÎùºÏù¥Ìä∏ Î∞òÌôò
+// ============================================================
 
 HBITMAP Character::GetCurrentSprite() const
 {
-    switch (State)
-    {
-    case ECharacterState::Idle:
-        return hSpriteIdle;
+	switch (State)
+	{
+	case ECharacterState::Idle:
+		if (hSpriteIdle != NULL) return hSpriteIdle;
+		break;
 
-    case ECharacterState::Walk:
-        return hSpriteWalk;
+	case ECharacterState::Walk:
+		if (hSpriteWalk != NULL) return hSpriteWalk;
+		break;
 
-    case ECharacterState::Attack:
-        return hSpriteAttack;
+	case ECharacterState::Attack:
+		if (hSpriteAttack != NULL) return hSpriteAttack;
+		break;
 
-    case ECharacterState::Defend:
-        return hSpriteDefend;
+	case ECharacterState::Defend:
+		if (hSpriteDefend != NULL) return hSpriteDefend;
+		break;
 
-    case ECharacterState::Skill:
-        return hSpriteSkill;
+	case ECharacterState::Skill:
+		if (hSpriteSkill != NULL) return hSpriteSkill;
+		break;
 
-    case ECharacterState::Hit:
-        return hSpriteHit;
+	case ECharacterState::Hit:
+		if (hSpriteHit != NULL) return hSpriteHit;
+		break;
 
-    case ECharacterState::Dead:
-        return hSpriteDead;
-    }
+	case ECharacterState::Dead:
+		if (hSpriteDead != NULL) return hSpriteDead;
+		break;
+	}
 
-    return hSpriteIdle;
+	return hSpriteIdle;
 }
 
-BITMAP Character::GetCurrentSpriteInfo() const
+const BITMAP* Character::GetCurrentSpriteInfo() const
 {
-    switch (State)
-    {
-    case ECharacterState::Idle:
-        return SpriteInfoIdle;
+	switch (State)
+	{
+	case ECharacterState::Idle:
+		if (hSpriteIdle != NULL) return &SpriteInfoIdle;
+		break;
 
-    case ECharacterState::Walk:
-        return SpriteInfoWalk;
+	case ECharacterState::Walk:
+		if (hSpriteWalk != NULL) return &SpriteInfoWalk;
+		break;
 
-    case ECharacterState::Attack:
-        return SpriteInfoAttack;
+	case ECharacterState::Attack:
+		if (hSpriteAttack != NULL) return &SpriteInfoAttack;
+		break;
 
-    case ECharacterState::Defend:
-        return SpriteInfoDefend;
+	case ECharacterState::Defend:
+		if (hSpriteDefend != NULL) return &SpriteInfoDefend;
+		break;
 
-    case ECharacterState::Skill:
-        return SpriteInfoSkill;
+	case ECharacterState::Skill:
+		if (hSpriteSkill != NULL) return &SpriteInfoSkill;
+		break;
 
-    case ECharacterState::Hit:
-        return SpriteInfoHit;
+	case ECharacterState::Hit:
+		if (hSpriteHit != NULL) return &SpriteInfoHit;
+		break;
 
-    case ECharacterState::Dead:
-        return SpriteInfoDead;
-    }
+	case ECharacterState::Dead:
+		if (hSpriteDead != NULL) return &SpriteInfoDead;
+		break;
+	}
 
-    return SpriteInfoIdle;
+	return &SpriteInfoIdle;
 }
-
-// =====================================================
-// πÊ«‚ √≥∏Æ
-// =====================================================
 
 int Character::GetDirectionRow() const
 {
-    switch (Direction)
-    {
-    case EDirection::Down:
-        return 0;
-
-    case EDirection::Left:
-        return 1;
-
-    case EDirection::Right:
-        return 1;
-
-    case EDirection::Up:
-        return 2;
-    }
-
-    return 0;
+	return 0;
 }
 
 bool Character::IsNeedFlip() const
 {
-    // ø¿∏•¬ ¿ª ∫º ∂ß∏∏ ¡¬øÏ π›¿¸.
-    if (Direction == EDirection::Right)
-    {
-        return true;
-    }
-
-    return false;
+	// Í∏∞Î≥∏ Í∞ÄÏ†ï:
+	// ÏõêÎ≥∏ Ï∫êÎ¶≠ÌÑ∞ Ïä§ÌîÑÎùºÏù¥Ìä∏Îäî ÏôºÏ™Ω Î∞©Ìñ• Í∏∞Ï§Ä.
+	// Ïò§Î•∏Ï™Ω Î∞©Ìñ•Ïùº Îïå Ï¢åÏö∞ Î∞òÏ†ÑÌïúÎã§.
+	return Direction == EDirection::Right;
 }
 
 void Character::UpdateMaxFrameByState()
 {
-    MaxFrame = CHARACTER_SHEET_COL;
+	MaxFrame = CHARACTER_SHEET_COL;
 
-    if (CurFrame >= MaxFrame)
-    {
-        CurFrame = 0;
-    }
+	if (MaxFrame <= 0)
+	{
+		MaxFrame = 1;
+	}
+
+	if (CurFrame >= MaxFrame)
+	{
+		CurFrame = 0;
+	}
 }
 
-// =====================================================
-// ∞ªΩ≈ / √‚∑¬
-// =====================================================
+// ============================================================
+// Update / Draw
+// ============================================================
 
 void Character::Update()
 {
-    if (Stat.CurHP <= 0 && State != ECharacterState::Dead)
-    {
-        SetState(ECharacterState::Dead);
-    }
+	if (Stat.CurHP <= 0 && State != ECharacterState::Dead)
+	{
+		Die();
+	}
 
-    AniTick++;
+	if (IsMoving)
+	{
+		float dx = TargetPixelX - WorldPixelX;
+		float dy = TargetPixelY - WorldPixelY;
 
-    if (AniTick < AniDelay)
-    {
-        return;
-    }
+		float dist = sqrtf(dx * dx + dy * dy);
 
-    AniTick = 0;
+		if (dist <= MoveSpeed)
+		{
+			WorldPixelX = TargetPixelX;
+			WorldPixelY = TargetPixelY;
 
-    CurFrame++;
+			GridPos.x = TargetGridX;
+			GridPos.y = TargetGridY;
 
-    if (CurFrame >= MaxFrame)
-    {
-        switch (State)
-        {
-        case ECharacterState::Idle:
-        case ECharacterState::Walk:
-            CurFrame = 0;
-            break;
+			IsMoving = false;
+			SetState(ECharacterState::Idle);
+		}
+		else if (dist > 0.0f)
+		{
+			WorldPixelX += (dx / dist) * MoveSpeed;
+			WorldPixelY += (dy / dist) * MoveSpeed;
+		}
+	}
 
-        case ECharacterState::Attack:
-        case ECharacterState::Defend:
-        case ECharacterState::Skill:
-        case ECharacterState::Hit:
-            CurFrame = MaxFrame - 1;
-            IsActionEnd = true;
-            break;
+	if (State == ECharacterState::Idle)
+	{
+		CurFrame = 0;
+		return;
+	}
 
-        case ECharacterState::Dead:
-            CurFrame = MaxFrame - 1;
-            IsActionEnd = true;
-            break;
-        }
-    }
+	AniTick++;
+
+	if (AniTick < AniDelay)
+	{
+		return;
+	}
+
+	AniTick = 0;
+	CurFrame++;
+
+	if (CurFrame >= MaxFrame)
+	{
+		switch (State)
+		{
+		case ECharacterState::Walk:
+			CurFrame = 0;
+			break;
+
+		case ECharacterState::Attack:
+		case ECharacterState::Defend:
+		case ECharacterState::Skill:
+		case ECharacterState::Hit:
+		case ECharacterState::Dead:
+			CurFrame = MaxFrame - 1;
+			IsActionEnd = true;
+			break;
+
+		default:
+			CurFrame = 0;
+			break;
+		}
+	}
 }
 
-void Character::Draw(HDC hMemDC, HDC hBackDC)
+void Character::Draw(HDC hMemDC, HDC hMemDC1)
 {
-    HBITMAP curSprite = GetCurrentSprite();
-
-    if (curSprite == NULL)
-    {
-        return;
-    }
-
-    int row = GetDirectionRow();
-
-    int srcX = CurFrame * CHARACTER_FRAME_WIDTH;
-    int srcY = row * CHARACTER_FRAME_HEIGHT;
-
-    int dstX = PixelPos.x;
-    int dstY = PixelPos.y;
-
-    int dstW = CHARACTER_FRAME_WIDTH;
-    int dstH = CHARACTER_FRAME_HEIGHT;
-
-    HBITMAP oldBitmap = (HBITMAP)SelectObject(hMemDC, curSprite);
-
-    if (!IsNeedFlip())
-    {
-        TransparentBlt(
-            hBackDC,
-            dstX,
-            dstY,
-            dstW,
-            dstH,
-            hMemDC,
-            srcX,
-            srcY,
-            CHARACTER_FRAME_WIDTH,
-            CHARACTER_FRAME_HEIGHT,
-            CHARACTER_TRANSPARENT_COLOR
-        );
-    }
-    else
-    {
-        // ¡¬øÏ π›¿¸ √≥∏Æ∏¶ ¿ß«— ¿”Ω√ DC / ¿”Ω√ ∫Ò∆Æ∏ 
-        HDC hFlipDC = CreateCompatibleDC(hBackDC);
-        HBITMAP hFlipBitmap = CreateCompatibleBitmap(
-            hBackDC,
-            CHARACTER_FRAME_WIDTH,
-            CHARACTER_FRAME_HEIGHT
-        );
-
-        HBITMAP hOldFlipBitmap = (HBITMAP)SelectObject(hFlipDC, hFlipBitmap);
-
-        // ¿”Ω√ ∫Ò∆Æ∏  πË∞Ê¿ª ∏∂¡®≈∏∑Œ √§øÚ
-        HBRUSH hBrush = CreateSolidBrush(CHARACTER_TRANSPARENT_COLOR);
-        RECT rc;
-        rc.left = 0;
-        rc.top = 0;
-        rc.right = CHARACTER_FRAME_WIDTH;
-        rc.bottom = CHARACTER_FRAME_HEIGHT;
-        FillRect(hFlipDC, &rc, hBrush);
-        DeleteObject(hBrush);
-
-        // StretchBlt¿« ¿Ωºˆ ∆¯¿ª ¿ÃøÎ«ÿº≠ ¡¬øÏ π›¿¸ ∫πªÁ
-        StretchBlt(
-            hFlipDC,
-            CHARACTER_FRAME_WIDTH,
-            0,
-            -CHARACTER_FRAME_WIDTH,
-            CHARACTER_FRAME_HEIGHT,
-            hMemDC,
-            srcX,
-            srcY,
-            CHARACTER_FRAME_WIDTH,
-            CHARACTER_FRAME_HEIGHT,
-            SRCCOPY
-        );
-
-        TransparentBlt(
-            hBackDC,
-            dstX,
-            dstY,
-            dstW,
-            dstH,
-            hFlipDC,
-            0,
-            0,
-            CHARACTER_FRAME_WIDTH,
-            CHARACTER_FRAME_HEIGHT,
-            CHARACTER_TRANSPARENT_COLOR
-        );
-
-        SelectObject(hFlipDC, hOldFlipBitmap);
-        DeleteObject(hFlipBitmap);
-        DeleteDC(hFlipDC);
-    }
-
-    SelectObject(hMemDC, oldBitmap);
+	Draw(hMemDC, hMemDC1, 0, 0);
 }
 
-// =====================================================
-// ªÛ≈¬ / πÊ«‚
-// =====================================================
+void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
+{
+	HBITMAP curSprite = GetCurrentSprite();
+	const BITMAP* curInfo = GetCurrentSpriteInfo();
+
+	if (curSprite == NULL || curInfo == nullptr)
+	{
+		return;
+	}
+
+	if (curInfo->bmWidth <= 0 || curInfo->bmHeight <= 0)
+	{
+		return;
+	}
+
+	// Í∏∞Î≥∏ÏùÄ 4Ïó¥ Í∏∞Ï§Ä
+	int frameW = curInfo->bmWidth / CHARACTER_SHEET_COL;
+
+	if (frameW <= 0)
+	{
+		return;
+	}
+
+	// ÌòÑÏû¨ ÌîÑÎ°úÏ†ùÌä∏ ÏûÑÏãú Î¶¨ÏÜåÏä§Îäî 4x3 Íµ¨Ï°∞:
+	// 1448 x 1086 => frameW 362, frameH 362
+	//
+	// ÎÇòÏ§ëÏóê 1x4 Íµ¨Ï°∞Î°ú Î∞îÍæ∏Î©¥:
+	// Ï†ÑÏ≤¥ ÎÜíÏù¥ = frameH, rowCount = 1
+	int rowCount = 1;
+
+	if (curInfo->bmHeight % 3 == 0)
+	{
+		int candidateFrameH = curInfo->bmHeight / 3;
+
+		// 4x3 ÏûÑÏãú Ïä§ÌîÑÎùºÏù¥Ìä∏Îäî ÌîÑÎ†àÏûÑÏù¥ Ï†ïÏÇ¨Í∞ÅÌòï 362x362Ïù¥ÎØÄÎ°ú
+		// frameWÏôÄ candidateFrameHÍ∞Ä Í∞ôÏúºÎ©¥ 3Ìñâ ÏãúÌä∏Î°ú ÌåêÎã®
+		if (candidateFrameH == frameW)
+		{
+			rowCount = 3;
+		}
+	}
+
+	int frameH = curInfo->bmHeight / rowCount;
+
+	if (frameH <= 0)
+	{
+		return;
+	}
+
+	if (CurFrame < 0)
+	{
+		CurFrame = 0;
+	}
+
+	if (CurFrame >= CHARACTER_SHEET_COL)
+	{
+		CurFrame = CHARACTER_SHEET_COL - 1;
+	}
+
+	if (drawW <= 0)
+	{
+		drawW = frameW;
+	}
+
+	if (drawH <= 0)
+	{
+		drawH = frameH;
+	}
+
+	// 4x3Ïù¥Î©¥ Í∞ÄÏö¥Îç∞ ÌñâÏù¥ Ï¢åÏö∞ Î∞©Ìñ•Ïù¥ÎùºÍ≥† Î≥¥Í≥† ÏÇ¨Ïö©
+	// 1x4Ïù¥Î©¥ 0Ìñâ ÏÇ¨Ïö©
+	int srcRow = 0;
+
+	if (rowCount == 3)
+	{
+		srcRow = 1;
+	}
+
+	int srcX = CurFrame * frameW;
+	int srcY = srcRow * frameH;
+
+	int dstX = PixelPos.x;
+	int dstY = PixelPos.y;
+
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC1, curSprite);
+
+	if (!IsNeedFlip())
+	{
+		TransparentBlt(
+			hMemDC,
+			dstX,
+			dstY,
+			drawW,
+			drawH,
+			hMemDC1,
+			srcX,
+			srcY,
+			frameW,
+			frameH,
+			CHARACTER_TRANSPARENT_COLOR
+		);
+	}
+	else
+	{
+		HDC hFlipDC = CreateCompatibleDC(hMemDC);
+
+		HBITMAP hFlipBitmap = CreateCompatibleBitmap(
+			hMemDC,
+			frameW,
+			frameH
+		);
+
+		HBITMAP hOldFlipBitmap = (HBITMAP)SelectObject(hFlipDC, hFlipBitmap);
+
+		HBRUSH hBrush = CreateSolidBrush(CHARACTER_TRANSPARENT_COLOR);
+
+		RECT rc;
+		rc.left = 0;
+		rc.top = 0;
+		rc.right = frameW;
+		rc.bottom = frameH;
+
+		FillRect(hFlipDC, &rc, hBrush);
+		DeleteObject(hBrush);
+
+		StretchBlt(
+			hFlipDC,
+			frameW,
+			0,
+			-frameW,
+			frameH,
+			hMemDC1,
+			srcX,
+			srcY,
+			frameW,
+			frameH,
+			SRCCOPY
+		);
+
+		TransparentBlt(
+			hMemDC,
+			dstX,
+			dstY,
+			drawW,
+			drawH,
+			hFlipDC,
+			0,
+			0,
+			frameW,
+			frameH,
+			CHARACTER_TRANSPARENT_COLOR
+		);
+
+		SelectObject(hFlipDC, hOldFlipBitmap);
+		DeleteObject(hFlipBitmap);
+		DeleteDC(hFlipDC);
+	}
+
+	SelectObject(hMemDC1, hOldBitmap);
+}
+
+// ============================================================
+// ÏÉÅÌÉú
+// ============================================================
 
 void Character::SetState(ECharacterState newState)
 {
-    if (State == newState)
-    {
-        return;
-    }
+	if (State == newState)
+	{
+		return;
+	}
 
-    State = newState;
+	State = newState;
 
-    CurFrame = 0;
-    AniTick = 0;
-    IsActionEnd = false;
+	CurFrame = 0;
+	AniTick = 0;
+	IsActionEnd = false;
 
-    UpdateMaxFrameByState();
+	UpdateMaxFrameByState();
 }
 
 ECharacterState Character::GetState() const
 {
-    return State;
+	return State;
 }
 
 void Character::SetDirection(EDirection newDirection)
 {
-    Direction = newDirection;
+	Direction = newDirection;
 }
 
 EDirection Character::GetDirection() const
 {
-    return Direction;
+	return Direction;
 }
 
 bool Character::GetIsActionEnd() const
 {
-    return IsActionEnd;
+	return IsActionEnd;
 }
 
-void Character::SetIsActionEnd(bool newValue)
+void Character::SetIsActionEnd(bool value)
 {
-    IsActionEnd = newValue;
+	IsActionEnd = value;
 }
 
-// =====================================================
-// ¿ßƒ°
-// =====================================================
-
-void Character::SetGridPos(int x, int y)
-{
-    GridPos.x = x;
-    GridPos.y = y;
-}
-
-Location Character::GetGridPos() const
-{
-    return GridPos;
-}
-
-void Character::SetPixelPos(int x, int y)
-{
-    PixelPos.x = x;
-    PixelPos.y = y;
-}
-
-Location Character::GetPixelPos() const
-{
-    return PixelPos;
-}
-
-// =====================================================
-// ±‚∫ª ¡§∫∏
-// =====================================================
+// ============================================================
+// ID / Ïù¥Î¶Ñ / ÏßÅÏóÖ / ÏÜçÏÑ±
+// ============================================================
 
 void Character::SetCharacterID(int id)
 {
-    CharacterID = id;
+	CharacterID = id;
 }
 
 int Character::GetCharacterID() const
 {
-    return CharacterID;
+	return CharacterID;
+}
+
+void Character::SetName(const std::wstring& newName)
+{
+	Name = newName;
+}
+
+std::wstring Character::GetName() const
+{
+	return Name;
 }
 
 ECharacterClass Character::GetClassType() const
 {
-    return ClassType;
+	return ClassType;
 }
 
 void Character::SetElement(EElement newElement)
 {
-    Element = newElement;
+	Element = newElement;
 }
 
 EElement Character::GetElement() const
 {
-    return Element;
+	return Element;
 }
 
-// =====================================================
-// Ω∫≈» / º∫¿Â
-// =====================================================
+// ============================================================
+// ÏúÑÏπò
+// ============================================================
+
+void Character::SetGridPos(int gx, int gy)
+{
+	GridPos.x = gx;
+	GridPos.y = gy;
+}
+
+Location Character::GetGridPos() const
+{
+	return GridPos;
+}
+
+void Character::SetPixelPos(int px, int py)
+{
+	PixelPos.x = px;
+	PixelPos.y = py;
+}
+
+Location Character::GetPixelPos() const
+{
+	return PixelPos;
+}
+
+void Character::SyncWorldPixelToGrid(int tileSize)
+{
+	WorldPixelX = static_cast<float>(GridPos.x * tileSize);
+	WorldPixelY = static_cast<float>(GridPos.y * tileSize);
+
+	TargetPixelX = WorldPixelX;
+	TargetPixelY = WorldPixelY;
+
+	TargetGridX = GridPos.x;
+	TargetGridY = GridPos.y;
+}
+
+Location Character::GetWorldPixelPos(int tileSize) const
+{
+	Location result;
+
+	if (IsMoving)
+	{
+		result.x = static_cast<int>(WorldPixelX);
+		result.y = static_cast<int>(WorldPixelY);
+	}
+	else
+	{
+		result.x = GridPos.x * tileSize;
+		result.y = GridPos.y * tileSize;
+	}
+
+	return result;
+}
+
+bool Character::StartMoveToGrid(int targetX, int targetY, int tileSize)
+{
+	if (IsMoving)
+	{
+		return false;
+	}
+
+	if (!IsInMoveRange(targetX, targetY))
+	{
+		return false;
+	}
+
+	TargetGridX = targetX;
+	TargetGridY = targetY;
+
+	WorldPixelX = static_cast<float>(GridPos.x * tileSize);
+	WorldPixelY = static_cast<float>(GridPos.y * tileSize);
+
+	TargetPixelX = static_cast<float>(targetX * tileSize);
+	TargetPixelY = static_cast<float>(targetY * tileSize);
+
+	LookAtGrid(targetX, targetY);
+
+	IsMoving = true;
+	SetState(ECharacterState::Walk);
+
+	return true;
+}
+
+bool Character::GetIsMoving() const
+{
+	return IsMoving;
+}
+
+bool Character::MoveToGrid(int targetX, int targetY)
+{
+	if (!IsInMoveRange(targetX, targetY))
+	{
+		return false;
+	}
+
+	LookAtGrid(targetX, targetY);
+
+	GridPos.x = targetX;
+	GridPos.y = targetY;
+
+	IsMoving = false;
+
+	SyncWorldPixelToGrid(1);
+
+	return true;
+}
+
+// ============================================================
+// Ïä§ÌÉØ
+// ============================================================
 
 CharacterStat Character::GetStat() const
 {
-    return Stat;
+	return Stat;
 }
 
 void Character::SetStat(const CharacterStat& newStat)
 {
-    Stat = newStat;
+	Stat = newStat;
+
+	if (Stat.MaxHP < 1)
+	{
+		Stat.MaxHP = 1;
+	}
+
+	if (Stat.CurHP > Stat.MaxHP)
+	{
+		Stat.CurHP = Stat.MaxHP;
+	}
+
+	if (Stat.CurHP < 0)
+	{
+		Stat.CurHP = 0;
+	}
+
+	if (Stat.MaxMP < 0)
+	{
+		Stat.MaxMP = 0;
+	}
+
+	if (Stat.CurMP > Stat.MaxMP)
+	{
+		Stat.CurMP = Stat.MaxMP;
+	}
+
+	if (Stat.CurMP < 0)
+	{
+		Stat.CurMP = 0;
+	}
+}
+
+int Character::GetHP() const
+{
+	return Stat.CurHP;
+}
+
+int Character::GetMaxHP() const
+{
+	return Stat.MaxHP;
+}
+
+int Character::GetMP() const
+{
+	return Stat.CurMP;
+}
+
+int Character::GetMaxMP() const
+{
+	return Stat.MaxMP;
 }
 
 int Character::GetLevel() const
 {
-    return Level;
+	return Level;
 }
 
 void Character::SetLevel(int newLevel)
 {
-    if (newLevel < 1)
-    {
-        newLevel = 1;
-    }
+	Level = newLevel;
 
-    Level = newLevel;
+	if (Level < 1)
+	{
+		Level = 1;
+	}
 }
 
 int Character::GetExp() const
 {
-    return Exp;
+	return Exp;
 }
 
 void Character::AddExp(int addExp)
 {
-    if (addExp <= 0)
-    {
-        return;
-    }
+	if (addExp <= 0)
+	{
+		return;
+	}
 
-    Exp += addExp;
+	Exp += addExp;
 
-    // ¿œ¥‹ ¿”Ω√ ∑π∫ßæ˜ ∞¯Ωƒ
-    while (Exp >= Level * 100)
-    {
-        Exp -= Level * 100;
-        Level++;
+	while (Exp >= Level * 100)
+	{
+		Exp -= Level * 100;
+		Level++;
 
-        Stat.STR += 2;
-        Stat.INT += 2;
-        Stat.DEF += 1;
-        Stat.SPD += 1;
+		Stat.MaxHP += 10;
+		Stat.CurHP = Stat.MaxHP;
 
-        Stat.MaxHP = 80 + Stat.STR * 5;
-        Stat.MaxMP = 20 + Stat.INT * 3;
+		Stat.MaxMP += 5;
+		Stat.CurMP = Stat.MaxMP;
 
-        Stat.CurHP = Stat.MaxHP;
-        Stat.CurMP = Stat.MaxMP;
-    }
+		Stat.STR += 2;
+		Stat.INT += 2;
+		Stat.DEF += 1;
+		Stat.SPD += 1;
+	}
 }
 
 int Character::GetMoney() const
 {
-    return Money;
+	return Money;
 }
 
 void Character::AddMoney(int addMoney)
 {
-    if (addMoney <= 0)
-    {
-        return;
-    }
+	if (addMoney <= 0)
+	{
+		return;
+	}
 
-    Money += addMoney;
+	Money += addMoney;
 }
 
 bool Character::UseMoney(int useMoney)
 {
-    if (useMoney <= 0)
-    {
-        return true;
-    }
+	if (useMoney <= 0)
+	{
+		return true;
+	}
 
-    if (Money < useMoney)
-    {
-        return false;
-    }
+	if (Money < useMoney)
+	{
+		return false;
+	}
 
-    Money -= useMoney;
-    return true;
+	Money -= useMoney;
+
+	return true;
 }
-
-// =====================================================
-// ¿Â∫Ò
-// =====================================================
-
-CharacterEquipment Character::GetEquipment() const
-{
-    return Equip;
-}
-
-void Character::SetEquipment(const CharacterEquipment& newEquip)
-{
-    Equip = newEquip;
-}
-
-void Character::SetWeaponID(int itemID)
-{
-    Equip.WeaponID = itemID;
-}
-
-void Character::SetArmorID(int itemID)
-{
-    Equip.ArmorID = itemID;
-}
-
-void Character::SetAccessoryID(int itemID)
-{
-    Equip.AccessoryID = itemID;
-}
-
-// =====================================================
-// Ω∫≈≥
-// =====================================================
-
-void Character::AddSkillID(int skillID)
-{
-    if (!HasSkillID(skillID))
-    {
-        LearnedSkillIDs.push_back(skillID);
-    }
-}
-
-bool Character::HasSkillID(int skillID) const
-{
-    for (int id : LearnedSkillIDs)
-    {
-        if (id == skillID)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-std::vector<int> Character::GetLearnedSkillIDs() const
-{
-    return LearnedSkillIDs;
-}
-
-// =====================================================
-// ¿Ãµø ∞¸∑√
-// =====================================================
 
 int Character::GetAP() const
 {
-    return AP;
+	return AP;
 }
 
 void Character::SetAP(int newAP)
 {
-    if (newAP < 0)
-    {
-        newAP = 0;
-    }
+	AP = newAP;
 
-    AP = newAP;
+	if (AP < 0)
+	{
+		AP = 0;
+	}
+}
+
+// ============================================================
+// Ïû•ÎπÑ
+// ============================================================
+
+CharacterEquipment Character::GetEquipment() const
+{
+	return Equip;
+}
+
+void Character::SetEquipment(const CharacterEquipment& newEquipment)
+{
+	Equip = newEquipment;
+}
+
+// ============================================================
+// Ïä§ÌÇ¨
+// ============================================================
+
+void Character::AddSkillID(int skillID)
+{
+	for (int id : LearnedSkillIDs)
+	{
+		if (id == skillID)
+		{
+			return;
+		}
+	}
+
+	LearnedSkillIDs.push_back(skillID);
+}
+
+bool Character::HasSkillID(int skillID) const
+{
+	for (int id : LearnedSkillIDs)
+	{
+		if (id == skillID)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+std::vector<int> Character::GetLearnedSkillIDs() const
+{
+	return LearnedSkillIDs;
+}
+
+// ============================================================
+// Ï†ÑÌà¨ ÌåêÏ†ï
+// ============================================================
+
+bool Character::IsAlive() const
+{
+	return Stat.CurHP > 0;
 }
 
 bool Character::IsInMoveRange(int targetX, int targetY) const
 {
-    int dx = targetX - GridPos.x;
-    int dy = targetY - GridPos.y;
+	int dx = std::abs(targetX - GridPos.x);
+	int dy = std::abs(targetY - GridPos.y);
 
-    int distSquare = dx * dx + dy * dy;
-
-    return distSquare <= AP * AP;
-}
-
-void Character::MoveToGrid(int targetX, int targetY)
-{
-    if (!IsInMoveRange(targetX, targetY))
-    {
-        return;
-    }
-
-    GridPos.x = targetX;
-    GridPos.y = targetY;
-
-    // Ω«¡¶ «»ºø ¡¬«• ∫Ø»Ø¿∫ ∏  ≈∏¿œ ≈©±‚ ¡§«ÿ¡¯ µ⁄ ø¨∞·«“ øπ¡§
-
-    SetState(ECharacterState::Walk);
-}
-
-// =====================================================
-// ∞¯∞› / πÊæÓ / ««∞›
-// =====================================================
-
-bool Character::IsAlive() const
-{
-    return Stat.CurHP > 0;
+	return dx + dy <= AP;
 }
 
 bool Character::IsInAttackRange(const Character& target) const
 {
-    Location targetPos = target.GetGridPos();
+	Location targetPos = target.GetGridPos();
 
-    int dx = targetPos.x - GridPos.x;
-    int dy = targetPos.y - GridPos.y;
+	return IsInAttackRangeByGrid(targetPos.x, targetPos.y);
+}
 
-    int dist = abs(dx) + abs(dy);
+bool Character::IsInAttackRangeByGrid(int targetX, int targetY) const
+{
+	int dx = std::abs(targetX - GridPos.x);
+	int dy = std::abs(targetY - GridPos.y);
 
-    int attackRange = 1;
+	int attackRange = 1;
 
-    switch (ClassType)
-    {
-    case ECharacterClass::Warrior:
-        attackRange = 1;
-        break;
+	switch (ClassType)
+	{
+	case ECharacterClass::Warrior:
+		attackRange = 1;
+		break;
 
-    case ECharacterClass::Archer:
-        attackRange = 3;
-        break;
+	case ECharacterClass::Archer:
+		attackRange = 3;
+		break;
 
-    case ECharacterClass::Mage:
-        attackRange = 2;
-        break;
-    }
+	case ECharacterClass::Mage:
+		attackRange = 2;
+		break;
 
-    return dist <= attackRange;
+	default:
+		attackRange = 1;
+		break;
+	}
+
+	return dx + dy <= attackRange;
 }
 
 int Character::CalcAttackDamage(const Character& target) const
 {
-    CharacterStat targetStat = target.GetStat();
+	CharacterStat targetStat = target.GetStat();
 
-    int damage = Stat.STR * 2 - targetStat.DEF;
+	int damage = Stat.STR * 2 - targetStat.DEF;
 
-    if (damage < 1)
-    {
-        damage = 1;
-    }
+	if (damage < 1)
+	{
+		damage = 1;
+	}
 
-    return damage;
+	return damage;
 }
 
-int Character::CalcSkillDamage(const Character& target, int skillID) const
+int Character::CalcSkillDamage(const Character& target) const
 {
-    CharacterStat targetStat = target.GetStat();
+	CharacterStat targetStat = target.GetStat();
 
-    // Skill µ•πÃ¡ˆ ¿”Ω√ ∞¯Ωƒ
-    int damage = Stat.INT * 3 - targetStat.DEF;
+	int damage = Stat.INT * 2 - targetStat.DEF;
 
-    if (damage < 1)
-    {
-        damage = 1;
-    }
+	if (damage < 1)
+	{
+		damage = 1;
+	}
 
-    return damage;
+	return damage;
 }
 
 void Character::GetDamage(int damage)
 {
-    if (damage <= 0)
-    {
-        return;
-    }
+	if (State == ECharacterState::Dead)
+	{
+		return;
+	}
 
-    if (State == ECharacterState::Defend)
-    {
-        damage = static_cast<int>(damage * DefendRate);
+	if (damage < 0)
+	{
+		damage = 0;
+	}
 
-        if (damage < 1)
-        {
-            damage = 1;
-        }
-    }
+	if (State == ECharacterState::Defend)
+	{
+		damage = static_cast<int>(damage * DefendRate);
+	}
 
-    Stat.CurHP -= damage;
+	Stat.CurHP -= damage;
 
-    if (Stat.CurHP <= 0)
-    {
-        Stat.CurHP = 0;
-        SetState(ECharacterState::Dead);
-    }
-    else
-    {
-        SetState(ECharacterState::Hit);
-    }
+	if (Stat.CurHP <= 0)
+	{
+		Stat.CurHP = 0;
+		Die();
+	}
+	else
+	{
+		SetState(ECharacterState::Hit);
+	}
+}
+
+void Character::Die()
+{
+	Stat.CurHP = 0;
+	IsMoving = false;
+
+	SetState(ECharacterState::Dead);
 }
 
 float Character::GetDefendRate() const
 {
-    return DefendRate;
+	return DefendRate;
 }
 
-void Character::SetDefendRate(float newRate)
+void Character::SetDefendRate(float rate)
 {
-    if (newRate < 0.0f)
-    {
-        newRate = 0.0f;
-    }
+	DefendRate = rate;
 
-    if (newRate > 1.0f)
-    {
-        newRate = 1.0f;
-    }
+	if (DefendRate < 0.0f)
+	{
+		DefendRate = 0.0f;
+	}
 
-    DefendRate = newRate;
+	if (DefendRate > 1.0f)
+	{
+		DefendRate = 1.0f;
+	}
+}
+
+// ============================================================
+// Î∞©Ìñ• Î≥¥Ï°∞
+// ============================================================
+
+void Character::LookAtGrid(int targetX, int targetY)
+{
+	int dx = targetX - GridPos.x;
+
+	if (dx < 0)
+	{
+		SetDirection(EDirection::Left);
+	}
+	else if (dx > 0)
+	{
+		SetDirection(EDirection::Right);
+	}
 }

@@ -9,6 +9,7 @@ UWidget::UWidget() {
 	Size.sY = 50;
 
 	IsPointed = false;
+	bVisible = true;
 
 	AniCount = 0;
 	CurAni = 0;
@@ -22,7 +23,6 @@ void UWidget::Draw(HDC hMemDC, HDC hMemDC1) {
 
 }
 void UWidget::Update() {
-	//애니메이션 등등
 }
 UWidget* UWidget::FindWidgetUnderMouse(int MouseX, int MouseY) {
 	if (ContainsPoint(MouseX, MouseY)) {
@@ -32,7 +32,6 @@ UWidget* UWidget::FindWidgetUnderMouse(int MouseX, int MouseY) {
 }
 
 
-//오버라이드 안해도 되는 함수들
 void UWidget::SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr) {
 	AniCount = FrameStr.size();
 	bBitmap.resize(AniCount);
@@ -54,12 +53,18 @@ bool UWidget::GetIsPointed() {
 
 bool UWidget::ContainsPoint(int MouseX, int MouseY) {
 	RECT rects = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-	if ((rects.left < MouseX && MouseX < rects.right) && rects.top < MouseY && MouseY < rects.bottom) {
-		SetIsPointed(true);
+	if ((rects.left <= MouseX && MouseX <= rects.right) && rects.top <= MouseY && MouseY <= rects.bottom) {
 		return true;
 	}
-	SetIsPointed(false);
 	return false;
+}
+
+void UWidget::UpdateMouseHover(int MouseX, int MouseY) {
+	if (!bVisible) {
+		IsPointed = false;
+		return;
+	}
+	IsPointed = ContainsPoint(MouseX, MouseY);
 }
 
 void UWidget::SetLocation(int nX, int nY) {
@@ -70,6 +75,13 @@ Location UWidget::GetLocation() {
 	return Loc;
 }
 
+void UWidget::SetSize(int sX, int sY) {
+	Size.sX = sX;
+	Size.sY = sY;
+}
+BuSIZE UWidget::GetSize() {
+	return Size;
+}
 
 void UWidget::SetUIID(int New) {
 	UI_ID = New;

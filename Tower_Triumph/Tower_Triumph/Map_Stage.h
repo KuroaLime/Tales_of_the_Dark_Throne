@@ -1,29 +1,37 @@
 #pragma once
 #include"CStage.h"
-#include"AButton.h"
 #include"ACamera.h"
-
-#define buttonCount 5
-
-const Location ButtonLocs[buttonCount] = { {-200,0},{200,},{0,200},{0,-200},{0,0} };
+#include"URegionMarker.h"
+#include"URegionInfoPopup.h"
+#include"UMainMenuPopup.h"
+#include"ULocationIndicator.h"
+#include"UCanvasPanel.h"
+#include"UImage.h"
+#include "TeamManager.h"
 
 class Map_Stage : public CStage
 {
 private:
-	
 	ACamera* Camera;
 
-	std::vector<AButton> Buttons;
+	std::vector<URegionMarker*> Markers;
+	std::vector<class AItemBase*> stageItems;
+	URegionInfoPopup* infoPopup;
+	UMainMenuPopup* mainMenu;
+	ULocationIndicator* locationUI;
+	UCanvasPanel screenUI;
 
-	int SelectionButton;
+	class UMouseMark* MouseMark;
+	int NextStageID;
 public:
 	Map_Stage();
+	virtual ~Map_Stage();
 	virtual void Init(HWND hWnd, HINSTANCE const g_hInst);
 	virtual void Update(HWND hWnd);
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
 	virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	virtual void Comp_NextStage(int ID);
-	virtual void BackgroundMove(int x, int y){};
+	virtual void BackgroundMove(int x, int y) override;
 };
 

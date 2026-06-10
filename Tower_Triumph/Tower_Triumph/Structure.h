@@ -1,5 +1,6 @@
 #pragma once
-//#include <windows.h>
+#include <windows.h>
+#include <tchar.h>
 
 struct Location {
 	int x;
@@ -15,6 +16,7 @@ struct Tile {
 	int type;
 	int height;
 };
+
 struct MapConfig {
 	int X;
 	int Y;
@@ -22,4 +24,33 @@ struct MapConfig {
 	int TILE_H;
 
 	TCHAR mapName[256];
+};
+
+// Character.h에서 이관
+struct CharacterStat
+{
+    int MaxHP;
+    int CurHP;
+
+    int MaxMP;
+    int CurMP;
+
+    int STR;
+    int INT;
+    int DEF;
+    int SPD;
+
+    CharacterStat()
+    {
+        MaxHP = 100;
+        CurHP = 100;
+
+        MaxMP = 30;
+        CurMP = 30;
+
+        STR = 10;
+        INT = 10;
+        DEF = 5;
+        SPD = 10;
+    }
 };
