@@ -5,6 +5,7 @@
 #include "STurnTimeline.h"
 #include "UTurnOrderPanel.h"
 #include "UBattleActionMenu.h"
+#include "BattleMapData.h"
 
 #include <vector>
 
@@ -34,11 +35,30 @@ private:
     int W;
     int H;
 
-    // ̵ ִϸ̼    ѱ ٸ  
     Character* MovingUnit;
-
-    // /ǰ  ׼ ִϸ̼   ٸ  
     Character* ActingUnit;
+
+    int HoverGridX;
+    int HoverGridY;
+
+    std::vector<Location> PreviewMovePath;
+    std::vector<Location> ActiveMovePath;
+    int ActiveMoveIndex;
+
+    SBattleMapData CurrentMap;
+    std::vector<std::vector<ETileType>> TileMap;
+
+    struct DamageText
+    {
+        int x;
+        int y;
+        int value;
+        int life;
+        int maxLife;
+        COLORREF color;
+    };
+
+    std::vector<DamageText> DamageTexts;
 
 private:
     bool IsInsideGrid(int gx, int gy) const;
@@ -51,18 +71,41 @@ private:
     bool FindBestMoveTileToward(Character* unit, Character* target, int& outX, int& outY) const;
     void ProcessEnemyTurn();
 
+    bool BuildMovePath(Character* unit, int targetX, int targetY, std::vector<Location>& outPath) const;
+    bool StartActiveMovePath(Character* unit, const std::vector<Location>& path);
+    void ClearMovePath();
+    void UpdatePreviewMovePathByMouse(int mouseX, int mouseY);
+
+    void LoadBattleMap(EBattleMapId mapId);
+
+    ETileType GetTileType(int gx, int gy) const;
+    bool IsBlockedTile(int gx, int gy, Character* unit = nullptr) const;
+    bool IsDamageTile(int gx, int gy) const;
+    int GetTileDamage(int gx, int gy) const;
+    COLORREF GetTileOverlayColor(ETileType type) const;
+
+    void ApplyTileEffect(Character* unit);
+    void DrawTileOverlay(HDC hMemDC);
+    void DrawBlockedMoveRange(HDC hMemDC);
+
+    void AddDamageText(Character* target, int damage, COLORREF color);
+    void UpdateDamageTexts();
+    void DrawDamageTexts(HDC hMemDC);
+
     void DrawBackground(HDC hMemDC, HDC hMemDC1);
     void DrawGrid(HDC hMemDC);
     void DrawMoveRange(HDC hMemDC);
     void DrawAttackRange(HDC hMemDC);
+    void DrawMoveArrow(HDC hMemDC);
     void DrawUnit(HDC hMemDC, HDC hMemDC1, Character* unit, bool isEnemy);
+
+    void DrawArrowPolyline(HDC hMemDC, const std::vector<POINT>& points, COLORREF color, int width);
 
     void FocusCameraOnGrid(int gx, int gy);
 
     int GetOffsetX() const;
     int GetOffsetY() const;
 
-    // 메뉴 콜백
     void OnMenuMove();
     void OnMenuAttack();
     void OnMenuSkill();
@@ -84,11 +127,9 @@ public:
     virtual void Comp_NextStage(int ID);
     virtual void BackgroundMove(int x, int y) override;
 
-    // 카메라 추적 관련
     void FocusCameraOnWorldPos(int wx, int wy);
 
 private:
-    // 부드러운 카메라 이동을 위한 내부 좌표
     float camPosX;
     float camPosY;
 };

@@ -48,6 +48,9 @@ Character::Character()
 
 	IsActionEnd = false;
 
+	bHasMoved = false;
+	bHasActed = false;
+
 	hSpriteIdle = NULL;
 	hSpriteWalk = NULL;
 	hSpriteAttack = NULL;
@@ -120,6 +123,8 @@ Character::Character(Character&& other) noexcept
 	AniDelay = other.AniDelay;
 
 	IsActionEnd = other.IsActionEnd;
+	bHasMoved = other.bHasMoved;
+	bHasActed = other.bHasActed;
 
 	hSpriteIdle = other.hSpriteIdle;
 	hSpriteWalk = other.hSpriteWalk;
@@ -198,6 +203,8 @@ Character& Character::operator=(Character&& other) noexcept
 	AniDelay = other.AniDelay;
 
 	IsActionEnd = other.IsActionEnd;
+	bHasMoved = other.bHasMoved;
+	bHasActed = other.bHasActed;
 
 	hSpriteIdle = other.hSpriteIdle;
 	hSpriteWalk = other.hSpriteWalk;
@@ -336,76 +343,76 @@ void Character::Release()
 
 void Character::InitClassValue()
 {
+	CharacterStat newStat;
+
 	switch (ClassType)
 	{
 	case ECharacterClass::Warrior:
-		Stat.MaxHP = 130;
-		Stat.CurHP = 130;
-
-		Stat.MaxMP = 20;
-		Stat.CurMP = 20;
-
-		Stat.STR = 18;
-		Stat.INT = 5;
-		Stat.DEF = 12;
-		Stat.SPD = 7;
+		newStat.MaxHP = 150;
+		newStat.CurHP = 150;
+		newStat.MaxMP = 20;
+		newStat.CurMP = 20;
+		newStat.STR = 22;
+		newStat.INT = 4;
+		newStat.DEF = 15;
+		newStat.SPD = 8;
 
 		AP = 3;
-		DefendRate = 0.5f;
+		DefendRate = 0.45f;
 		Element = EElement::None;
+		MoveSpeed = 7.5f;
 		break;
 
 	case ECharacterClass::Archer:
-		Stat.MaxHP = 90;
-		Stat.CurHP = 90;
-
-		Stat.MaxMP = 30;
-		Stat.CurMP = 30;
-
-		Stat.STR = 14;
-		Stat.INT = 8;
-		Stat.DEF = 7;
-		Stat.SPD = 12;
+		newStat.MaxHP = 100;
+		newStat.CurHP = 100;
+		newStat.MaxMP = 30;
+		newStat.CurMP = 30;
+		newStat.STR = 16;
+		newStat.INT = 8;
+		newStat.DEF = 7;
+		newStat.SPD = 16;
 
 		AP = 4;
 		DefendRate = 0.65f;
 		Element = EElement::Grass;
+		MoveSpeed = 9.0f;
 		break;
 
 	case ECharacterClass::Mage:
-		Stat.MaxHP = 75;
-		Stat.CurHP = 75;
-
-		Stat.MaxMP = 70;
-		Stat.CurMP = 70;
-
-		Stat.STR = 6;
-		Stat.INT = 20;
-		Stat.DEF = 5;
-		Stat.SPD = 8;
+		newStat.MaxHP = 80;
+		newStat.CurHP = 80;
+		newStat.MaxMP = 80;
+		newStat.CurMP = 80;
+		newStat.STR = 6;
+		newStat.INT = 26;
+		newStat.DEF = 4;
+		newStat.SPD = 10;
 
 		AP = 3;
-		DefendRate = 0.7f;
+		DefendRate = 0.75f;
 		Element = EElement::Fire;
+		MoveSpeed = 8.0f;
 		break;
 
 	default:
-		Stat.MaxHP = 100;
-		Stat.CurHP = 100;
-
-		Stat.MaxMP = 30;
-		Stat.CurMP = 30;
-
-		Stat.STR = 10;
-		Stat.INT = 10;
-		Stat.DEF = 5;
-		Stat.SPD = 10;
+		newStat.MaxHP = 100;
+		newStat.CurHP = 100;
+		newStat.MaxMP = 30;
+		newStat.CurMP = 30;
+		newStat.STR = 10;
+		newStat.INT = 10;
+		newStat.DEF = 5;
+		newStat.SPD = 10;
 
 		AP = 3;
 		DefendRate = 0.5f;
 		Element = EElement::None;
+		MoveSpeed = 8.0f;
 		break;
 	}
+
+	Stat = newStat;
 }
 
 // ============================================================
@@ -1125,16 +1132,47 @@ void Character::AddExp(int addExp)
 		Exp -= Level * 100;
 		Level++;
 
-		Stat.MaxHP += 10;
+		switch (ClassType)
+		{
+		case ECharacterClass::Warrior:
+			Stat.MaxHP += 15;
+			Stat.MaxMP += 2;
+			Stat.STR += 3;
+			Stat.INT += 1;
+			Stat.DEF += 2;
+			Stat.SPD += 1;
+			break;
+
+		case ECharacterClass::Archer:
+			Stat.MaxHP += 10;
+			Stat.MaxMP += 4;
+			Stat.STR += 2;
+			Stat.INT += 1;
+			Stat.DEF += 1;
+			Stat.SPD += 2;
+			break;
+
+		case ECharacterClass::Mage:
+			Stat.MaxHP += 7;
+			Stat.MaxMP += 8;
+			Stat.STR += 1;
+			Stat.INT += 3;
+			Stat.DEF += 1;
+			Stat.SPD += 1;
+			break;
+
+		default:
+			Stat.MaxHP += 10;
+			Stat.MaxMP += 5;
+			Stat.STR += 2;
+			Stat.INT += 2;
+			Stat.DEF += 1;
+			Stat.SPD += 1;
+			break;
+		}
+
 		Stat.CurHP = Stat.MaxHP;
-
-		Stat.MaxMP += 5;
 		Stat.CurMP = Stat.MaxMP;
-
-		Stat.STR += 2;
-		Stat.INT += 2;
-		Stat.DEF += 1;
-		Stat.SPD += 1;
 	}
 }
 
@@ -1291,7 +1329,26 @@ int Character::CalcAttackDamage(const Character& target) const
 {
 	CharacterStat targetStat = target.GetStat();
 
-	int damage = Stat.STR * 2 - targetStat.DEF;
+	int damage = 1;
+
+	switch (ClassType)
+	{
+	case ECharacterClass::Warrior:
+		damage = Stat.STR * 2 - targetStat.DEF;
+		break;
+
+	case ECharacterClass::Archer:
+		damage = Stat.STR * 2 + Stat.SPD / 2 - targetStat.DEF;
+		break;
+
+	case ECharacterClass::Mage:
+		damage = Stat.INT + Stat.STR - targetStat.DEF;
+		break;
+
+	default:
+		damage = Stat.STR * 2 - targetStat.DEF;
+		break;
+	}
 
 	if (damage < 1)
 	{
@@ -1305,7 +1362,26 @@ int Character::CalcSkillDamage(const Character& target) const
 {
 	CharacterStat targetStat = target.GetStat();
 
-	int damage = Stat.INT * 2 - targetStat.DEF;
+	int damage = 1;
+
+	switch (ClassType)
+	{
+	case ECharacterClass::Warrior:
+		damage = Stat.STR * 3 - targetStat.DEF;
+		break;
+
+	case ECharacterClass::Archer:
+		damage = Stat.STR * 2 + Stat.SPD - targetStat.DEF / 2;
+		break;
+
+	case ECharacterClass::Mage:
+		damage = Stat.INT * 3 - targetStat.DEF / 2;
+		break;
+
+	default:
+		damage = Stat.INT * 2 - targetStat.DEF;
+		break;
+	}
 
 	if (damage < 1)
 	{

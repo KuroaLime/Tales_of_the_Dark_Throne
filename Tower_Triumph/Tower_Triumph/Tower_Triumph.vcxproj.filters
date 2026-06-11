@@ -180,6 +180,9 @@
     <ClCompile Include="STurnTimeline.cpp">
       <Filter>소스 파일\System</Filter>
     </ClCompile>
+    <ClCompile Include="BattleMapData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CStage.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="TeamManager.h">
       <Filter>헤더 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleMapData.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

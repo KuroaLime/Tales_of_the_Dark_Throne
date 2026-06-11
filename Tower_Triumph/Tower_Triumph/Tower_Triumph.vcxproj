@@ -131,6 +131,7 @@
     <ClCompile Include="ACamera.cpp" />
     <ClCompile Include="AItemBase.cpp" />
     <ClCompile Include="AUsable.cpp" />
+    <ClCompile Include="BattleMapData.cpp" />
     <ClCompile Include="Battle_Stage.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="ACamera.h" />
     <ClInclude Include="AItemBase.h" />
     <ClInclude Include="AUsable.h" />
+    <ClInclude Include="BattleMapData.h" />
     <ClInclude Include="Battle_Stage.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CStage.h" />
