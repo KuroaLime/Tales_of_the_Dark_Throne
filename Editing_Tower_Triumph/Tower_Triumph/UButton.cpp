@@ -202,7 +202,7 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
             0,
             bMapinfo[frame].bmWidth,
             bMapinfo[frame].bmHeight,
-            RGB(255, 255, 255)
+            TransColor
         );
         SelectObject(hMemDC1, temp);
 
