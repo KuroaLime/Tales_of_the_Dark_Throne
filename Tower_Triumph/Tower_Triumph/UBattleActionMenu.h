@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UContainerWidget.h"
 #include "UButton.h"
 
@@ -12,12 +12,25 @@ private:
     UButton* btnItem;
     UButton* btnEndTurn;
 
+    RECT ScreenRect;
+    int PanelWidth;
+    int PanelHeight;
+
+private:
+    void SetupCommandButton(UButton* button, const std::wstring& text);
+    void LayoutButtons(int panelLeft, int panelTop);
+    int ClampInt(int value, int minValue, int maxValue) const;
+    bool IsRectIntersect(const RECT& a, const RECT& b) const;
+    bool IsCandidateUsable(const RECT& candidate, const RECT& avoidRect, int maxPanelBottom) const;
+
 public:
     UBattleActionMenu();
     virtual ~UBattleActionMenu();
 
     virtual void Init() override;
+    virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
 
+    void SetScreenRect(const RECT& clientRect);
     void UpdatePosition(int screenX, int screenY);
     void UpdateButtonStates(class Character* character);
 

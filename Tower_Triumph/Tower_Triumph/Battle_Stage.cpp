@@ -315,6 +315,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     actionMenu = new UBattleActionMenu();
     actionMenu->Init();
+    actionMenu->SetScreenRect(rects);
     actionMenu->SetOnMoveClick(std::bind(&Battle_Stage::OnMenuMove, this));
     actionMenu->SetOnAttackClick(std::bind(&Battle_Stage::OnMenuAttack, this));
     actionMenu->SetOnSkillClick(std::bind(&Battle_Stage::OnMenuSkill, this));
