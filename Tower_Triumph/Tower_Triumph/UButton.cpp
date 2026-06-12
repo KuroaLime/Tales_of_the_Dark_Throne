@@ -270,13 +270,32 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
         else if (isSelected) textColor = TextSelectedColor;
         else if (IsPointed) textColor = TextHoverColor;
 
+        // 한글 텍스트가 살짝 위로 떠 보이므로 행동창 버튼만 아래로 보정
+        int textYOffset = bDrawTextFallbackBackground ? 2 : 0;
+
+        RECT textRect = visualRect;
+        OffsetRect(&textRect, 0, textYOffset);
+
         RECT shadowRect = visualRect;
-        OffsetRect(&shadowRect, 2, 2);
+        OffsetRect(&shadowRect, 2, 2 + textYOffset);
+
         SetTextColor(hMemDC, RGB(0, 0, 0));
-        DrawTextW(hMemDC, ButtonText.c_str(), -1, &shadowRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        DrawTextW(
+            hMemDC,
+            ButtonText.c_str(),
+            -1,
+            &shadowRect,
+            DT_CENTER | DT_VCENTER | DT_SINGLELINE
+        );
 
         SetTextColor(hMemDC, textColor);
-        DrawTextW(hMemDC, ButtonText.c_str(), -1, &visualRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        DrawTextW(
+            hMemDC,
+            ButtonText.c_str(),
+            -1,
+            &textRect,
+            DT_CENTER | DT_VCENTER | DT_SINGLELINE
+        );
 
         if (oldFont != NULL)
         {

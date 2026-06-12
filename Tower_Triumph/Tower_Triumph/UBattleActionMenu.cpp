@@ -336,11 +336,15 @@ void UBattleActionMenu::Draw(HDC hMemDC, HDC hMemDC1)
     HFONT oldFont = (HFONT)SelectObject(hMemDC, titleFont);
 
     std::wstring title = L"행동";
+
+    RECT titleTextRect = titleRect;
+    OffsetRect(&titleTextRect, 0, 2);
+
     DrawTextW(
         hMemDC,
         title.c_str(),
         -1,
-        &titleRect,
+        &titleTextRect,
         DT_CENTER | DT_VCENTER | DT_SINGLELINE
     );
 
