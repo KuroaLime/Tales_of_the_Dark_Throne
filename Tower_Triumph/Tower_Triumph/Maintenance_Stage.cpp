@@ -76,13 +76,20 @@ void Maintenance_Stage::Draw(HDC hMemDC, HDC hMemDC1)
 
     DrawCenteredText(
         hMemDC,
-        BattleRewardManager::Get().HasReward() ? L"PREPARATION STAGE" : L"TOWN / PREPARATION",
+        IsRewardMode() ? L"BATTLE REWARD" : L"TOWN / PREPARATION",
         panel.top + 16,
         50,
         38,
         FW_HEAVY,
         RGB(255, 220, 90)
     );
+
+    if (IsRewardMode())
+    {
+        DrawRewardTab(hMemDC, panel);
+        DrawContinueButton(hMemDC);
+        return;
+    }
 
     DrawTabs(hMemDC);
 
@@ -113,7 +120,7 @@ void Maintenance_Stage::Draw(HDC hMemDC, HDC hMemDC1)
         break;
 
     default:
-        DrawRewardTab(hMemDC, panel);
+        DrawPartyTab(hMemDC, panel);
         break;
     }
 
@@ -127,9 +134,30 @@ int Maintenance_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         int mouseX = LOWORD(lParam);
         int mouseY = HIWORD(lParam);
 
+        if (IsRewardMode())
+        {
+            RECT panel = GetMainPanelRect();
+
+            if (CanProceedToNextStage() && IsPointInRect(mouseX, mouseY, GetNextStageButtonRect()))
+            {
+                return ProceedToNextStage();
+            }
+
+            if (IsPointInRect(mouseX, mouseY, GetContinueRect()))
+            {
+                return ReturnToMapFromReward();
+            }
+
+            if (!IsPointInRect(mouseX, mouseY, panel))
+            {
+                return ReturnToMapFromReward();
+            }
+
+            return -2;
+        }
+
         if (IsPointInRect(mouseX, mouseY, GetContinueRect()))
         {
-            ApplyRewardOnce();
             BattleRewardManager::Get().Clear();
             return MAP_STAGE;
         }
@@ -140,34 +168,44 @@ int Maintenance_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     if (uMsg == WM_KEYDOWN)
     {
+        if (IsRewardMode())
+        {
+            if ((wParam == VK_RETURN || wParam == VK_SPACE) && CanProceedToNextStage())
+            {
+                return ProceedToNextStage();
+            }
+
+            if (wParam == VK_ESCAPE)
+            {
+                return ReturnToMapFromReward();
+            }
+
+            return -2;
+        }
+
         if (wParam == VK_RETURN || wParam == VK_SPACE || wParam == VK_ESCAPE)
         {
-            ApplyRewardOnce();
             BattleRewardManager::Get().Clear();
             return MAP_STAGE;
         }
 
         if (wParam == '1')
         {
-            ActiveTab = EMaintenanceTab::Reward;
+            ActiveTab = EMaintenanceTab::Party;
         }
         else if (wParam == '2')
         {
-            ActiveTab = EMaintenanceTab::Party;
+            ActiveTab = EMaintenanceTab::Inventory;
         }
         else if (wParam == '3')
         {
-            ActiveTab = EMaintenanceTab::Inventory;
+            ActiveTab = EMaintenanceTab::Equipment;
         }
         else if (wParam == '4')
         {
-            ActiveTab = EMaintenanceTab::Equipment;
-        }
-        else if (wParam == '5')
-        {
             ActiveTab = EMaintenanceTab::Skill;
         }
-        else if (wParam == '6')
+        else if (wParam == '5')
         {
             ActiveTab = EMaintenanceTab::Shop;
         }
@@ -279,42 +317,38 @@ RECT Maintenance_Stage::GetTabRect(EMaintenanceTab tab) const
     RECT panel = GetMainPanelRect();
 
     int index = 0;
-
-    switch (tab)
-    {
-    case EMaintenanceTab::Reward:
-        index = 0;
-        break;
-
-    case EMaintenanceTab::Party:
-        index = 1;
-        break;
-
-    case EMaintenanceTab::Inventory:
-        index = 2;
-        break;
-
-    case EMaintenanceTab::Equipment:
-        index = 3;
-        break;
-
-    case EMaintenanceTab::Skill:
-        index = 4;
-        break;
-
-    case EMaintenanceTab::Shop:
-        index = 5;
-        break;
-
-    default:
-        index = 0;
-        break;
-    }
-
-    int tabW = 140;
+    int tabCount = IsRewardMode() ? 6 : 5;
+    int tabW = IsRewardMode() ? 140 : 160;
     int tabH = 44;
     int gap = 8;
-    int totalW = tabW * 6 + gap * 5;
+
+    if (IsRewardMode())
+    {
+        switch (tab)
+        {
+        case EMaintenanceTab::Reward: index = 0; break;
+        case EMaintenanceTab::Party: index = 1; break;
+        case EMaintenanceTab::Inventory: index = 2; break;
+        case EMaintenanceTab::Equipment: index = 3; break;
+        case EMaintenanceTab::Skill: index = 4; break;
+        case EMaintenanceTab::Shop: index = 5; break;
+        default: index = 0; break;
+        }
+    }
+    else
+    {
+        switch (tab)
+        {
+        case EMaintenanceTab::Party: index = 0; break;
+        case EMaintenanceTab::Inventory: index = 1; break;
+        case EMaintenanceTab::Equipment: index = 2; break;
+        case EMaintenanceTab::Skill: index = 3; break;
+        case EMaintenanceTab::Shop: index = 4; break;
+        default: index = 0; break;
+        }
+    }
+
+    int totalW = tabW * tabCount + gap * (tabCount - 1);
     int startX = panel.left + (panel.right - panel.left - totalW) / 2;
     int y = panel.top + 78;
 
@@ -334,6 +368,18 @@ RECT Maintenance_Stage::GetContinueRect() const
     rc.left = panel.right - 240;
     rc.top = panel.bottom - 58;
     rc.right = panel.right - 45;
+    rc.bottom = panel.bottom - 20;
+    return rc;
+}
+
+RECT Maintenance_Stage::GetNextStageButtonRect() const
+{
+    RECT panel = GetMainPanelRect();
+
+    RECT rc;
+    rc.left = panel.right - 460;
+    rc.top = panel.bottom - 58;
+    rc.right = panel.right - 260;
     rc.bottom = panel.bottom - 20;
     return rc;
 }
@@ -489,16 +535,15 @@ void Maintenance_Stage::DrawTabs(HDC hMemDC)
         const wchar_t* Text;
     };
 
-    TabInfo tabs[6] = {
-        { EMaintenanceTab::Reward, L"1. Reward" },
-        { EMaintenanceTab::Party, L"2. Party" },
-        { EMaintenanceTab::Inventory, L"3. Inventory" },
-        { EMaintenanceTab::Equipment, L"4. Equip" },
-        { EMaintenanceTab::Skill, L"5. Skill" },
-        { EMaintenanceTab::Shop, L"6. Shop" }
+    TabInfo tabs[5] = {
+        { EMaintenanceTab::Party, L"1. Party" },
+        { EMaintenanceTab::Inventory, L"2. Inventory" },
+        { EMaintenanceTab::Equipment, L"3. Equip" },
+        { EMaintenanceTab::Skill, L"4. Skill" },
+        { EMaintenanceTab::Shop, L"5. Shop" }
     };
 
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         bool selected = ActiveTab == tabs[i].Tab;
         DrawBoxText(
@@ -517,10 +562,53 @@ void Maintenance_Stage::DrawTabs(HDC hMemDC)
 
 void Maintenance_Stage::DrawContinueButton(HDC hMemDC)
 {
+    if (IsRewardMode())
+    {
+        if (CanProceedToNextStage())
+        {
+            DrawBoxText(
+                hMemDC,
+                GetNextStageButtonRect(),
+                L"Next Stage",
+                20,
+                FW_BOLD,
+                RGB(255, 255, 255),
+                RGB(80, 90, 135),
+                RGB(150, 180, 255),
+                DT_CENTER | DT_VCENTER | DT_SINGLELINE
+            );
+        }
+
+        DrawBoxText(
+            hMemDC,
+            GetContinueRect(),
+            L"Back to Map",
+            20,
+            FW_BOLD,
+            RGB(255, 255, 255),
+            RGB(70, 105, 70),
+            RGB(150, 230, 150),
+            DT_CENTER | DT_VCENTER | DT_SINGLELINE
+        );
+
+        DrawLeftText(
+            hMemDC,
+            L"Click outside the reward panel to return to the world map.",
+            GetMainPanelRect().left + 65,
+            GetMainPanelRect().bottom - 52,
+            560,
+            26,
+            17,
+            FW_NORMAL,
+            RGB(190, 190, 200)
+        );
+        return;
+    }
+
     DrawBoxText(
         hMemDC,
         GetContinueRect(),
-        BattleRewardManager::Get().HasReward() ? L"Continue" : L"Back to Map",
+        L"Back to Map",
         20,
         FW_BOLD,
         RGB(255, 255, 255),
@@ -528,6 +616,44 @@ void Maintenance_Stage::DrawContinueButton(HDC hMemDC)
         RGB(150, 230, 150),
         DT_CENTER | DT_VCENTER | DT_SINGLELINE
     );
+}
+
+
+bool Maintenance_Stage::IsRewardMode() const
+{
+    return BattleRewardManager::Get().HasReward();
+}
+
+bool Maintenance_Stage::CanProceedToNextStage() const
+{
+    const BattleRewardManager& reward = BattleRewardManager::Get();
+
+    if (!reward.HasReward() || !reward.IsVictory())
+    {
+        return false;
+    }
+
+    int clearedStageId = reward.GetClearedStageId();
+    int nextStageId = reward.GetNextStageId();
+
+    return nextStageId > clearedStageId && nextStageId <= 3;
+}
+
+int Maintenance_Stage::ProceedToNextStage()
+{
+    ApplyRewardOnce();
+
+    int nextStageId = BattleRewardManager::Get().GetNextStageId();
+    GameManager::Get().SetCurrentBattleStageId(nextStageId);
+    BattleRewardManager::Get().Clear();
+    return BATTLE_STAGE;
+}
+
+int Maintenance_Stage::ReturnToMapFromReward()
+{
+    ApplyRewardOnce();
+    BattleRewardManager::Get().Clear();
+    return MAP_STAGE;
 }
 
 void Maintenance_Stage::DrawRewardTab(HDC hMemDC, const RECT& panel)
@@ -1197,12 +1323,6 @@ void Maintenance_Stage::DrawLeftText(
 
 void Maintenance_Stage::HandleMouseDown(int mouseX, int mouseY)
 {
-    if (IsPointInRect(mouseX, mouseY, GetTabRect(EMaintenanceTab::Reward)))
-    {
-        ActiveTab = EMaintenanceTab::Reward;
-        return;
-    }
-
     if (IsPointInRect(mouseX, mouseY, GetTabRect(EMaintenanceTab::Party)))
     {
         ActiveTab = EMaintenanceTab::Party;

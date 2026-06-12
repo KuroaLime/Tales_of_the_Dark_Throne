@@ -19,17 +19,18 @@ private:
 	std::vector<int> MarkerBattleStageIds;
 	struct SMapStageItem
 	{
+		int MapItemID;
 		int ItemID;
 		Location WorldPos;
 		bool Active;
 
 		SMapStageItem()
-			: ItemID(-1), WorldPos{ 0, 0 }, Active(false)
+			: MapItemID(-1), ItemID(-1), WorldPos{ 0, 0 }, Active(false)
 		{
 		}
 
-		SMapStageItem(int itemID, int x, int y)
-			: ItemID(itemID), WorldPos{ x, y }, Active(true)
+		SMapStageItem(int mapItemID, int itemID, int x, int y)
+			: MapItemID(mapItemID), ItemID(itemID), WorldPos{ x, y }, Active(true)
 		{
 		}
 	};

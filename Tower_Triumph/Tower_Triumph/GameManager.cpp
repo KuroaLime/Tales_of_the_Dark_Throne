@@ -54,6 +54,7 @@ void GameManager::Clear()
     Roster.clear();
     PlayerParty.clear();
     Inventory.clear();
+    CollectedMapItemIDs.clear();
     PartyGold = 0;
     CurrentBattleStageId = 1;
     MaxUnlockedBattleStageId = 1;
@@ -332,6 +333,30 @@ void GameManager::UnlockBattleStage(int stageId)
     {
         MaxUnlockedBattleStageId = stageId;
     }
+}
+
+
+bool GameManager::IsMapItemCollected(int mapItemId) const
+{
+    return std::find(CollectedMapItemIDs.begin(), CollectedMapItemIDs.end(), mapItemId) != CollectedMapItemIDs.end();
+}
+
+void GameManager::MarkMapItemCollected(int mapItemId)
+{
+    if (mapItemId < 0)
+    {
+        return;
+    }
+
+    if (!IsMapItemCollected(mapItemId))
+    {
+        CollectedMapItemIDs.push_back(mapItemId);
+    }
+}
+
+void GameManager::ClearCollectedMapItems()
+{
+    CollectedMapItemIDs.clear();
 }
 
 void GameManager::AddItem(int itemID, int count)

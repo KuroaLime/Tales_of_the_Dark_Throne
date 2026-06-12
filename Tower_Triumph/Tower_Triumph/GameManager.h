@@ -34,6 +34,7 @@ private:
     int PartyGold;
     int CurrentBattleStageId;
     int MaxUnlockedBattleStageId;
+    std::vector<int> CollectedMapItemIDs;
 
 private:
     GameManager();
@@ -74,6 +75,10 @@ public:
     int GetMaxUnlockedBattleStageId() const;
     bool IsBattleStageUnlocked(int stageId) const;
     void UnlockBattleStage(int stageId);
+
+    bool IsMapItemCollected(int mapItemId) const;
+    void MarkMapItemCollected(int mapItemId);
+    void ClearCollectedMapItems();
 
     void AddItem(int itemID, int count);
     bool RemoveItem(int itemID, int count);

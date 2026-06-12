@@ -109,9 +109,12 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	MouseMark = new UMouseMark();
 	MouseMark->SetFrame(g_hInst, { IDB_UI_MOUSECUSOR }); 
 
-	// Test field item. Actual item information is resolved through ItemData by ItemID.
+	// Test field item. The pickup state is stored in GameManager, so it does not respawn after returning to the map.
 	stageItems.clear();
-	stageItems.push_back(SMapStageItem(101, 600, 400));
+	if (!GameManager::Get().IsMapItemCollected(1))
+	{
+		stageItems.push_back(SMapStageItem(1, 101, 600, 400));
+	}
 }
 
 void Map_Stage::Update(HWND hWnd) {
@@ -305,7 +308,9 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 				if (it->Active && dx * dx + dy * dy <= 30 * 30) {
 					int itemID = it->ItemID;
+					int mapItemID = it->MapItemID;
 					GameManager::Get().AddItem(itemID, 1);
+					GameManager::Get().MarkMapItemCollected(mapItemID);
 					std::wstring itemName = ItemData::GetName(itemID);
 					it = stageItems.erase(it);
 
