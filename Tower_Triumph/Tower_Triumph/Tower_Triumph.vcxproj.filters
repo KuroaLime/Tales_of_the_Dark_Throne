@@ -156,6 +156,21 @@
     <ClCompile Include="UTurnOrderPanel.cpp">
       <Filter>소스 파일\UI\ALL</Filter>
     </ClCompile>
+    <ClCompile Include="UTextLabel.cpp">
+      <Filter>소스 파일\UI\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="UInventoryPopup.cpp">
+      <Filter>소스 파일\UI\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="UCharacterInfoPopup.cpp">
+      <Filter>소스 파일\UI\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="UStatePanel.cpp">
+      <Filter>소스 파일\UI\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="UProfilePanel.cpp">
+      <Filter>소스 파일\UI\Default</Filter>
+    </ClCompile>
     <ClCompile Include="UBattleActionMenu.cpp">
       <Filter>소스 파일\UI\ALL</Filter>
     </ClCompile>
@@ -194,9 +209,6 @@
     </ClCompile>
     <ClCompile Include="Maintenance_Stage.cpp">
       <Filter>소스 파일\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="SkillData.cpp">
-      <Filter>소스 파일\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +281,21 @@
     <ClInclude Include="UTurnOrderPanel.h">
       <Filter>헤더 파일\UI\ALL</Filter>
     </ClInclude>
+    <ClInclude Include="UTextLabel.h">
+      <Filter>헤더 파일\UI\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="UInventoryPopup.h">
+      <Filter>헤더 파일\UI\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="UCharacterInfoPopup.h">
+      <Filter>헤더 파일\UI\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="UStatePanel.h">
+      <Filter>헤더 파일\UI\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="UProfilePanel.h">
+      <Filter>헤더 파일\UI\Default</Filter>
+    </ClInclude>
     <ClInclude Include="UBattleActionMenu.h">
       <Filter>헤더 파일\UI\ALL</Filter>
     </ClInclude>
@@ -307,9 +334,6 @@
     </ClInclude>
     <ClInclude Include="Maintenance_Stage.h">
       <Filter>헤더 파일\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="SkillData.h">
-      <Filter>헤더 파일\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

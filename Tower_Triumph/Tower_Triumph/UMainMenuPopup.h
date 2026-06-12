@@ -6,6 +6,10 @@
 #include "UExitConfirmPopup.h"
 #include "GameManager.h"
 #include "ItemData.h"
+#include "UProfilePanel.h"
+#include "UStatePanel.h"
+#include "UCharacterInfoPopup.h"
+#include "UInventoryPopup.h"
 
 #include <vector>
 #include <string>
@@ -36,6 +40,8 @@ private:
     UButton* btnTabInv;
     UButton* btnExit;
     UButton* btnClose;
+    UButton* btnOpenCharPopup;
+    UButton* btnOpenInvPopup;
 
     std::vector<UButton*> charSelectButtons;
     std::vector<UButton*> itemIconButtons;
@@ -48,10 +54,15 @@ private:
     UContainerWidget* targetSelectPanel;
     std::vector<UButton*> targetButtons;
 
+    UProfilePanel* profilePanel;
+    UStatePanel* statePanel;
+
     HBITMAP hBgBitmap;
     BITMAP bgInfo;
 
     UExitConfirmPopup* exitPopup;
+    UCharacterInfoPopup* charPopup;
+    UInventoryPopup* invPopup;
 
     bool bShowTooltip;
     std::wstring tooltipTitle;
@@ -72,6 +83,8 @@ private:
 
     void DrawSubMenuBackgrounds(HDC hMemDC);
     void DrawTooltip(HDC hMemDC);
+    void RefreshFriendStylePanels();
+    void CloseSubPopups();
 
     std::wstring GetEquipName(int itemID) const;
     std::wstring MakeItemTooltip(int itemID) const;
@@ -90,6 +103,10 @@ public:
     void SetTeamData(const std::vector<Character*>& team);
 
     void SelectTab(EMenuTab tab);
+    void ShowNavigation();
+    void OpenCharacterPopup();
+    void OpenInventoryPopup();
+    bool HandleBack();
     void SelectCharacter(Character* character);
     void ShowTooltip(const std::wstring& title, const std::wstring& desc, Location loc);
     void HideTooltip();

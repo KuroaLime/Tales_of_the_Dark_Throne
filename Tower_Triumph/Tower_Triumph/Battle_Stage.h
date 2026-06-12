@@ -43,6 +43,8 @@ private:
 
     int HoverGridX;
     int HoverGridY;
+    int LastMouseX;
+    int LastMouseY;
 
     std::vector<Location> PreviewMovePath;
     std::vector<Location> ActiveMovePath;
@@ -63,13 +65,13 @@ private:
 
     std::vector<DamageText> DamageTexts;
 
-    int SelectedBattleItemID;
-    bool bSelectingBattleItemTarget;
-    std::vector<int> BattleConsumableItemIDs;
-
     int SelectedBattleSkillID;
     bool bSelectingBattleSkillTarget;
     std::vector<int> BattleSkillIDs;
+
+    int SelectedBattleItemID;
+    bool bSelectingBattleItemTarget;
+    std::vector<int> BattleConsumableItemIDs;
 
 private:
     bool IsInsideGrid(int gx, int gy) const;
@@ -80,6 +82,9 @@ private:
     Character* GetPlayerAt(int gx, int gy) const;
 
     bool FindBestMoveTileToward(Character* unit, Character* target, int& outX, int& outY) const;
+    int GetAttackRangeForUnit(Character* unit) const;
+    bool CanAttackFromTile(Character* unit, int fromX, int fromY, Character* target) const;
+    int GetMoveTileDangerPenalty(int gx, int gy) const;
     void ProcessEnemyTurn();
 
     bool BuildMovePath(Character* unit, int targetX, int targetY, std::vector<Location>& outPath) const;
@@ -103,6 +108,20 @@ private:
     void UpdateDamageTexts();
     void DrawDamageTexts(HDC hMemDC);
 
+    void RefreshBattleSkillList(Character* current);
+    void ClearBattleSkillSelection();
+    void DrawBattleSkillUI(HDC hMemDC);
+    void DrawBattleSkillList(HDC hMemDC);
+    void DrawBattleSkillTargetSelect(HDC hMemDC);
+    void DrawSkillRange(HDC hMemDC);
+    void UpdateHoverGridByMouse(int mouseX, int mouseY);
+    void UpdateSkillTargetCameraByMouse(HWND hWnd);
+    std::vector<Location> BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const;
+    void DrawSkillAreaPreview(HDC hMemDC);
+    bool HandleBattleSkillClick(int mouseX, int mouseY, Character* current);
+    bool UseSelectedBattleSkill(Character* user, Character* target);
+    RECT GetBattleSkillRect(int index) const;
+
     void RefreshBattleConsumableItems();
     void ClearBattleItemSelection();
     void DrawBattleItemUI(HDC hMemDC);
@@ -114,18 +133,6 @@ private:
     RECT GetBattleTargetRect(int index) const;
     RECT GetBattleCancelRect() const;
     bool IsPointInRect(const RECT& rc, int x, int y) const;
-
-    void RefreshBattleSkillList(Character* current);
-    void ClearBattleSkillSelection();
-    void DrawBattleSkillUI(HDC hMemDC);
-    void DrawBattleSkillList(HDC hMemDC);
-    void DrawBattleSkillTargetSelect(HDC hMemDC);
-    void DrawSkillRange(HDC hMemDC);
-    void DrawSkillAreaPreview(HDC hMemDC);
-    void UpdateHoverGridByMouse(int mouseX, int mouseY);
-    bool HandleBattleSkillClick(int mouseX, int mouseY, Character* current);
-    bool UseSelectedBattleSkill(Character* user, Character* target);
-    RECT GetBattleSkillRect(int index) const;
 
     void DrawBackground(HDC hMemDC, HDC hMemDC1);
     void DrawGrid(HDC hMemDC);

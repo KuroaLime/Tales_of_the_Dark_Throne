@@ -335,30 +335,6 @@ void GameManager::UnlockBattleStage(int stageId)
     }
 }
 
-
-bool GameManager::IsMapItemCollected(int mapItemId) const
-{
-    return std::find(CollectedMapItemIDs.begin(), CollectedMapItemIDs.end(), mapItemId) != CollectedMapItemIDs.end();
-}
-
-void GameManager::MarkMapItemCollected(int mapItemId)
-{
-    if (mapItemId < 0)
-    {
-        return;
-    }
-
-    if (!IsMapItemCollected(mapItemId))
-    {
-        CollectedMapItemIDs.push_back(mapItemId);
-    }
-}
-
-void GameManager::ClearCollectedMapItems()
-{
-    CollectedMapItemIDs.clear();
-}
-
 void GameManager::AddItem(int itemID, int count)
 {
     if (itemID < 0 || count <= 0)
@@ -446,6 +422,34 @@ const std::vector<InventoryItem>& GameManager::GetInventory() const
 void GameManager::ClearInventory()
 {
     Inventory.clear();
+}
+
+bool GameManager::IsMapItemCollected(int mapItemID) const
+{
+    if (mapItemID < 0)
+    {
+        return false;
+    }
+
+    return std::find(CollectedMapItemIDs.begin(), CollectedMapItemIDs.end(), mapItemID) != CollectedMapItemIDs.end();
+}
+
+void GameManager::MarkMapItemCollected(int mapItemID)
+{
+    if (mapItemID < 0)
+    {
+        return;
+    }
+
+    if (!IsMapItemCollected(mapItemID))
+    {
+        CollectedMapItemIDs.push_back(mapItemID);
+    }
+}
+
+void GameManager::ClearCollectedMapItems()
+{
+    CollectedMapItemIDs.clear();
 }
 
 bool GameManager::EquipItem(Character* target, int itemID)

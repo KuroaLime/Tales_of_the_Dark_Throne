@@ -154,6 +154,11 @@
     <ClCompile Include="USettingPopup.cpp" />
     <ClCompile Include="UTurnCharacterInfo.cpp" />
     <ClCompile Include="UTurnOrderPanel.cpp" />
+    <ClCompile Include="UTextLabel.cpp" />
+    <ClCompile Include="UInventoryPopup.cpp" />
+    <ClCompile Include="UCharacterInfoPopup.cpp" />
+    <ClCompile Include="UStatePanel.cpp" />
+    <ClCompile Include="UProfilePanel.cpp" />
     <ClCompile Include="STurnTimeline.cpp" />
     <ClCompile Include="UBattleActionMenu.cpp" />
     <ClCompile Include="BattleMapData.cpp" />
@@ -193,6 +198,11 @@
     <ClInclude Include="USettingPopup.h" />
     <ClInclude Include="UTurnCharacterInfo.h" />
     <ClInclude Include="UTurnOrderPanel.h" />
+    <ClInclude Include="UTextLabel.h" />
+    <ClInclude Include="UInventoryPopup.h" />
+    <ClInclude Include="UCharacterInfoPopup.h" />
+    <ClInclude Include="UStatePanel.h" />
+    <ClInclude Include="UProfilePanel.h" />
     <ClInclude Include="STurnTimeline.h" />
     <ClInclude Include="UBattleActionMenu.h" />
     <ClInclude Include="BattleMapData.h" />

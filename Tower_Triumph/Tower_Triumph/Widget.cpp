@@ -1,4 +1,4 @@
-#include "Widget.h"
+﻿#include "Widget.h"
 
 
 UWidget::UWidget() {
@@ -33,13 +33,36 @@ UWidget* UWidget::FindWidgetUnderMouse(int MouseX, int MouseY) {
 
 
 void UWidget::SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr) {
-	AniCount = FrameStr.size();
+	AniCount = static_cast<int>(FrameStr.size());
 	bBitmap.resize(AniCount);
 	bMapinfo.resize(AniCount);
 	for (int i = 0; i < AniCount; i++) {
 		bBitmap[i] = (HBITMAP)LoadBitmap(g_hInst, MAKEINTRESOURCE(FrameStr[i]));
 		GetObject(bBitmap[i], sizeof(BITMAP), &bMapinfo[i]);
 	}
+	CurAni = 0;
+}
+
+
+void UWidget::SetFrameFromFile(std::vector<std::wstring> FramePaths)
+{
+	AniCount = static_cast<int>(FramePaths.size());
+	bBitmap.resize(AniCount);
+	bMapinfo.resize(AniCount);
+
+	for (int i = 0; i < AniCount; ++i)
+	{
+		bBitmap[i] = (HBITMAP)LoadImageW(NULL, FramePaths[i].c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+		if (bBitmap[i] != NULL)
+		{
+			GetObject(bBitmap[i], sizeof(BITMAP), &bMapinfo[i]);
+		}
+		else
+		{
+			ZeroMemory(&bMapinfo[i], sizeof(BITMAP));
+		}
+	}
+
 	CurAni = 0;
 }
 

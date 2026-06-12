@@ -1,4 +1,4 @@
-#include "UMouseMark.h"
+﻿#include "UMouseMark.h"
 #include "URegionMarker.h"
 #include <cmath>
 int Win_xS = 1280;
@@ -49,8 +49,8 @@ void UMouseMark::Draw(HDC hMemDC, HDC hMemDC1)
 	SetGraphicsMode(hMemDC, GM_ADVANCED);
 
 	int oldStretchMode = SetStretchBltMode(hMemDC, COLORONCOLOR);
-	float cosA = cos(angle);
-	float sinA = sin(angle);
+	float cosA = static_cast<float>(cos(angle));
+	float sinA = static_cast<float>(sin(angle));
 
 	// Rotation Matrix around (0,0) and then translate to Loc.x, Loc.y
 	XFORM xForm;

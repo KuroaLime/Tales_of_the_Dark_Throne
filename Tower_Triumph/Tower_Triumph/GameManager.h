@@ -28,13 +28,13 @@ private:
     std::vector<Character*> Roster;
     std::vector<Character*> PlayerParty;
     std::vector<InventoryItem> Inventory;
+    std::vector<int> CollectedMapItemIDs;
 
     static const int MAX_ACTIVE_PARTY = 5;
 
     int PartyGold;
     int CurrentBattleStageId;
     int MaxUnlockedBattleStageId;
-    std::vector<int> CollectedMapItemIDs;
 
 private:
     GameManager();
@@ -76,10 +76,6 @@ public:
     bool IsBattleStageUnlocked(int stageId) const;
     void UnlockBattleStage(int stageId);
 
-    bool IsMapItemCollected(int mapItemId) const;
-    void MarkMapItemCollected(int mapItemId);
-    void ClearCollectedMapItems();
-
     void AddItem(int itemID, int count);
     bool RemoveItem(int itemID, int count);
     int GetItemCount(int itemID) const;
@@ -87,6 +83,10 @@ public:
 
     const std::vector<InventoryItem>& GetInventory() const;
     void ClearInventory();
+
+    bool IsMapItemCollected(int mapItemID) const;
+    void MarkMapItemCollected(int mapItemID);
+    void ClearCollectedMapItems();
 
     bool EquipItem(Character* target, int itemID);
     bool EquipItem(Character* target, int itemID, EEquipPart part);

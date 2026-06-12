@@ -217,6 +217,7 @@ private:
 	HBITMAP hSpriteSkill;
 	HBITMAP hSpriteHit;
 	HBITMAP hSpriteDead;
+	HBITMAP hIllustration;
 
 	BITMAP SpriteInfoIdle;
 	BITMAP SpriteInfoWalk;
@@ -225,6 +226,7 @@ private:
 	BITMAP SpriteInfoSkill;
 	BITMAP SpriteInfoHit;
 	BITMAP SpriteInfoDead;
+	BITMAP SpriteInfoIllustration;
 
 private:
 	// ------------------------------------------------------------
@@ -290,6 +292,8 @@ public:
 
 	// 상태창/턴 UI에서 Idle 스프라이트를 직접 참조할 때 사용
 	HBITMAP GetSpriteIdle() const;
+	HBITMAP GetIllustration() const;
+	const BITMAP* GetIllustrationInfo() const;
 
 	// ------------------------------------------------------------
 	// 업데이트 / 출력

@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 #include<windows.h>
 #include<vector>
+#include<string>
 #include"Structure.h"
 class UWidget
 {
@@ -26,6 +27,7 @@ public:
 	virtual UWidget* FindWidgetUnderMouse(int MouseX, int MouseY);
 	
 	virtual void SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr);
+	virtual void SetFrameFromFile(std::vector<std::wstring> FramePaths);
 	
 	virtual void SetIsPointed(bool New);
 	virtual bool GetIsPointed();

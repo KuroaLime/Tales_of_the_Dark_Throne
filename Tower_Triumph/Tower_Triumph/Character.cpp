@@ -59,6 +59,7 @@ Character::Character()
 	hSpriteSkill = NULL;
 	hSpriteHit = NULL;
 	hSpriteDead = NULL;
+	hIllustration = NULL;
 
 	ZeroMemory(&SpriteInfoIdle, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoWalk, sizeof(BITMAP));
@@ -67,6 +68,7 @@ Character::Character()
 	ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoIllustration, sizeof(BITMAP));
 
 	ClearEquippedSkills();
 }
@@ -141,6 +143,7 @@ Character::Character(Character&& other) noexcept
 	hSpriteSkill = other.hSpriteSkill;
 	hSpriteHit = other.hSpriteHit;
 	hSpriteDead = other.hSpriteDead;
+	hIllustration = other.hIllustration;
 
 	SpriteInfoIdle = other.SpriteInfoIdle;
 	SpriteInfoWalk = other.SpriteInfoWalk;
@@ -149,6 +152,7 @@ Character::Character(Character&& other) noexcept
 	SpriteInfoSkill = other.SpriteInfoSkill;
 	SpriteInfoHit = other.SpriteInfoHit;
 	SpriteInfoDead = other.SpriteInfoDead;
+	SpriteInfoIllustration = other.SpriteInfoIllustration;
 
 	other.hSpriteIdle = NULL;
 	other.hSpriteWalk = NULL;
@@ -157,6 +161,7 @@ Character::Character(Character&& other) noexcept
 	other.hSpriteSkill = NULL;
 	other.hSpriteHit = NULL;
 	other.hSpriteDead = NULL;
+	other.hIllustration = NULL;
 }
 
 Character& Character::operator=(Character&& other) noexcept
@@ -226,6 +231,7 @@ Character& Character::operator=(Character&& other) noexcept
 	hSpriteSkill = other.hSpriteSkill;
 	hSpriteHit = other.hSpriteHit;
 	hSpriteDead = other.hSpriteDead;
+	hIllustration = other.hIllustration;
 
 	SpriteInfoIdle = other.SpriteInfoIdle;
 	SpriteInfoWalk = other.SpriteInfoWalk;
@@ -234,6 +240,7 @@ Character& Character::operator=(Character&& other) noexcept
 	SpriteInfoSkill = other.SpriteInfoSkill;
 	SpriteInfoHit = other.SpriteInfoHit;
 	SpriteInfoDead = other.SpriteInfoDead;
+	SpriteInfoIllustration = other.SpriteInfoIllustration;
 
 	other.hSpriteIdle = NULL;
 	other.hSpriteWalk = NULL;
@@ -243,6 +250,7 @@ Character& Character::operator=(Character&& other) noexcept
 	other.hSpriteHit = NULL;
 	other.hSpriteDead = NULL;
 
+	other.hIllustration = NULL;
 	return *this;
 }
 
@@ -301,7 +309,7 @@ void Character::Init(ECharacterClass classType, int gridX, int gridY)
 
 void Character::Release()
 {
-	HBITMAP handles[7] =
+	HBITMAP handles[8] =
 	{
 		hSpriteIdle,
 		hSpriteWalk,
@@ -309,10 +317,11 @@ void Character::Release()
 		hSpriteDefend,
 		hSpriteSkill,
 		hSpriteHit,
-		hSpriteDead
+		hSpriteDead,
+		hIllustration
 	};
 
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
 		if (handles[i] == NULL)
 		{
@@ -343,6 +352,7 @@ void Character::Release()
 	hSpriteSkill = NULL;
 	hSpriteHit = NULL;
 	hSpriteDead = NULL;
+	hIllustration = NULL;
 
 	ZeroMemory(&SpriteInfoIdle, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoWalk, sizeof(BITMAP));
@@ -351,6 +361,7 @@ void Character::Release()
 	ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
+	ZeroMemory(&SpriteInfoIllustration, sizeof(BITMAP));
 }
 
 // ============================================================
@@ -499,6 +510,7 @@ bool Character::LoadSprites(const std::wstring& folderPath)
 	hSpriteSkill = LoadBitmapFromFile(basePath + prefix + L"_Skill.bmp", &SpriteInfoSkill);
 	hSpriteHit = LoadBitmapFromFile(basePath + prefix + L"_Hit.bmp", &SpriteInfoHit);
 	hSpriteDead = LoadBitmapFromFile(basePath + prefix + L"_Dead.bmp", &SpriteInfoDead);
+	hIllustration = LoadBitmapFromFile(basePath + prefix + L"_Illustration.bmp", &SpriteInfoIllustration);
 
 	if (hSpriteIdle == NULL)
 	{
@@ -511,6 +523,21 @@ bool Character::LoadSprites(const std::wstring& folderPath)
 HBITMAP Character::GetSpriteIdle() const
 {
 	return hSpriteIdle;
+}
+
+HBITMAP Character::GetIllustration() const
+{
+	return hIllustration;
+}
+
+const BITMAP* Character::GetIllustrationInfo() const
+{
+	if (hIllustration == NULL)
+	{
+		return nullptr;
+	}
+
+	return &SpriteInfoIllustration;
 }
 
 // ============================================================

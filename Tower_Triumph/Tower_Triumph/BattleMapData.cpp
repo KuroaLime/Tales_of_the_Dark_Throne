@@ -78,6 +78,7 @@ static void InitBaseMap(SBattleMapData& map)
 
     SetRect(0, 0, 2, 3, ETileType::Tree);
     SetRect(9, 2, 11, 5, ETileType::Tree);
+    SetRect(14, 9, 17, 12, ETileType::Tree);
     SetRect(24, 5, 27, 10, ETileType::Tree);
     SetRect(31, 7, 35, 14, ETileType::Tree);
     SetRect(19, 12, 23, 16, ETileType::Tree);
@@ -85,6 +86,8 @@ static void InitBaseMap(SBattleMapData& map)
     SetRect(0, 20, 3, 23, ETileType::Tree);
     SetRect(23, 20, 25, 23, ETileType::Tree);
     SetRect(34, 20, 37, 23, ETileType::Tree);
+    SetRect(35, 0, 37, 3, ETileType::Tree);
+    SetRect(41, 0, 43, 3, ETileType::Tree);
 
     SetRect(5, 8, 11, 8, ETileType::Fence);
     SetRect(10, 7, 11, 10, ETileType::Fence);

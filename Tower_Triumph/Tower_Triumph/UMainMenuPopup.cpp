@@ -10,12 +10,18 @@ UMainMenuPopup::UMainMenuPopup()
       btnTabInv(nullptr),
       btnExit(nullptr),
       btnClose(nullptr),
+      btnOpenCharPopup(nullptr),
+      btnOpenInvPopup(nullptr),
       itemActionPanel(nullptr),
       btnItemAction1(nullptr),
       btnItemAction2(nullptr),
       targetSelectPanel(nullptr),
+      profilePanel(nullptr),
+      statePanel(nullptr),
       hBgBitmap(NULL),
       exitPopup(nullptr),
+      charPopup(nullptr),
+      invPopup(nullptr),
       bShowTooltip(false)
 {
     bVisible = false;
@@ -75,8 +81,26 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     btnClose->SetText(L"X");
     btnClose->SetLocation(clientRect.right - 50, topY);
     btnClose->SetSize(50, 50);
-    btnClose->SetOnClick([this]() { this->SetVisible(false); });
+    btnClose->SetOnClick([this]() { this->CloseSubPopups(); this->SetVisible(false); });
     AddChild(btnClose);
+
+    btnOpenCharPopup = new UButton();
+    btnOpenCharPopup->SetText(L"DETAIL VIEW");
+    btnOpenCharPopup->SetLocation(Loc.x - 120, topY + 62);
+    btnOpenCharPopup->SetSize(190, 42);
+    btnOpenCharPopup->SetFont(18, FW_BOLD, L"Arial");
+    btnOpenCharPopup->SetAnimationType(1);
+    btnOpenCharPopup->SetOnClick([this]() { this->OpenCharacterPopup(); });
+    AddChild(btnOpenCharPopup);
+
+    btnOpenInvPopup = new UButton();
+    btnOpenInvPopup->SetText(L"BAG VIEW");
+    btnOpenInvPopup->SetLocation(Loc.x + 120, topY + 62);
+    btnOpenInvPopup->SetSize(190, 42);
+    btnOpenInvPopup->SetFont(18, FW_BOLD, L"Arial");
+    btnOpenInvPopup->SetAnimationType(1);
+    btnOpenInvPopup->SetOnClick([this]() { this->OpenInventoryPopup(); });
+    AddChild(btnOpenInvPopup);
 
     itemActionPanel = new UContainerWidget();
     itemActionPanel->SetSize(180, 100);
@@ -101,11 +125,41 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     targetSelectPanel->SetVisible(false);
     AddChild(targetSelectPanel);
 
+    profilePanel = new UProfilePanel();
+    profilePanel->Setup(Loc.x - 285, Loc.y + 70);
+    profilePanel->SetVisible(false);
+    AddChild(profilePanel);
+
+    statePanel = new UStatePanel();
+    statePanel->Setup(Loc.x + 235, Loc.y + 70);
+    statePanel->SetVisible(false);
+    AddChild(statePanel);
+
     exitPopup = new UExitConfirmPopup();
     exitPopup->Setup(hInst, clientRect);
     exitPopup->SetOnYes([]() { PostQuitMessage(0); });
     exitPopup->SetOnNo([this]() { exitPopup->SetVisible(false); });
     AddChild(exitPopup);
+
+    charPopup = new UCharacterInfoPopup();
+    charPopup->Setup(clientRect);
+    charPopup->OnBackCallback = [this]() {
+        if (charPopup) {
+            charPopup->SetVisible(false);
+        }
+    };
+    charPopup->SetVisible(false);
+    AddChild(charPopup);
+
+    invPopup = new UInventoryPopup();
+    invPopup->Setup(clientRect);
+    invPopup->OnBackCallback = [this]() {
+        if (invPopup) {
+            invPopup->SetVisible(false);
+        }
+    };
+    invPopup->SetVisible(false);
+    AddChild(invPopup);
 
     for (int i = 0; i < 3; ++i) {
         UButton* btn = new UButton();
@@ -134,6 +188,15 @@ void UMainMenuPopup::SetTeamData(const std::vector<Character*>& team)
     UpdateCharList();
     UpdateInventoryGrid();
     UpdateEquipmentSlots();
+    RefreshFriendStylePanels();
+
+    if (charPopup) {
+        charPopup->SetTeamData(teamMembers);
+    }
+    if (invPopup) {
+        invPopup->SetTeamData(teamMembers);
+        invPopup->Refresh();
+    }
 }
 
 void UMainMenuPopup::UpdateCharList()
@@ -267,6 +330,10 @@ void UMainMenuPopup::UpdateEquipmentSlots()
                     GameManager::Get().UnequipItem(selectedCharacter, equipPart);
                     this->UpdateInventoryGrid();
                     this->UpdateEquipmentSlots();
+                    this->RefreshFriendStylePanels();
+                    if (invPopup) {
+                        invPopup->Refresh();
+                    }
                 }
             });
             btn->SetOnRightClick([this, equipPart]() {
@@ -274,6 +341,10 @@ void UMainMenuPopup::UpdateEquipmentSlots()
                     GameManager::Get().UnequipItem(selectedCharacter, equipPart);
                     this->UpdateInventoryGrid();
                     this->UpdateEquipmentSlots();
+                    this->RefreshFriendStylePanels();
+                    if (invPopup) {
+                        invPopup->Refresh();
+                    }
                 }
             });
         }
@@ -348,6 +419,10 @@ void UMainMenuPopup::ShowTargetSelection()
             this->HideSubMenus();
             this->UpdateInventoryGrid();
             this->UpdateEquipmentSlots();
+            this->RefreshFriendStylePanels();
+            if (invPopup) {
+                invPopup->Refresh();
+            }
         });
 
         targetSelectPanel->AddChild(btn);
@@ -392,6 +467,16 @@ void UMainMenuPopup::SelectTab(EMenuTab tab)
         btn->SetVisible(showCharLists);
     }
 
+    if (profilePanel) {
+        profilePanel->SetVisible(showCharLists);
+    }
+
+    if (statePanel) {
+        statePanel->SetVisible(showCharLists);
+    }
+
+    RefreshFriendStylePanels();
+
     if (currentTab == EMenuTab::Inventory) {
         UpdateInventoryGrid();
         for (auto b : equipSlotButtons) {
@@ -410,6 +495,104 @@ void UMainMenuPopup::SelectCharacter(Character* character)
 {
     selectedCharacter = character;
     UpdateEquipmentSlots();
+    RefreshFriendStylePanels();
+}
+
+void UMainMenuPopup::RefreshFriendStylePanels()
+{
+    if (profilePanel) {
+        profilePanel->SetCharacter(selectedCharacter);
+    }
+
+    if (statePanel) {
+        statePanel->SetCharacter(selectedCharacter);
+    }
+}
+
+void UMainMenuPopup::ShowNavigation()
+{
+    CloseSubPopups();
+    HideTooltip();
+    SelectTab(currentTab);
+    SetVisible(true);
+}
+
+void UMainMenuPopup::OpenCharacterPopup()
+{
+    if (charPopup == nullptr) {
+        return;
+    }
+
+    HideSubMenus();
+    HideTooltip();
+    if (invPopup) {
+        invPopup->SetVisible(false);
+    }
+
+    charPopup->SetTeamData(teamMembers);
+    RemoveChild(charPopup, false);
+    AddChild(charPopup);
+    charPopup->SetVisible(true);
+}
+
+void UMainMenuPopup::OpenInventoryPopup()
+{
+    if (invPopup == nullptr) {
+        return;
+    }
+
+    HideSubMenus();
+    HideTooltip();
+    if (charPopup) {
+        charPopup->SetVisible(false);
+    }
+
+    invPopup->SetTeamData(teamMembers);
+    invPopup->Refresh();
+    RemoveChild(invPopup, false);
+    AddChild(invPopup);
+    invPopup->SetVisible(true);
+}
+
+void UMainMenuPopup::CloseSubPopups()
+{
+    HideSubMenus();
+
+    if (charPopup) {
+        charPopup->SetVisible(false);
+    }
+    if (invPopup) {
+        invPopup->SetVisible(false);
+    }
+    if (exitPopup) {
+        exitPopup->SetVisible(false);
+    }
+}
+
+bool UMainMenuPopup::HandleBack()
+{
+    if (exitPopup && exitPopup->GetVisible()) {
+        exitPopup->SetVisible(false);
+        return true;
+    }
+
+    if (charPopup && charPopup->GetVisible()) {
+        charPopup->SetVisible(false);
+        return true;
+    }
+
+    if (invPopup && invPopup->GetVisible()) {
+        invPopup->SetVisible(false);
+        return true;
+    }
+
+    if ((targetSelectPanel && targetSelectPanel->GetVisible()) ||
+        (itemActionPanel && itemActionPanel->GetVisible())) {
+        HideSubMenus();
+        return true;
+    }
+
+    return false;
 }
 
 void UMainMenuPopup::ShowTooltip(const std::wstring& title, const std::wstring& desc, Location loc)
@@ -495,93 +678,20 @@ void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
 
     int boxLeft = Loc.x - Size.sX / 2 + 80;
     int boxTop = Loc.y - Size.sY / 2 + 160;
+    int width = Size.sX - 160;
 
-    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
-    COLORREF oldColor = SetTextColor(hMemDC, RGB(255, 255, 255));
+    SetBkMode(hMemDC, TRANSPARENT);
+    SetTextColor(hMemDC, RGB(230, 230, 240));
 
-    HFONT hTitleFont = CreateFontW(30, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hTitleFont);
+    HFONT hFont = CreateFontW(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
 
-    std::wstring nameText = selectedCharacter->GetName();
-    TextOutW(hMemDC, boxLeft + 45, boxTop + 48, nameText.c_str(), (int)nameText.length());
-
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hTitleFont);
-
-    int spriteX = boxLeft + 45;
-    int spriteY = boxTop + 105;
-    int spriteW = 270;
-    int spriteH = 330;
-
-    HBITMAP hSprite = selectedCharacter->GetSpriteIdle();
-    if (hSprite) {
-        BITMAP bm;
-        GetObject(hSprite, sizeof(BITMAP), &bm);
-        HDC hSpriteDC = CreateCompatibleDC(hMemDC);
-        HBITMAP hOld = (HBITMAP)SelectObject(hSpriteDC, hSprite);
-        int frameW = bm.bmWidth / CHARACTER_SHEET_COL;
-        int frameH = bm.bmHeight / CHARACTER_SHEET_ROW;
-        TransparentBlt(
-            hMemDC,
-            spriteX,
-            spriteY,
-            spriteW,
-            spriteH,
-            hSpriteDC,
-            0,
-            0,
-            frameW,
-            frameH,
-            RGB(255, 0, 255)
-        );
-        SelectObject(hSpriteDC, hOld);
-        DeleteDC(hSpriteDC);
-    }
-
-    HFONT hFont = CreateFontW(21, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    oldF = (HFONT)SelectObject(hMemDC, hFont);
-
-    CharacterStat stat = selectedCharacter->GetStat();
-    int statX = boxLeft + 380;
-    int statY = boxTop + 112;
-
-    std::wstring lines[8] = {
-        L"Level: " + std::to_wstring(selectedCharacter->GetLevel()),
-        L"EXP: " + std::to_wstring(selectedCharacter->GetExp()),
-        L"HP: " + std::to_wstring(stat.CurHP) + L" / " + std::to_wstring(stat.MaxHP),
-        L"MP: " + std::to_wstring(stat.CurMP) + L" / " + std::to_wstring(stat.MaxMP),
-        L"STR: " + std::to_wstring(stat.STR),
-        L"INT: " + std::to_wstring(stat.INT),
-        L"DEF: " + std::to_wstring(stat.DEF),
-        L"SPD: " + std::to_wstring(stat.SPD)
-    };
-
-    for (int i = 0; i < 8; ++i) {
-        TextOutW(hMemDC, statX, statY + i * 29, lines[i].c_str(), (int)lines[i].length());
-    }
+    std::wstring guide = L"Friend-style profile/state panels are now used here. Click equipment slots on the right to unequip.";
+    RECT guideRect = { boxLeft + 20, boxTop + 5, boxLeft + width - 20, boxTop + 38 };
+    DrawTextW(hMemDC, guide.c_str(), -1, &guideRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
     SelectObject(hMemDC, oldF);
     DeleteObject(hFont);
-
-    HFONT hEquipFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    oldF = (HFONT)SelectObject(hMemDC, hEquipFont);
-    SetTextColor(hMemDC, RGB(255, 220, 90));
-    std::wstring eqTitle = L"Equipment";
-    TextOutW(hMemDC, boxLeft + 770, boxTop + 178, eqTitle.c_str(), (int)eqTitle.length());
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hEquipFont);
-
-    HFONT hHelpFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    oldF = (HFONT)SelectObject(hMemDC, hHelpFont);
-    SetTextColor(hMemDC, RGB(210, 210, 220));
-    RECT helpRect = { boxLeft + 760, boxTop + 405, boxLeft + 1110, boxTop + 470 };
-    std::wstring help = L"Click equipped item to unequip.\nEquip new items in Inventory.";
-    DrawTextW(hMemDC, help.c_str(), (int)help.length(), &helpRect, DT_LEFT | DT_WORDBREAK);
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hHelpFont);
-
-    SetTextColor(hMemDC, oldColor);
-    SetBkMode(hMemDC, oldBkMode);
 }
 
 void UMainMenuPopup::DrawInventory(HDC hMemDC)

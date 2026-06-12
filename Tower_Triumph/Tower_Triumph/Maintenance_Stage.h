@@ -65,7 +65,8 @@ private:
     RECT GetMainPanelRect() const;
     RECT GetTabRect(EMaintenanceTab tab) const;
     RECT GetContinueRect() const;
-    RECT GetNextStageButtonRect() const;
+    RECT GetNextStageRect() const;
+    bool IsRewardMode() const;
     RECT GetPartySelectRect(int index) const;
     RECT GetInventorySlotRect(int index) const;
     RECT GetEquipmentSlotRect(int index) const;
@@ -79,10 +80,7 @@ private:
     void DrawPanel(HDC hMemDC, const RECT& panel);
     void DrawTabs(HDC hMemDC);
     void DrawContinueButton(HDC hMemDC);
-    bool IsRewardMode() const;
-    bool CanProceedToNextStage() const;
-    int ProceedToNextStage();
-    int ReturnToMapFromReward();
+    void DrawNextStageButton(HDC hMemDC);
 
     void DrawRewardTab(HDC hMemDC, const RECT& panel);
     void DrawPartyTab(HDC hMemDC, const RECT& panel);

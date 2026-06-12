@@ -109,7 +109,7 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	MouseMark = new UMouseMark();
 	MouseMark->SetFrame(g_hInst, { IDB_UI_MOUSECUSOR }); 
 
-	// Test field item. The pickup state is stored in GameManager, so it does not respawn after returning to the map.
+	// Test field item. MapItemID prevents the item from respawning after returning to the map.
 	stageItems.clear();
 	if (!GameManager::Get().IsMapItemCollected(1))
 	{
@@ -258,7 +258,7 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				for (auto m : Markers) {
 					int dx = (m->GetLocation().x) - (camX + CLK_X);
 					int dy = (m->GetLocation().y) - (camY + CLK_Y);
-					float dist = sqrt((float)(dx * dx + dy * dy));
+					float dist = sqrtf(static_cast<float>(dx * dx + dy * dy));
 					if (dist < 275.0f) {
 						if (dist < minDesc) {
 							minDesc = dist;
@@ -307,8 +307,8 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				int dy = (camY + CLK_Y) - pos.y;
 
 				if (it->Active && dx * dx + dy * dy <= 30 * 30) {
-					int itemID = it->ItemID;
 					int mapItemID = it->MapItemID;
+					int itemID = it->ItemID;
 					GameManager::Get().AddItem(itemID, 1);
 					GameManager::Get().MarkMapItemCollected(mapItemID);
 					std::wstring itemName = ItemData::GetName(itemID);
@@ -389,14 +389,18 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	case WM_KEYDOWN:
 		if (wParam == 'i' || wParam == 'I') {
 			if (mainMenu) {
+				mainMenu->SetTeamData(GameManager::Get().GetParty());
+				mainMenu->SetVisible(true);
 				mainMenu->SelectTab(EMenuTab::Inventory);
-				mainMenu->SetVisible(!mainMenu->GetVisible());
+				mainMenu->OpenInventoryPopup();
 			}
 		}
 		else if (wParam == 'p' || wParam == 'P') {
 			if (mainMenu) {
+				mainMenu->SetTeamData(GameManager::Get().GetParty());
+				mainMenu->SetVisible(true);
 				mainMenu->SelectTab(EMenuTab::CharacterInfo);
-				mainMenu->SetVisible(!mainMenu->GetVisible());
+				mainMenu->OpenCharacterPopup();
 			}
 		}
 		else if (wParam == VK_ESCAPE) {
@@ -404,8 +408,16 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				infoPopup->SetVisible(false);
 				for (auto m : Markers) m->Deactivate();
 			}
-			else if (mainMenu && mainMenu->GetVisible()) {
-				mainMenu->SetVisible(false);
+			else if (mainMenu) {
+				if (mainMenu->GetVisible()) {
+					if (!mainMenu->HandleBack()) {
+						mainMenu->SetVisible(false);
+					}
+				}
+				else {
+					mainMenu->SetTeamData(GameManager::Get().GetParty());
+					mainMenu->ShowNavigation();
+				}
 			}
 		}
 		break;

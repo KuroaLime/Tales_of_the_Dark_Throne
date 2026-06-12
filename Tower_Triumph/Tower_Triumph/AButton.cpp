@@ -16,7 +16,7 @@ AButton::AButton() {
 }
 
 void AButton::SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr) {
-	AniCount = FrameStr.size();
+	AniCount = static_cast<int>(FrameStr.size());
 	bBitmap.resize(AniCount);
 	bMapinfo.resize(AniCount);
 	for (int i = 0; i < AniCount; i++) {

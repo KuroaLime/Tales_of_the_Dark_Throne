@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Widget.h"
 #include <functional>
 #include <string>
@@ -15,12 +15,24 @@ protected:
 	std::function<void()> OnUnhoverCallback;
 	bool bWasPointed;
 	std::wstring ButtonText;
+	HFONT hButtonFont;
+
+	int AnimationType;
+	float currentVisualOffsetY;
+	float currentScale;
+
+protected:
+	void Animation1();
+	void Animation2();
 
 public:
 	UButton();
+	virtual ~UButton();
 	virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
 	virtual void Update() override;
 	
+	void SetFont(int nHeight, int nWeight, const std::wstring& fontName);
+	void SetAnimationType(int type) { AnimationType = type; }
 	void SetOnClick(std::function<void()> Callback) { OnClickCallback = Callback; }
 	void Click();
 

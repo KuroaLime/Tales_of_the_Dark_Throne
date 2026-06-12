@@ -1,4 +1,4 @@
-#include "UBattleActionMenu.h"
+﻿#include "UBattleActionMenu.h"
 #include "Character.h"
 
 UBattleActionMenu::UBattleActionMenu()
@@ -48,6 +48,89 @@ void UBattleActionMenu::Init()
     AddChild(btnEndTurn);
 
     SetVisible(false);
+}
+
+void UBattleActionMenu::Draw(HDC hMemDC, HDC hMemDC1)
+{
+    if (!bVisible)
+    {
+        return;
+    }
+
+    RECT panel = { 0, 0, 0, 0 };
+    bool hasRect = false;
+
+    std::vector<UButton*> buttons =
+    {
+        btnMove,
+        btnAttack,
+        btnSkill,
+        btnDefend,
+        btnItem,
+        btnEndTurn
+    };
+
+    for (UButton* button : buttons)
+    {
+        if (button == nullptr)
+        {
+            continue;
+        }
+
+        Location loc = button->GetLocation();
+        BuSIZE size = button->GetSize();
+
+        RECT rc =
+        {
+            loc.x - size.sX / 2,
+            loc.y - size.sY / 2,
+            loc.x + size.sX / 2,
+            loc.y + size.sY / 2
+        };
+
+        if (!hasRect)
+        {
+            panel = rc;
+            hasRect = true;
+        }
+        else
+        {
+            if (rc.left < panel.left) panel.left = rc.left;
+            if (rc.top < panel.top) panel.top = rc.top;
+            if (rc.right > panel.right) panel.right = rc.right;
+            if (rc.bottom > panel.bottom) panel.bottom = rc.bottom;
+        }
+    }
+
+    if (hasRect)
+    {
+        InflateRect(&panel, 12, 10);
+
+        HBRUSH bgBrush = CreateSolidBrush(RGB(12, 16, 28));
+        FillRect(hMemDC, &panel, bgBrush);
+        DeleteObject(bgBrush);
+
+        HPEN borderPen = CreatePen(PS_SOLID, 2, RGB(230, 230, 230));
+        HPEN oldPen = (HPEN)SelectObject(hMemDC, borderPen);
+        HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+        Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
+
+        int centerX = (panel.left + panel.right) / 2;
+        int row1 = panel.top + (panel.bottom - panel.top) / 3;
+        int row2 = panel.top + ((panel.bottom - panel.top) * 2) / 3;
+        MoveToEx(hMemDC, centerX, panel.top, nullptr);
+        LineTo(hMemDC, centerX, panel.bottom);
+        MoveToEx(hMemDC, panel.left, row1, nullptr);
+        LineTo(hMemDC, panel.right, row1);
+        MoveToEx(hMemDC, panel.left, row2, nullptr);
+        LineTo(hMemDC, panel.right, row2);
+
+        SelectObject(hMemDC, oldBrush);
+        SelectObject(hMemDC, oldPen);
+        DeleteObject(borderPen);
+    }
+
+    UContainerWidget::Draw(hMemDC, hMemDC1);
 }
 
 void UBattleActionMenu::UpdatePosition(int screenX, int screenY)

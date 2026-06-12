@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UContainerWidget.h"
 #include "UButton.h"
 
@@ -17,6 +17,7 @@ public:
     virtual ~UBattleActionMenu();
 
     virtual void Init() override;
+    virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
     
     // 캐릭터 위치를 기준으로 메뉴 위치 업데이트
     void UpdatePosition(int screenX, int screenY);

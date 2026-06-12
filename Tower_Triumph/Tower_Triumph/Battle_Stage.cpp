@@ -23,9 +23,14 @@ static void DrawBattleStageText(
     COLORREF color,
     UINT format
 );
-static void DrawBattleStageButton(HDC hMemDC, const RECT& rc, const std::wstring& text, COLORREF border, COLORREF textColor);
 
-
+static void DrawBattleStageButton(
+    HDC hMemDC,
+    const RECT& rc,
+    const std::wstring& text,
+    COLORREF border,
+    COLORREF textColor
+);
 
 static const SSkillData* FindBattleSkillInfo(int skillID)
 {
@@ -159,6 +164,8 @@ Battle_Stage::Battle_Stage()
     BattleWon(false),
     HoverGridX(-1),
     HoverGridY(-1),
+    LastMouseX(-1),
+    LastMouseY(-1),
     ActiveMoveIndex(0),
     SelectedBattleItemID(-1),
     bSelectingBattleItemTarget(false),
@@ -264,16 +271,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     GameManager::Get().InitDefaultParty();
     playerTeam = GameManager::Get().GetParty();
 
-    const int fallbackPlayerStarts[5][2] =
-    {
-        { 6, 19 },
-        { 8, 19 },
-        { 7, 18 },
-        { 5, 19 },
-        { 9, 18 }
-    };
-
-    for (size_t i = 0; i < playerTeam.size(); ++i)
+    for (size_t i = 0; i < playerTeam.size() && i < CurrentMap.playerStarts.size(); ++i)
     {
         Character* c = playerTeam[i];
 
@@ -282,16 +280,9 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
             continue;
         }
 
-        int startX = fallbackPlayerStarts[i % 5][0];
-        int startY = fallbackPlayerStarts[i % 5][1];
+        const auto& start = CurrentMap.playerStarts[i];
 
-        if (i < CurrentMap.playerStarts.size())
-        {
-            startX = CurrentMap.playerStarts[i].x;
-            startY = CurrentMap.playerStarts[i].y;
-        }
-
-        c->SetGridPos(startX, startY);
+        c->SetGridPos(start.x, start.y);
         c->LoadSprites(L"Resource");
         c->SyncWorldPixelToGrid(TILE_SIZE);
         c->ResetTurnState();
@@ -386,23 +377,33 @@ void Battle_Stage::Update(HWND hWnd)
 
     Character* focusTarget = nullptr;
 
-    if (MovingUnit != nullptr)
-    {
-        focusTarget = MovingUnit;
-    }
-    else if (ActingUnit != nullptr)
-    {
-        focusTarget = ActingUnit;
-    }
-    else if (turnSystem != nullptr)
-    {
-        focusTarget = turnSystem->GetCurrentTurnCharacter();
-    }
+    const bool bSkillTargetCameraMode =
+        (controlMode == EBattleControlMode::SELECT_SKILL && bSelectingBattleSkillTarget);
 
-    if (focusTarget != nullptr)
+    if (bSkillTargetCameraMode)
     {
-        Location p = focusTarget->GetWorldPixelPos(TILE_SIZE);
-        FocusCameraOnWorldPos(p.x + TILE_SIZE / 2, p.y + TILE_SIZE / 2);
+        UpdateSkillTargetCameraByMouse(hWnd);
+    }
+    else
+    {
+        if (MovingUnit != nullptr)
+        {
+            focusTarget = MovingUnit;
+        }
+        else if (ActingUnit != nullptr)
+        {
+            focusTarget = ActingUnit;
+        }
+        else if (turnSystem != nullptr)
+        {
+            focusTarget = turnSystem->GetCurrentTurnCharacter();
+        }
+
+        if (focusTarget != nullptr)
+        {
+            Location p = focusTarget->GetWorldPixelPos(TILE_SIZE);
+            FocusCameraOnWorldPos(p.x + TILE_SIZE / 2, p.y + TILE_SIZE / 2);
+        }
     }
 
     if (MovingUnit != nullptr)
@@ -449,13 +450,26 @@ void Battle_Stage::Update(HWND hWnd)
                 return;
             }
 
+            if (turnSystem)
+            {
+                if (movingUnitAlive)
+                {
+                    if (isEnemyTurn)
+                    {
+                        turnSystem->NextTurn();
+                    }
+                }
+                else
+                {
+                    // The current moving unit can be removed by terrain damage.
+                    // In that case, do not call NextTurn(), because the next unit is
+                    // already at the front of the turn queue after RemoveDeadUnits().
+                    turnSystem->RemoveDeadUnits();
+                }
+            }
+
             if (isEnemyTurn || !movingUnitAlive)
             {
-                if (turnSystem)
-                {
-                    turnSystem->NextTurn();
-                }
-
                 ResetTurnActions();
             }
         }
@@ -605,6 +619,7 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
 {
     DrawBackground(hMemDC, hMemDC1);
     DrawGrid(hMemDC);
+    DrawTileOverlay(hMemDC);
 
     if (controlMode == EBattleControlMode::SELECT_MOVE && !BattleEnded)
     {
@@ -755,12 +770,22 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         int mouseX = LOWORD(lParam);
         int mouseY = HIWORD(lParam);
+        LastMouseX = mouseX;
+        LastMouseY = mouseY;
 
-        UpdatePreviewMovePathByMouse(mouseX, mouseY);
-
-        if (controlMode == EBattleControlMode::SELECT_SKILL && bSelectingBattleSkillTarget)
+        if (controlMode == EBattleControlMode::SELECT_MOVE)
+        {
+            UpdatePreviewMovePathByMouse(mouseX, mouseY);
+        }
+        else if (controlMode == EBattleControlMode::SELECT_SKILL && bSelectingBattleSkillTarget)
         {
             UpdateHoverGridByMouse(mouseX, mouseY);
+        }
+        else
+        {
+            HoverGridX = -1;
+            HoverGridY = -1;
+            PreviewMovePath.clear();
         }
 
         return -2;
@@ -1560,6 +1585,8 @@ void Battle_Stage::ClearBattleSkillSelection()
     SelectedBattleSkillID = -1;
     bSelectingBattleSkillTarget = false;
     BattleSkillIDs.clear();
+    HoverGridX = -1;
+    HoverGridY = -1;
 }
 
 RECT Battle_Stage::GetBattleSkillRect(int index) const
@@ -1878,6 +1905,13 @@ void Battle_Stage::DrawSkillRange(HDC hMemDC)
 
 void Battle_Stage::UpdateHoverGridByMouse(int mouseX, int mouseY)
 {
+    if (controlMode != EBattleControlMode::SELECT_SKILL || !bSelectingBattleSkillTarget)
+    {
+        HoverGridX = -1;
+        HoverGridY = -1;
+        return;
+    }
+
     int offsetX = GetOffsetX();
     int offsetY = GetOffsetY();
 
@@ -1905,9 +1939,160 @@ void Battle_Stage::UpdateHoverGridByMouse(int mouseX, int mouseY)
     HoverGridY = gridY;
 }
 
+void Battle_Stage::UpdateSkillTargetCameraByMouse(HWND hWnd)
+{
+    if (controlMode != EBattleControlMode::SELECT_SKILL || !bSelectingBattleSkillTarget)
+    {
+        return;
+    }
+
+    POINT mousePos;
+    GetCursorPos(&mousePos);
+    ScreenToClient(hWnd, &mousePos);
+
+    if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x > rects.right || mousePos.y > rects.bottom)
+    {
+        return;
+    }
+
+    LastMouseX = mousePos.x;
+    LastMouseY = mousePos.y;
+
+    float moveX = 0.0f;
+    float moveY = 0.0f;
+
+    const int edgeMargin = 42;
+    const int skillPanelLeft = rects.right - 420;
+    const float cameraSpeed = 34.0f;
+
+    if (mousePos.x < edgeMargin)
+    {
+        moveX -= 1.0f;
+    }
+
+    if (mousePos.x > rects.right - edgeMargin || mousePos.x >= skillPanelLeft)
+    {
+        moveX += 1.0f;
+    }
+
+    if (mousePos.y < edgeMargin)
+    {
+        moveY -= 1.0f;
+    }
+
+    if (mousePos.y > rects.bottom - edgeMargin)
+    {
+        moveY += 1.0f;
+    }
+
+    if (moveX != 0.0f || moveY != 0.0f)
+    {
+        FocusCameraOnWorldPos(
+            (int)(camPosX + moveX * cameraSpeed),
+            (int)(camPosY + moveY * cameraSpeed)
+        );
+
+        UpdateHoverGridByMouse(LastMouseX, LastMouseY);
+    }
+}
+
+std::vector<Location> Battle_Stage::BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const
+{
+    std::vector<Location> cells;
+
+    const SSkillData* info = FindBattleSkillInfo(skillID);
+
+    if (user == nullptr || info == nullptr)
+    {
+        return cells;
+    }
+
+    if (!IsInsideGrid(centerX, centerY))
+    {
+        return cells;
+    }
+
+    Location userPos = user->GetGridPos();
+
+    if (info->AreaType == ESkillAreaType::Single)
+    {
+        cells.push_back({ centerX, centerY });
+        return cells;
+    }
+
+    if (info->AreaType == ESkillAreaType::Splash1 || info->AreaType == ESkillAreaType::Splash2)
+    {
+        int radius = (info->AreaType == ESkillAreaType::Splash2) ? 2 : 1;
+
+        for (int y = centerY - radius; y <= centerY + radius; ++y)
+        {
+            for (int x = centerX - radius; x <= centerX + radius; ++x)
+            {
+                if (!IsInsideGrid(x, y))
+                {
+                    continue;
+                }
+
+                int dist = std::abs(x - centerX) + std::abs(y - centerY);
+
+                if (dist <= radius)
+                {
+                    cells.push_back({ x, y });
+                }
+            }
+        }
+
+        return cells;
+    }
+
+    if (info->AreaType == ESkillAreaType::Line)
+    {
+        int dirX = 0;
+        int dirY = 0;
+
+        if (centerX == userPos.x)
+        {
+            dirY = (centerY > userPos.y) ? 1 : -1;
+        }
+        else if (centerY == userPos.y)
+        {
+            dirX = (centerX > userPos.x) ? 1 : -1;
+        }
+        else
+        {
+            return cells;
+        }
+
+        for (int i = 1; i <= info->Range; ++i)
+        {
+            int x = userPos.x + dirX * i;
+            int y = userPos.y + dirY * i;
+
+            if (!IsInsideGrid(x, y))
+            {
+                break;
+            }
+
+            cells.push_back({ x, y });
+        }
+    }
+
+    return cells;
+}
+
 void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
 {
-    if (turnSystem == nullptr || SelectedBattleSkillID < 0)
+    if (turnSystem == nullptr)
+    {
+        return;
+    }
+
+    if (controlMode != EBattleControlMode::SELECT_SKILL || !bSelectingBattleSkillTarget)
+    {
+        return;
+    }
+
+    if (HoverGridX < 0 || HoverGridY < 0)
     {
         return;
     }
@@ -1920,23 +2105,26 @@ void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
         return;
     }
 
-    if (HoverGridX < 0 || HoverGridY < 0 || !IsInsideGrid(HoverGridX, HoverGridY))
-    {
-        return;
-    }
+    int offsetX = GetOffsetX();
+    int offsetY = GetOffsetY();
 
-    if (!IsBattleSkillTargetValid(current, SelectedBattleSkillID, HoverGridX, HoverGridY))
+    bool validTarget = IsBattleSkillTargetValid(current, SelectedBattleSkillID, HoverGridX, HoverGridY);
+    COLORREF previewColor = validTarget ? info->Color : RGB(255, 60, 60);
+
+    if (!validTarget)
     {
-        int offsetX = GetOffsetX();
-        int offsetY = GetOffsetY();
         int sx = offsetX + HoverGridX * TILE_SIZE;
         int sy = offsetY + HoverGridY * TILE_SIZE;
 
-        HPEN hInvalidPen = CreatePen(PS_SOLID, 3, RGB(220, 80, 80));
+        HPEN hInvalidPen = CreatePen(PS_SOLID, 4, previewColor);
         HPEN hOldPen = (HPEN)SelectObject(hMemDC, hInvalidPen);
         HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
 
-        Rectangle(hMemDC, sx + 7, sy + 7, sx + TILE_SIZE - 7, sy + TILE_SIZE - 7);
+        Rectangle(hMemDC, sx + 6, sy + 6, sx + TILE_SIZE - 6, sy + TILE_SIZE - 6);
+        MoveToEx(hMemDC, sx + 12, sy + 12, NULL);
+        LineTo(hMemDC, sx + TILE_SIZE - 12, sy + TILE_SIZE - 12);
+        MoveToEx(hMemDC, sx + TILE_SIZE - 12, sy + 12, NULL);
+        LineTo(hMemDC, sx + 12, sy + TILE_SIZE - 12);
 
         SelectObject(hMemDC, hOldBrush);
         SelectObject(hMemDC, hOldPen);
@@ -1944,105 +2132,39 @@ void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
         return;
     }
 
-    std::vector<Location> previewTiles;
+    std::vector<Location> cells = BuildSkillAreaCells(current, SelectedBattleSkillID, HoverGridX, HoverGridY);
 
-    if (info->AreaType == ESkillAreaType::Single)
-    {
-        previewTiles.push_back({ HoverGridX, HoverGridY });
-    }
-    else if (info->AreaType == ESkillAreaType::Splash1 || info->AreaType == ESkillAreaType::Splash2)
-    {
-        int radius = (info->AreaType == ESkillAreaType::Splash2) ? 2 : 1;
-
-        for (int y = HoverGridY - radius; y <= HoverGridY + radius; ++y)
-        {
-            for (int x = HoverGridX - radius; x <= HoverGridX + radius; ++x)
-            {
-                if (!IsInsideGrid(x, y))
-                {
-                    continue;
-                }
-
-                int dist = std::abs(x - HoverGridX) + std::abs(y - HoverGridY);
-
-                if (dist <= radius)
-                {
-                    previewTiles.push_back({ x, y });
-                }
-            }
-        }
-    }
-    else if (info->AreaType == ESkillAreaType::Line)
-    {
-        Location userPos = current->GetGridPos();
-        int dx = 0;
-        int dy = 0;
-
-        if (HoverGridX > userPos.x)
-        {
-            dx = 1;
-        }
-        else if (HoverGridX < userPos.x)
-        {
-            dx = -1;
-        }
-        else if (HoverGridY > userPos.y)
-        {
-            dy = 1;
-        }
-        else if (HoverGridY < userPos.y)
-        {
-            dy = -1;
-        }
-
-        if (dx != 0 || dy != 0)
-        {
-            for (int step = 1; step <= info->Range; ++step)
-            {
-                int x = userPos.x + dx * step;
-                int y = userPos.y + dy * step;
-
-                if (!IsInsideGrid(x, y))
-                {
-                    break;
-                }
-
-                previewTiles.push_back({ x, y });
-            }
-        }
-    }
-
-    if (previewTiles.empty())
+    if (cells.empty())
     {
         return;
     }
 
-    int offsetX = GetOffsetX();
-    int offsetY = GetOffsetY();
+    HBRUSH hAreaBrush = CreateHatchBrush(HS_DIAGCROSS, previewColor);
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, hAreaBrush);
+    HPEN hAreaPen = CreatePen(PS_SOLID, 4, previewColor);
+    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hAreaPen);
 
-    HBRUSH hPreviewBrush = CreateHatchBrush(HS_DIAGCROSS, info->Color);
-    HPEN hPreviewPen = CreatePen(PS_SOLID, 4, info->Color);
-    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, hPreviewBrush);
-    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPreviewPen);
-
-    for (const Location& tile : previewTiles)
+    for (const Location& cell : cells)
     {
-        int sx = offsetX + tile.x * TILE_SIZE;
-        int sy = offsetY + tile.y * TILE_SIZE;
-
-        Rectangle(
-            hMemDC,
-            sx + 10,
-            sy + 10,
-            sx + TILE_SIZE - 10,
-            sy + TILE_SIZE - 10
-        );
+        int sx = offsetX + cell.x * TILE_SIZE;
+        int sy = offsetY + cell.y * TILE_SIZE;
+        Rectangle(hMemDC, sx + 8, sy + 8, sx + TILE_SIZE - 8, sy + TILE_SIZE - 8);
     }
 
-    SelectObject(hMemDC, hOldPen);
     SelectObject(hMemDC, hOldBrush);
-    DeleteObject(hPreviewPen);
-    DeleteObject(hPreviewBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hAreaBrush);
+    DeleteObject(hAreaPen);
+
+    int centerX = offsetX + HoverGridX * TILE_SIZE;
+    int centerY = offsetY + HoverGridY * TILE_SIZE;
+    HPEN hCenterPen = CreatePen(PS_SOLID, 5, RGB(255, 255, 255));
+    hOldPen = (HPEN)SelectObject(hMemDC, hCenterPen);
+    hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+    Rectangle(hMemDC, centerX + 3, centerY + 3, centerX + TILE_SIZE - 3, centerY + TILE_SIZE - 3);
+    SelectObject(hMemDC, hOldBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hCenterPen);
 }
 
 bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* current)
@@ -2108,8 +2230,6 @@ bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* cur
 
             SelectedBattleSkillID = skillID;
             bSelectingBattleSkillTarget = true;
-            HoverGridX = -1;
-            HoverGridY = -1;
             return true;
         }
 
@@ -3078,7 +3198,19 @@ void Battle_Stage::DrawMoveArrow(HDC hMemDC)
             points.push_back(p);
         }
 
-        DrawArrowPolyline(hMemDC, points, RGB(255, 230, 40), 5);
+        COLORREF arrowColor = RGB(255, 230, 40);
+
+        if (!ActiveMovePath.empty())
+        {
+            const Location& end = ActiveMovePath.back();
+
+            if (IsDamageTile(end.x, end.y))
+            {
+                arrowColor = RGB(255, 90, 50);
+            }
+        }
+
+        DrawArrowPolyline(hMemDC, points, arrowColor, 5);
         return;
     }
 
@@ -3113,7 +3245,19 @@ void Battle_Stage::DrawMoveArrow(HDC hMemDC)
             points.push_back(p);
         }
 
-        DrawArrowPolyline(hMemDC, points, RGB(255, 230, 40), 5);
+        COLORREF arrowColor = RGB(255, 230, 40);
+
+        if (!PreviewMovePath.empty())
+        {
+            const Location& end = PreviewMovePath.back();
+
+            if (IsDamageTile(end.x, end.y))
+            {
+                arrowColor = RGB(255, 90, 50);
+            }
+        }
+
+        DrawArrowPolyline(hMemDC, points, arrowColor, 5);
     }
 }
 
@@ -3568,6 +3712,59 @@ Character* Battle_Stage::FindNearestAlivePlayer(Character* enemy) const
     return bestTarget;
 }
 
+int Battle_Stage::GetAttackRangeForUnit(Character* unit) const
+{
+    if (unit == nullptr)
+    {
+        return 1;
+    }
+
+    switch (unit->GetClassType())
+    {
+    case ECharacterClass::Warrior:
+        return 1;
+
+    case ECharacterClass::Archer:
+        return 3;
+
+    case ECharacterClass::Mage:
+        return 2;
+
+    default:
+        return 1;
+    }
+}
+
+bool Battle_Stage::CanAttackFromTile(Character* unit, int fromX, int fromY, Character* target) const
+{
+    if (unit == nullptr || target == nullptr || !target->IsAlive())
+    {
+        return false;
+    }
+
+    Location tp = target->GetGridPos();
+    int dist = std::abs(tp.x - fromX) + std::abs(tp.y - fromY);
+
+    return dist <= GetAttackRangeForUnit(unit);
+}
+
+int Battle_Stage::GetMoveTileDangerPenalty(int gx, int gy) const
+{
+    if (!IsDamageTile(gx, gy))
+    {
+        return 0;
+    }
+
+    int damage = GetTileDamage(gx, gy);
+
+    if (damage <= 0)
+    {
+        return 0;
+    }
+
+    return damage * 30;
+}
+
 bool Battle_Stage::FindBestMoveTileToward(Character* unit, Character* target, int& outX, int& outY) const
 {
     if (unit == nullptr || target == nullptr)
@@ -3579,7 +3776,9 @@ bool Battle_Stage::FindBestMoveTileToward(Character* unit, Character* target, in
     Location tp = target->GetGridPos();
 
     bool found = false;
+    int bestScore = 999999;
     int bestDist = 999999;
+    int bestDanger = 999999;
 
     outX = up.x;
     outY = up.y;
@@ -3616,10 +3815,20 @@ bool Battle_Stage::FindBestMoveTileToward(Character* unit, Character* target, in
             }
 
             int distToTarget = std::abs(tp.x - x) + std::abs(tp.y - y);
+            int pathCost = (int)tempPath.size();
+            int dangerPenalty = GetMoveTileDangerPenalty(x, y);
+            int attackReadyBonus = CanAttackFromTile(unit, x, y, target) ? -500 : 0;
 
-            if (distToTarget < bestDist)
+            int score = distToTarget * 100 + pathCost * 3 + dangerPenalty + attackReadyBonus;
+
+            if (!found ||
+                score < bestScore ||
+                (score == bestScore && dangerPenalty < bestDanger) ||
+                (score == bestScore && dangerPenalty == bestDanger && distToTarget < bestDist))
             {
+                bestScore = score;
                 bestDist = distToTarget;
+                bestDanger = dangerPenalty;
                 outX = x;
                 outY = y;
                 found = true;

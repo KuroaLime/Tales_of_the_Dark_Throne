@@ -145,72 +145,66 @@ void UTurnCharacterInfo::Draw(HDC hMemDC, HDC hMemDC1)
 
 void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
 {
-    HBITMAP hSprite = owner->GetSpriteIdle();
+    if (owner == nullptr)
+    {
+        return;
+    }
 
-    if (hSprite == NULL)
+    HBITMAP hPortrait = owner->GetIllustration();
+    const BITMAP* portraitInfo = owner->GetIllustrationInfo();
+
+    bool useSpriteFallback = false;
+    if (hPortrait == NULL || portraitInfo == nullptr)
+    {
+        hPortrait = owner->GetSpriteIdle();
+        portraitInfo = nullptr;
+        useSpriteFallback = true;
+    }
+
+    if (hPortrait == NULL)
     {
         HBRUSH hFallbackBrush = CreateSolidBrush(RGB(100, 100, 100));
-
-        RECT fallbackRect =
-        {
-            portraitRect.left + 5,
-            portraitRect.top + 5,
-            portraitRect.right - 5,
-            portraitRect.bottom - 5
-        };
-
-        FillRect(hMemDC, &fallbackRect, hFallbackBrush);
+        FillRect(hMemDC, &portraitRect, hFallbackBrush);
         DeleteObject(hFallbackBrush);
 
-        SetTextColor(hMemDC, RGB(255, 255, 255));
-        SetBkMode(hMemDC, TRANSPARENT);
-        DrawTextW(hMemDC, L"No Img", -1, (RECT*)&portraitRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        int oldMode = SetBkMode(hMemDC, TRANSPARENT);
+        COLORREF oldColor = SetTextColor(hMemDC, RGB(255, 255, 255));
 
+        std::wstring noImage = L"NO IMAGE";
+        DrawTextW(hMemDC, noImage.c_str(), -1, (RECT*)&portraitRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+        SetTextColor(hMemDC, oldColor);
+        SetBkMode(hMemDC, oldMode);
         return;
     }
 
-    BITMAP spriteInfo;
-    ZeroMemory(&spriteInfo, sizeof(BITMAP));
-    GetObject(hSprite, sizeof(BITMAP), &spriteInfo);
+    int srcW = 0;
+    int srcH = 0;
 
-    if (spriteInfo.bmWidth <= 0 || spriteInfo.bmHeight <= 0)
+    if (useSpriteFallback)
     {
-        return;
-    }
+        BITMAP spriteInfo;
+        ZeroMemory(&spriteInfo, sizeof(BITMAP));
+        GetObject(hPortrait, sizeof(BITMAP), &spriteInfo);
 
-    // Temporary sprite sheet: 4 columns, auto-detect 1 or 3 rows.
-    //
-    int sheetCol = 4;
-    int frameW = spriteInfo.bmWidth / sheetCol;
+        srcW = spriteInfo.bmWidth / CHARACTER_SHEET_COL;
+        srcH = spriteInfo.bmHeight;
 
-    if (frameW <= 0)
-    {
-        return;
-    }
-
-    int rowCount = 1;
-
-    if (spriteInfo.bmHeight % 3 == 0)
-    {
-        int candidateFrameH = spriteInfo.bmHeight / 3;
-
-    // Temporary sprite sheet: 4 columns, auto-detect 1 or 3 rows.
-        if (candidateFrameH == frameW)
+        if (spriteInfo.bmHeight % 3 == 0 && (spriteInfo.bmHeight / 3) == srcW)
         {
-            rowCount = 3;
+            srcH = spriteInfo.bmHeight / 3;
         }
     }
+    else
+    {
+        srcW = portraitInfo->bmWidth;
+        srcH = portraitInfo->bmHeight;
+    }
 
-    int frameH = spriteInfo.bmHeight / rowCount;
-
-    if (frameH <= 0)
+    if (srcW <= 0 || srcH <= 0)
     {
         return;
     }
-
-    // Use the first frame as the portrait.
-    int srcX = 0;
-    int srcY = 0;
 
     int portraitW = portraitRect.right - portraitRect.left;
     int portraitH = portraitRect.bottom - portraitRect.top;
@@ -218,26 +212,25 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
     int dstW = portraitW;
     int dstH = portraitH;
 
-    // Keep source aspect ratio.
-    float srcRatio = (float)frameW / (float)frameH;
+    float srcRatio = (float)srcW / (float)srcH;
     float dstRatio = (float)portraitW / (float)portraitH;
 
     if (srcRatio > dstRatio)
     {
         dstW = portraitW;
-        dstH = (int)(portraitW / srcRatio);
+        dstH = (int)((float)portraitW / srcRatio);
     }
     else
     {
         dstH = portraitH;
-        dstW = (int)(portraitH * srcRatio);
+        dstW = (int)((float)portraitH * srcRatio);
     }
 
     int dstX = portraitRect.left + (portraitW - dstW) / 2;
     int dstY = portraitRect.top + (portraitH - dstH) / 2;
 
-    HDC hSpriteDC = CreateCompatibleDC(hMemDC);
-    HBITMAP hOld = (HBITMAP)SelectObject(hSpriteDC, hSprite);
+    HDC hPortraitDC = CreateCompatibleDC(hMemDC);
+    HBITMAP hOld = (HBITMAP)SelectObject(hPortraitDC, hPortrait);
 
     TransparentBlt(
         hMemDC,
@@ -245,14 +238,14 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         dstY,
         dstW,
         dstH,
-        hSpriteDC,
-        srcX,
-        srcY,
-        frameW,
-        frameH,
-        RGB(255, 0, 255)
+        hPortraitDC,
+        0,
+        0,
+        srcW,
+        srcH,
+        CHARACTER_TRANSPARENT_COLOR
     );
 
-    SelectObject(hSpriteDC, hOld);
-    DeleteDC(hSpriteDC);
+    SelectObject(hPortraitDC, hOld);
+    DeleteDC(hPortraitDC);
 }
