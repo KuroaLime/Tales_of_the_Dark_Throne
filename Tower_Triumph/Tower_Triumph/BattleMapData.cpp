@@ -180,6 +180,8 @@ SBattleMapData BattleMapData::BuildStage01()
     map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
     map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
     map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 5, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    9, 18, 18 });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 36, 18, 10 });
     map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    34, 19, 20 });
@@ -199,6 +201,8 @@ SBattleMapData BattleMapData::BuildStage02()
     map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
     map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
     map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 5, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    9, 18, 18 });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Stage2 Guard", 35, 18, 12 });
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Stage2 Guard", 37, 19, 12 });
@@ -219,6 +223,8 @@ SBattleMapData BattleMapData::BuildStage03()
     map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
     map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
     map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 5, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    9, 18, 18 });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Final Knight", 35, 18, 14 });
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Final Knight", 37, 19, 14 });

@@ -1,4 +1,4 @@
-#include "UTurnCharacterInfo.h"
+癤�#include "UTurnCharacterInfo.h"
 
 #include <string>
 
@@ -130,6 +130,14 @@ void UTurnCharacterInfo::Draw(HDC hMemDC, HDC hMemDC1)
 
         TextOutW(hMemDC, infoX, infoY + 45, hpStr.c_str(), (int)hpStr.length());
 
+        std::wstring mpStr =
+            L"MP: " +
+            std::to_wstring(stat.CurMP) +
+            L" / " +
+            std::to_wstring(stat.MaxMP);
+
+        TextOutW(hMemDC, infoX, infoY + 65, mpStr.c_str(), (int)mpStr.length());
+
         SelectObject(hMemDC, oldFont);
         DeleteObject(detailFont);
     }
@@ -170,10 +178,8 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         return;
     }
 
-    // 현재 프로젝트 임시 캐릭터 스프라이트:
-    // 1448 x 1086 = 4열 x 3행, 한 프레임 362 x 362
+    // Temporary sprite sheet: 4 columns, auto-detect 1 or 3 rows.
     //
-    // 나중에 1행 4프레임으로 바꿔도 대응 가능하게 처리.
     int sheetCol = 4;
     int frameW = spriteInfo.bmWidth / sheetCol;
 
@@ -188,7 +194,7 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
     {
         int candidateFrameH = spriteInfo.bmHeight / 3;
 
-        // 현재 4x3 임시 스프라이트는 프레임이 정사각형이라 이 조건으로 판단 가능
+    // Temporary sprite sheet: 4 columns, auto-detect 1 or 3 rows.
         if (candidateFrameH == frameW)
         {
             rowCount = 3;
@@ -202,9 +208,7 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         return;
     }
 
-    // 초상화는 첫 번째 프레임 사용
-    // 4x3이면 0행 = 정면/아래 방향 프레임
-    // 1x4이면 0행 = 유일한 행
+    // Use the first frame as the portrait.
     int srcX = 0;
     int srcY = 0;
 
@@ -214,7 +218,7 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
     int dstW = portraitW;
     int dstH = portraitH;
 
-    // 원본 비율 유지
+    // Keep source aspect ratio.
     float srcRatio = (float)frameW / (float)frameH;
     float dstRatio = (float)portraitW / (float)portraitH;
 

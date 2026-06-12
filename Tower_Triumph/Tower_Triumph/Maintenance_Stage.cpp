@@ -8,8 +8,11 @@ Maintenance_Stage::Maintenance_Stage()
     : RewardApplied(false),
       ActiveTab(EMaintenanceTab::Reward),
       SelectedPartyIndex(0),
+      SelectedSkillSlot(0),
       ShopMessage(L""),
-      ShopMessageLife(0)
+      ShopMessageLife(0),
+      SkillMessage(L""),
+      SkillMessageLife(0)
 {
     CurStageID = 3;
     NextStageID = -2;
@@ -28,11 +31,14 @@ void Maintenance_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     GetClientRect(hWnd, &rects);
 
     RewardApplied = false;
-    ActiveTab = EMaintenanceTab::Reward;
+    ActiveTab = BattleRewardManager::Get().HasReward() ? EMaintenanceTab::Reward : EMaintenanceTab::Party;
     SelectedPartyIndex = 0;
     LevelResults.clear();
     ShopMessage.clear();
     ShopMessageLife = 0;
+    SkillMessage.clear();
+    SkillMessageLife = 0;
+    SelectedSkillSlot = 0;
     NextStageID = -2;
 
     GameManager::Get().InitDefaultParty();
@@ -51,6 +57,11 @@ void Maintenance_Stage::Update(HWND hWnd)
     {
         ShopMessageLife--;
     }
+
+    if (SkillMessageLife > 0)
+    {
+        SkillMessageLife--;
+    }
 }
 
 
@@ -65,7 +76,7 @@ void Maintenance_Stage::Draw(HDC hMemDC, HDC hMemDC1)
 
     DrawCenteredText(
         hMemDC,
-        L"PREPARATION STAGE",
+        BattleRewardManager::Get().HasReward() ? L"PREPARATION STAGE" : L"TOWN / PREPARATION",
         panel.top + 16,
         50,
         38,
@@ -93,6 +104,10 @@ void Maintenance_Stage::Draw(HDC hMemDC, HDC hMemDC1)
         DrawEquipmentTab(hMemDC, panel);
         break;
 
+    case EMaintenanceTab::Skill:
+        DrawSkillTab(hMemDC, panel);
+        break;
+
     case EMaintenanceTab::Shop:
         DrawShopTab(hMemDC, panel);
         break;
@@ -114,6 +129,8 @@ int Maintenance_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         if (IsPointInRect(mouseX, mouseY, GetContinueRect()))
         {
+            ApplyRewardOnce();
+            BattleRewardManager::Get().Clear();
             return MAP_STAGE;
         }
 
@@ -125,6 +142,8 @@ int Maintenance_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         if (wParam == VK_RETURN || wParam == VK_SPACE || wParam == VK_ESCAPE)
         {
+            ApplyRewardOnce();
+            BattleRewardManager::Get().Clear();
             return MAP_STAGE;
         }
 
@@ -145,6 +164,10 @@ int Maintenance_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ActiveTab = EMaintenanceTab::Equipment;
         }
         else if (wParam == '5')
+        {
+            ActiveTab = EMaintenanceTab::Skill;
+        }
+        else if (wParam == '6')
         {
             ActiveTab = EMaintenanceTab::Shop;
         }
@@ -275,8 +298,12 @@ RECT Maintenance_Stage::GetTabRect(EMaintenanceTab tab) const
         index = 3;
         break;
 
-    case EMaintenanceTab::Shop:
+    case EMaintenanceTab::Skill:
         index = 4;
+        break;
+
+    case EMaintenanceTab::Shop:
+        index = 5;
         break;
 
     default:
@@ -284,10 +311,10 @@ RECT Maintenance_Stage::GetTabRect(EMaintenanceTab tab) const
         break;
     }
 
-    int tabW = 160;
+    int tabW = 140;
     int tabH = 44;
-    int gap = 10;
-    int totalW = tabW * 5 + gap * 4;
+    int gap = 8;
+    int totalW = tabW * 6 + gap * 5;
     int startX = panel.left + (panel.right - panel.left - totalW) / 2;
     int y = panel.top + 78;
 
@@ -377,6 +404,60 @@ RECT Maintenance_Stage::GetShopSlotRect(int index) const
     return rc;
 }
 
+RECT Maintenance_Stage::GetRosterSlotRect(int index) const
+{
+    RECT panel = GetMainPanelRect();
+
+    int colCount = 5;
+    int slotW = 180;
+    int slotH = 48;
+    int gapX = 18;
+    int gapY = 10;
+
+    int col = index % colCount;
+    int row = index / colCount;
+
+    RECT rc;
+    rc.left = panel.left + 55 + col * (slotW + gapX);
+    rc.top = panel.top + 250 + row * (slotH + gapY);
+    rc.right = rc.left + slotW;
+    rc.bottom = rc.top + slotH;
+    return rc;
+}
+
+RECT Maintenance_Stage::GetSkillSlotRect(int index) const
+{
+    RECT panel = GetMainPanelRect();
+
+    RECT rc;
+    rc.left = panel.left + 65 + index * 310;
+    rc.top = panel.top + 250;
+    rc.right = rc.left + 280;
+    rc.bottom = rc.top + 62;
+    return rc;
+}
+
+RECT Maintenance_Stage::GetLearnedSkillRect(int index) const
+{
+    RECT panel = GetMainPanelRect();
+
+    int colCount = 3;
+    int slotW = 285;
+    int slotH = 58;
+    int gapX = 25;
+    int gapY = 12;
+
+    int col = index % colCount;
+    int row = index / colCount;
+
+    RECT rc;
+    rc.left = panel.left + 65 + col * (slotW + gapX);
+    rc.top = panel.top + 390 + row * (slotH + gapY);
+    rc.right = rc.left + slotW;
+    rc.bottom = rc.top + slotH;
+    return rc;
+}
+
 bool Maintenance_Stage::IsPointInRect(int x, int y, const RECT& rc) const
 {
     return x >= rc.left && x <= rc.right && y >= rc.top && y <= rc.bottom;
@@ -408,15 +489,16 @@ void Maintenance_Stage::DrawTabs(HDC hMemDC)
         const wchar_t* Text;
     };
 
-    TabInfo tabs[5] = {
+    TabInfo tabs[6] = {
         { EMaintenanceTab::Reward, L"1. Reward" },
         { EMaintenanceTab::Party, L"2. Party" },
         { EMaintenanceTab::Inventory, L"3. Inventory" },
         { EMaintenanceTab::Equipment, L"4. Equip" },
-        { EMaintenanceTab::Shop, L"5. Shop" }
+        { EMaintenanceTab::Skill, L"5. Skill" },
+        { EMaintenanceTab::Shop, L"6. Shop" }
     };
 
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 6; ++i)
     {
         bool selected = ActiveTab == tabs[i].Tab;
         DrawBoxText(
@@ -438,7 +520,7 @@ void Maintenance_Stage::DrawContinueButton(HDC hMemDC)
     DrawBoxText(
         hMemDC,
         GetContinueRect(),
-        L"Continue",
+        BattleRewardManager::Get().HasReward() ? L"Continue" : L"Back to Map",
         20,
         FW_BOLD,
         RGB(255, 255, 255),
@@ -472,7 +554,7 @@ void Maintenance_Stage::DrawRewardTab(HDC hMemDC, const RECT& panel)
 
     if (!reward.HasReward())
     {
-        DrawLeftText(hMemDC, L"No reward data.", left, top, width, 32, 22, FW_NORMAL, RGB(230, 230, 230));
+        DrawLeftText(hMemDC, L"Town mode: no recent battle reward.", left, top, width, 32, 22, FW_NORMAL, RGB(230, 230, 230));
         return;
     }
 
@@ -590,58 +672,58 @@ void Maintenance_Stage::DrawRewardTab(HDC hMemDC, const RECT& panel)
 
 void Maintenance_Stage::DrawPartyTab(HDC hMemDC, const RECT& panel)
 {
-    DrawPartySelectButtons(hMemDC, panel);
+    const std::vector<Character*>& party = GameManager::Get().GetParty();
+    const std::vector<Character*>& roster = GameManager::Get().GetRoster();
 
-    Character* selected = GetSelectedCharacter();
+    DrawLeftText(hMemDC, L"ACTIVE PARTY  " + std::to_wstring((int)party.size()) + L" / " + std::to_wstring(GameManager::Get().GetMaxActivePartySize()), panel.left + 55, panel.top + 135, 500, 34, 26, FW_HEAVY, RGB(255, 220, 90));
+    DrawLeftText(hMemDC, L"Click a roster character to add/remove. At least 1 and up to 5 characters can be active.", panel.left + 55, panel.top + 175, panel.right - panel.left - 110, 28, 18, FW_NORMAL, RGB(220, 220, 220));
 
-    if (selected == nullptr)
+    int activeTop = panel.top + 205;
+
+    for (int i = 0; i < (int)party.size() && i < 5; ++i)
     {
-        DrawLeftText(hMemDC, L"No party member.", panel.left + 65, panel.top + 220, panel.right - panel.left - 130, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-        return;
+        Character* c = party[i];
+        std::wstring text = std::to_wstring(i + 1) + L". ";
+        if (c != nullptr)
+        {
+            text += c->GetName() + L" / " + c->GetElementName();
+        }
+        else
+        {
+            text += L"Empty";
+        }
+
+        DrawLeftText(hMemDC, text, panel.left + 60 + i * 190, activeTop, 180, 30, 17, FW_BOLD, RGB(120, 200, 255));
     }
 
-    CharacterStat stat = selected->GetStat();
-    CharacterEquipment equip = selected->GetEquipment();
+    DrawLeftText(hMemDC, L"ROSTER", panel.left + 55, panel.top + 222, 300, 28, 22, FW_HEAVY, RGB(230, 230, 230));
 
-    int left = panel.left + 75;
-    int top = panel.top + 220;
-    int width = panel.right - panel.left - 150;
+    for (int i = 0; i < (int)roster.size(); ++i)
+    {
+        Character* c = roster[i];
+        if (c == nullptr)
+        {
+            continue;
+        }
 
-    DrawLeftText(hMemDC, selected->GetName(), left, top, width, 36, 30, FW_HEAVY, RGB(255, 220, 90));
+        bool active = GameManager::Get().IsInActiveParty(c);
+        COLORREF fill = active ? RGB(45, 70, 95) : RGB(35, 35, 45);
+        COLORREF border = active ? RGB(120, 200, 255) : RGB(90, 90, 100);
+        COLORREF textColor = active ? RGB(235, 245, 255) : RGB(200, 200, 205);
 
-    top += 54;
-    DrawLeftText(hMemDC, L"Level: " + std::to_wstring(selected->GetLevel()) + L"     EXP: " + std::to_wstring(selected->GetExp()), left, top, width, 30, 22, FW_BOLD, RGB(230, 230, 230));
+        std::wstring label = c->GetName();
+        if (active)
+        {
+            label += L"  ACTIVE";
+        }
 
-    top += 44;
-    DrawLeftText(hMemDC, L"HP: " + std::to_wstring(stat.CurHP) + L" / " + std::to_wstring(stat.MaxHP), left, top, width, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-    top += 34;
-    DrawLeftText(hMemDC, L"MP: " + std::to_wstring(stat.CurMP) + L" / " + std::to_wstring(stat.MaxMP), left, top, width, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-    top += 42;
-    DrawLeftText(hMemDC, MakeStatLine(stat), left, top, width, 34, 24, FW_BOLD, RGB(120, 200, 255));
+        DrawBoxText(hMemDC, GetRosterSlotRect(i), label, 16, FW_BOLD, textColor, fill, border, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+    }
 
-    int eqLeft = panel.left + 600;
-    int eqTop = panel.top + 235;
-    int eqWidth = panel.right - eqLeft - 70;
-
-    DrawLeftText(hMemDC, L"Equipment", eqLeft, eqTop, eqWidth, 32, 26, FW_HEAVY, RGB(255, 220, 90));
-    eqTop += 50;
-    DrawLeftText(hMemDC, L"Weapon: " + GetEquippedName(equip.WeaponID), eqLeft, eqTop, eqWidth, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-    eqTop += 38;
-    DrawLeftText(hMemDC, L"Armor: " + GetEquippedName(equip.ArmorID), eqLeft, eqTop, eqWidth, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-    eqTop += 38;
-    DrawLeftText(hMemDC, L"Accessory: " + GetEquippedName(equip.AccessoryID), eqLeft, eqTop, eqWidth, 30, 22, FW_NORMAL, RGB(230, 230, 230));
-
-    DrawLeftText(
-        hMemDC,
-        L"Equipment bonuses are already included in the stats on this screen and in battle damage.",
-        panel.left + 75,
-        panel.bottom - 100,
-        panel.right - panel.left - 150,
-        28,
-        18,
-        FW_NORMAL,
-        RGB(180, 180, 190)
-    );
+    if (!SkillMessage.empty() && SkillMessageLife > 0)
+    {
+        DrawLeftText(hMemDC, SkillMessage, panel.left + 65, panel.bottom - 105, panel.right - panel.left - 340, 30, 20, FW_BOLD, RGB(255, 220, 90));
+    }
 }
 
 void Maintenance_Stage::DrawInventoryTab(HDC hMemDC, const RECT& panel)
@@ -783,6 +865,68 @@ void Maintenance_Stage::DrawEquipmentTab(HDC hMemDC, const RECT& panel)
     );
 }
 
+
+void Maintenance_Stage::DrawSkillTab(HDC hMemDC, const RECT& panel)
+{
+    DrawPartySelectButtons(hMemDC, panel);
+
+    Character* selected = GetSelectedCharacter();
+
+    if (selected == nullptr)
+    {
+        DrawLeftText(hMemDC, L"No active party member.", panel.left + 65, panel.top + 220, panel.right - panel.left - 130, 30, 22, FW_NORMAL, RGB(230, 230, 230));
+        return;
+    }
+
+    DrawLeftText(hMemDC, L"SKILL SETTING", panel.left + 65, panel.top + 195, 420, 34, 28, FW_HEAVY, RGB(255, 220, 90));
+    DrawLeftText(hMemDC, selected->GetName() + L" / " + selected->GetElementName(), panel.left + 470, panel.top + 198, 450, 30, 22, FW_BOLD, RGB(120, 200, 255));
+
+    DrawLeftText(hMemDC, L"Equipped Skills", panel.left + 65, panel.top + 225, 320, 28, 20, FW_BOLD, RGB(230, 230, 230));
+
+    for (int i = 0; i < 3; ++i)
+    {
+        int skillID = selected->GetEquippedSkillID(i);
+        const SSkillData* skill = SkillData::Find(skillID);
+
+        std::wstring text = L"Slot " + std::to_wstring(i + 1) + L": ";
+        COLORREF border = (i == SelectedSkillSlot) ? RGB(255, 220, 90) : RGB(90, 90, 100);
+        COLORREF fill = (i == SelectedSkillSlot) ? RGB(70, 60, 30) : RGB(35, 35, 45);
+
+        if (skill != nullptr)
+        {
+            text += skill->Name + L"  MP " + std::to_wstring(skill->MPCost);
+        }
+        else
+        {
+            text += L"Empty";
+        }
+
+        DrawBoxText(hMemDC, GetSkillSlotRect(i), text, 17, FW_BOLD, RGB(235, 235, 235), fill, border, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+    }
+
+    DrawLeftText(hMemDC, L"Learned Skills - click a skill to equip it into the selected slot.", panel.left + 65, panel.top + 350, panel.right - panel.left - 130, 28, 18, FW_NORMAL, RGB(220, 220, 220));
+
+    std::vector<int> learned = selected->GetLearnedSkillIDs();
+
+    for (int i = 0; i < (int)learned.size(); ++i)
+    {
+        int skillID = learned[i];
+        const SSkillData* skill = SkillData::Find(skillID);
+
+        if (skill == nullptr)
+        {
+            continue;
+        }
+
+        std::wstring text = skill->Name + L"\nMP " + std::to_wstring(skill->MPCost) + L" / R" + std::to_wstring(skill->Range);
+        DrawBoxText(hMemDC, GetLearnedSkillRect(i), text, 15, FW_BOLD, RGB(240, 240, 240), RGB(35, 35, 45), skill->Color, DT_CENTER | DT_VCENTER | DT_WORDBREAK);
+    }
+
+    if (!SkillMessage.empty() && SkillMessageLife > 0)
+    {
+        DrawLeftText(hMemDC, SkillMessage, panel.left + 65, panel.bottom - 105, panel.right - panel.left - 340, 30, 20, FW_BOLD, RGB(255, 220, 90));
+    }
+}
 
 void Maintenance_Stage::DrawShopTab(HDC hMemDC, const RECT& panel)
 {
@@ -1077,6 +1221,12 @@ void Maintenance_Stage::HandleMouseDown(int mouseX, int mouseY)
         return;
     }
 
+    if (IsPointInRect(mouseX, mouseY, GetTabRect(EMaintenanceTab::Skill)))
+    {
+        ActiveTab = EMaintenanceTab::Skill;
+        return;
+    }
+
     if (IsPointInRect(mouseX, mouseY, GetTabRect(EMaintenanceTab::Shop)))
     {
         ActiveTab = EMaintenanceTab::Shop;
@@ -1094,7 +1244,11 @@ void Maintenance_Stage::HandleMouseDown(int mouseX, int mouseY)
         }
     }
 
-    if (ActiveTab == EMaintenanceTab::Inventory)
+    if (ActiveTab == EMaintenanceTab::Party)
+    {
+        HandlePartyClick(mouseX, mouseY);
+    }
+    else if (ActiveTab == EMaintenanceTab::Inventory)
     {
         HandleInventoryClick(mouseX, mouseY);
     }
@@ -1102,9 +1256,88 @@ void Maintenance_Stage::HandleMouseDown(int mouseX, int mouseY)
     {
         HandleEquipmentClick(mouseX, mouseY);
     }
+    else if (ActiveTab == EMaintenanceTab::Skill)
+    {
+        HandleSkillClick(mouseX, mouseY);
+    }
     else if (ActiveTab == EMaintenanceTab::Shop)
     {
         HandleShopClick(mouseX, mouseY);
+    }
+}
+
+void Maintenance_Stage::HandlePartyClick(int mouseX, int mouseY)
+{
+    std::vector<Character*>& roster = GameManager::Get().GetRoster();
+
+    for (int i = 0; i < (int)roster.size(); ++i)
+    {
+        if (!IsPointInRect(mouseX, mouseY, GetRosterSlotRect(i)))
+        {
+            continue;
+        }
+
+        Character* c = roster[i];
+        bool wasActive = GameManager::Get().IsInActiveParty(c);
+
+        if (!GameManager::Get().ToggleActivePartyMember(c))
+        {
+            SkillMessage = wasActive ? L"At least one active character is required." : L"Active party is already full.";
+            SkillMessageLife = 180;
+            return;
+        }
+
+        std::vector<Character*>& party = GameManager::Get().GetParty();
+        for (int p = 0; p < (int)party.size(); ++p)
+        {
+            if (party[p] == c)
+            {
+                SelectedPartyIndex = p;
+                break;
+            }
+        }
+
+        if (SelectedPartyIndex >= (int)party.size())
+        {
+            SelectedPartyIndex = (int)party.size() - 1;
+        }
+
+        return;
+    }
+}
+
+void Maintenance_Stage::HandleSkillClick(int mouseX, int mouseY)
+{
+    Character* selected = GetSelectedCharacter();
+
+    if (selected == nullptr)
+    {
+        return;
+    }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (IsPointInRect(mouseX, mouseY, GetSkillSlotRect(i)))
+        {
+            SelectedSkillSlot = i;
+            return;
+        }
+    }
+
+    std::vector<int> learned = selected->GetLearnedSkillIDs();
+
+    for (int i = 0; i < (int)learned.size(); ++i)
+    {
+        if (!IsPointInRect(mouseX, mouseY, GetLearnedSkillRect(i)))
+        {
+            continue;
+        }
+
+        int skillID = learned[i];
+        selected->SetEquippedSkillID(SelectedSkillSlot, skillID);
+        SkillMessage = L"Equipped " + SkillData::GetName(skillID) + L" to slot " + std::to_wstring(SelectedSkillSlot + 1) + L".";
+        SkillMessageLife = 180;
+        return;
     }
 }
 

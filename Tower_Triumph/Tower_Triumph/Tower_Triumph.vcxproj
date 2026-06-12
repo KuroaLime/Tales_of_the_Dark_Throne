@@ -160,6 +160,7 @@
     <ClCompile Include="BattleRewardManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="ItemData.cpp" />
+    <ClCompile Include="SkillData.cpp" />
     <ClCompile Include="Maintenance_Stage.cpp" />
     <ClCompile Include="Widget.cpp" />
   </ItemGroup>
@@ -198,6 +199,7 @@
     <ClInclude Include="BattleRewardManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="ItemData.h" />
+    <ClInclude Include="SkillData.h" />
     <ClInclude Include="Maintenance_Stage.h" />
     <ClInclude Include="Widget.h" />
   </ItemGroup>

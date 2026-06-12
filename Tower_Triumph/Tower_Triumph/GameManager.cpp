@@ -2,6 +2,7 @@
 #include "ItemData.h"
 
 #include <algorithm>
+#include <string>
 
 static void ApplyItemStatBonusToCharacter(Character* target, int itemID, int sign)
 {
@@ -45,11 +46,12 @@ GameManager& GameManager::Get()
 
 void GameManager::Clear()
 {
-    for (Character* c : PlayerParty)
+    for (Character* c : Roster)
     {
         delete c;
     }
 
+    Roster.clear();
     PlayerParty.clear();
     Inventory.clear();
     PartyGold = 0;
@@ -57,30 +59,54 @@ void GameManager::Clear()
     MaxUnlockedBattleStageId = 1;
 }
 
+static Character* CreateRosterCharacter(int id, ECharacterClass classType, EElement element, const std::wstring& name)
+{
+    Character* c = new Character();
+    c->Init(classType, 0, 0);
+    c->SetCharacterID(id);
+    c->SetElement(element);
+    c->SetName(name);
+    c->LoadSprites(L"Resource");
+    return c;
+}
+
 void GameManager::InitDefaultParty()
 {
-    if (!PlayerParty.empty())
+    if (!Roster.empty())
     {
         return;
     }
 
-    Character* warrior = new Character();
-    warrior->Init(ECharacterClass::Warrior, 6, 19);
-    warrior->SetName(L"Warrior");
-    warrior->LoadSprites(L"Resource");
-    PlayerParty.push_back(warrior);
+    int id = 1;
 
-    Character* archer = new Character();
-    archer->Init(ECharacterClass::Archer, 8, 19);
-    archer->SetName(L"Archer");
-    archer->LoadSprites(L"Resource");
-    PlayerParty.push_back(archer);
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Warrior, EElement::Fire,  L"Fire Warrior"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Warrior, EElement::Water, L"Water Warrior"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Warrior, EElement::Grass, L"Grass Warrior"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Warrior, EElement::Light, L"Light Warrior"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Warrior, EElement::Dark,  L"Dark Warrior"));
 
-    Character* mage = new Character();
-    mage->Init(ECharacterClass::Mage, 7, 18);
-    mage->SetName(L"Mage");
-    mage->LoadSprites(L"Resource");
-    PlayerParty.push_back(mage);
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Archer, EElement::Fire,  L"Fire Archer"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Archer, EElement::Water, L"Water Archer"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Archer, EElement::Grass, L"Grass Archer"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Archer, EElement::Light, L"Light Archer"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Archer, EElement::Dark,  L"Dark Archer"));
+
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Mage, EElement::Fire,  L"Fire Mage"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Mage, EElement::Water, L"Water Mage"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Mage, EElement::Grass, L"Grass Mage"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Mage, EElement::Light, L"Light Mage"));
+    Roster.push_back(CreateRosterCharacter(id++, ECharacterClass::Mage, EElement::Dark,  L"Dark Mage"));
+
+    PlayerParty.clear();
+
+    if (Roster.size() >= 5)
+    {
+        PlayerParty.push_back(Roster[0]);
+        PlayerParty.push_back(Roster[1]);
+        PlayerParty.push_back(Roster[7]);
+        PlayerParty.push_back(Roster[10]);
+        PlayerParty.push_back(Roster[13]);
+    }
 
     PartyGold = 0;
 }
@@ -98,6 +124,90 @@ std::vector<Character*>& GameManager::GetParty()
 const std::vector<Character*>& GameManager::GetParty() const
 {
     return PlayerParty;
+}
+
+std::vector<Character*>& GameManager::GetRoster()
+{
+    return Roster;
+}
+
+const std::vector<Character*>& GameManager::GetRoster() const
+{
+    return Roster;
+}
+
+int GameManager::GetMaxActivePartySize() const
+{
+    return MAX_ACTIVE_PARTY;
+}
+
+bool GameManager::IsInActiveParty(Character* character) const
+{
+    if (character == nullptr)
+    {
+        return false;
+    }
+
+    return std::find(PlayerParty.begin(), PlayerParty.end(), character) != PlayerParty.end();
+}
+
+bool GameManager::AddActivePartyMember(Character* character)
+{
+    if (character == nullptr)
+    {
+        return false;
+    }
+
+    if (IsInActiveParty(character))
+    {
+        return true;
+    }
+
+    if ((int)PlayerParty.size() >= MAX_ACTIVE_PARTY)
+    {
+        return false;
+    }
+
+    PlayerParty.push_back(character);
+    return true;
+}
+
+bool GameManager::RemoveActivePartyMember(Character* character)
+{
+    if (character == nullptr)
+    {
+        return false;
+    }
+
+    if (PlayerParty.size() <= 1)
+    {
+        return false;
+    }
+
+    auto it = std::find(PlayerParty.begin(), PlayerParty.end(), character);
+
+    if (it == PlayerParty.end())
+    {
+        return false;
+    }
+
+    PlayerParty.erase(it);
+    return true;
+}
+
+bool GameManager::ToggleActivePartyMember(Character* character)
+{
+    if (character == nullptr)
+    {
+        return false;
+    }
+
+    if (IsInActiveParty(character))
+    {
+        return RemoveActivePartyMember(character);
+    }
+
+    return AddActivePartyMember(character);
 }
 
 int GameManager::GetGold() const

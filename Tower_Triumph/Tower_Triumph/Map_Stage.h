@@ -16,6 +16,7 @@ private:
 	ACamera* Camera;
 
 	std::vector<URegionMarker*> Markers;
+	std::vector<int> MarkerBattleStageIds;
 	struct SMapStageItem
 	{
 		int ItemID;
@@ -42,6 +43,7 @@ private:
 	class UMouseMark* MouseMark;
 	int NextStageID;
 	int SelectedBattleStageId;
+	int SelectedMarkerNextStageID;
 public:
 	Map_Stage();
 	virtual ~Map_Stage();

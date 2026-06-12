@@ -3,6 +3,7 @@
 #include "UMouseMark.h"
 #include "GameManager.h"
 #include "ItemData.h"
+#include "BattleRewardManager.h"
 
 Map_Stage::Map_Stage() {
 	Camera = nullptr;
@@ -13,6 +14,7 @@ Map_Stage::Map_Stage() {
 	CurStageID = MAP_STAGE;
 	NextStageID = -2;
 	SelectedBattleStageId = 1;
+	SelectedMarkerNextStageID = BATTLE_STAGE;
 }
 
 Map_Stage::~Map_Stage() {
@@ -48,27 +50,40 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	H = BackgroundInfo.bmHeight / TILE_SIZE;
 	Baord.resize(H, std::vector<Tile>(W));
 
+	// World map markers. 0 means town/maintenance, positive values mean battle stage id.
+	Markers.clear();
+	MarkerBattleStageIds.clear();
+
+	URegionMarker* town = new URegionMarker();
+	town->Setup(g_hInst, 260, 220, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	town->SetRegionInfo(L"Town", L"Preparation Camp", L"Manage party, equipment, inventory, skills, and shop before entering a stage.", L"Always available");
+	Markers.push_back(town);
+	MarkerBattleStageIds.push_back(0);
+
 	// Clickable battle stage markers. All markers currently use Test01 resources.
 	URegionMarker* m1 = new URegionMarker();
 	m1->Setup(g_hInst, 400, 300, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
 	m1->SetRegionInfo(L"Stage 01", L"Graveyard Entrance", L"First battle stage. Clear it to unlock Stage 02.", L"Test01 resource");
 	Markers.push_back(m1);
+	MarkerBattleStageIds.push_back(1);
 
 	URegionMarker* m2 = new URegionMarker();
 	m2->Setup(g_hInst, 1200, 800, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
 	m2->SetRegionInfo(L"Stage 02", L"Cursed Library", L"Second battle stage. Clear Stage 01 first.", L"Test01 resource");
 	Markers.push_back(m2);
+	MarkerBattleStageIds.push_back(2);
 
 	URegionMarker* m3 = new URegionMarker();
 	m3->Setup(g_hInst, 1850, 520, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
 	m3->SetRegionInfo(L"Stage 03", L"Final Graveyard", L"Final battle stage. Clear Stage 02 first.", L"Test01 resource");
 	Markers.push_back(m3);
+	MarkerBattleStageIds.push_back(3);
 
 	//지역 마커 클릭시 띄울 UI 설정
 	infoPopup = new URegionInfoPopup();
 	infoPopup->Setup(g_hInst, rects);
 	infoPopup->SetOnEnterClick([this]() {
-		this->Comp_NextStage(BATTLE_STAGE);
+		this->Comp_NextStage(SelectedMarkerNextStageID);
 	});
 
 	//m키 입력시 띄울 UI 설정(캐릭터, 인벤토리)
@@ -310,15 +325,25 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			URegionMarker* m = Markers[i];
 
 			if (m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY)) {
-				int stageId = (int)i + 1;
+				int stageId = 0;
+				if (i < MarkerBattleStageIds.size()) {
+					stageId = MarkerBattleStageIds[i];
+				}
 
-				if (!GameManager::Get().IsBattleStageUnlocked(stageId)) {
+				if (stageId > 0 && !GameManager::Get().IsBattleStageUnlocked(stageId)) {
 					MessageBoxW(hWnd, L"This stage is locked. Clear the previous stage first.", L"Locked", MB_OK);
 					return -2;
 				}
 
-				SelectedBattleStageId = stageId;
-				GameManager::Get().SetCurrentBattleStageId(stageId);
+				if (stageId <= 0) {
+					BattleRewardManager::Get().Clear();
+					SelectedMarkerNextStageID = MAINTENANCE_STAGE;
+				}
+				else {
+					SelectedBattleStageId = stageId;
+					SelectedMarkerNextStageID = BATTLE_STAGE;
+					GameManager::Get().SetCurrentBattleStageId(stageId);
+				}
 
 				int gridX = (camX + CLK_X) / TILE_SIZE;
 				int gridY = (camY + CLK_Y) / TILE_SIZE;

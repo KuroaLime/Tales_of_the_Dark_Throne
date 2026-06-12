@@ -155,6 +155,7 @@ private:
 	int Money;
 
 	std::vector<int> LearnedSkillIDs;
+	int EquippedSkillIDs[3];
 
 	// 이동 가능 범위
 	int AP;
@@ -332,6 +333,7 @@ public:
 
 	void SetElement(EElement newElement);
 	EElement GetElement() const;
+	std::wstring GetElementName() const;
 
 	// ------------------------------------------------------------
 	// 위치
@@ -413,8 +415,14 @@ public:
 	// 스킬
 	// ------------------------------------------------------------
 	void AddSkillID(int skillID);
+	void ClearSkillIDs();
+	void RebuildSkillsFromClassElement();
 	bool HasSkillID(int skillID) const;
 	std::vector<int> GetLearnedSkillIDs() const;
+	void SetEquippedSkillID(int slot, int skillID);
+	int GetEquippedSkillID(int slot) const;
+	std::vector<int> GetEquippedSkillIDs() const;
+	void ClearEquippedSkills();
 
 	// ------------------------------------------------------------
 	// 전투 판정

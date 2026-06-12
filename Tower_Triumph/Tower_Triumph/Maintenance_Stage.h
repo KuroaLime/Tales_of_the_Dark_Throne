@@ -4,6 +4,7 @@
 #include "BattleRewardManager.h"
 #include "Character.h"
 #include "GameManager.h"
+#include "SkillData.h"
 
 #include <string>
 #include <vector>
@@ -14,6 +15,7 @@ enum class EMaintenanceTab
     Party,
     Inventory,
     Equipment,
+    Skill,
     Shop
 };
 
@@ -48,9 +50,12 @@ private:
     bool RewardApplied;
     EMaintenanceTab ActiveTab;
     int SelectedPartyIndex;
+    int SelectedSkillSlot;
 
     std::wstring ShopMessage;
     int ShopMessageLife;
+    std::wstring SkillMessage;
+    int SkillMessageLife;
 
     std::vector<SMaintenanceLevelResult> LevelResults;
 
@@ -64,6 +69,9 @@ private:
     RECT GetInventorySlotRect(int index) const;
     RECT GetEquipmentSlotRect(int index) const;
     RECT GetShopSlotRect(int index) const;
+    RECT GetRosterSlotRect(int index) const;
+    RECT GetSkillSlotRect(int index) const;
+    RECT GetLearnedSkillRect(int index) const;
 
     bool IsPointInRect(int x, int y, const RECT& rc) const;
 
@@ -76,6 +84,7 @@ private:
     void DrawInventoryTab(HDC hMemDC, const RECT& panel);
     void DrawEquipmentTab(HDC hMemDC, const RECT& panel);
     void DrawShopTab(HDC hMemDC, const RECT& panel);
+    void DrawSkillTab(HDC hMemDC, const RECT& panel);
 
     void DrawPartySelectButtons(HDC hMemDC, const RECT& panel);
 
@@ -117,6 +126,8 @@ private:
     void HandleInventoryClick(int mouseX, int mouseY);
     void HandleEquipmentClick(int mouseX, int mouseY);
     void HandleShopClick(int mouseX, int mouseY);
+    void HandlePartyClick(int mouseX, int mouseY);
+    void HandleSkillClick(int mouseX, int mouseY);
 
     Character* GetSelectedCharacter() const;
     std::wstring GetEquipPartName(EEquipPart part) const;

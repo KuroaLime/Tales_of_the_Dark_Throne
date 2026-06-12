@@ -1,4 +1,5 @@
 ﻿#include "Character.h"
+#include "SkillData.h"
 
 // ============================================================
 // 생성자 / 소멸자
@@ -66,6 +67,8 @@ Character::Character()
 	ZeroMemory(&SpriteInfoSkill, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
+
+	ClearEquippedSkills();
 }
 
 Character::~Character()
@@ -97,6 +100,11 @@ Character::Character(Character&& other) noexcept
 	Money = other.Money;
 
 	LearnedSkillIDs = std::move(other.LearnedSkillIDs);
+	for (int i = 0; i < 3; ++i)
+	{
+		EquippedSkillIDs[i] = other.EquippedSkillIDs[i];
+		other.EquippedSkillIDs[i] = -1;
+	}
 
 	AP = other.AP;
 	DefendRate = other.DefendRate;
@@ -177,6 +185,11 @@ Character& Character::operator=(Character&& other) noexcept
 	Money = other.Money;
 
 	LearnedSkillIDs = std::move(other.LearnedSkillIDs);
+	for (int i = 0; i < 3; ++i)
+	{
+		EquippedSkillIDs[i] = other.EquippedSkillIDs[i];
+		other.EquippedSkillIDs[i] = -1;
+	}
 
 	AP = other.AP;
 	DefendRate = other.DefendRate;
@@ -276,6 +289,7 @@ void Character::Init(ECharacterClass classType, int gridX, int gridY)
 	Money = 0;
 
 	LearnedSkillIDs.clear();
+	ClearEquippedSkills();
 
 	Equip = CharacterEquipment();
 
@@ -346,6 +360,7 @@ void Character::Release()
 void Character::InitClassValue()
 {
 	CharacterStat newStat;
+	LearnedSkillIDs.clear();
 
 	switch (ClassType)
 	{
@@ -361,7 +376,7 @@ void Character::InitClassValue()
 
 		AP = 3;
 		DefendRate = 0.45f;
-		Element = EElement::None;
+		Element = EElement::Fire;
 		MoveSpeed = 7.5f;
 		break;
 
@@ -377,7 +392,7 @@ void Character::InitClassValue()
 
 		AP = 4;
 		DefendRate = 0.65f;
-		Element = EElement::Grass;
+		Element = EElement::Water;
 		MoveSpeed = 9.0f;
 		break;
 
@@ -393,7 +408,7 @@ void Character::InitClassValue()
 
 		AP = 3;
 		DefendRate = 0.75f;
-		Element = EElement::Fire;
+		Element = EElement::Grass;
 		MoveSpeed = 8.0f;
 		break;
 
@@ -415,6 +430,7 @@ void Character::InitClassValue()
 	}
 
 	Stat = newStat;
+	RebuildSkillsFromClassElement();
 }
 
 // ============================================================
@@ -920,11 +936,17 @@ ECharacterClass Character::GetClassType() const
 void Character::SetElement(EElement newElement)
 {
 	Element = newElement;
+	RebuildSkillsFromClassElement();
 }
 
 EElement Character::GetElement() const
 {
 	return Element;
+}
+
+std::wstring Character::GetElementName() const
+{
+	return SkillData::GetElementName(Element);
 }
 
 // ============================================================
@@ -1271,6 +1293,36 @@ void Character::AddSkillID(int skillID)
 	LearnedSkillIDs.push_back(skillID);
 }
 
+void Character::ClearSkillIDs()
+{
+	LearnedSkillIDs.clear();
+	ClearEquippedSkills();
+}
+
+void Character::RebuildSkillsFromClassElement()
+{
+	LearnedSkillIDs.clear();
+	ClearEquippedSkills();
+
+	std::vector<int> skillIDs = SkillData::GetSkillIDs(ClassType, Element);
+
+	for (int skillID : skillIDs)
+	{
+		LearnedSkillIDs.push_back(skillID);
+	}
+
+	int equipCount = (int)skillIDs.size();
+	if (equipCount > 3)
+	{
+		equipCount = 3;
+	}
+
+	for (int i = 0; i < equipCount; ++i)
+	{
+		EquippedSkillIDs[i] = skillIDs[i];
+	}
+}
+
 bool Character::HasSkillID(int skillID) const
 {
 	for (int id : LearnedSkillIDs)
@@ -1287,6 +1339,57 @@ bool Character::HasSkillID(int skillID) const
 std::vector<int> Character::GetLearnedSkillIDs() const
 {
 	return LearnedSkillIDs;
+}
+
+void Character::SetEquippedSkillID(int slot, int skillID)
+{
+	if (slot < 0 || slot >= 3)
+	{
+		return;
+	}
+
+	if (skillID >= 0)
+	{
+		if (!HasSkillID(skillID) || !SkillData::CanCharacterUse(this, skillID))
+		{
+			return;
+		}
+	}
+
+	EquippedSkillIDs[slot] = skillID;
+}
+
+int Character::GetEquippedSkillID(int slot) const
+{
+	if (slot < 0 || slot >= 3)
+	{
+		return -1;
+	}
+
+	return EquippedSkillIDs[slot];
+}
+
+std::vector<int> Character::GetEquippedSkillIDs() const
+{
+	std::vector<int> result;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (EquippedSkillIDs[i] >= 0 && HasSkillID(EquippedSkillIDs[i]))
+		{
+			result.push_back(EquippedSkillIDs[i]);
+		}
+	}
+
+	return result;
+}
+
+void Character::ClearEquippedSkills()
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		EquippedSkillIDs[i] = -1;
+	}
 }
 
 // ============================================================

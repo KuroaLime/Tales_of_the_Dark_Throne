@@ -67,6 +67,10 @@ private:
     bool bSelectingBattleItemTarget;
     std::vector<int> BattleConsumableItemIDs;
 
+    int SelectedBattleSkillID;
+    bool bSelectingBattleSkillTarget;
+    std::vector<int> BattleSkillIDs;
+
 private:
     bool IsInsideGrid(int gx, int gy) const;
     bool IsOccupied(int gx, int gy, Character* except = nullptr) const;
@@ -110,6 +114,18 @@ private:
     RECT GetBattleTargetRect(int index) const;
     RECT GetBattleCancelRect() const;
     bool IsPointInRect(const RECT& rc, int x, int y) const;
+
+    void RefreshBattleSkillList(Character* current);
+    void ClearBattleSkillSelection();
+    void DrawBattleSkillUI(HDC hMemDC);
+    void DrawBattleSkillList(HDC hMemDC);
+    void DrawBattleSkillTargetSelect(HDC hMemDC);
+    void DrawSkillRange(HDC hMemDC);
+    void DrawSkillAreaPreview(HDC hMemDC);
+    void UpdateHoverGridByMouse(int mouseX, int mouseY);
+    bool HandleBattleSkillClick(int mouseX, int mouseY, Character* current);
+    bool UseSelectedBattleSkill(Character* user, Character* target);
+    RECT GetBattleSkillRect(int index) const;
 
     void DrawBackground(HDC hMemDC, HDC hMemDC1);
     void DrawGrid(HDC hMemDC);

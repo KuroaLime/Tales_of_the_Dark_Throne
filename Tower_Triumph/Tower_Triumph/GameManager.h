@@ -25,8 +25,11 @@ struct InventoryItem
 class GameManager
 {
 private:
+    std::vector<Character*> Roster;
     std::vector<Character*> PlayerParty;
     std::vector<InventoryItem> Inventory;
+
+    static const int MAX_ACTIVE_PARTY = 5;
 
     int PartyGold;
     int CurrentBattleStageId;
@@ -50,6 +53,14 @@ public:
 
     std::vector<Character*>& GetParty();
     const std::vector<Character*>& GetParty() const;
+
+    std::vector<Character*>& GetRoster();
+    const std::vector<Character*>& GetRoster() const;
+    int GetMaxActivePartySize() const;
+    bool IsInActiveParty(Character* character) const;
+    bool AddActivePartyMember(Character* character);
+    bool RemoveActivePartyMember(Character* character);
+    bool ToggleActivePartyMember(Character* character);
 
     int GetGold() const;
     void SetGold(int gold);
