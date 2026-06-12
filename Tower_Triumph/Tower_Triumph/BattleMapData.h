@@ -1,27 +1,28 @@
-#pragma once
+﻿#pragma once
 
 #include "Character.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 enum class EBattleMapId
 {
     Test01,
+    Stage01,
+    Stage02,
+    Stage03
 };
 
 enum class ETileType
 {
     Normal,
     Road,
-
     Water,
     Building,
     Wall,
     Fence,
     Tree,
     Grave,
-
     MagicHazard,
     CursedGround,
     Lava
@@ -31,26 +32,26 @@ struct SBattleStartInfo
 {
     ECharacterClass classType;
     std::wstring name;
-
     int x;
     int y;
+    int spd;
 };
 
 struct SBattleMapData
 {
-    EBattleMapId mapId = EBattleMapId::Test01;
+    EBattleMapId mapId;
     std::wstring mapName;
 
-    int backgroundResourceId = 0;
+    int backgroundResourceId;
 
-    int width = 0;
-    int height = 0;
-    int tileSize = 64;
+    int width;
+    int height;
+    int tileSize;
 
-    int cameraStartX = 0;
-    int cameraStartY = 0;
+    int cameraStartX;
+    int cameraStartY;
 
-    bool drawTileDebug = false;
+    bool drawTileDebug;
 
     std::vector<SBattleStartInfo> playerStarts;
     std::vector<SBattleStartInfo> enemyStarts;
@@ -65,4 +66,7 @@ public:
 
 private:
     static SBattleMapData BuildTest01();
+    static SBattleMapData BuildStage01();
+    static SBattleMapData BuildStage02();
+    static SBattleMapData BuildStage03();
 };

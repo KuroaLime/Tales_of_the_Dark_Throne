@@ -1,8 +1,8 @@
-#include "Map_Stage.h"
+﻿#include "Map_Stage.h"
 #include "resource.h"
 #include "UMouseMark.h"
-#include "AUsable.h"
-#include "AArmor.h"
+#include "GameManager.h"
+#include "ItemData.h"
 
 Map_Stage::Map_Stage() {
 	Camera = nullptr;
@@ -12,6 +12,7 @@ Map_Stage::Map_Stage() {
 	MouseMark = nullptr;
 	CurStageID = MAP_STAGE;
 	NextStageID = -2;
+	SelectedBattleStageId = 1;
 }
 
 Map_Stage::~Map_Stage() {
@@ -20,8 +21,6 @@ Map_Stage::~Map_Stage() {
 	if (infoPopup) delete infoPopup;
 	if (mainMenu) delete mainMenu;
 	if (locationUI) delete locationUI;
-	for (auto item : stageItems) delete item;
-
 	if (MouseMark) delete MouseMark;
 }
 
@@ -49,16 +48,21 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	H = BackgroundInfo.bmHeight / TILE_SIZE;
 	Baord.resize(H, std::vector<Tile>(W));
 
-	//클릭 가능한 지역 마커 및 정보 설정
+	// Clickable battle stage markers. All markers currently use Test01 resources.
 	URegionMarker* m1 = new URegionMarker();
 	m1->Setup(g_hInst, 400, 300, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
-	m1->SetRegionInfo(L"화이트홀름성", L"기사 훈련소", L"신참 기사들이 무술을 연마하는 장소입니다.", L"맑음 / 평지");
+	m1->SetRegionInfo(L"Stage 01", L"Graveyard Entrance", L"First battle stage. Clear it to unlock Stage 02.", L"Test01 resource");
 	Markers.push_back(m1);
 
 	URegionMarker* m2 = new URegionMarker();
 	m2->Setup(g_hInst, 1200, 800, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
-	m2->SetRegionInfo(L"하이샌드 대교구", L"고대 마법 도서관", L"수천 년 전의 지식이 잠들어 있는 곳입니다.", L"신비로움 / 도서관");
+	m2->SetRegionInfo(L"Stage 02", L"Cursed Library", L"Second battle stage. Clear Stage 01 first.", L"Test01 resource");
 	Markers.push_back(m2);
+
+	URegionMarker* m3 = new URegionMarker();
+	m3->Setup(g_hInst, 1850, 520, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m3->SetRegionInfo(L"Stage 03", L"Final Graveyard", L"Final battle stage. Clear Stage 02 first.", L"Test01 resource");
+	Markers.push_back(m3);
 
 	//지역 마커 클릭시 띄울 UI 설정
 	infoPopup = new URegionInfoPopup();
@@ -79,22 +83,9 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	mainMenu->SetBackgroundImage(hMenuBG);
 
 
-	// 테스트를 위한 더미 플레이어 (팀이 비어있을 때만 생성)
-	if (TeamManager::Get().GetPlayers().empty()) {
-		Character* char1 = new Character();
-		char1->Init(ECharacterClass::Warrior, 0, 0);
-		char1->SetName(L"Warrior");
-		char1->LoadSprites(L"Resource");
-		TeamManager::Get().AddPlayer(char1);
-
-		Character* char2 = new Character();
-		char2->Init(ECharacterClass::Archer, 0, 0);
-		char2->SetName(L"Archer");
-		char2->LoadSprites(L"Resource");
-		TeamManager::Get().AddPlayer(char2);
-	}
-
-	mainMenu->SetTeamData(TeamManager::Get().GetPlayers());
+	// Player party is owned by GameManager. Map_Stage only displays it.
+	GameManager::Get().InitDefaultParty();
+	mainMenu->SetTeamData(GameManager::Get().GetParty());
 
 	screenUI.AddChildWindow(infoPopup);
 	screenUI.AddChildWindow(mainMenu);
@@ -103,12 +94,9 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	MouseMark = new UMouseMark();
 	MouseMark->SetFrame(g_hInst, { IDB_UI_MOUSECUSOR }); 
 
-	// 테스트용 아이템 생성 (포션)
-	AUsable* testPotion = new AUsable();
-	testPotion->SetItemData(101, L"Test Potion", L"Heals 50 HP", 100);
-	testPotion->SetUsableData(50, true);
-	testPotion->SetGridPos(600, 400); // 월드 좌표
-	stageItems.push_back(testPotion);
+	// Test field item. Actual item information is resolved through ItemData by ItemID.
+	stageItems.clear();
+	stageItems.push_back(SMapStageItem(101, 600, 400));
 }
 
 void Map_Stage::Update(HWND hWnd) {
@@ -185,25 +173,27 @@ void Map_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
 		m->DrawWithOffset(hMemDC, hMemDC1, camX, camY);
 	}
 
-	// 아이템 그리기 (월드 좌표)
-	for (auto item : stageItems) {
-		if (item->IsActive()) {
-			Location pos = item->GetGridPos();
-			int drawX = pos.x - camX;
-			int drawY = pos.y - camY;
+	// Draw field items. The actual item name comes from ItemData.
+	for (const auto& item : stageItems) {
+		if (!item.Active) {
+			continue;
+		}
 
-			// 화면 안에 있을 때만 그리기
-			if (drawX > -50 && drawX < 1330 && drawY > -50 && drawY < 770) {
-				HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
-				HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
-				Ellipse(hMemDC, drawX - 15, drawY - 15, drawX + 15, drawY + 15);
-				SelectObject(hMemDC, oldBrush);
-				DeleteObject(hBrush);
+		Location pos = item.WorldPos;
+		int drawX = pos.x - camX;
+		int drawY = pos.y - camY;
 
-				SetBkMode(hMemDC, TRANSPARENT);
-				SetTextColor(hMemDC, RGB(255, 255, 255));
-				TextOutW(hMemDC, drawX - 30, drawY + 20, item->GetName().c_str(), (int)item->GetName().length());
-			}
+		if (drawX > -50 && drawX < 1330 && drawY > -50 && drawY < 770) {
+			HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
+			HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
+			Ellipse(hMemDC, drawX - 15, drawY - 15, drawX + 15, drawY + 15);
+			SelectObject(hMemDC, oldBrush);
+			DeleteObject(hBrush);
+
+			std::wstring itemName = ItemData::GetName(item.ItemID);
+			SetBkMode(hMemDC, TRANSPARENT);
+			SetTextColor(hMemDC, RGB(255, 255, 255));
+			TextOutW(hMemDC, drawX - 30, drawY + 20, itemName.c_str(), (int)itemName.length());
 		}
 	}
 
@@ -290,36 +280,53 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 		if (uMsg == WM_RBUTTONDOWN) return -2; // 월드 우클릭은 현재 기능 없음
 
-		// 0. 아이템 클릭 체크 (월드 좌표 기준)
+		// 0. Field item click check. Inventory is owned by GameManager.
 		{
 			auto it = stageItems.begin();
 			while (it != stageItems.end()) {
-				AItemBase* item = *it;
-				Location pos = item->GetGridPos();
+				Location pos = it->WorldPos;
 				int dx = (camX + CLK_X) - pos.x;
 				int dy = (camY + CLK_Y) - pos.y;
 
-				if (dx * dx + dy * dy <= 30 * 30) { 
-					TeamManager::Get().AddItem(item);
+				if (it->Active && dx * dx + dy * dy <= 30 * 30) {
+					int itemID = it->ItemID;
+					GameManager::Get().AddItem(itemID, 1);
+					std::wstring itemName = ItemData::GetName(itemID);
 					it = stageItems.erase(it);
-					std::wstring msg = item->GetName() + L"을(를) 획득했습니다!";
-					MessageBoxW(hWnd, msg.c_str(), L"획득 알림", MB_OK);
+
+					std::wstring msg = itemName + L" acquired!";
+					MessageBoxW(hWnd, msg.c_str(), L"Item", MB_OK);
+					if (mainMenu) {
+						mainMenu->SetTeamData(GameManager::Get().GetParty());
+					}
 					return -2;
 				}
 				++it;
 			}
 		}
 
-		// 2. 월드 마커 클릭 체크
-		for (auto m : Markers) {
+		// 2. World marker click check
+		for (size_t i = 0; i < Markers.size(); ++i) {
+			URegionMarker* m = Markers[i];
+
 			if (m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY)) {
+				int stageId = (int)i + 1;
+
+				if (!GameManager::Get().IsBattleStageUnlocked(stageId)) {
+					MessageBoxW(hWnd, L"This stage is locked. Clear the previous stage first.", L"Locked", MB_OK);
+					return -2;
+				}
+
+				SelectedBattleStageId = stageId;
+				GameManager::Get().SetCurrentBattleStageId(stageId);
+
 				int gridX = (camX + CLK_X) / TILE_SIZE;
 				int gridY = (camY + CLK_Y) / TILE_SIZE;
 				Camera->SetPointGrid(gridX, gridY);
 				for (auto other : Markers) other->Deactivate();
 				m->Activate();
 				infoPopup->SetInfo(m->GetName(), m->GetDesc(), m->GetEnv());
-				infoPopup->SetVisible(true); // 명시적으로 보이게 설정
+				infoPopup->SetVisible(true);
 				return -2;
 			}
 		}

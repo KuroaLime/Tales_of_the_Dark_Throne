@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include"CStage.h"
 #include"ACamera.h"
 #include"URegionMarker.h"
@@ -7,7 +7,8 @@
 #include"ULocationIndicator.h"
 #include"UCanvasPanel.h"
 #include"UImage.h"
-#include "TeamManager.h"
+#include "GameManager.h"
+#include "ItemData.h"
 
 class Map_Stage : public CStage
 {
@@ -15,7 +16,24 @@ private:
 	ACamera* Camera;
 
 	std::vector<URegionMarker*> Markers;
-	std::vector<class AItemBase*> stageItems;
+	struct SMapStageItem
+	{
+		int ItemID;
+		Location WorldPos;
+		bool Active;
+
+		SMapStageItem()
+			: ItemID(-1), WorldPos{ 0, 0 }, Active(false)
+		{
+		}
+
+		SMapStageItem(int itemID, int x, int y)
+			: ItemID(itemID), WorldPos{ x, y }, Active(true)
+		{
+		}
+	};
+
+	std::vector<SMapStageItem> stageItems;
 	URegionInfoPopup* infoPopup;
 	UMainMenuPopup* mainMenu;
 	ULocationIndicator* locationUI;
@@ -23,6 +41,7 @@ private:
 
 	class UMouseMark* MouseMark;
 	int NextStageID;
+	int SelectedBattleStageId;
 public:
 	Map_Stage();
 	virtual ~Map_Stage();

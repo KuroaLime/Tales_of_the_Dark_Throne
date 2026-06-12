@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CStage.h"
 #include "Character.h"
@@ -38,6 +38,9 @@ private:
     Character* MovingUnit;
     Character* ActingUnit;
 
+    bool BattleEnded;
+    bool BattleWon;
+
     int HoverGridX;
     int HoverGridY;
 
@@ -59,6 +62,10 @@ private:
     };
 
     std::vector<DamageText> DamageTexts;
+
+    int SelectedBattleItemID;
+    bool bSelectingBattleItemTarget;
+    std::vector<int> BattleConsumableItemIDs;
 
 private:
     bool IsInsideGrid(int gx, int gy) const;
@@ -92,6 +99,18 @@ private:
     void UpdateDamageTexts();
     void DrawDamageTexts(HDC hMemDC);
 
+    void RefreshBattleConsumableItems();
+    void ClearBattleItemSelection();
+    void DrawBattleItemUI(HDC hMemDC);
+    void DrawBattleItemList(HDC hMemDC);
+    void DrawBattleItemTargetSelect(HDC hMemDC);
+    bool HandleBattleItemClick(int mouseX, int mouseY, Character* current);
+    bool UseSelectedBattleItem(Character* user, Character* target);
+    RECT GetBattleItemRect(int index) const;
+    RECT GetBattleTargetRect(int index) const;
+    RECT GetBattleCancelRect() const;
+    bool IsPointInRect(const RECT& rc, int x, int y) const;
+
     void DrawBackground(HDC hMemDC, HDC hMemDC1);
     void DrawGrid(HDC hMemDC);
     void DrawMoveRange(HDC hMemDC);
@@ -100,6 +119,10 @@ private:
     void DrawUnit(HDC hMemDC, HDC hMemDC1, Character* unit, bool isEnemy);
 
     void DrawArrowPolyline(HDC hMemDC, const std::vector<POINT>& points, COLORREF color, int width);
+
+    bool IsTeamAllDead(const std::vector<Character*>& team) const;
+    void CheckBattleEnd();
+    void DrawBattleEndMessage(HDC hMemDC);
 
     void FocusCameraOnGrid(int gx, int gy);
 

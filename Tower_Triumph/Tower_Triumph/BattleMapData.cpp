@@ -1,42 +1,17 @@
-#include "BattleMapData.h"
+﻿#include "BattleMapData.h"
 #include "resource.h"
 
 #include <algorithm>
 
-SBattleMapData BattleMapData::Load(EBattleMapId mapId)
+static void InitBaseMap(SBattleMapData& map)
 {
-    switch (mapId)
-    {
-    case EBattleMapId::Test01:
-    default:
-        return BuildTest01();
-    }
-}
-
-SBattleMapData BattleMapData::BuildTest01()
-{
-    SBattleMapData map;
-
-    map.mapId = EBattleMapId::Test01;
-    map.mapName = L"Test01 Graveyard";
     map.backgroundResourceId = IDB_BITMAP3;
-
     map.tileSize = 64;
     map.width = 44;
     map.height = 24;
-
     map.cameraStartX = 12;
     map.cameraStartY = 18;
-
     map.drawTileDebug = true;
-
-    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19 });
-    map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19 });
-    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18 });
-
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 36, 18 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    34, 19 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Enemy Archer",  38, 18 });
 
     map.tiles.clear();
     map.tiles.resize(map.height);
@@ -86,34 +61,23 @@ SBattleMapData BattleMapData::BuildTest01()
     SetRect(0, 5, 2, 8, ETileType::Water);
     SetRect(7, 0, 11, 3, ETileType::Water);
 
-    SetRoad(5, 3, 8, 4);
-    SetRoad(3, 7, 5, 8);
-
     SetRect(13, 0, 19, 7, ETileType::Building);
-    SetRoad(15, 7, 18, 9);
-
     SetRect(20, 0, 23, 8, ETileType::Building);
     SetRect(37, 0, 40, 5, ETileType::Building);
     SetRect(40, 8, 43, 13, ETileType::Building);
-
     SetRect(27, 2, 30, 9, ETileType::Building);
     SetRect(31, 3, 34, 6, ETileType::Building);
-
     SetRect(12, 12, 16, 18, ETileType::Building);
     SetRect(13, 9, 16, 11, ETileType::Building);
-
     SetRect(0, 15, 2, 18, ETileType::Building);
-
     SetRect(15, 20, 20, 23, ETileType::Building);
     SetRect(25, 20, 31, 23, ETileType::Building);
     SetRect(32, 20, 35, 23, ETileType::Building);
-
     SetRect(40, 14, 43, 19, ETileType::Building);
     SetRect(30, 14, 35, 18, ETileType::Building);
 
     SetRect(0, 0, 2, 3, ETileType::Tree);
     SetRect(9, 2, 11, 5, ETileType::Tree);
-    SetRect(14, 9, 17, 12, ETileType::Tree);
     SetRect(24, 5, 27, 10, ETileType::Tree);
     SetRect(31, 7, 35, 14, ETileType::Tree);
     SetRect(19, 12, 23, 16, ETileType::Tree);
@@ -121,8 +85,6 @@ SBattleMapData BattleMapData::BuildTest01()
     SetRect(0, 20, 3, 23, ETileType::Tree);
     SetRect(23, 20, 25, 23, ETileType::Tree);
     SetRect(34, 20, 37, 23, ETileType::Tree);
-    SetRect(35, 0, 37, 3, ETileType::Tree);
-    SetRect(41, 0, 43, 3, ETileType::Tree);
 
     SetRect(5, 8, 11, 8, ETileType::Fence);
     SetRect(10, 7, 11, 10, ETileType::Fence);
@@ -161,6 +123,9 @@ SBattleMapData BattleMapData::BuildTest01()
     SetRoad(34, 15, 39, 19);
     SetRoad(34, 18, 39, 19);
     SetRoad(36, 16, 39, 18);
+    SetRoad(5, 3, 8, 4);
+    SetRoad(3, 7, 5, 8);
+    SetRoad(15, 7, 18, 9);
 
     SetRect(6, 14, 10, 16, ETileType::MagicHazard);
     SetPoint(8, 17, ETileType::MagicHazard);
@@ -178,6 +143,88 @@ SBattleMapData BattleMapData::BuildTest01()
     SetRoad(36, 18, 36, 18);
     SetRoad(34, 19, 34, 19);
     SetRoad(38, 18, 38, 18);
+}
+
+SBattleMapData BattleMapData::Load(EBattleMapId mapId)
+{
+    switch (mapId)
+    {
+    case EBattleMapId::Test01:
+    case EBattleMapId::Stage01:
+        return BuildStage01();
+
+    case EBattleMapId::Stage02:
+        return BuildStage02();
+
+    case EBattleMapId::Stage03:
+        return BuildStage03();
+
+    default:
+        return BuildStage01();
+    }
+}
+
+SBattleMapData BattleMapData::BuildTest01()
+{
+    return BuildStage01();
+}
+
+SBattleMapData BattleMapData::BuildStage01()
+{
+    SBattleMapData map;
+    InitBaseMap(map);
+
+    map.mapId = EBattleMapId::Stage01;
+    map.mapName = L"Stage 01 - Graveyard Entrance";
+
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 36, 18, 10 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    34, 19, 20 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Enemy Archer",  38, 18, 18 });
+
+    return map;
+}
+
+SBattleMapData BattleMapData::BuildStage02()
+{
+    SBattleMapData map;
+    InitBaseMap(map);
+
+    map.mapId = EBattleMapId::Stage02;
+    map.mapName = L"Stage 02 - Cursed Library";
+
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Stage2 Guard", 35, 18, 12 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Stage2 Guard", 37, 19, 12 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Stage2 Mage",  34, 16, 22 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Stage2 Archer", 39, 18, 20 });
+
+    return map;
+}
+
+SBattleMapData BattleMapData::BuildStage03()
+{
+    SBattleMapData map;
+    InitBaseMap(map);
+
+    map.mapId = EBattleMapId::Stage03;
+    map.mapName = L"Stage 03 - Final Graveyard";
+
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", 6, 19, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  8, 19, 25 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    7, 18, 18 });
+
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Final Knight", 35, 18, 14 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Final Knight", 37, 19, 14 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Final Mage",   34, 16, 24 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Final Archer", 39, 18, 22 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Final Boss",   36, 16, 26 });
 
     return map;
 }

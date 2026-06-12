@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 #include <string>
@@ -113,14 +113,12 @@ enum class EEquipPart
 
 struct CharacterEquipment
 {
-	class AArmor* Helmet;
-	class AArmor* Armor;
-	class AArmor* Pants;
-	class AArmor* Weapon;
-	class AArmor* Accessory;
+	int WeaponID;
+	int ArmorID;
+	int AccessoryID;
 
 	CharacterEquipment()
-		: Helmet(nullptr), Armor(nullptr), Pants(nullptr), Weapon(nullptr), Accessory(nullptr)
+		: WeaponID(-1), ArmorID(-1), AccessoryID(-1)
 	{
 	}
 };

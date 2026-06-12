@@ -1,4 +1,4 @@
-#include "TeamManager.h"
+﻿#include "TeamManager.h"
 #include "AArmor.h"
 #include <algorithm>
 
@@ -8,100 +8,77 @@ TeamManager::TeamManager()
 
 TeamManager::~TeamManager()
 {
-    for (auto c : Players) delete c;
-    for (auto i : Inventory) delete i;
+    for (auto c : Players) {
+        delete c;
+    }
+
+    for (auto i : Inventory) {
+        delete i;
+    }
 }
 
 void TeamManager::RemoveItem(AItemBase* item)
 {
     auto it = std::find(Inventory.begin(), Inventory.end(), item);
-    if (it != Inventory.end())
-    {
+    if (it != Inventory.end()) {
         Inventory.erase(it);
     }
 }
 
 void TeamManager::EquipArmor(Character* target, AArmor* newArmor)
 {
-    if (!target || !newArmor) return;
+    if (!target || !newArmor) {
+        return;
+    }
 
     CharacterEquipment equip = target->GetEquipment();
-    AArmor* oldArmor = nullptr;
+    int itemID = newArmor->GetItemID();
 
-    // 부위에 맞는 기존 장비 확인 및 해제
-    switch (newArmor->GetPart())
-    {
-    case EArmorPart::Helmet:
-        oldArmor = equip.Helmet;
-        equip.Helmet = newArmor;
-        break;
-    case EArmorPart::Armor:
-        oldArmor = equip.Armor;
-        equip.Armor = newArmor;
-        break;
-    case EArmorPart::Pants:
-        oldArmor = equip.Pants;
-        equip.Pants = newArmor;
-        break;
+    switch (newArmor->GetPart()) {
     case EArmorPart::Weapon:
-        oldArmor = equip.Weapon;
-        equip.Weapon = newArmor;
+        equip.WeaponID = itemID;
         break;
+
     case EArmorPart::Accessory:
-        oldArmor = equip.Accessory;
-        equip.Accessory = newArmor;
+        equip.AccessoryID = itemID;
+        break;
+
+    case EArmorPart::Helmet:
+    case EArmorPart::Armor:
+    case EArmorPart::Pants:
+    default:
+        equip.ArmorID = itemID;
         break;
     }
-
-    // 기존 장비가 있었다면 해제하고 인벤토리에 추가
-    if (oldArmor)
-    {
-        oldArmor->Unequip(target);
-        AddItem(oldArmor);
-    }
-
-    // 새 장비 장착하고 인벤토리에서 제거
-    newArmor->Equip(target);
-    RemoveItem(newArmor);
 
     target->SetEquipment(equip);
+    RemoveItem(newArmor);
 }
 
 void TeamManager::UnequipArmor(Character* target, EArmorPart part)
 {
-    if (!target) return;
+    if (!target) {
+        return;
+    }
 
     CharacterEquipment equip = target->GetEquipment();
-    AArmor* oldArmor = nullptr;
 
-    switch (part)
-    {
-    case EArmorPart::Helmet:
-        oldArmor = equip.Helmet;
-        equip.Helmet = nullptr;
-        break;
-    case EArmorPart::Armor:
-        oldArmor = equip.Armor;
-        equip.Armor = nullptr;
-        break;
-    case EArmorPart::Pants:
-        oldArmor = equip.Pants;
-        equip.Pants = nullptr;
-        break;
+    switch (part) {
     case EArmorPart::Weapon:
-        oldArmor = equip.Weapon;
-        equip.Weapon = nullptr;
+        equip.WeaponID = -1;
         break;
+
     case EArmorPart::Accessory:
-        oldArmor = equip.Accessory;
-        equip.Accessory = nullptr;
+        equip.AccessoryID = -1;
+        break;
+
+    case EArmorPart::Helmet:
+    case EArmorPart::Armor:
+    case EArmorPart::Pants:
+    default:
+        equip.ArmorID = -1;
         break;
     }
 
-    if (oldArmor)
-    {
-        oldArmor->Unequip(target);
-        AddItem(oldArmor);
-        target->SetEquipment(equip);
-    }
+    target->SetEquipment(equip);
 }

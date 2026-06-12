@@ -1,4 +1,4 @@
-#include "Character.h"
+﻿#include "Character.h"
 
 // ============================================================
 // 생성자 / 소멸자
@@ -276,6 +276,8 @@ void Character::Init(ECharacterClass classType, int gridX, int gridY)
 	Money = 0;
 
 	LearnedSkillIDs.clear();
+
+	Equip = CharacterEquipment();
 
 	bHasMoved = false;
 	bHasActed = false;
@@ -1235,6 +1237,21 @@ CharacterEquipment Character::GetEquipment() const
 void Character::SetEquipment(const CharacterEquipment& newEquipment)
 {
 	Equip = newEquipment;
+}
+
+void Character::SetWeaponID(int itemID)
+{
+	Equip.WeaponID = itemID;
+}
+
+void Character::SetArmorID(int itemID)
+{
+	Equip.ArmorID = itemID;
+}
+
+void Character::SetAccessoryID(int itemID)
+{
+	Equip.AccessoryID = itemID;
 }
 
 // ============================================================

@@ -1,16 +1,25 @@
-#include "UMainMenuPopup.h"
-#include "AArmor.h"
-#include "AUsable.h"
+﻿#include "UMainMenuPopup.h"
 #include "resource.h"
 
 UMainMenuPopup::UMainMenuPopup()
-    : currentTab(EMenuTab::CharacterInfo), invState(EInventoryState::Normal), 
-      selectedCharacter(nullptr), selectedItem(nullptr), hBgBitmap(NULL), exitPopup(nullptr),
+    : currentTab(EMenuTab::CharacterInfo),
+      invState(EInventoryState::Normal),
+      selectedCharacter(nullptr),
+      selectedItemID(-1),
+      btnTabChar(nullptr),
+      btnTabInv(nullptr),
+      btnExit(nullptr),
+      btnClose(nullptr),
+      itemActionPanel(nullptr),
+      btnItemAction1(nullptr),
+      btnItemAction2(nullptr),
+      targetSelectPanel(nullptr),
+      hBgBitmap(NULL),
+      exitPopup(nullptr),
       bShowTooltip(false)
 {
     bVisible = false;
-    itemActionPanel = nullptr;
-    targetSelectPanel = nullptr;
+    ZeroMemory(&bgInfo, sizeof(BITMAP));
 }
 
 UMainMenuPopup::~UMainMenuPopup()
@@ -28,7 +37,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     Loc.x = clientRect.right / 2;
     Loc.y = clientRect.bottom / 2;
 
-    int topY = 60;
+    int topY = 88;
     int btnW = 180;
     int btnH = 50;
     int spacing = 20;
@@ -41,7 +50,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     btnTabChar->SetLocation(groupStartX + (btnW / 2), topY);
     btnTabChar->SetSize(btnW, btnH);
     btnTabChar->SetOnClick([this]() { this->SelectTab(EMenuTab::CharacterInfo); });
-    btnTabChar->SetSelected(true); 
+    btnTabChar->SetSelected(true);
     AddChild(btnTabChar);
 
     btnTabInv = new UButton();
@@ -55,8 +64,10 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     btnExit->SetText(L"EXIT");
     btnExit->SetLocation(groupStartX + (btnW * 2) + (spacing * 2) + (btnW / 2), topY);
     btnExit->SetSize(btnW, btnH);
-    btnExit->SetOnClick([this]() { 
-        if (exitPopup) exitPopup->SetVisible(true);
+    btnExit->SetOnClick([this]() {
+        if (exitPopup) {
+            exitPopup->SetVisible(true);
+        }
     });
     AddChild(btnExit);
 
@@ -67,27 +78,25 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     btnClose->SetOnClick([this]() { this->SetVisible(false); });
     AddChild(btnClose);
 
-    // 아이템 액션 패널 (사각형 서브 메뉴)
     itemActionPanel = new UContainerWidget();
-    itemActionPanel->SetSize(160, 100);
+    itemActionPanel->SetSize(180, 100);
     itemActionPanel->SetVisible(false);
     AddChild(itemActionPanel);
 
     btnItemAction1 = new UButton();
-    btnItemAction1->SetSize(140, 40);
-    btnItemAction1->SetLocation(80, 25);
+    btnItemAction1->SetSize(150, 40);
+    btnItemAction1->SetLocation(90, 25);
     itemActionPanel->AddChild(btnItemAction1);
 
     btnItemAction2 = new UButton();
     btnItemAction2->SetText(L"CANCEL");
-    btnItemAction2->SetSize(140, 40);
-    btnItemAction2->SetLocation(80, 75);
+    btnItemAction2->SetSize(150, 40);
+    btnItemAction2->SetLocation(90, 75);
     btnItemAction2->SetOnClick([this]() { this->HideSubMenus(); });
     itemActionPanel->AddChild(btnItemAction2);
 
-    // 타겟 선택 패널
     targetSelectPanel = new UContainerWidget();
-    targetSelectPanel->SetSize(600, 200);
+    targetSelectPanel->SetSize(640, 220);
     targetSelectPanel->SetLocation(Loc.x, Loc.y);
     targetSelectPanel->SetVisible(false);
     AddChild(targetSelectPanel);
@@ -98,10 +107,9 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     exitPopup->SetOnNo([this]() { exitPopup->SetVisible(false); });
     AddChild(exitPopup);
 
-    // 장비 슬롯 버튼 초기화
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 3; ++i) {
         UButton* btn = new UButton();
-        btn->SetSize(64, 64);
+        btn->SetSize(240, 54);
         btn->SetVisible(false);
         AddChild(btn);
         equipSlotButtons.push_back(btn);
@@ -119,81 +127,102 @@ void UMainMenuPopup::SetBackgroundImage(HBITMAP hBitmap)
 void UMainMenuPopup::SetTeamData(const std::vector<Character*>& team)
 {
     teamMembers = team;
-    if (!teamMembers.empty() && !selectedCharacter) {
+    if (!teamMembers.empty() && selectedCharacter == nullptr) {
         selectedCharacter = teamMembers[0];
     }
+
     UpdateCharList();
+    UpdateInventoryGrid();
+    UpdateEquipmentSlots();
 }
 
 void UMainMenuPopup::UpdateCharList()
 {
-    for (auto b : charSelectButtons) RemoveChild(b, true);
+    for (auto b : charSelectButtons) {
+        RemoveChild(b, true);
+    }
     charSelectButtons.clear();
-    
-    int boxRight = Loc.x + Size.sX / 2 - 50;
-    int boxTop = Loc.y - Size.sY / 2 + 120;
-    
-    int btnW = 180;
-    int listStartX = boxRight - (btnW / 2) - 20; 
-    int listStartY = boxTop + 50;
+
+    int panelRight = Loc.x + Size.sX / 2 - 70;
+    int listStartX = panelRight - 85;
+    int listStartY = Loc.y - Size.sY / 2 + 185;
+
+    int btnW = 155;
+    int btnH = 44;
 
     for (size_t i = 0; i < teamMembers.size(); ++i) {
         UButton* btn = new UButton();
-        btn->SetText(teamMembers[i]->GetName()); 
-        btn->SetLocation(listStartX, listStartY + (int)i * 60);
-        btn->SetSize(btnW, 50);
-        
+        btn->SetText(teamMembers[i]->GetName());
+        btn->SetLocation(listStartX, listStartY + (int)i * 54);
+        btn->SetSize(btnW, btnH);
+
         Character* charPtr = teamMembers[i];
-        btn->SetOnClick([this, charPtr, btn]() { 
-            this->SelectCharacter(charPtr); 
-            for (auto b : charSelectButtons) b->SetSelected(false);
+        btn->SetOnClick([this, charPtr, btn]() {
+            this->SelectCharacter(charPtr);
+            for (auto b : charSelectButtons) {
+                b->SetSelected(false);
+            }
             btn->SetSelected(true);
         });
 
-        if (charPtr == selectedCharacter) btn->SetSelected(true);
+        if (charPtr == selectedCharacter) {
+            btn->SetSelected(true);
+        }
 
         AddChild(btn);
         charSelectButtons.push_back(btn);
     }
-    
+
     SelectTab(currentTab);
 }
 
 void UMainMenuPopup::UpdateInventoryGrid()
 {
-    for (auto b : itemIconButtons) RemoveChild(b, true);
+    for (auto b : itemIconButtons) {
+        RemoveChild(b, true);
+    }
     itemIconButtons.clear();
 
-    if (currentTab != EMenuTab::Inventory) return;
+    if (currentTab != EMenuTab::Inventory) {
+        return;
+    }
 
-    int boxLeft = Loc.x - Size.sX / 2 + 80;
-    int boxTop = Loc.y - Size.sY / 2 + 180;
-    
-    const auto& inventory = TeamManager::Get().GetInventory();
-    
-    int colCount = 8;
-    int slotSize = 80;
-    int spacing = 15;
+    int boxLeft = Loc.x - Size.sX / 2 + 105;
+    int boxTop = Loc.y - Size.sY / 2 + 245;
+
+    const auto& inventory = GameManager::Get().GetInventory();
+
+    int colCount = 5;
+    int slotW = 160;
+    int slotH = 66;
+    int spacingX = 22;
+    int spacingY = 22;
 
     for (size_t i = 0; i < inventory.size(); ++i) {
-        AItemBase* item = inventory[i];
+        int itemID = inventory[i].ItemID;
+        int count = inventory[i].Count;
+
         int col = (int)i % colCount;
         int row = (int)i / colCount;
 
         UButton* btn = new UButton();
-        btn->SetLocation(boxLeft + col * (slotSize + spacing), boxTop + row * (slotSize + spacing));
-        btn->SetSize(slotSize, slotSize);
-        
-        btn->SetOnHover([this, item, btn]() {
-            this->ShowTooltip(item->GetName(), item->GetDescription(), btn->GetLocation());
+        btn->SetText(MakeItemButtonText(itemID, count));
+        btn->SetLocation(
+            boxLeft + col * (slotW + spacingX) + slotW / 2,
+            boxTop + row * (slotH + spacingY) + slotH / 2
+        );
+        btn->SetSize(slotW, slotH);
+
+        btn->SetOnHover([this, itemID, btn]() {
+            this->ShowTooltip(ItemData::GetName(itemID), this->MakeItemTooltip(itemID), btn->GetLocation());
         });
         btn->SetOnUnhover([this]() { this->HideTooltip(); });
 
-        btn->SetOnClick([this, item, btn]() { 
+        btn->SetOnClick([this, itemID, btn]() {
             Location loc = btn->GetLocation();
-            this->ShowActionMenu(item, loc.x, loc.y); 
+            this->ShowActionMenu(itemID, loc.x, loc.y);
         });
-        
+
         AddChild(btn);
         itemIconButtons.push_back(btn);
     }
@@ -202,125 +231,177 @@ void UMainMenuPopup::UpdateInventoryGrid()
 void UMainMenuPopup::UpdateEquipmentSlots()
 {
     if (!selectedCharacter || currentTab != EMenuTab::CharacterInfo) {
-        for (auto b : equipSlotButtons) b->SetVisible(false);
+        for (auto b : equipSlotButtons) {
+            b->SetVisible(false);
+        }
         return;
     }
 
-    int boxLeft = Loc.x - Size.sX / 2 + 50;
-    int boxTop = Loc.y - Size.sY / 2 + 120;
-    int col1StartX = boxLeft + 30;
-    int spriteCenterX = col1StartX + 64; // Approx center of 128px sprite
-    
-    int slotX_Left = spriteCenterX - 100;
-    int slotX_Right = spriteCenterX + 100;
-    int startY = boxTop + 60;
+    int panelLeft = Loc.x - Size.sX / 2 + 80;
+    int panelTop = Loc.y - Size.sY / 2 + 150;
+
+    int slotX = panelLeft + 890;
+    int startY = panelTop + 245;
 
     CharacterEquipment equip = selectedCharacter->GetEquipment();
-    AArmor* items[5] = { equip.Helmet, equip.Armor, equip.Pants, equip.Weapon, equip.Accessory };
-    std::wstring slotNames[5] = { L"HELMET", L"ARMOR", L"PANTS", L"WEAPON", L"ACCESSORY" };
+    int itemIDs[3] = { equip.WeaponID, equip.ArmorID, equip.AccessoryID };
+    EEquipPart parts[3] = { EEquipPart::Weapon, EEquipPart::Armor, EEquipPart::Accessory };
+    std::wstring slotNames[3] = { L"WEAPON", L"ARMOR", L"ACCESSORY" };
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 3; ++i) {
         UButton* btn = equipSlotButtons[i];
         btn->SetVisible(true);
-        btn->SetLocation((i < 3) ? slotX_Left : slotX_Right, startY + (i % 3) * 80);
-        
-        AArmor* item = items[i];
-        if (item) {
-            btn->SetText(L"");
-            btn->SetOnHover([this, item, btn]() {
-                CharacterStat bonus = item->GetStatBonus();
-                std::wstring statStr = L"STR+" + std::to_wstring(bonus.STR) + L" DEF+" + std::to_wstring(bonus.DEF);
-                this->ShowTooltip(item->GetName(), item->GetDescription() + L"\n" + statStr, btn->GetLocation());
+        btn->SetLocation(slotX, startY + i * 66);
+        btn->SetSize(310, 52);
+
+        int itemID = itemIDs[i];
+        EEquipPart equipPart = parts[i];
+
+        if (itemID >= 0) {
+            btn->SetText(slotNames[i] + L": " + ItemData::GetName(itemID));
+            btn->SetOnHover([this, itemID, btn]() {
+                this->ShowTooltip(ItemData::GetName(itemID), this->MakeItemTooltip(itemID), btn->GetLocation());
             });
-            btn->SetOnRightClick([this, item]() {
-                TeamManager::Get().UnequipArmor(selectedCharacter, item->GetPart());
-                this->UpdateEquipmentSlots();
+            btn->SetOnClick([this, equipPart]() {
+                if (selectedCharacter) {
+                    GameManager::Get().UnequipItem(selectedCharacter, equipPart);
+                    this->UpdateInventoryGrid();
+                    this->UpdateEquipmentSlots();
+                }
             });
-        } else {
-            btn->SetText(slotNames[i].substr(0, 1)); // Show first letter as placeholder
-            btn->SetOnHover([this, slotNames, i, btn]() {
-                this->ShowTooltip(slotNames[i], L"No item equipped.", btn->GetLocation());
+            btn->SetOnRightClick([this, equipPart]() {
+                if (selectedCharacter) {
+                    GameManager::Get().UnequipItem(selectedCharacter, equipPart);
+                    this->UpdateInventoryGrid();
+                    this->UpdateEquipmentSlots();
+                }
             });
+        }
+        else {
+            std::wstring emptySlotName = slotNames[i];
+            btn->SetText(emptySlotName + L": EMPTY");
+            btn->SetOnHover([this, emptySlotName, btn]() {
+                this->ShowTooltip(emptySlotName, L"No item equipped.", btn->GetLocation());
+            });
+            btn->SetOnClick(nullptr);
             btn->SetOnRightClick(nullptr);
         }
+
         btn->SetOnUnhover([this]() { this->HideTooltip(); });
     }
 }
 
-void UMainMenuPopup::ShowActionMenu(AItemBase* item, int x, int y)
+void UMainMenuPopup::ShowActionMenu(int itemID, int x, int y)
 {
-    selectedItem = item;
-    invState = EInventoryState::ActionChoice;
-    
-    itemActionPanel->SetLocation(x + 100, y); // 아이템 버튼 옆에 표시
-    itemActionPanel->SetVisible(true);
+    selectedItemID = itemID;
+    invState = EInventoryState::TargetSelect;
 
-    if (item->GetItemType() == EItemType::Armor) {
-        btnItemAction1->SetText(L"EQUIP");
-        btnItemAction1->SetOnClick([this]() { this->ShowTargetSelection(); });
-    } else {
-        btnItemAction1->SetText(L"USE");
-        btnItemAction1->SetOnClick([this]() { 
-            MessageBoxW(NULL, L"전투 중에 사용 가능합니다.", L"알림", MB_OK);
-            this->HideSubMenus();
-        });
+    if (itemActionPanel) {
+        itemActionPanel->SetVisible(false);
     }
+
+    if (ItemData::IsEquipment(itemID) || ItemData::IsConsumable(itemID)) {
+        ShowTargetSelection();
+        return;
+    }
+
+    HideSubMenus();
 }
 
 void UMainMenuPopup::ShowTargetSelection()
 {
     invState = EInventoryState::TargetSelect;
-    itemActionPanel->SetVisible(false);
+
+    if (itemActionPanel) {
+        itemActionPanel->SetVisible(false);
+    }
+
     targetSelectPanel->ClearChildren(true);
     targetButtons.clear();
 
-    int startX = 80;
+    std::wstring itemName = ItemData::GetName(selectedItemID);
+    int panelCenterX = Loc.x;
+    int panelCenterY = Loc.y;
+    int startX = panelCenterX - 220;
+    int buttonY = panelCenterY + 30;
+
     for (size_t i = 0; i < teamMembers.size(); ++i) {
         Character* target = teamMembers[i];
         UButton* btn = new UButton();
         btn->SetText(target->GetName());
-        btn->SetLocation(startX + (int)i * 150, 100);
-        btn->SetSize(120, 120);
-        
+        btn->SetLocation(startX + (int)i * 160, buttonY);
+        btn->SetSize(130, 70);
+
         btn->SetOnClick([this, target]() {
-            if (AArmor* armor = dynamic_cast<AArmor*>(selectedItem)) {
-                TeamManager::Get().EquipArmor(target, armor);
-                MessageBoxW(NULL, (target->GetName() + L"에게 장착했습니다.").c_str(), L"장착 완료", MB_OK);
+            if (target == nullptr || selectedItemID < 0) {
+                this->HideSubMenus();
+                return;
             }
+
+            if (ItemData::IsEquipment(selectedItemID)) {
+                GameManager::Get().EquipItem(target, selectedItemID);
+            }
+            else if (ItemData::IsConsumable(selectedItemID)) {
+                GameManager::Get().UseConsumable(target, selectedItemID);
+            }
+
             this->HideSubMenus();
             this->UpdateInventoryGrid();
             this->UpdateEquipmentSlots();
         });
+
         targetSelectPanel->AddChild(btn);
         targetButtons.push_back(btn);
     }
+
+    UButton* cancel = new UButton();
+    cancel->SetText(L"CANCEL");
+    cancel->SetLocation(panelCenterX + 240, buttonY);
+    cancel->SetSize(120, 70);
+    cancel->SetOnClick([this]() { this->HideSubMenus(); });
+    targetSelectPanel->AddChild(cancel);
+    targetButtons.push_back(cancel);
+
     targetSelectPanel->SetVisible(true);
 }
 
 void UMainMenuPopup::HideSubMenus()
 {
-    if (itemActionPanel) itemActionPanel->SetVisible(false);
-    if (targetSelectPanel) targetSelectPanel->SetVisible(false);
+    if (itemActionPanel) {
+        itemActionPanel->SetVisible(false);
+    }
+    if (targetSelectPanel) {
+        targetSelectPanel->SetVisible(false);
+    }
+
+    targetButtons.clear();
+    selectedItemID = -1;
     invState = EInventoryState::Normal;
 }
 
 void UMainMenuPopup::SelectTab(EMenuTab tab)
 {
     currentTab = tab;
-    invState = EInventoryState::Normal;
     HideSubMenus();
 
     btnTabChar->SetSelected(currentTab == EMenuTab::CharacterInfo);
     btnTabInv->SetSelected(currentTab == EMenuTab::Inventory);
 
     bool showCharLists = (currentTab == EMenuTab::CharacterInfo);
-    for (auto btn : charSelectButtons) btn->SetVisible(showCharLists);
+    for (auto btn : charSelectButtons) {
+        btn->SetVisible(showCharLists);
+    }
 
     if (currentTab == EMenuTab::Inventory) {
         UpdateInventoryGrid();
-        for (auto b : equipSlotButtons) b->SetVisible(false);
-    } else {
-        for (auto b : itemIconButtons) b->SetVisible(false);
+        for (auto b : equipSlotButtons) {
+            b->SetVisible(false);
+        }
+    }
+    else {
+        for (auto b : itemIconButtons) {
+            b->SetVisible(false);
+        }
         UpdateEquipmentSlots();
     }
 }
@@ -351,62 +432,86 @@ void UMainMenuPopup::Update()
 
 void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
 {
-    if (!bVisible) return;
+    if (!bVisible) {
+        return;
+    }
 
     BLENDFUNCTION bf;
     bf.BlendOp = AC_SRC_OVER;
     bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = 200;
+    bf.SourceConstantAlpha = 210;
     bf.AlphaFormat = 0;
 
     if (hBgBitmap) {
         HDC hTempDC = CreateCompatibleDC(hMemDC);
         HBITMAP hOldBit = (HBITMAP)SelectObject(hTempDC, hBgBitmap);
-        AlphaBlend(hMemDC, Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Size.sX, Size.sY,
-                   hTempDC, 0, 0, bgInfo.bmWidth, bgInfo.bmHeight, bf);
+        AlphaBlend(
+            hMemDC,
+            Loc.x - Size.sX / 2,
+            Loc.y - Size.sY / 2,
+            Size.sX,
+            Size.sY,
+            hTempDC,
+            0,
+            0,
+            bgInfo.bmWidth,
+            bgInfo.bmHeight,
+            bf
+        );
         SelectObject(hTempDC, hOldBit);
         DeleteDC(hTempDC);
     }
 
-    RECT r = { Loc.x - Size.sX / 2 + 50, Loc.y - Size.sY / 2 + 120, Loc.x + Size.sX / 2 - 50, Loc.y + Size.sY / 2 - 50 };
+    RECT r = {
+        Loc.x - Size.sX / 2 + 50,
+        Loc.y - Size.sY / 2 + 145,
+        Loc.x + Size.sX / 2 - 50,
+        Loc.y + Size.sY / 2 - 50
+    };
     HBRUSH borderBrush = CreateSolidBrush(RGB(150, 150, 150));
     FrameRect(hMemDC, &r, borderBrush);
     DeleteObject(borderBrush);
 
     if (currentTab == EMenuTab::CharacterInfo) {
         DrawCharacterInfo(hMemDC);
-    } else {
+    }
+    else {
         DrawInventory(hMemDC);
     }
 
+    DrawSubMenuBackgrounds(hMemDC);
     UContainerWidget::Draw(hMemDC, hMemDC1);
-    
-    if (bShowTooltip) DrawTooltip(hMemDC);
 
-    // 서브 메뉴 배경 (불투명)
-    if (itemActionPanel && itemActionPanel->GetVisible()) {
-        Location pLoc = itemActionPanel->GetLocation();
-        BuSIZE pSize = itemActionPanel->GetSize();
-        RECT pr = { pLoc.x - pSize.sX / 2, pLoc.y - pSize.sY / 2, pLoc.x + pSize.sX / 2, pLoc.y + pSize.sY / 2 };
-        HBRUSH hB = CreateSolidBrush(RGB(50, 50, 70));
-        FillRect(hMemDC, &pr, hB);
-        DeleteObject(hB);
-        FrameRect(hMemDC, &pr, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    if (bShowTooltip) {
+        DrawTooltip(hMemDC);
     }
 }
 
 void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
 {
-    if (!selectedCharacter) return;
+    if (!selectedCharacter) {
+        return;
+    }
 
-    int boxLeft = Loc.x - Size.sX / 2 + 50;
-    int boxRight = Loc.x + Size.sX / 2 - 50;
-    int boxTop = Loc.y - Size.sY / 2 + 120;
-    
-    int infoAreaEndX = boxRight - 220; 
-    int col1Width = (infoAreaEndX - boxLeft) * 0.4;
-    int col1StartX = boxLeft + 30;
-    int col2StartX = boxLeft + col1Width + 120; // Pushed right for equipment slots
+    int boxLeft = Loc.x - Size.sX / 2 + 80;
+    int boxTop = Loc.y - Size.sY / 2 + 160;
+
+    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
+    COLORREF oldColor = SetTextColor(hMemDC, RGB(255, 255, 255));
+
+    HFONT hTitleFont = CreateFontW(30, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    HFONT oldF = (HFONT)SelectObject(hMemDC, hTitleFont);
+
+    std::wstring nameText = selectedCharacter->GetName();
+    TextOutW(hMemDC, boxLeft + 45, boxTop + 48, nameText.c_str(), (int)nameText.length());
+
+    SelectObject(hMemDC, oldF);
+    DeleteObject(hTitleFont);
+
+    int spriteX = boxLeft + 45;
+    int spriteY = boxTop + 105;
+    int spriteW = 270;
+    int spriteH = 330;
 
     HBITMAP hSprite = selectedCharacter->GetSpriteIdle();
     if (hSprite) {
@@ -416,61 +521,149 @@ void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
         HBITMAP hOld = (HBITMAP)SelectObject(hSpriteDC, hSprite);
         int frameW = bm.bmWidth / CHARACTER_SHEET_COL;
         int frameH = bm.bmHeight / CHARACTER_SHEET_ROW;
-        TransparentBlt(hMemDC, col1StartX, boxTop + 40, frameW * 2, frameH * 2,
-                       hSpriteDC, 0, 0, frameW, frameH, RGB(255, 0, 255));
+        TransparentBlt(
+            hMemDC,
+            spriteX,
+            spriteY,
+            spriteW,
+            spriteH,
+            hSpriteDC,
+            0,
+            0,
+            frameW,
+            frameH,
+            RGB(255, 0, 255)
+        );
         SelectObject(hSpriteDC, hOld);
         DeleteDC(hSpriteDC);
     }
 
-    SetTextColor(hMemDC, RGB(255, 255, 255));
-    SetBkMode(hMemDC, TRANSPARENT);
-    
-    HFONT hFont = CreateFont(28, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-    TextOutW(hMemDC, col1StartX + 10, boxTop + 220, selectedCharacter->GetName().c_str(), (int)selectedCharacter->GetName().length());
-    DeleteObject(hFont);
+    HFONT hFont = CreateFontW(21, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    oldF = (HFONT)SelectObject(hMemDC, hFont);
 
-    hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    SelectObject(hMemDC, hFont);
     CharacterStat stat = selectedCharacter->GetStat();
-    int statY = boxTop + 50;
-    TextOutW(hMemDC, col2StartX, statY, (L"HP: " + std::to_wstring(stat.CurHP) + L" / " + std::to_wstring(stat.MaxHP)).c_str(), 15);
-    TextOutW(hMemDC, col2StartX, statY + 30, (L"MP: " + std::to_wstring(stat.CurMP) + L" / " + std::to_wstring(stat.MaxMP)).c_str(), 15);
-    TextOutW(hMemDC, col2StartX, statY + 60, (L"STR: " + std::to_wstring(stat.STR)).c_str(), 10);
-    TextOutW(hMemDC, col2StartX, statY + 90, (L"INT: " + std::to_wstring(stat.INT)).c_str(), 10);
-    TextOutW(hMemDC, col2StartX, statY + 120, (L"DEF: " + std::to_wstring(stat.DEF)).c_str(), 10);
-    TextOutW(hMemDC, col2StartX, statY + 150, (L"SPD: " + std::to_wstring(stat.SPD)).c_str(), 10);
-    
-    DeleteObject(hFont);
-    SelectObject(hMemDC, oldF);
-}
+    int statX = boxLeft + 380;
+    int statY = boxTop + 112;
 
-void UMainMenuPopup::DrawInventory(HDC hMemDC)
-{
-    int boxLeft = Loc.x - Size.sX / 2 + 80;
-    int boxTop = Loc.y - Size.sY / 2 + 150;
-    
-    SetTextColor(hMemDC, RGB(255, 255, 255));
-    SetBkMode(hMemDC, TRANSPARENT);
-    
-    HFONT hFont = CreateFont(24, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-    TextOutW(hMemDC, boxLeft, boxTop - 40, L"TEAM INVENTORY", 14);
-    
-    if (TeamManager::Get().GetInventory().empty()) {
-        TextOutW(hMemDC, boxLeft, boxTop + 50, L"No Items Found.", 15);
+    std::wstring lines[8] = {
+        L"Level: " + std::to_wstring(selectedCharacter->GetLevel()),
+        L"EXP: " + std::to_wstring(selectedCharacter->GetExp()),
+        L"HP: " + std::to_wstring(stat.CurHP) + L" / " + std::to_wstring(stat.MaxHP),
+        L"MP: " + std::to_wstring(stat.CurMP) + L" / " + std::to_wstring(stat.MaxMP),
+        L"STR: " + std::to_wstring(stat.STR),
+        L"INT: " + std::to_wstring(stat.INT),
+        L"DEF: " + std::to_wstring(stat.DEF),
+        L"SPD: " + std::to_wstring(stat.SPD)
+    };
+
+    for (int i = 0; i < 8; ++i) {
+        TextOutW(hMemDC, statX, statY + i * 29, lines[i].c_str(), (int)lines[i].length());
     }
 
     SelectObject(hMemDC, oldF);
     DeleteObject(hFont);
+
+    HFONT hEquipFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    oldF = (HFONT)SelectObject(hMemDC, hEquipFont);
+    SetTextColor(hMemDC, RGB(255, 220, 90));
+    std::wstring eqTitle = L"Equipment";
+    TextOutW(hMemDC, boxLeft + 770, boxTop + 178, eqTitle.c_str(), (int)eqTitle.length());
+    SelectObject(hMemDC, oldF);
+    DeleteObject(hEquipFont);
+
+    HFONT hHelpFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    oldF = (HFONT)SelectObject(hMemDC, hHelpFont);
+    SetTextColor(hMemDC, RGB(210, 210, 220));
+    RECT helpRect = { boxLeft + 760, boxTop + 405, boxLeft + 1110, boxTop + 470 };
+    std::wstring help = L"Click equipped item to unequip.\nEquip new items in Inventory.";
+    DrawTextW(hMemDC, help.c_str(), (int)help.length(), &helpRect, DT_LEFT | DT_WORDBREAK);
+    SelectObject(hMemDC, oldF);
+    DeleteObject(hHelpFont);
+
+    SetTextColor(hMemDC, oldColor);
+    SetBkMode(hMemDC, oldBkMode);
+}
+
+void UMainMenuPopup::DrawInventory(HDC hMemDC)
+{
+    int boxLeft = Loc.x - Size.sX / 2 + 105;
+    int boxTop = Loc.y - Size.sY / 2 + 170;
+
+    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
+    COLORREF oldColor = SetTextColor(hMemDC, RGB(255, 255, 255));
+
+    HFONT hFont = CreateFontW(25, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
+
+    std::wstring title = L"TEAM INVENTORY    GOLD: " + std::to_wstring(GameManager::Get().GetGold());
+    TextOutW(hMemDC, boxLeft, boxTop, title.c_str(), (int)title.length());
+
+    SelectObject(hMemDC, oldF);
+    DeleteObject(hFont);
+
+    hFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    oldF = (HFONT)SelectObject(hMemDC, hFont);
+    SetTextColor(hMemDC, RGB(215, 215, 225));
+    std::wstring guide = L"Click equipment or potion, then select a target character.";
+    TextOutW(hMemDC, boxLeft, boxTop + 38, guide.c_str(), (int)guide.length());
+
+    if (GameManager::Get().GetInventory().empty()) {
+        TextOutW(hMemDC, boxLeft, boxTop + 95, L"No Items Found.", 15);
+    }
+
+    SelectObject(hMemDC, oldF);
+    DeleteObject(hFont);
+
+    SetTextColor(hMemDC, oldColor);
+    SetBkMode(hMemDC, oldBkMode);
+}
+
+void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)
+{
+    if (targetSelectPanel && targetSelectPanel->GetVisible()) {
+        Location pLoc = targetSelectPanel->GetLocation();
+        BuSIZE pSize = targetSelectPanel->GetSize();
+
+        RECT pr = {
+            pLoc.x - pSize.sX / 2,
+            pLoc.y - pSize.sY / 2,
+            pLoc.x + pSize.sX / 2,
+            pLoc.y + pSize.sY / 2
+        };
+
+        HBRUSH hB = CreateSolidBrush(RGB(38, 38, 55));
+        FillRect(hMemDC, &pr, hB);
+        DeleteObject(hB);
+        FrameRect(hMemDC, &pr, (HBRUSH)GetStockObject(WHITE_BRUSH));
+
+        SetBkMode(hMemDC, TRANSPARENT);
+        SetTextColor(hMemDC, RGB(255, 255, 255));
+
+        HFONT hFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+        HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
+
+        std::wstring title = L"Select Target: " + ItemData::GetName(selectedItemID);
+        RECT titleRect = { pr.left, pr.top + 25, pr.right, pr.top + 60 };
+        DrawTextW(hMemDC, title.c_str(), (int)title.length(), &titleRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+        SelectObject(hMemDC, oldF);
+        DeleteObject(hFont);
+    }
 }
 
 void UMainMenuPopup::DrawTooltip(HDC hMemDC)
 {
-    int tw = 200;
-    int th = 100;
+    int tw = 280;
+    int th = 150;
     int tx = tooltipLoc.x + 40;
-    int ty = tooltipLoc.y - 50;
+    int ty = tooltipLoc.y - 60;
+
+    if (tx + tw > Loc.x + Size.sX / 2 - 20) {
+        tx = tooltipLoc.x - tw - 40;
+    }
+    if (ty < 20) {
+        ty = 20;
+    }
 
     RECT tr = { tx, ty, tx + tw, ty + th };
     HBRUSH hB = CreateSolidBrush(RGB(30, 30, 30));
@@ -479,16 +672,70 @@ void UMainMenuPopup::DrawTooltip(HDC hMemDC)
     FrameRect(hMemDC, &tr, (HBRUSH)GetStockObject(WHITE_BRUSH));
 
     SetTextColor(hMemDC, RGB(255, 255, 255));
-    HFONT hFont = CreateFont(18, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    SetBkMode(hMemDC, TRANSPARENT);
+
+    HFONT hFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
     TextOutW(hMemDC, tx + 10, ty + 10, tooltipTitle.c_str(), (int)tooltipTitle.length());
     DeleteObject(hFont);
 
-    hFont = CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    hFont = CreateFontW(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     SelectObject(hMemDC, hFont);
     RECT textR = { tx + 10, ty + 40, tx + tw - 10, ty + th - 10 };
     DrawTextW(hMemDC, tooltipDesc.c_str(), -1, &textR, DT_LEFT | DT_WORDBREAK);
-    
+
     SelectObject(hMemDC, oldF);
     DeleteObject(hFont);
+}
+
+std::wstring UMainMenuPopup::GetEquipName(int itemID) const
+{
+    if (itemID < 0) {
+        return L"Empty";
+    }
+
+    return ItemData::GetName(itemID);
+}
+
+std::wstring UMainMenuPopup::MakeItemTooltip(int itemID) const
+{
+    std::wstring text = ItemData::GetDescription(itemID);
+    SItemStatBonus bonus = ItemData::GetBonus(itemID);
+
+    if (ItemData::IsEquipment(itemID)) {
+        text += L"\n";
+        text += L"HP+" + std::to_wstring(bonus.MaxHP) + L" MP+" + std::to_wstring(bonus.MaxMP);
+        text += L"\nSTR+" + std::to_wstring(bonus.STR) + L" INT+" + std::to_wstring(bonus.INT);
+        text += L"\nDEF+" + std::to_wstring(bonus.DEF) + L" SPD+" + std::to_wstring(bonus.SPD);
+    }
+    else if (ItemData::IsConsumable(itemID)) {
+        text += L"\nHeal HP: " + std::to_wstring(ItemData::GetHealHP(itemID));
+        text += L"\nHeal MP: " + std::to_wstring(ItemData::GetHealMP(itemID));
+    }
+
+    return text;
+}
+
+std::wstring UMainMenuPopup::MakeItemButtonText(int itemID, int count) const
+{
+    std::wstring name = ItemData::GetName(itemID);
+
+    if (name == L"Small Potion") {
+        name = L"Potion";
+    }
+    else if (name == L"Leather Armor") {
+        name = L"Leather Armor";
+    }
+
+    std::wstring text = name;
+
+    if (count > 1) {
+        text += L" x" + std::to_wstring(count);
+    }
+
+    if (text.length() > 17) {
+        text = text.substr(0, 16) + L"...";
+    }
+
+    return text;
 }

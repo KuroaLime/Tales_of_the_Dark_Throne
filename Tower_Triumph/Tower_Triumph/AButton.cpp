@@ -1,4 +1,4 @@
-#include "AButton.h"
+ï»¿#include "AButton.h"
 
 
 AButton::AButton() {
@@ -71,7 +71,7 @@ void AButton::SetbClick(bool New) {
 	isClicked = New;
 }
 void AButton::Update() {
-	//¾Ö´Ï¸ŞÀÌ¼Ç µîµî
+	//ì• ë‹ˆë©”ì´ì…˜ ë“±ë“±
 }
 
 void AButton::SetLocation(int nX, int nY) {

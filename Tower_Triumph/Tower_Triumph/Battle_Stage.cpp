@@ -1,7 +1,9 @@
-#include "Battle_Stage.h"
+﻿#include "Battle_Stage.h"
 #include "resource.h"
-#include "TeamManager.h"
+#include "GameManager.h"
+#include "ItemData.h"
 #include "UButton.h"
+#include "BattleRewardManager.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -9,6 +11,7 @@
 #include <cmath>
 #include <string>
 #include <queue>
+#include <vector>
 
 Battle_Stage::Battle_Stage()
     : turnSystem(nullptr),
@@ -20,9 +23,13 @@ Battle_Stage::Battle_Stage()
     H(0),
     MovingUnit(nullptr),
     ActingUnit(nullptr),
+    BattleEnded(false),
+    BattleWon(false),
     HoverGridX(-1),
     HoverGridY(-1),
     ActiveMoveIndex(0),
+    SelectedBattleItemID(-1),
+    bSelectingBattleItemTarget(false),
     camPosX(0.0f),
     camPosY(0.0f)
 {
@@ -61,7 +68,25 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
 
-    LoadBattleMap(EBattleMapId::Test01);
+    BattleEnded = false;
+    BattleWon = false;
+
+    BattleRewardManager::Get().Clear();
+
+    int battleStageId = GameManager::Get().GetCurrentBattleStageId();
+
+    EBattleMapId battleMapId = EBattleMapId::Stage01;
+
+    if (battleStageId == 2)
+    {
+        battleMapId = EBattleMapId::Stage02;
+    }
+    else if (battleStageId >= 3)
+    {
+        battleMapId = EBattleMapId::Stage03;
+    }
+
+    LoadBattleMap(battleMapId);
 
     hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(CurrentMap.backgroundResourceId));
     GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
@@ -102,22 +127,8 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     Loc.second.sX = BackgroundInfo.bmWidth / 2;
     Loc.second.sY = BackgroundInfo.bmHeight / 2;
 
-    playerTeam = TeamManager::Get().GetPlayers();
-
-    if (playerTeam.empty())
-    {
-        for (const auto& start : CurrentMap.playerStarts)
-        {
-            Character* p = new Character();
-            p->Init(start.classType, start.x, start.y);
-            p->SetName(start.name);
-            p->LoadSprites(L"Resource");
-
-            TeamManager::Get().AddPlayer(p);
-        }
-
-        playerTeam = TeamManager::Get().GetPlayers();
-    }
+    GameManager::Get().InitDefaultParty();
+    playerTeam = GameManager::Get().GetParty();
 
     for (size_t i = 0; i < playerTeam.size() && i < CurrentMap.playerStarts.size(); ++i)
     {
@@ -133,6 +144,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         c->SetGridPos(start.x, start.y);
         c->LoadSprites(L"Resource");
         c->SyncWorldPixelToGrid(TILE_SIZE);
+        c->ResetTurnState();
     }
 
     for (auto c : enemyTeam)
@@ -148,7 +160,6 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         e->Init(start.classType, start.x, start.y);
         e->SetName(start.name);
         e->LoadSprites(L"Resource");
-
         e->SyncWorldPixelToGrid(TILE_SIZE);
 
         enemyTeam.push_back(e);
@@ -173,6 +184,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     ResetTurnActions();
 
     FocusCameraOnGrid(CurrentMap.cameraStartX, CurrentMap.cameraStartY);
+
     camPosX = (float)Loc.second.sX;
     camPosY = (float)Loc.second.sY;
 }
@@ -202,6 +214,25 @@ void Battle_Stage::Update(HWND hWnd)
     }
 
     UpdateDamageTexts();
+
+    CheckBattleEnd();
+
+    if (BattleEnded)
+    {
+        if (actionMenu)
+        {
+            actionMenu->SetVisible(false);
+        }
+
+        ClearMovePath();
+
+        if (turnUI)
+        {
+            turnUI->Update();
+        }
+
+        return;
+    }
 
     Character* focusTarget = nullptr;
 
@@ -261,6 +292,13 @@ void Battle_Stage::Update(HWND hWnd)
 
             controlMode = EBattleControlMode::WAIT_COMMAND;
 
+            CheckBattleEnd();
+
+            if (BattleEnded)
+            {
+                return;
+            }
+
             if (isEnemyTurn || !movingUnitAlive)
             {
                 if (turnSystem)
@@ -316,6 +354,13 @@ void Battle_Stage::Update(HWND hWnd)
                     c->SetState(ECharacterState::Idle);
                     c->SetIsActionEnd(false);
                 }
+            }
+
+            CheckBattleEnd();
+
+            if (BattleEnded)
+            {
+                return;
             }
 
             if (isEnemyTurn)
@@ -411,14 +456,15 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
     DrawBackground(hMemDC, hMemDC1);
     DrawGrid(hMemDC);
 
-    if (controlMode == EBattleControlMode::SELECT_MOVE)
+    if (controlMode == EBattleControlMode::SELECT_MOVE && !BattleEnded)
     {
         DrawMoveRange(hMemDC);
         DrawBlockedMoveRange(hMemDC);
     }
 
-    if (controlMode == EBattleControlMode::SELECT_ATTACK ||
-        controlMode == EBattleControlMode::SELECT_SKILL)
+    if (!BattleEnded &&
+        (controlMode == EBattleControlMode::SELECT_ATTACK ||
+            controlMode == EBattleControlMode::SELECT_SKILL))
     {
         DrawAttackRange(hMemDC);
     }
@@ -446,14 +492,59 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
     {
         actionMenu->Draw(hMemDC, hMemDC1);
     }
+
+    if (!BattleEnded && controlMode == EBattleControlMode::SELECT_ITEM)
+    {
+        DrawBattleItemUI(hMemDC);
+    }
+
+    if (BattleEnded)
+    {
+        DrawBattleEndMessage(hMemDC);
+    }
 }
 
 int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    if (BattleEnded)
+    {
+        if (uMsg == WM_KEYDOWN)
+        {
+            if (wParam == VK_RETURN || wParam == VK_SPACE || wParam == VK_ESCAPE)
+            {
+                if (BattleWon)
+                {
+                    return MAINTENANCE_STAGE;
+                }
+
+                return MAP_STAGE;
+            }
+        }
+
+        if (uMsg == WM_LBUTTONDOWN)
+        {
+            if (BattleWon)
+            {
+                return MAINTENANCE_STAGE;
+            }
+
+            return MAP_STAGE;
+        }
+
+        return -2;
+    }
+
     if (uMsg == WM_KEYDOWN)
     {
         if (wParam == VK_ESCAPE)
         {
+            if (controlMode == EBattleControlMode::SELECT_ITEM)
+            {
+                ClearBattleItemSelection();
+                controlMode = EBattleControlMode::WAIT_COMMAND;
+                return -2;
+            }
+
             return MAP_STAGE;
         }
 
@@ -510,6 +601,7 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (MovingUnit == nullptr && ActingUnit == nullptr)
         {
             ClearMovePath();
+            ClearBattleItemSelection();
             controlMode = EBattleControlMode::WAIT_COMMAND;
         }
 
@@ -542,6 +634,12 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         int mouseX = LOWORD(lParam);
         int mouseY = HIWORD(lParam);
+
+        if (controlMode == EBattleControlMode::SELECT_ITEM)
+        {
+            HandleBattleItemClick(mouseX, mouseY, current);
+            return -2;
+        }
 
         if (controlMode == EBattleControlMode::WAIT_COMMAND && actionMenu && actionMenu->GetVisible())
         {
@@ -617,6 +715,8 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 ActingUnit = current;
                 ClearMovePath();
                 controlMode = EBattleControlMode::WAIT_COMMAND;
+
+                CheckBattleEnd();
             }
 
             return -2;
@@ -645,6 +745,8 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 ActingUnit = current;
                 ClearMovePath();
                 controlMode = EBattleControlMode::WAIT_COMMAND;
+
+                CheckBattleEnd();
             }
 
             return -2;
@@ -696,6 +798,9 @@ void Battle_Stage::OnMenuDefend()
 void Battle_Stage::OnMenuItem()
 {
     ClearMovePath();
+    RefreshBattleConsumableItems();
+    SelectedBattleItemID = -1;
+    bSelectingBattleItemTarget = false;
     controlMode = EBattleControlMode::SELECT_ITEM;
 }
 
@@ -730,6 +835,199 @@ void Battle_Stage::ResetTurnActions()
     {
         current->ResetTurnState();
     }
+}
+
+bool Battle_Stage::IsTeamAllDead(const std::vector<Character*>& team) const
+{
+    if (team.empty())
+    {
+        return false;
+    }
+
+    for (auto c : team)
+    {
+        if (c != nullptr && c->IsAlive())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Battle_Stage::CheckBattleEnd()
+{
+    if (BattleEnded)
+    {
+        return;
+    }
+
+    if (IsTeamAllDead(enemyTeam))
+    {
+        BattleEnded = true;
+        BattleWon = true;
+
+        int clearedStageId = GameManager::Get().GetCurrentBattleStageId();
+        int nextStageId = clearedStageId + 1;
+
+        if (nextStageId > 3)
+        {
+            nextStageId = 3;
+        }
+
+        BattleRewardManager::Get().SetDefaultVictoryReward(clearedStageId, nextStageId);
+
+        ClearMovePath();
+
+        if (actionMenu)
+        {
+            actionMenu->SetVisible(false);
+        }
+
+        return;
+    }
+
+    if (IsTeamAllDead(playerTeam))
+    {
+        BattleEnded = true;
+        BattleWon = false;
+
+        std::vector<SBattleRewardItem> noItems;
+
+        int currentStageId = GameManager::Get().GetCurrentBattleStageId();
+
+        BattleRewardManager::Get().SetReward(
+            false,
+            currentStageId,
+            currentStageId,
+            0,
+            0,
+            noItems
+        );
+
+        ClearMovePath();
+
+        if (actionMenu)
+        {
+            actionMenu->SetVisible(false);
+        }
+
+        return;
+    }
+}
+
+void Battle_Stage::DrawBattleEndMessage(HDC hMemDC)
+{
+    RECT box;
+
+    box.left = rects.right / 2 - 300;
+    box.top = rects.bottom / 2 - 110;
+    box.right = rects.right / 2 + 300;
+    box.bottom = rects.bottom / 2 + 110;
+
+    HBRUSH hBrush = CreateSolidBrush(RGB(20, 20, 20));
+    FillRect(hMemDC, &box, hBrush);
+    DeleteObject(hBrush);
+
+    HPEN hPen = CreatePen(PS_SOLID, 3, BattleWon ? RGB(255, 220, 80) : RGB(255, 80, 80));
+    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
+
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+
+    Rectangle(hMemDC, box.left, box.top, box.right, box.bottom);
+
+    SelectObject(hMemDC, hOldBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hPen);
+
+    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
+
+    HFONT hTitleFont = CreateFontW(
+        54,
+        0,
+        0,
+        0,
+        FW_HEAVY,
+        FALSE,
+        FALSE,
+        FALSE,
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Arial"
+    );
+
+    HFONT hOldFont = (HFONT)SelectObject(hMemDC, hTitleFont);
+
+    std::wstring title = BattleWon ? L"VICTORY" : L"DEFEAT";
+
+    RECT titleRect = box;
+    titleRect.top += 35;
+    titleRect.bottom = titleRect.top + 70;
+
+    SetTextColor(hMemDC, BattleWon ? RGB(255, 220, 80) : RGB(255, 100, 100));
+
+    DrawTextW(
+        hMemDC,
+        title.c_str(),
+        (int)title.length(),
+        &titleRect,
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+
+    SelectObject(hMemDC, hOldFont);
+    DeleteObject(hTitleFont);
+
+    HFONT hSubFont = CreateFontW(
+        24,
+        0,
+        0,
+        0,
+        FW_NORMAL,
+        FALSE,
+        FALSE,
+        FALSE,
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Arial"
+    );
+
+    hOldFont = (HFONT)SelectObject(hMemDC, hSubFont);
+
+    std::wstring sub;
+
+    if (BattleWon)
+    {
+        sub = L"Click or press Enter / Space to Preparation";
+    }
+    else
+    {
+        sub = L"Click or press Enter / Space to Map";
+    }
+
+    RECT subRect = box;
+    subRect.top += 125;
+    subRect.bottom = subRect.top + 40;
+
+    SetTextColor(hMemDC, RGB(230, 230, 230));
+
+    DrawTextW(
+        hMemDC,
+        sub.c_str(),
+        (int)sub.length(),
+        &subRect,
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+
+    SelectObject(hMemDC, hOldFont);
+    DeleteObject(hSubFont);
+
+    SetBkMode(hMemDC, oldBkMode);
 }
 
 ETileType Battle_Stage::GetTileType(int gx, int gy) const
@@ -1027,7 +1325,16 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
         int sx = offsetX + dt.x;
         int sy = offsetY + dt.y - elapsed / 2;
 
-        std::wstring text = L"-" + std::to_wstring(dt.value);
+        std::wstring text;
+
+        if (dt.value >= 0)
+        {
+            text = L"-" + std::to_wstring(dt.value);
+        }
+        else
+        {
+            text = L"+" + std::to_wstring(-dt.value);
+        }
 
         SIZE textSize;
         GetTextExtentPoint32W(hMemDC, text.c_str(), (int)text.length(), &textSize);
@@ -1049,6 +1356,501 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
     DeleteObject(hFont);
 
     SetBkMode(hMemDC, oldBkMode);
+}
+
+
+void Battle_Stage::RefreshBattleConsumableItems()
+{
+    BattleConsumableItemIDs.clear();
+
+    const std::vector<InventoryItem>& inventory = GameManager::Get().GetInventory();
+
+    for (const InventoryItem& item : inventory)
+    {
+        if (item.Count <= 0)
+        {
+            continue;
+        }
+
+        if (!ItemData::IsConsumable(item.ItemID))
+        {
+            continue;
+        }
+
+        BattleConsumableItemIDs.push_back(item.ItemID);
+    }
+}
+
+void Battle_Stage::ClearBattleItemSelection()
+{
+    SelectedBattleItemID = -1;
+    bSelectingBattleItemTarget = false;
+    BattleConsumableItemIDs.clear();
+}
+
+RECT Battle_Stage::GetBattleItemRect(int index) const
+{
+    RECT rc;
+    int panelLeft = rects.right - 370;
+    int panelTop = 100;
+    int itemTop = panelTop + 90 + index * 58;
+
+    rc.left = panelLeft + 20;
+    rc.top = itemTop;
+    rc.right = panelLeft + 330;
+    rc.bottom = itemTop + 48;
+
+    return rc;
+}
+
+RECT Battle_Stage::GetBattleTargetRect(int index) const
+{
+    RECT rc;
+    int panelLeft = rects.right - 370;
+    int panelTop = 100;
+    int targetTop = panelTop + 150 + index * 58;
+
+    rc.left = panelLeft + 20;
+    rc.top = targetTop;
+    rc.right = panelLeft + 330;
+    rc.bottom = targetTop + 48;
+
+    return rc;
+}
+
+RECT Battle_Stage::GetBattleCancelRect() const
+{
+    RECT rc;
+    int panelLeft = rects.right - 370;
+    int panelTop = 100;
+
+    rc.left = panelLeft + 20;
+    rc.top = panelTop + 430;
+    rc.right = panelLeft + 330;
+    rc.bottom = panelTop + 478;
+
+    return rc;
+}
+
+bool Battle_Stage::IsPointInRect(const RECT& rc, int x, int y) const
+{
+    return x >= rc.left && x <= rc.right && y >= rc.top && y <= rc.bottom;
+}
+
+static void DrawBattleStageText(
+    HDC hMemDC,
+    const std::wstring& text,
+    const RECT& rc,
+    int fontSize,
+    int fontWeight,
+    COLORREF color,
+    UINT format
+)
+{
+    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
+
+    HFONT hFont = CreateFontW(
+        fontSize,
+        0,
+        0,
+        0,
+        fontWeight,
+        FALSE,
+        FALSE,
+        FALSE,
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Arial"
+    );
+
+    HFONT hOldFont = (HFONT)SelectObject(hMemDC, hFont);
+
+    SetTextColor(hMemDC, color);
+    DrawTextW(hMemDC, text.c_str(), (int)text.length(), (RECT*)&rc, format);
+
+    SelectObject(hMemDC, hOldFont);
+    DeleteObject(hFont);
+
+    SetBkMode(hMemDC, oldBkMode);
+}
+
+static void DrawBattleStageButton(HDC hMemDC, const RECT& rc, const std::wstring& text, COLORREF border, COLORREF textColor)
+{
+    HBRUSH hBrush = CreateSolidBrush(RGB(35, 35, 48));
+    FillRect(hMemDC, &rc, hBrush);
+    DeleteObject(hBrush);
+
+    HPEN hPen = CreatePen(PS_SOLID, 2, border);
+    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+
+    Rectangle(hMemDC, rc.left, rc.top, rc.right, rc.bottom);
+
+    SelectObject(hMemDC, hOldBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hPen);
+
+    DrawBattleStageText(
+        hMemDC,
+        text,
+        rc,
+        18,
+        FW_BOLD,
+        textColor,
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+}
+
+void Battle_Stage::DrawBattleItemUI(HDC hMemDC)
+{
+    if (bSelectingBattleItemTarget)
+    {
+        DrawBattleItemTargetSelect(hMemDC);
+    }
+    else
+    {
+        DrawBattleItemList(hMemDC);
+    }
+}
+
+void Battle_Stage::DrawBattleItemList(HDC hMemDC)
+{
+    RECT panel;
+    panel.left = rects.right - 390;
+    panel.top = 80;
+    panel.right = rects.right - 25;
+    panel.bottom = 610;
+
+    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    FillRect(hMemDC, &panel, hBrush);
+    DeleteObject(hBrush);
+
+    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(100, 180, 255));
+    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+    Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
+    SelectObject(hMemDC, hOldBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hPen);
+
+    RECT titleRect = panel;
+    titleRect.top += 18;
+    titleRect.bottom = titleRect.top + 40;
+
+    DrawBattleStageText(
+        hMemDC,
+        L"BATTLE ITEM",
+        titleRect,
+        28,
+        FW_HEAVY,
+        RGB(120, 210, 255),
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+
+    RECT guideRect = panel;
+    guideRect.left += 20;
+    guideRect.right -= 20;
+    guideRect.top += 60;
+    guideRect.bottom = guideRect.top + 26;
+
+    DrawBattleStageText(
+        hMemDC,
+        L"Select a consumable item.",
+        guideRect,
+        16,
+        FW_NORMAL,
+        RGB(220, 220, 220),
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+
+    RefreshBattleConsumableItems();
+
+    if (BattleConsumableItemIDs.empty())
+    {
+        RECT emptyRect = panel;
+        emptyRect.left += 25;
+        emptyRect.right -= 25;
+        emptyRect.top += 150;
+        emptyRect.bottom = emptyRect.top + 70;
+
+        DrawBattleStageText(
+            hMemDC,
+            L"No usable item.",
+            emptyRect,
+            22,
+            FW_BOLD,
+            RGB(230, 230, 230),
+            DT_CENTER | DT_VCENTER | DT_SINGLELINE
+        );
+    }
+    else
+    {
+        int visibleCount = (int)BattleConsumableItemIDs.size();
+
+        if (visibleCount > 6)
+        {
+            visibleCount = 6;
+        }
+
+        for (int i = 0; i < visibleCount; ++i)
+        {
+            int itemID = BattleConsumableItemIDs[i];
+            int count = GameManager::Get().GetItemCount(itemID);
+
+            std::wstring itemText = ItemData::GetName(itemID) + L" x" + std::to_wstring(count);
+
+            int hp = ItemData::GetHealHP(itemID);
+            int mp = ItemData::GetHealMP(itemID);
+
+            if (hp > 0)
+            {
+                itemText += L"  HP+" + std::to_wstring(hp);
+            }
+
+            if (mp > 0)
+            {
+                itemText += L"  MP+" + std::to_wstring(mp);
+            }
+
+            DrawBattleStageButton(
+                hMemDC,
+                GetBattleItemRect(i),
+                itemText,
+                RGB(100, 180, 255),
+                RGB(240, 240, 240)
+            );
+        }
+    }
+
+    DrawBattleStageButton(
+        hMemDC,
+        GetBattleCancelRect(),
+        L"Cancel",
+        RGB(170, 170, 170),
+        RGB(230, 230, 230)
+    );
+}
+
+void Battle_Stage::DrawBattleItemTargetSelect(HDC hMemDC)
+{
+    RECT panel;
+    panel.left = rects.right - 390;
+    panel.top = 80;
+    panel.right = rects.right - 25;
+    panel.bottom = 610;
+
+    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    FillRect(hMemDC, &panel, hBrush);
+    DeleteObject(hBrush);
+
+    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(120, 230, 140));
+    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+    Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
+    SelectObject(hMemDC, hOldBrush);
+    SelectObject(hMemDC, hOldPen);
+    DeleteObject(hPen);
+
+    RECT titleRect = panel;
+    titleRect.top += 18;
+    titleRect.bottom = titleRect.top + 40;
+
+    DrawBattleStageText(
+        hMemDC,
+        L"SELECT TARGET",
+        titleRect,
+        28,
+        FW_HEAVY,
+        RGB(130, 240, 150),
+        DT_CENTER | DT_VCENTER | DT_SINGLELINE
+    );
+
+    RECT itemRect = panel;
+    itemRect.left += 20;
+    itemRect.right -= 20;
+    itemRect.top += 68;
+    itemRect.bottom = itemRect.top + 58;
+
+    std::wstring itemText = ItemData::GetName(SelectedBattleItemID);
+
+    int hp = ItemData::GetHealHP(SelectedBattleItemID);
+    int mp = ItemData::GetHealMP(SelectedBattleItemID);
+
+    if (hp > 0)
+    {
+        itemText += L"  HP+" + std::to_wstring(hp);
+    }
+
+    if (mp > 0)
+    {
+        itemText += L"  MP+" + std::to_wstring(mp);
+    }
+
+    DrawBattleStageText(
+        hMemDC,
+        itemText,
+        itemRect,
+        18,
+        FW_BOLD,
+        RGB(240, 240, 240),
+        DT_CENTER | DT_VCENTER | DT_WORDBREAK
+    );
+
+    int targetIndex = 0;
+
+    for (Character* c : playerTeam)
+    {
+        if (c == nullptr || !c->IsAlive())
+        {
+            continue;
+        }
+
+        CharacterStat stat = c->GetStat();
+        std::wstring targetText = c->GetName()
+            + L"  HP " + std::to_wstring(stat.CurHP) + L"/" + std::to_wstring(stat.MaxHP)
+            + L"  MP " + std::to_wstring(stat.CurMP) + L"/" + std::to_wstring(stat.MaxMP);
+
+        DrawBattleStageButton(
+            hMemDC,
+            GetBattleTargetRect(targetIndex),
+            targetText,
+            RGB(120, 230, 140),
+            RGB(240, 240, 240)
+        );
+
+        targetIndex++;
+    }
+
+    DrawBattleStageButton(
+        hMemDC,
+        GetBattleCancelRect(),
+        L"Back",
+        RGB(170, 170, 170),
+        RGB(230, 230, 230)
+    );
+}
+
+bool Battle_Stage::HandleBattleItemClick(int mouseX, int mouseY, Character* current)
+{
+    if (current == nullptr || !current->IsAlive())
+    {
+        return false;
+    }
+
+    RECT cancelRect = GetBattleCancelRect();
+
+    if (IsPointInRect(cancelRect, mouseX, mouseY))
+    {
+        if (bSelectingBattleItemTarget)
+        {
+            SelectedBattleItemID = -1;
+            bSelectingBattleItemTarget = false;
+        }
+        else
+        {
+            ClearBattleItemSelection();
+            controlMode = EBattleControlMode::WAIT_COMMAND;
+        }
+
+        return true;
+    }
+
+    if (!bSelectingBattleItemTarget)
+    {
+        RefreshBattleConsumableItems();
+
+        int visibleCount = (int)BattleConsumableItemIDs.size();
+
+        if (visibleCount > 6)
+        {
+            visibleCount = 6;
+        }
+
+        for (int i = 0; i < visibleCount; ++i)
+        {
+            RECT rc = GetBattleItemRect(i);
+
+            if (!IsPointInRect(rc, mouseX, mouseY))
+            {
+                continue;
+            }
+
+            SelectedBattleItemID = BattleConsumableItemIDs[i];
+            bSelectingBattleItemTarget = true;
+            return true;
+        }
+
+        return true;
+    }
+
+    int targetIndex = 0;
+
+    for (Character* target : playerTeam)
+    {
+        if (target == nullptr || !target->IsAlive())
+        {
+            continue;
+        }
+
+        RECT rc = GetBattleTargetRect(targetIndex);
+
+        if (IsPointInRect(rc, mouseX, mouseY))
+        {
+            UseSelectedBattleItem(current, target);
+            return true;
+        }
+
+        targetIndex++;
+    }
+
+    return true;
+}
+
+bool Battle_Stage::UseSelectedBattleItem(Character* user, Character* target)
+{
+    if (user == nullptr || target == nullptr)
+    {
+        return false;
+    }
+
+    if (SelectedBattleItemID < 0)
+    {
+        return false;
+    }
+
+    int healHP = ItemData::GetHealHP(SelectedBattleItemID);
+    int healMP = ItemData::GetHealMP(SelectedBattleItemID);
+
+    if (!GameManager::Get().UseConsumable(target, SelectedBattleItemID))
+    {
+        RefreshBattleConsumableItems();
+        return false;
+    }
+
+    if (healHP > 0)
+    {
+        AddDamageText(target, -healHP, RGB(80, 255, 120));
+    }
+    else if (healMP > 0)
+    {
+        AddDamageText(target, -healMP, RGB(80, 180, 255));
+    }
+
+    user->SetHasActed(true);
+
+    ClearBattleItemSelection();
+    ClearMovePath();
+    controlMode = EBattleControlMode::WAIT_COMMAND;
+
+    if (actionMenu)
+    {
+        actionMenu->SetVisible(false);
+    }
+
+    return true;
 }
 
 bool Battle_Stage::BuildMovePath(Character* unit, int targetX, int targetY, std::vector<Location>& outPath) const
@@ -1712,7 +2514,12 @@ bool Battle_Stage::IsOccupied(int gx, int gy, Character* except) const
 {
     for (auto c : playerTeam)
     {
-        if (c == nullptr || c == except || !c->IsAlive())
+        if (c == nullptr)
+        {
+            continue;
+        }
+
+        if (c == except)
         {
             continue;
         }
@@ -1727,7 +2534,12 @@ bool Battle_Stage::IsOccupied(int gx, int gy, Character* except) const
 
     for (auto c : enemyTeam)
     {
-        if (c == nullptr || c == except || !c->IsAlive())
+        if (c == nullptr)
+        {
+            continue;
+        }
+
+        if (c == except)
         {
             continue;
         }
@@ -1885,6 +2697,11 @@ void Battle_Stage::ProcessEnemyTurn()
         return;
     }
 
+    if (BattleEnded)
+    {
+        return;
+    }
+
     Character* enemy = turnSystem->GetCurrentTurnCharacter();
 
     if (enemy == nullptr || !enemy->IsAlive())
@@ -1922,6 +2739,8 @@ void Battle_Stage::ProcessEnemyTurn()
 
         enemy->SetHasActed(true);
         ActingUnit = enemy;
+
+        CheckBattleEnd();
 
         return;
     }
