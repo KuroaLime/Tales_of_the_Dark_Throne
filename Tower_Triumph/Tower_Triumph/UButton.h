@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Widget.h"
 #include <functional>
 #include <string>
@@ -20,6 +20,7 @@ protected:
 	int AnimationType;
 	float currentVisualOffsetY;
 	float currentScale;
+	bool bDrawTextFallbackBackground;
 
 protected:
 	void Animation1();
@@ -33,6 +34,8 @@ public:
 	
 	void SetFont(int nHeight, int nWeight, const std::wstring& fontName);
 	void SetAnimationType(int type) { AnimationType = type; }
+	void SetDrawTextFallbackBackground(bool New) { bDrawTextFallbackBackground = New; }
+	bool GetDrawTextFallbackBackground() const { return bDrawTextFallbackBackground; }
 	void SetOnClick(std::function<void()> Callback) { OnClickCallback = Callback; }
 	void Click();
 

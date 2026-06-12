@@ -1,4 +1,4 @@
-﻿#include "UButton.h"
+#include "UButton.h"
 
 UButton::UButton()
 {
@@ -10,6 +10,7 @@ UButton::UButton()
 	AnimationType = 0;
 	currentVisualOffsetY = 0.0f;
 	currentScale = 1.0f;
+	bDrawTextFallbackBackground = false;
 }
 
 UButton::~UButton()
@@ -178,7 +179,7 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
 	}
 	else
 	{
-		if (ButtonText.empty())
+		if (ButtonText.empty() || bDrawTextFallbackBackground)
 		{
 			HBRUSH bBrush;
 			if (!bEnabled) bBrush = CreateSolidBrush(RGB(50, 50, 50));
