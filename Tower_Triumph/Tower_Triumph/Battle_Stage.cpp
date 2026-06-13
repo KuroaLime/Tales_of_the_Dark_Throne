@@ -203,6 +203,8 @@ Battle_Stage::~Battle_Stage()
         delete actionMenu;
         actionMenu = nullptr;
     }
+
+    ReleaseSkillEffectBitmaps();
 }
 
 void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
@@ -211,6 +213,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     BattleEnded = false;
     BattleWon = false;
+    ActiveSkillEffects.clear();
 
     BattleRewardManager::Get().Clear();
 
@@ -504,6 +507,7 @@ void Battle_Stage::Update(HWND hWnd)
     }
 
     UpdateDamageTexts();
+    UpdateSkillEffects();
 
     CheckBattleEnd();
 
@@ -798,6 +802,7 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
         DrawUnit(hMemDC, hMemDC1, c, true);
     }
 
+    DrawSkillEffects(hMemDC, hMemDC1);
     DrawDamageTexts(hMemDC);
 
     if (turnUI)
@@ -1724,6 +1729,280 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
 
 
 
+
+std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
+{
+    switch (skillID)
+    {
+    case 1101: return L"Skill\\Warrior\\Fire\\1101_Flame_Slash.bmp";
+    case 1102: return L"Skill\\Warrior\\Fire\\1102_Burning_Cleave.bmp";
+    case 1103: return L"Skill\\Warrior\\Fire\\1103_Blaze_Break.bmp";
+    case 1201: return L"Skill\\Warrior\\Water\\1201_Aqua_Slash.bmp";
+    case 1202: return L"Skill\\Warrior\\Water\\1202_Wave_Cutter.bmp";
+    case 1203: return L"Skill\\Warrior\\Water\\1203_Tide_Breaker.bmp";
+    case 1301: return L"Skill\\Warrior\\Grass\\1301_Vine_Slash.bmp";
+    case 1302: return L"Skill\\Warrior\\Grass\\1302_Thorn_Cleave.bmp";
+    case 1303: return L"Skill\\Warrior\\Grass\\1303_Root_Crusher.bmp";
+    case 1401: return L"Skill\\Warrior\\Light\\1401_Holy_Slash.bmp";
+    case 1402: return L"Skill\\Warrior\\Light\\1402_Radiant_Break.bmp";
+    case 1403: return L"Skill\\Warrior\\Light\\1403_Judgment_Cleave.bmp";
+    case 1501: return L"Skill\\Warrior\\Dark\\1501_Dark_Slash.bmp";
+    case 1502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
+    case 1503: return L"Skill\\Warrior\\Dark\\1503_Abyss_Cleave.bmp";
+    case 2101: return L"Skill\\Archer\\Fire\\2101_Flame_Arrow.bmp";
+    case 2102: return L"Skill\\Archer\\Fire\\2102_Explosive_Arrow.bmp";
+    case 2103: return L"Skill\\Archer\\Fire\\2103_Blazing_Snipe.bmp";
+    case 2201: return L"Skill\\Archer\\Water\\2201_Aqua_Arrow.bmp";
+    case 2202: return L"Skill\\Archer\\Water\\2202_Piercing_Wave.bmp";
+    case 2203: return L"Skill\\Archer\\Water\\2203_Tidal_Snipe.bmp";
+    case 2301: return L"Skill\\Archer\\Grass\\2301_Thorn_Arrow.bmp";
+    case 2302: return L"Skill\\Archer\\Grass\\2302_Vine_Volley.bmp";
+    case 2303: return L"Skill\\Archer\\Grass\\2303_Root_Snipe.bmp";
+    case 2401: return L"Skill\\Archer\\Light\\2401_Holy_Arrow.bmp";
+    case 2402: return L"Skill\\Archer\\Light\\2402_Radiant_Shot.bmp";
+    case 2403: return L"Skill\\Archer\\Light\\2403_Judgment_Rain.bmp";
+    case 2501: return L"Skill\\Archer\\Dark\\2501_Dark_Arrow.bmp";
+    case 2502: return L"Skill\\Archer\\Dark\\2502_Shadow_Pierce.bmp";
+    case 2503: return L"Skill\\Archer\\Dark\\2503_Abyss_Snipe.bmp";
+    case 3101: return L"Skill\\Mage\\Fire\\3101_Fire_Bolt.bmp";
+    case 3102: return L"Skill\\Mage\\Fire\\3102_Flame_Burst.bmp";
+    case 3103: return L"Skill\\Mage\\Fire\\3103_Meteor_Burst.bmp";
+    case 3201: return L"Skill\\Mage\\Water\\3201_Water_Shot.bmp";
+    case 3202: return L"Skill\\Mage\\Water\\3202_Aqua_Wave.bmp";
+    case 3203: return L"Skill\\Mage\\Water\\3203_Tidal_Blast.bmp";
+    case 3301: return L"Skill\\Mage\\Grass\\3301_Vine_Whip.bmp";
+    case 3302: return L"Skill\\Mage\\Grass\\3302_Thorn_Field.bmp";
+    case 3303: return L"Skill\\Mage\\Grass\\3303_Root_Storm.bmp";
+    case 3401: return L"Skill\\Mage\\Light\\3401_Holy_Ray.bmp";
+    case 3402: return L"Skill\\Mage\\Light\\3402_Smite_Undead.bmp";
+    case 3403: return L"Skill\\Mage\\Light\\3403_Sanctuary_Burst.bmp";
+    case 3501: return L"Skill\\Mage\\Dark\\3501_Dark_Ball.bmp";
+    case 3502: return L"Skill\\Mage\\Dark\\3502_Shadow_Spike.bmp";
+    case 3503: return L"Skill\\Mage\\Dark\\3503_Abyss_Blast.bmp";
+    default:
+        return L"";
+    }
+}
+HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
+{
+    auto found = SkillEffectBitmaps.find(skillID);
+
+    if (found != SkillEffectBitmaps.end())
+    {
+        auto infoFound = SkillEffectBitmapInfos.find(skillID);
+
+        if (outInfo != nullptr && infoFound != SkillEffectBitmapInfos.end())
+        {
+            *outInfo = infoFound->second;
+        }
+
+        return found->second;
+    }
+
+    std::wstring relativePath = GetSkillEffectRelativePath(skillID);
+
+    if (relativePath.empty())
+    {
+        return nullptr;
+    }
+
+    std::vector<std::wstring> candidates;
+    candidates.push_back(relativePath);
+    candidates.push_back(L"Tower_Triumph\\" + relativePath);
+    candidates.push_back(L"..\\Tower_Triumph\\" + relativePath);
+    candidates.push_back(L"..\\..\\Tower_Triumph\\" + relativePath);
+
+    for (const std::wstring& path : candidates)
+    {
+        HBITMAP hBitmap = (HBITMAP)LoadImageW(
+            NULL,
+            path.c_str(),
+            IMAGE_BITMAP,
+            0,
+            0,
+            LR_LOADFROMFILE | LR_CREATEDIBSECTION
+        );
+
+        if (hBitmap != nullptr)
+        {
+            BITMAP info = {};
+            GetObject(hBitmap, sizeof(BITMAP), &info);
+
+            SkillEffectBitmaps[skillID] = hBitmap;
+            SkillEffectBitmapInfos[skillID] = info;
+
+            if (outInfo != nullptr)
+            {
+                *outInfo = info;
+            }
+
+            return hBitmap;
+        }
+    }
+
+    return nullptr;
+}
+
+void Battle_Stage::ReleaseSkillEffectBitmaps()
+{
+    for (auto& pair : SkillEffectBitmaps)
+    {
+        if (pair.second != nullptr)
+        {
+            DeleteObject(pair.second);
+        }
+    }
+
+    SkillEffectBitmaps.clear();
+    SkillEffectBitmapInfos.clear();
+    ActiveSkillEffects.clear();
+}
+
+int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
+{
+    switch (areaType)
+    {
+    case ESkillAreaType::Splash2:
+        return TILE_SIZE * 5;
+    case ESkillAreaType::Splash1:
+        return TILE_SIZE * 3;
+    case ESkillAreaType::Line:
+        return TILE_SIZE * 4;
+    case ESkillAreaType::Single:
+    default:
+        return TILE_SIZE * 3;
+    }
+}
+
+void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType)
+{
+    if (!IsInsideGrid(gridX, gridY))
+    {
+        return;
+    }
+
+    BITMAP info = {};
+    HBITMAP hBitmap = LoadSkillEffectBitmap(skillID, &info);
+
+    if (hBitmap == nullptr || info.bmWidth <= 0 || info.bmHeight <= 0)
+    {
+        return;
+    }
+
+    SkillEffectAnim effect = {};
+    effect.skillID = skillID;
+    effect.gridX = gridX;
+    effect.gridY = gridY;
+    effect.areaType = areaType;
+    effect.frameIndex = 0;
+    effect.frameTick = 0;
+    effect.frameDelay = 4;
+    effect.maxFrame = 8;
+
+    ActiveSkillEffects.push_back(effect);
+}
+
+void Battle_Stage::UpdateSkillEffects()
+{
+    for (SkillEffectAnim& effect : ActiveSkillEffects)
+    {
+        effect.frameTick++;
+
+        if (effect.frameTick >= effect.frameDelay)
+        {
+            effect.frameTick = 0;
+            effect.frameIndex++;
+        }
+    }
+
+    ActiveSkillEffects.erase(
+        std::remove_if(
+            ActiveSkillEffects.begin(),
+            ActiveSkillEffects.end(),
+            [](const SkillEffectAnim& effect)
+            {
+                return effect.frameIndex >= effect.maxFrame;
+            }
+        ),
+        ActiveSkillEffects.end()
+    );
+}
+
+void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
+{
+    if (ActiveSkillEffects.empty())
+    {
+        return;
+    }
+
+    const int frameColumnCount = 4;
+    const int frameRowCount = 2;
+
+    int offsetX = GetOffsetX();
+    int offsetY = GetOffsetY();
+
+    for (const SkillEffectAnim& effect : ActiveSkillEffects)
+    {
+        BITMAP info = {};
+        HBITMAP hBitmap = LoadSkillEffectBitmap(effect.skillID, &info);
+
+        if (hBitmap == nullptr || info.bmWidth <= 0 || info.bmHeight <= 0)
+        {
+            continue;
+        }
+
+        int frameWidth = info.bmWidth / frameColumnCount;
+        int frameHeight = info.bmHeight / frameRowCount;
+
+        if (frameWidth <= 0 || frameHeight <= 0)
+        {
+            continue;
+        }
+
+        int frame = effect.frameIndex;
+
+        if (frame < 0)
+        {
+            frame = 0;
+        }
+
+        if (frame >= effect.maxFrame)
+        {
+            frame = effect.maxFrame - 1;
+        }
+
+        int srcX = (frame % frameColumnCount) * frameWidth;
+        int srcY = (frame / frameColumnCount) * frameHeight;
+
+        int drawWidth = GetSkillEffectDrawSize(effect.areaType);
+        int drawHeight = drawWidth * frameHeight / frameWidth;
+
+        int centerX = offsetX + effect.gridX * TILE_SIZE + TILE_SIZE / 2;
+        int centerY = offsetY + effect.gridY * TILE_SIZE + TILE_SIZE / 2;
+
+        int drawX = centerX - drawWidth / 2;
+        int drawY = centerY - drawHeight / 2;
+
+        HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC1, hBitmap);
+
+        TransparentBlt(
+            hMemDC,
+            drawX,
+            drawY,
+            drawWidth,
+            drawHeight,
+            hMemDC1,
+            srcX,
+            srcY,
+            frameWidth,
+            frameHeight,
+            RGB(0, 0, 0)
+        );
+
+        SelectObject(hMemDC1, hOldBitmap);
+    }
+}
+
 void Battle_Stage::RefreshBattleSkillList(Character* current)
 {
     BattleSkillIDs.clear();
@@ -2477,6 +2756,9 @@ bool Battle_Stage::UseSelectedBattleSkill(Character* user, Character* target)
 
     Location userPos = user->GetGridPos();
     Location targetPos = target->GetGridPos();
+
+    // Skill effects are anchored to the selected target tile, not the caster tile.
+    PlaySkillEffect(SelectedBattleSkillID, targetPos.x, targetPos.y, info->AreaType);
 
     user->LookAtGrid(targetPos.x, targetPos.y);
     user->SetState(ECharacterState::Skill);

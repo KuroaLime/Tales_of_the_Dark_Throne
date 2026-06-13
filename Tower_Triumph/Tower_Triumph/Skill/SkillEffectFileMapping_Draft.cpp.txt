@@ -1,0 +1,52 @@
+// Skill effect file mapping draft
+// Use project-relative paths after copying SkillEffects_BMP under your resource folder.
+
+struct SSkillEffectFileDraft { int SkillID; const wchar_t* EffectPath; };
+static const SSkillEffectFileDraft GSkillEffectFiles[] =
+{
+    { 1101, L"SkillEffects_BMP/Warrior/Fire/1101_Flame_Slash.bmp" }, // Warrior/Fire Flame Slash
+    { 1102, L"SkillEffects_BMP/Warrior/Fire/1102_Burning_Cleave.bmp" }, // Warrior/Fire Burning Cleave
+    { 1103, L"SkillEffects_BMP/Warrior/Fire/1103_Blaze_Break.bmp" }, // Warrior/Fire Blaze Break
+    { 1201, L"SkillEffects_BMP/Warrior/Water/1201_Aqua_Slash.bmp" }, // Warrior/Water Aqua Slash
+    { 1202, L"SkillEffects_BMP/Warrior/Water/1202_Wave_Cutter.bmp" }, // Warrior/Water Wave Cutter
+    { 1203, L"SkillEffects_BMP/Warrior/Water/1203_Tide_Breaker.bmp" }, // Warrior/Water Tide Breaker
+    { 1301, L"SkillEffects_BMP/Warrior/Grass/1301_Vine_Slash.bmp" }, // Warrior/Grass Vine Slash
+    { 1302, L"SkillEffects_BMP/Warrior/Grass/1302_Thorn_Cleave.bmp" }, // Warrior/Grass Thorn Cleave
+    { 1303, L"SkillEffects_BMP/Warrior/Grass/1303_Root_Crusher.bmp" }, // Warrior/Grass Root Crusher
+    { 1401, L"SkillEffects_BMP/Warrior/Light/1401_Holy_Slash.bmp" }, // Warrior/Light Holy Slash
+    { 1402, L"SkillEffects_BMP/Warrior/Light/1402_Radiant_Break.bmp" }, // Warrior/Light Radiant Break
+    { 1403, L"SkillEffects_BMP/Warrior/Light/1403_Judgment_Cleave.bmp" }, // Warrior/Light Judgment Cleave
+    { 1501, L"SkillEffects_BMP/Warrior/Dark/1501_Dark_Slash.bmp" }, // Warrior/Dark Dark Slash
+    { 1502, L"SkillEffects_BMP/Warrior/Dark/1502_Shadow_Break.bmp" }, // Warrior/Dark Shadow Break
+    { 1503, L"SkillEffects_BMP/Warrior/Dark/1503_Abyss_Cleave.bmp" }, // Warrior/Dark Abyss Cleave
+    { 2101, L"SkillEffects_BMP/Archer/Fire/2101_Flame_Arrow.bmp" }, // Archer/Fire Flame Arrow
+    { 2102, L"SkillEffects_BMP/Archer/Fire/2102_Explosive_Arrow.bmp" }, // Archer/Fire Explosive Arrow
+    { 2103, L"SkillEffects_BMP/Archer/Fire/2103_Blazing_Snipe.bmp" }, // Archer/Fire Blazing Snipe
+    { 2201, L"SkillEffects_BMP/Archer/Water/2201_Aqua_Arrow.bmp" }, // Archer/Water Aqua Arrow
+    { 2202, L"SkillEffects_BMP/Archer/Water/2202_Piercing_Wave.bmp" }, // Archer/Water Piercing Wave
+    { 2203, L"SkillEffects_BMP/Archer/Water/2203_Tidal_Snipe.bmp" }, // Archer/Water Tidal Snipe
+    { 2301, L"SkillEffects_BMP/Archer/Grass/2301_Thorn_Arrow.bmp" }, // Archer/Grass Thorn Arrow
+    { 2302, L"SkillEffects_BMP/Archer/Grass/2302_Vine_Volley.bmp" }, // Archer/Grass Vine Volley
+    { 2303, L"SkillEffects_BMP/Archer/Grass/2303_Root_Snipe.bmp" }, // Archer/Grass Root Snipe
+    { 2401, L"SkillEffects_BMP/Archer/Light/2401_Holy_Arrow.bmp" }, // Archer/Light Holy Arrow
+    { 2402, L"SkillEffects_BMP/Archer/Light/2402_Radiant_Shot.bmp" }, // Archer/Light Radiant Shot
+    { 2403, L"SkillEffects_BMP/Archer/Light/2403_Judgment_Rain.bmp" }, // Archer/Light Judgment Rain
+    { 2501, L"SkillEffects_BMP/Archer/Dark/2501_Dark_Arrow.bmp" }, // Archer/Dark Dark Arrow
+    { 2502, L"SkillEffects_BMP/Archer/Dark/2502_Shadow_Pierce.bmp" }, // Archer/Dark Shadow Pierce
+    { 2503, L"SkillEffects_BMP/Archer/Dark/2503_Abyss_Snipe.bmp" }, // Archer/Dark Abyss Snipe
+    { 3101, L"SkillEffects_BMP/Mage/Fire/3101_Fire_Bolt.bmp" }, // Mage/Fire Fire Bolt
+    { 3102, L"SkillEffects_BMP/Mage/Fire/3102_Flame_Burst.bmp" }, // Mage/Fire Flame Burst
+    { 3103, L"SkillEffects_BMP/Mage/Fire/3103_Meteor_Burst.bmp" }, // Mage/Fire Meteor Burst
+    { 3201, L"SkillEffects_BMP/Mage/Water/3201_Water_Shot.bmp" }, // Mage/Water Water Shot
+    { 3202, L"SkillEffects_BMP/Mage/Water/3202_Aqua_Wave.bmp" }, // Mage/Water Aqua Wave
+    { 3203, L"SkillEffects_BMP/Mage/Water/3203_Tidal_Blast.bmp" }, // Mage/Water Tidal Blast
+    { 3301, L"SkillEffects_BMP/Mage/Grass/3301_Vine_Whip.bmp" }, // Mage/Grass Vine Whip
+    { 3302, L"SkillEffects_BMP/Mage/Grass/3302_Thorn_Field.bmp" }, // Mage/Grass Thorn Field
+    { 3303, L"SkillEffects_BMP/Mage/Grass/3303_Root_Storm.bmp" }, // Mage/Grass Root Storm
+    { 3401, L"SkillEffects_BMP/Mage/Light/3401_Holy_Ray.bmp" }, // Mage/Light Holy Ray
+    { 3402, L"SkillEffects_BMP/Mage/Light/3402_Smite_Undead.bmp" }, // Mage/Light Smite Undead
+    { 3403, L"SkillEffects_BMP/Mage/Light/3403_Sanctuary_Burst.bmp" }, // Mage/Light Sanctuary Burst
+    { 3501, L"SkillEffects_BMP/Mage/Dark/3501_Dark_Ball.bmp" }, // Mage/Dark Dark Ball
+    { 3502, L"SkillEffects_BMP/Mage/Dark/3502_Shadow_Spike.bmp" }, // Mage/Dark Shadow Spike
+    { 3503, L"SkillEffects_BMP/Mage/Dark/3503_Abyss_Blast.bmp" }, // Mage/Dark Abyss Blast
+};
