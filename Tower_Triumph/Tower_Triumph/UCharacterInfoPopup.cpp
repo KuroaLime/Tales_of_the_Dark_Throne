@@ -1,4 +1,4 @@
-#include "UCharacterInfoPopup.h"
+﻿#include "UCharacterInfoPopup.h"
 
 UCharacterInfoPopup::UCharacterInfoPopup()
     : SelectedCharacter(nullptr),
@@ -33,8 +33,9 @@ void UCharacterInfoPopup::Setup(RECT clientRect)
     AddChild(StatePanel);
 
     BackButton = new UButton();
-    BackButton->SetText(L"BACK");
+    BackButton->SetText(L"뒤로");
     BackButton->SetSize(120, 46);
+    BackButton->SetFont(18, FW_BOLD, L"Malgun Gothic");
     BackButton->SetLocation(clientRect.right - 90, 58);
     BackButton->SetOnClick([this]() {
         if (OnBackCallback)
@@ -133,7 +134,7 @@ void UCharacterInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
     }
 
     RECT bg = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-    HBRUSH bgBrush = CreateSolidBrush(RGB(12, 12, 18));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(8, 8, 12));
     FillRect(hMemDC, &bg, bgBrush);
     DeleteObject(bgBrush);
 
@@ -142,7 +143,7 @@ void UCharacterInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
     HFONT titleFont = CreateFontW(34, 0, 0, 0, FW_HEAVY, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldFont = (HFONT)SelectObject(hMemDC, titleFont);
     RECT title = { 0, 20, Size.sX, 70 };
-    DrawTextW(hMemDC, L"CHARACTER", -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    DrawTextW(hMemDC, L"캐릭터", -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SelectObject(hMemDC, oldFont);
     DeleteObject(titleFont);
 

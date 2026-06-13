@@ -52,7 +52,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     int groupStartX = Loc.x - (groupWidth / 2);
 
     btnTabChar = new UButton();
-    btnTabChar->SetText(L"CHARACTER");
+    btnTabChar->SetText(L"상태");
     btnTabChar->SetLocation(groupStartX + (btnW / 2), topY);
     btnTabChar->SetSize(btnW, btnH);
     btnTabChar->SetOnClick([this]() { this->SelectTab(EMenuTab::CharacterInfo); });
@@ -60,14 +60,14 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     AddChild(btnTabChar);
 
     btnTabInv = new UButton();
-    btnTabInv->SetText(L"INVENTORY");
+    btnTabInv->SetText(L"인벤토리");
     btnTabInv->SetLocation(groupStartX + btnW + spacing + (btnW / 2), topY);
     btnTabInv->SetSize(btnW, btnH);
     btnTabInv->SetOnClick([this]() { this->SelectTab(EMenuTab::Inventory); });
     AddChild(btnTabInv);
 
     btnExit = new UButton();
-    btnExit->SetText(L"EXIT");
+    btnExit->SetText(L"종료");
     btnExit->SetLocation(groupStartX + (btnW * 2) + (spacing * 2) + (btnW / 2), topY);
     btnExit->SetSize(btnW, btnH);
     btnExit->SetOnClick([this]() {
@@ -85,7 +85,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     AddChild(btnClose);
 
     btnOpenCharPopup = new UButton();
-    btnOpenCharPopup->SetText(L"DETAIL VIEW");
+    btnOpenCharPopup->SetText(L"상세 보기");
     btnOpenCharPopup->SetLocation(Loc.x - 120, topY + 62);
     btnOpenCharPopup->SetSize(190, 42);
     btnOpenCharPopup->SetFont(18, FW_BOLD, L"Arial");
@@ -94,7 +94,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     AddChild(btnOpenCharPopup);
 
     btnOpenInvPopup = new UButton();
-    btnOpenInvPopup->SetText(L"BAG VIEW");
+    btnOpenInvPopup->SetText(L"가방 보기");
     btnOpenInvPopup->SetLocation(Loc.x + 120, topY + 62);
     btnOpenInvPopup->SetSize(190, 42);
     btnOpenInvPopup->SetFont(18, FW_BOLD, L"Arial");
@@ -113,7 +113,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     itemActionPanel->AddChild(btnItemAction1);
 
     btnItemAction2 = new UButton();
-    btnItemAction2->SetText(L"CANCEL");
+    btnItemAction2->SetText(L"취소");
     btnItemAction2->SetSize(150, 40);
     btnItemAction2->SetLocation(90, 75);
     btnItemAction2->SetOnClick([this]() { this->HideSubMenus(); });
@@ -293,72 +293,14 @@ void UMainMenuPopup::UpdateInventoryGrid()
 
 void UMainMenuPopup::UpdateEquipmentSlots()
 {
-    if (!selectedCharacter || currentTab != EMenuTab::CharacterInfo) {
-        for (auto b : equipSlotButtons) {
+    // 상태 화면에서는 UStatePanel 안에 장비 정보가 이미 표시된다.
+    // 별도의 큰 장비 버튼을 같이 띄우면 캐릭터 선택 버튼과 겹치므로 숨긴다.
+    for (auto b : equipSlotButtons)
+    {
+        if (b)
+        {
             b->SetVisible(false);
         }
-        return;
-    }
-
-    int panelLeft = Loc.x - Size.sX / 2 + 80;
-    int panelTop = Loc.y - Size.sY / 2 + 150;
-
-    int slotX = panelLeft + 890;
-    int startY = panelTop + 245;
-
-    CharacterEquipment equip = selectedCharacter->GetEquipment();
-    int itemIDs[3] = { equip.WeaponID, equip.ArmorID, equip.AccessoryID };
-    EEquipPart parts[3] = { EEquipPart::Weapon, EEquipPart::Armor, EEquipPart::Accessory };
-    std::wstring slotNames[3] = { L"WEAPON", L"ARMOR", L"ACCESSORY" };
-
-    for (int i = 0; i < 3; ++i) {
-        UButton* btn = equipSlotButtons[i];
-        btn->SetVisible(true);
-        btn->SetLocation(slotX, startY + i * 66);
-        btn->SetSize(310, 52);
-
-        int itemID = itemIDs[i];
-        EEquipPart equipPart = parts[i];
-
-        if (itemID >= 0) {
-            btn->SetText(slotNames[i] + L": " + ItemData::GetName(itemID));
-            btn->SetOnHover([this, itemID, btn]() {
-                this->ShowTooltip(ItemData::GetName(itemID), this->MakeItemTooltip(itemID), btn->GetLocation());
-            });
-            btn->SetOnClick([this, equipPart]() {
-                if (selectedCharacter) {
-                    GameManager::Get().UnequipItem(selectedCharacter, equipPart);
-                    this->UpdateInventoryGrid();
-                    this->UpdateEquipmentSlots();
-                    this->RefreshFriendStylePanels();
-                    if (invPopup) {
-                        invPopup->Refresh();
-                    }
-                }
-            });
-            btn->SetOnRightClick([this, equipPart]() {
-                if (selectedCharacter) {
-                    GameManager::Get().UnequipItem(selectedCharacter, equipPart);
-                    this->UpdateInventoryGrid();
-                    this->UpdateEquipmentSlots();
-                    this->RefreshFriendStylePanels();
-                    if (invPopup) {
-                        invPopup->Refresh();
-                    }
-                }
-            });
-        }
-        else {
-            std::wstring emptySlotName = slotNames[i];
-            btn->SetText(emptySlotName + L": EMPTY");
-            btn->SetOnHover([this, emptySlotName, btn]() {
-                this->ShowTooltip(emptySlotName, L"No item equipped.", btn->GetLocation());
-            });
-            btn->SetOnClick(nullptr);
-            btn->SetOnRightClick(nullptr);
-        }
-
-        btn->SetOnUnhover([this]() { this->HideTooltip(); });
     }
 }
 
@@ -390,18 +332,37 @@ void UMainMenuPopup::ShowTargetSelection()
     targetSelectPanel->ClearChildren(true);
     targetButtons.clear();
 
-    std::wstring itemName = ItemData::GetName(selectedItemID);
     int panelCenterX = Loc.x;
     int panelCenterY = Loc.y;
-    int startX = panelCenterX - 220;
-    int buttonY = panelCenterY + 30;
+
+    // 5명 + 취소 버튼을 한 줄에 모두 넣으면 패널 밖으로 튀어나가므로 3열 2행으로 배치한다.
+    const int panelW = 820;
+    const int panelH = 300;
+    const int colCount = 3;
+    const int btnW = 160;
+    const int btnH = 58;
+    const int gapX = 42;
+    const int gapY = 24;
+
+    targetSelectPanel->SetSize(panelW, panelH);
+    targetSelectPanel->SetLocation(panelCenterX, panelCenterY + 25);
+
+    int totalW = colCount * btnW + (colCount - 1) * gapX;
+    int startX = panelCenterX - totalW / 2 + btnW / 2;
+    int startY = panelCenterY + 15;
 
     for (size_t i = 0; i < teamMembers.size(); ++i) {
         Character* target = teamMembers[i];
         UButton* btn = new UButton();
-        btn->SetText(target->GetName());
-        btn->SetLocation(startX + (int)i * 160, buttonY);
-        btn->SetSize(130, 70);
+        btn->SetText(target ? target->GetName() : L"None");
+
+        int col = (int)i % colCount;
+        int row = (int)i / colCount;
+
+        btn->SetLocation(startX + col * (btnW + gapX), startY + row * (btnH + gapY));
+        btn->SetSize(btnW, btnH);
+        btn->SetFont(15, FW_BOLD, L"Malgun Gothic");
+        btn->SetAnimationType(0);
 
         btn->SetOnClick([this, target]() {
             if (target == nullptr || selectedItemID < 0) {
@@ -429,10 +390,16 @@ void UMainMenuPopup::ShowTargetSelection()
         targetButtons.push_back(btn);
     }
 
+    int cancelIndex = (int)teamMembers.size();
+    int cancelCol = cancelIndex % colCount;
+    int cancelRow = cancelIndex / colCount;
+
     UButton* cancel = new UButton();
-    cancel->SetText(L"CANCEL");
-    cancel->SetLocation(panelCenterX + 240, buttonY);
-    cancel->SetSize(120, 70);
+    cancel->SetText(L"취소");
+    cancel->SetLocation(startX + cancelCol * (btnW + gapX), startY + cancelRow * (btnH + gapY));
+    cancel->SetSize(btnW, btnH);
+    cancel->SetFont(15, FW_BOLD, L"Malgun Gothic");
+    cancel->SetAnimationType(0);
     cancel->SetOnClick([this]() { this->HideSubMenus(); });
     targetSelectPanel->AddChild(cancel);
     targetButtons.push_back(cancel);
@@ -619,41 +586,33 @@ void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
         return;
     }
 
-    BLENDFUNCTION bf;
-    bf.BlendOp = AC_SRC_OVER;
-    bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = 210;
-    bf.AlphaFormat = 0;
-
-    if (hBgBitmap) {
-        HDC hTempDC = CreateCompatibleDC(hMemDC);
-        HBITMAP hOldBit = (HBITMAP)SelectObject(hTempDC, hBgBitmap);
-        AlphaBlend(
-            hMemDC,
-            Loc.x - Size.sX / 2,
-            Loc.y - Size.sY / 2,
-            Size.sX,
-            Size.sY,
-            hTempDC,
-            0,
-            0,
-            bgInfo.bmWidth,
-            bgInfo.bmHeight,
-            bf
-        );
-        SelectObject(hTempDC, hOldBit);
-        DeleteDC(hTempDC);
-    }
-
-    RECT r = {
-        Loc.x - Size.sX / 2 + 50,
-        Loc.y - Size.sY / 2 + 145,
-        Loc.x + Size.sX / 2 - 50,
-        Loc.y + Size.sY / 2 - 50
+    RECT overlay = {
+        Loc.x - Size.sX / 2,
+        Loc.y - Size.sY / 2,
+        Loc.x + Size.sX / 2,
+        Loc.y + Size.sY / 2
     };
-    HBRUSH borderBrush = CreateSolidBrush(RGB(150, 150, 150));
-    FrameRect(hMemDC, &r, borderBrush);
-    DeleteObject(borderBrush);
+
+    HBRUSH overlayBrush = CreateSolidBrush(RGB(8, 8, 12));
+    FillRect(hMemDC, &overlay, overlayBrush);
+    DeleteObject(overlayBrush);
+
+    RECT mainPanel = {
+        Loc.x - Size.sX / 2 + 45,
+        Loc.y - Size.sY / 2 + 45,
+        Loc.x + Size.sX / 2 - 45,
+        Loc.y + Size.sY / 2 - 45
+    };
+
+    HBRUSH panelBrush = CreateSolidBrush(RGB(19, 23, 31));
+    HPEN panelPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
+    HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, panelBrush);
+    HPEN oldPen = (HPEN)SelectObject(hMemDC, panelPen);
+    RoundRect(hMemDC, mainPanel.left, mainPanel.top, mainPanel.right, mainPanel.bottom, 14, 14);
+    SelectObject(hMemDC, oldBrush);
+    SelectObject(hMemDC, oldPen);
+    DeleteObject(panelBrush);
+    DeleteObject(panelPen);
 
     if (currentTab == EMenuTab::CharacterInfo) {
         DrawCharacterInfo(hMemDC);
@@ -686,7 +645,7 @@ void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
     HFONT hFont = CreateFontW(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
 
-    std::wstring guide = L"Friend-style profile/state panels are now used here. Click equipment slots on the right to unequip.";
+    std::wstring guide = L"캐릭터를 선택하면 능력치와 장비 정보를 확인할 수 있습니다.";
     RECT guideRect = { boxLeft + 20, boxTop + 5, boxLeft + width - 20, boxTop + 38 };
     DrawTextW(hMemDC, guide.c_str(), -1, &guideRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
@@ -700,12 +659,12 @@ void UMainMenuPopup::DrawInventory(HDC hMemDC)
     int boxTop = Loc.y - Size.sY / 2 + 170;
 
     int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
-    COLORREF oldColor = SetTextColor(hMemDC, RGB(255, 255, 255));
+    COLORREF oldColor = SetTextColor(hMemDC, RGB(238, 232, 214));
 
     HFONT hFont = CreateFontW(25, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
 
-    std::wstring title = L"TEAM INVENTORY    GOLD: " + std::to_wstring(GameManager::Get().GetGold());
+    std::wstring title = L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold());
     TextOutW(hMemDC, boxLeft, boxTop, title.c_str(), (int)title.length());
 
     SelectObject(hMemDC, oldF);
@@ -714,11 +673,12 @@ void UMainMenuPopup::DrawInventory(HDC hMemDC)
     hFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     oldF = (HFONT)SelectObject(hMemDC, hFont);
     SetTextColor(hMemDC, RGB(215, 215, 225));
-    std::wstring guide = L"Click equipment or potion, then select a target character.";
+    std::wstring guide = L"장비 또는 소비 아이템을 선택한 뒤 대상 캐릭터를 고르세요.";
     TextOutW(hMemDC, boxLeft, boxTop + 38, guide.c_str(), (int)guide.length());
 
     if (GameManager::Get().GetInventory().empty()) {
-        TextOutW(hMemDC, boxLeft, boxTop + 95, L"No Items Found.", 15);
+        std::wstring emptyText = L"아이템이 없습니다.";
+        TextOutW(hMemDC, boxLeft, boxTop + 95, emptyText.c_str(), (int)emptyText.length());
     }
 
     SelectObject(hMemDC, oldF);
@@ -741,18 +701,26 @@ void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)
             pLoc.y + pSize.sY / 2
         };
 
-        HBRUSH hB = CreateSolidBrush(RGB(38, 38, 55));
+        HBRUSH hB = CreateSolidBrush(RGB(28, 30, 44));
         FillRect(hMemDC, &pr, hB);
         DeleteObject(hB);
-        FrameRect(hMemDC, &pr, (HBRUSH)GetStockObject(WHITE_BRUSH));
+        {
+            HPEN hPen = CreatePen(PS_SOLID, 2, RGB(176, 146, 78));
+            HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
+            HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+            Rectangle(hMemDC, pr.left, pr.top, pr.right, pr.bottom);
+            SelectObject(hMemDC, oldBrush);
+            SelectObject(hMemDC, oldPen);
+            DeleteObject(hPen);
+        }
 
         SetBkMode(hMemDC, TRANSPARENT);
-        SetTextColor(hMemDC, RGB(255, 255, 255));
+        SetTextColor(hMemDC, RGB(238, 232, 214));
 
         HFONT hFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
         HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
 
-        std::wstring title = L"Select Target: " + ItemData::GetName(selectedItemID);
+        std::wstring title = L"대상 선택: " + ItemData::GetName(selectedItemID);
         RECT titleRect = { pr.left, pr.top + 25, pr.right, pr.top + 60 };
         DrawTextW(hMemDC, title.c_str(), (int)title.length(), &titleRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
@@ -776,12 +744,20 @@ void UMainMenuPopup::DrawTooltip(HDC hMemDC)
     }
 
     RECT tr = { tx, ty, tx + tw, ty + th };
-    HBRUSH hB = CreateSolidBrush(RGB(30, 30, 30));
+    HBRUSH hB = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &tr, hB);
     DeleteObject(hB);
-    FrameRect(hMemDC, &tr, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    {
+        HPEN hPen = CreatePen(PS_SOLID, 2, RGB(176, 146, 78));
+        HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
+        HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
+        Rectangle(hMemDC, tr.left, tr.top, tr.right, tr.bottom);
+        SelectObject(hMemDC, oldBrush);
+        SelectObject(hMemDC, oldPen);
+        DeleteObject(hPen);
+    }
 
-    SetTextColor(hMemDC, RGB(255, 255, 255));
+    SetTextColor(hMemDC, RGB(238, 232, 214));
     SetBkMode(hMemDC, TRANSPARENT);
 
     HFONT hFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");

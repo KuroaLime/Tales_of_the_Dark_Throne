@@ -25,10 +25,10 @@ void UInventoryPopup::Setup(RECT clientRect)
     Loc.y = clientRect.bottom / 2;
 
     BackButton = new UButton();
-    BackButton->SetText(L"BACK");
+    BackButton->SetText(L"뒤로");
     BackButton->SetSize(120, 46);
     BackButton->SetLocation(clientRect.right - 90, 58);
-    BackButton->SetFont(18, FW_BOLD, L"Arial");
+    BackButton->SetFont(18, FW_BOLD, L"Malgun Gothic");
     BackButton->SetAnimationType(1);
     BackButton->SetOnClick([this]() {
         HideTargetSelection();
@@ -79,7 +79,7 @@ void UInventoryPopup::UpdateInventoryGrid()
     int spacingX = 22;
     int spacingY = 20;
     int startX = Loc.x - ((colCount * slotW + (colCount - 1) * spacingX) / 2) + slotW / 2;
-    int startY = Loc.y - 180;
+    int startY = Loc.y - 90;
 
     for (size_t i = 0; i < inventory.size(); ++i)
     {
@@ -92,8 +92,8 @@ void UInventoryPopup::UpdateInventoryGrid()
         button->SetText(MakeItemButtonText(itemID, count));
         button->SetSize(slotW, slotH);
         button->SetLocation(startX + col * (slotW + spacingX), startY + row * (slotH + spacingY));
-        button->SetFont(16, FW_BOLD, L"Arial");
-        button->SetAnimationType(1);
+        button->SetFont(16, FW_BOLD, L"Malgun Gothic");
+        button->SetAnimationType(0);
         button->SetOnHover([this, itemID, button]() {
             ShowTooltip(ItemData::GetName(itemID), MakeItemTooltip(itemID), button->GetLocation());
         });
@@ -125,18 +125,35 @@ void UInventoryPopup::ShowTargetSelection(int itemID)
 
     int panelX = Loc.x;
     int panelY = Loc.y + 120;
-    int startX = panelX - 245;
-    int buttonY = panelY + 35;
+
+    const int panelW = 820;
+    const int panelH = 270;
+    const int colCount = 3;
+    const int btnW = 160;
+    const int btnH = 58;
+    const int gapX = 42;
+    const int gapY = 22;
+
+    TargetPanel->SetSize(panelW, panelH);
+    TargetPanel->SetLocation(panelX, panelY);
+
+    int totalW = colCount * btnW + (colCount - 1) * gapX;
+    int startX = panelX - totalW / 2 + btnW / 2;
+    int startY = panelY + 18;
 
     for (size_t i = 0; i < TeamMembers.size(); ++i)
     {
         Character* target = TeamMembers[i];
         UButton* button = new UButton();
         button->SetText(target ? target->GetName() : L"None");
-        button->SetSize(140, 66);
-        button->SetLocation(startX + (int)i * 125, buttonY);
-        button->SetFont(15, FW_BOLD, L"Arial");
-        button->SetAnimationType(1);
+
+        int col = (int)i % colCount;
+        int row = (int)i / colCount;
+
+        button->SetSize(btnW, btnH);
+        button->SetLocation(startX + col * (btnW + gapX), startY + row * (btnH + gapY));
+        button->SetFont(15, FW_BOLD, L"Malgun Gothic");
+        button->SetAnimationType(0);
         button->SetOnClick([this, target]() {
             if (target == nullptr || SelectedItemID < 0)
             {
@@ -160,12 +177,16 @@ void UInventoryPopup::ShowTargetSelection(int itemID)
         TargetButtons.push_back(button);
     }
 
+    int cancelIndex = (int)TeamMembers.size();
+    int cancelCol = cancelIndex % colCount;
+    int cancelRow = cancelIndex / colCount;
+
     UButton* cancel = new UButton();
-    cancel->SetText(L"CANCEL");
-    cancel->SetSize(130, 56);
-    cancel->SetLocation(panelX + 300, buttonY);
-    cancel->SetFont(15, FW_BOLD, L"Arial");
-    cancel->SetAnimationType(1);
+    cancel->SetText(L"취소");
+    cancel->SetSize(btnW, btnH);
+    cancel->SetLocation(startX + cancelCol * (btnW + gapX), startY + cancelRow * (btnH + gapY));
+    cancel->SetFont(15, FW_BOLD, L"Malgun Gothic");
+    cancel->SetAnimationType(0);
     cancel->SetOnClick([this]() { HideTargetSelection(); });
     TargetPanel->AddChild(cancel);
     TargetButtons.push_back(cancel);
@@ -204,16 +225,16 @@ void UInventoryPopup::Draw(HDC hMemDC, HDC hMemDC1)
     }
 
     RECT bg = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-    HBRUSH bgBrush = CreateSolidBrush(RGB(12, 12, 18));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(8, 8, 12));
     FillRect(hMemDC, &bg, bgBrush);
     DeleteObject(bgBrush);
 
     RECT panel = { Loc.x - 540, Loc.y - 270, Loc.x + 540, Loc.y + 280 };
-    HBRUSH panelBrush = CreateSolidBrush(RGB(28, 30, 44));
+    HBRUSH panelBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, panelBrush);
     DeleteObject(panelBrush);
 
-    HBRUSH frameBrush = CreateSolidBrush(RGB(115, 120, 160));
+    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
     FrameRect(hMemDC, &panel, frameBrush);
     DeleteObject(frameBrush);
 
@@ -222,20 +243,22 @@ void UInventoryPopup::Draw(HDC hMemDC, HDC hMemDC1)
     HFONT titleFont = CreateFontW(34, 0, 0, 0, FW_HEAVY, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldFont = (HFONT)SelectObject(hMemDC, titleFont);
     RECT title = { 0, 20, Size.sX, 70 };
-    DrawTextW(hMemDC, L"INVENTORY", -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    DrawTextW(hMemDC, L"인벤토리", -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SelectObject(hMemDC, oldFont);
     DeleteObject(titleFont);
 
     HFONT normalFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     oldFont = (HFONT)SelectObject(hMemDC, normalFont);
     SetTextColor(hMemDC, RGB(225, 225, 235));
-    std::wstring goldText = L"GOLD: " + std::to_wstring(GameManager::Get().GetGold());
+    std::wstring goldText = L"골드: " + std::to_wstring(GameManager::Get().GetGold());
     TextOutW(hMemDC, Loc.x - 500, Loc.y - 235, goldText.c_str(), (int)goldText.length());
-    TextOutW(hMemDC, Loc.x - 500, Loc.y - 210, L"Click equipment or potion, then select a target.", 47);
+    std::wstring guideText = L"장비 또는 소비 아이템을 선택한 뒤 대상을 고르세요.";
+    TextOutW(hMemDC, Loc.x - 500, Loc.y - 210, guideText.c_str(), (int)guideText.length());
 
     if (GameManager::Get().GetInventory().empty())
     {
-        TextOutW(hMemDC, Loc.x - 80, Loc.y - 20, L"No Items Found.", 15);
+        std::wstring emptyText = L"아이템이 없습니다.";
+        TextOutW(hMemDC, Loc.x - 80, Loc.y - 20, emptyText.c_str(), (int)emptyText.length());
     }
 
     SelectObject(hMemDC, oldFont);
@@ -273,11 +296,11 @@ void UInventoryPopup::DrawTargetPanelBackground(HDC hMemDC)
     BuSIZE size = TargetPanel->GetSize();
     RECT rc = { loc.x - size.sX / 2, loc.y - size.sY / 2, loc.x + size.sX / 2, loc.y + size.sY / 2 };
 
-    HBRUSH bgBrush = CreateSolidBrush(RGB(36, 38, 58));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(28, 30, 44));
     FillRect(hMemDC, &rc, bgBrush);
     DeleteObject(bgBrush);
 
-    HBRUSH frameBrush = CreateSolidBrush(RGB(180, 180, 220));
+    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
     FrameRect(hMemDC, &rc, frameBrush);
     DeleteObject(frameBrush);
 
@@ -285,7 +308,7 @@ void UInventoryPopup::DrawTargetPanelBackground(HDC hMemDC)
     SetTextColor(hMemDC, RGB(255, 230, 120));
     HFONT font = CreateFontW(24, 0, 0, 0, FW_HEAVY, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT oldFont = (HFONT)SelectObject(hMemDC, font);
-    std::wstring title = L"Select Target: " + ItemData::GetName(SelectedItemID);
+    std::wstring title = L"대상 선택: " + ItemData::GetName(SelectedItemID);
     RECT titleRc = { rc.left, rc.top + 22, rc.right, rc.top + 58 };
     DrawTextW(hMemDC, title.c_str(), -1, &titleRc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SelectObject(hMemDC, oldFont);
@@ -317,11 +340,11 @@ void UInventoryPopup::DrawTooltip(HDC hMemDC)
         rc = { tx, ty, tx + 300, ty + 150 };
     }
 
-    HBRUSH bgBrush = CreateSolidBrush(RGB(5, 5, 8));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &rc, bgBrush);
     DeleteObject(bgBrush);
 
-    HBRUSH frameBrush = CreateSolidBrush(RGB(190, 190, 220));
+    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
     FrameRect(hMemDC, &rc, frameBrush);
     DeleteObject(frameBrush);
 

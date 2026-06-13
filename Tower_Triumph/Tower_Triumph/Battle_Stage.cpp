@@ -37,6 +37,172 @@ static const SSkillData* FindBattleSkillInfo(int skillID)
     return SkillData::Find(skillID);
 }
 
+
+static void RuntimeSetTilePoint(SBattleMapData& map, int x, int y, ETileType type)
+{
+    if (x < 0 || y < 0 || x >= map.width || y >= map.height)
+    {
+        return;
+    }
+
+    if ((int)map.tiles.size() != map.height)
+    {
+        return;
+    }
+
+    if ((int)map.tiles[y].size() != map.width)
+    {
+        return;
+    }
+
+    map.tiles[y][x] = type;
+}
+
+static void RuntimeSetTileRect(SBattleMapData& map, int x1, int y1, int x2, int y2, ETileType type)
+{
+    if (x1 > x2) std::swap(x1, x2);
+    if (y1 > y2) std::swap(y1, y2);
+
+    for (int y = y1; y <= y2; ++y)
+    {
+        for (int x = x1; x <= x2; ++x)
+        {
+            RuntimeSetTilePoint(map, x, y, type);
+        }
+    }
+}
+
+static void RuntimeFillTiles(SBattleMapData& map, ETileType type)
+{
+    if (map.width <= 0) map.width = 44;
+    if (map.height <= 0) map.height = 24;
+
+    map.tiles.clear();
+    map.tiles.resize(map.height);
+
+    for (int y = 0; y < map.height; ++y)
+    {
+        map.tiles[y].resize(map.width, type);
+    }
+}
+
+static void RuntimeAddPlayerStarts(SBattleMapData& map,
+    int x0, int y0,
+    int x1, int y1,
+    int x2, int y2,
+    int x3, int y3,
+    int x4, int y4)
+{
+    map.playerStarts.clear();
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", x0, y0, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Archer,  L"Archer",  x1, y1, 25 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    x2, y2, 18 });
+    map.playerStarts.push_back({ ECharacterClass::Warrior, L"Warrior", x3, y3, 15 });
+    map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    x4, y4, 18 });
+}
+
+static void RuntimeAddEnemyStart(SBattleMapData& map, ECharacterClass type, const std::wstring& name, int x, int y, int spd)
+{
+    map.enemyStarts.push_back({ type, name, x, y, spd });
+}
+
+static void ApplyRuntimeStageLayout(int stageId, SBattleMapData& map)
+{
+    // 이 함수는 실제 전투 진입 직전에 좌표/기믹을 한 번 더 확정한다.
+    // BattleMapData.cpp가 이전 값으로 남아 있어도 전투 화면에서는 이 값이 우선 적용된다.
+    map.width = 44;
+    map.height = 24;
+    map.tileSize = 64;
+    map.drawTileDebug = false;
+
+    RuntimeFillTiles(map, ETileType::Normal);
+    map.enemyStarts.clear();
+
+    switch (stageId)
+    {
+    case 2: // 천상 성전
+        map.cameraStartX = 10;
+        map.cameraStartY = 10;
+        RuntimeAddPlayerStarts(map, 7, 10, 8, 11, 9, 10, 10, 11, 11, 10);
+
+        RuntimeSetTileRect(map, 12, 9, 14, 11, ETileType::SkyVoid);
+        RuntimeSetTileRect(map, 4, 13, 7, 16, ETileType::SkyVoid);
+        RuntimeSetTileRect(map, 16, 14, 20, 18, ETileType::SkyVoid);
+        RuntimeSetTileRect(map, 28, 13, 31, 17, ETileType::SkyVoid);
+        RuntimeSetTileRect(map, 38, 10, 43, 15, ETileType::SkyVoid);
+
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Sky Guard", 32, 10, 12);
+        RuntimeAddEnemyStart(map, ECharacterClass::Archer,  L"Sky Archer", 34, 11, 20);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Sky Mage",   35, 10, 22);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Angel",      36, 11, 24);
+        break;
+
+    case 3: // 기본 방
+        map.cameraStartX = 10;
+        map.cameraStartY = 12;
+        RuntimeAddPlayerStarts(map, 8, 12, 9, 11, 10, 12, 11, 11, 12, 12);
+
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Training Guard", 32, 11, 10);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Training Mage",  34, 12, 18);
+        RuntimeAddEnemyStart(map, ECharacterClass::Archer,  L"Training Archer",36, 11, 18);
+        break;
+
+    case 4: // 바다 폐허
+        map.cameraStartX = 10;
+        map.cameraStartY = 10;
+        RuntimeAddPlayerStarts(map, 7, 10, 8, 11, 9, 10, 10, 11, 11, 10);
+
+        RuntimeSetTileRect(map, 12, 10, 14, 12, ETileType::Water);
+        RuntimeSetTileRect(map, 5, 14, 8, 16, ETileType::Water);
+        RuntimeSetTileRect(map, 16, 13, 21, 17, ETileType::Water);
+        RuntimeSetTileRect(map, 26, 13, 31, 18, ETileType::Water);
+        RuntimeSetTileRect(map, 38, 12, 43, 19, ETileType::Water);
+        RuntimeSetTileRect(map, 1, 3, 6, 8, ETileType::Water);
+        RuntimeSetTileRect(map, 34, 2, 43, 7, ETileType::Water);
+
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Coast Guard", 32, 10, 12);
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Coast Guard", 34, 11, 12);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Tide Mage",   35, 10, 22);
+        RuntimeAddEnemyStart(map, ECharacterClass::Archer,  L"Coast Archer",36, 11, 20);
+        break;
+
+    case 5: // 용암지대
+        map.cameraStartX = 11;
+        map.cameraStartY = 10;
+        RuntimeAddPlayerStarts(map, 8, 10, 9, 11, 10, 10, 11, 11, 12, 10);
+
+        RuntimeSetTileRect(map, 13, 10, 15, 12, ETileType::Lava);
+        RuntimeSetTileRect(map, 7, 14, 10, 16, ETileType::Lava);
+        RuntimeSetTileRect(map, 17, 14, 22, 17, ETileType::Lava);
+        RuntimeSetTileRect(map, 27, 13, 31, 18, ETileType::Lava);
+        RuntimeSetTileRect(map, 37, 14, 42, 19, ETileType::Lava);
+        RuntimeSetTileRect(map, 2, 3, 6, 7, ETileType::Lava);
+        RuntimeSetTileRect(map, 34, 3, 39, 7, ETileType::Lava);
+
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Lava Guard", 32, 10, 14);
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Lava Guard", 34, 11, 14);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Lava Mage",  35, 10, 24);
+        RuntimeAddEnemyStart(map, ECharacterClass::Archer,  L"Lava Archer",36, 11, 22);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Lava Boss",  33, 12, 26);
+        break;
+
+    case 1:
+    default: // 묘지
+        map.cameraStartX = 10;
+        map.cameraStartY = 11;
+        RuntimeAddPlayerStarts(map, 8, 11, 9, 12, 10, 11, 11, 12, 12, 11);
+
+        RuntimeSetTileRect(map, 13, 10, 15, 12, ETileType::CursedGround);
+        RuntimeSetTileRect(map, 3, 13, 5, 15, ETileType::CursedGround);
+        RuntimeSetTileRect(map, 22, 12, 24, 14, ETileType::MagicHazard);
+
+        RuntimeAddEnemyStart(map, ECharacterClass::Warrior, L"Enemy Warrior", 32, 11, 10);
+        RuntimeAddEnemyStart(map, ECharacterClass::Mage,    L"Enemy Mage",    34, 12, 20);
+        RuntimeAddEnemyStart(map, ECharacterClass::Archer,  L"Enemy Archer",  36, 11, 18);
+        break;
+    }
+}
+
 static int BattleSkillDistance(Character* user, int targetX, int targetY)
 {
     if (user == nullptr)
@@ -215,22 +381,60 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     BattleRewardManager::Get().Clear();
 
     int battleStageId = GameManager::Get().GetCurrentBattleStageId();
-
-    EBattleMapId battleMapId = EBattleMapId::Stage01;
-
-    if (battleStageId == 2)
-    {
-        battleMapId = EBattleMapId::Stage02;
-    }
-    else if (battleStageId >= 3)
-    {
-        battleMapId = EBattleMapId::Stage03;
-    }
+    EBattleMapId battleMapId = BattleMapData::FromStageId(battleStageId);
 
     LoadBattleMap(battleMapId);
+    ApplyRuntimeStageLayout(battleStageId, CurrentMap);
+    TileMap = CurrentMap.tiles;
 
-    hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(CurrentMap.backgroundResourceId));
-    GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+    hBitBackground = nullptr;
+
+    // 배경 파일은 절대 경로를 쓰지 않는다.
+    // Visual Studio 실행 위치가 솔루션 루트일 때와 프로젝트 폴더일 때를 모두 처리한다.
+    if (!CurrentMap.backgroundFilePath.empty())
+    {
+        std::vector<std::wstring> backgroundPathCandidates;
+        backgroundPathCandidates.push_back(CurrentMap.backgroundFilePath);
+        backgroundPathCandidates.push_back(L"Tower_Triumph\\" + CurrentMap.backgroundFilePath);
+        backgroundPathCandidates.push_back(L"..\\Tower_Triumph\\" + CurrentMap.backgroundFilePath);
+
+        for (const std::wstring& path : backgroundPathCandidates)
+        {
+            hBitBackground = (HBITMAP)LoadImageW(
+                NULL,
+                path.c_str(),
+                IMAGE_BITMAP,
+                0,
+                0,
+                LR_LOADFROMFILE | LR_CREATEDIBSECTION
+            );
+
+            if (hBitBackground != nullptr)
+            {
+                break;
+            }
+        }
+    }
+
+    if (hBitBackground == nullptr && CurrentMap.backgroundResourceId != 0)
+    {
+        hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(CurrentMap.backgroundResourceId));
+    }
+
+    if (hBitBackground == nullptr)
+    {
+        hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP3));
+    }
+
+    if (hBitBackground)
+    {
+        GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+    }
+    else
+    {
+        BackgroundInfo.bmWidth = rects.right;
+        BackgroundInfo.bmHeight = rects.bottom;
+    }
 
     TILE_SIZE = CurrentMap.tileSize;
 
@@ -325,10 +529,34 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     ResetTurnActions();
 
-    FocusCameraOnGrid(CurrentMap.cameraStartX, CurrentMap.cameraStartY);
+    // 첫 진입 카메라는 보간 없이 즉시 시작 위치로 맞춘다.
+    // 기존 FocusCameraOnGrid는 camPosX/Y가 0인 상태에서 0.1 보간을 해서
+    // 실제 캐릭터 시작 위치가 화면 밖으로 밀려 보일 수 있었다.
+    {
+        int halfW = rects.right / 2;
+        int halfH = rects.bottom / 2;
 
-    camPosX = (float)Loc.second.sX;
-    camPosY = (float)Loc.second.sY;
+        int minX = halfW;
+        int minY = halfH;
+        int maxX = BackgroundInfo.bmWidth - halfW;
+        int maxY = BackgroundInfo.bmHeight - halfH;
+
+        if (maxX < minX) maxX = minX;
+        if (maxY < minY) maxY = minY;
+
+        int targetX = CurrentMap.cameraStartX * TILE_SIZE + TILE_SIZE / 2;
+        int targetY = CurrentMap.cameraStartY * TILE_SIZE + TILE_SIZE / 2;
+
+        if (targetX < minX) targetX = minX;
+        if (targetX > maxX) targetX = maxX;
+        if (targetY < minY) targetY = minY;
+        if (targetY > maxY) targetY = maxY;
+
+        Loc.second.sX = targetX;
+        Loc.second.sY = targetY;
+        camPosX = (float)targetX;
+        camPosY = (float)targetY;
+    }
 }
 
 void Battle_Stage::LoadBattleMap(EBattleMapId mapId)
@@ -1056,9 +1284,9 @@ void Battle_Stage::CheckBattleEnd()
         int clearedStageId = GameManager::Get().GetCurrentBattleStageId();
         int nextStageId = clearedStageId + 1;
 
-        if (nextStageId > 3)
+        if (nextStageId > 5)
         {
-            nextStageId = 3;
+            nextStageId = 5;
         }
 
         BattleRewardManager::Get().SetDefaultVictoryReward(clearedStageId, nextStageId);
@@ -1243,6 +1471,13 @@ bool Battle_Stage::IsBlockedTile(int gx, int gy, Character* unit) const
     switch (type)
     {
     case ETileType::Water:
+        // 바다/물 타일은 수속성 유닛만 이동 가능.
+        return !(unit != nullptr && unit->GetElement() == EElement::Water);
+
+    case ETileType::SkyVoid:
+        // 천상/공중 빈 공간은 빛속성 유닛만 이동 가능.
+        return !(unit != nullptr && unit->GetElement() == EElement::Light);
+
     case ETileType::Building:
     case ETileType::Wall:
     case ETileType::Fence:
@@ -1303,6 +1538,14 @@ void Battle_Stage::ApplyTileEffect(Character* unit)
         return;
     }
 
+    ETileType type = GetTileType(pos.x, pos.y);
+
+    // 용암은 누구나 밟을 수 있지만, 불속성은 피해를 받지 않는다.
+    if (type == ETileType::Lava && unit->GetElement() == EElement::Fire)
+    {
+        return;
+    }
+
     int damage = GetTileDamage(pos.x, pos.y);
 
     if (damage <= 0)
@@ -1311,8 +1554,6 @@ void Battle_Stage::ApplyTileEffect(Character* unit)
     }
 
     unit->GetDamage(damage);
-
-    ETileType type = GetTileType(pos.x, pos.y);
 
     if (type == ETileType::MagicHazard)
     {
@@ -1368,6 +1609,9 @@ COLORREF Battle_Stage::GetTileOverlayColor(ETileType type) const
     case ETileType::Lava:
         return RGB(255, 80, 20);
 
+    case ETileType::SkyVoid:
+        return RGB(120, 200, 255);
+
     case ETileType::Road:
     case ETileType::Normal:
     default:
@@ -1417,7 +1661,8 @@ void Battle_Stage::DrawTileOverlay(HDC hMemDC)
             if (type == ETileType::MagicHazard ||
                 type == ETileType::CursedGround ||
                 type == ETileType::Water ||
-                type == ETileType::Lava)
+                type == ETileType::Lava ||
+                type == ETileType::SkyVoid)
             {
                 MoveToEx(hMemDC, sx + 8, sy + 8, NULL);
                 LineTo(hMemDC, sx + TILE_SIZE - 8, sy + TILE_SIZE - 8);
@@ -1615,11 +1860,11 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
     panel.right = rects.right - 25;
     panel.bottom = 610;
 
-    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
     DeleteObject(hBrush);
 
-    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(210, 120, 255));
+    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
     Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
@@ -1633,11 +1878,11 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"BATTLE SKILL",
+        L"마법",
         titleRect,
         28,
         FW_HEAVY,
-        RGB(220, 150, 255),
+        RGB(245, 220, 150),
         DT_CENTER | DT_VCENTER | DT_SINGLELINE
     );
 
@@ -1649,7 +1894,7 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"Select a damage skill.",
+        L"사용할 마법을 선택하세요.",
         guideRect,
         16,
         FW_NORMAL,
@@ -1676,7 +1921,7 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
 
         DrawBattleStageText(
             hMemDC,
-            L"No skill.",
+            L"사용 가능한 마법이 없습니다.",
             emptyRect,
             22,
             FW_BOLD,
@@ -1754,7 +1999,7 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
     DrawBattleStageButton(
         hMemDC,
         GetBattleCancelRect(),
-        L"Cancel",
+        L"취소",
         RGB(170, 170, 170),
         RGB(230, 230, 230)
     );
@@ -1768,7 +2013,7 @@ void Battle_Stage::DrawBattleSkillTargetSelect(HDC hMemDC)
     panel.right = rects.right - 25;
     panel.bottom = 610;
 
-    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
     DeleteObject(hBrush);
 
@@ -1794,7 +2039,7 @@ void Battle_Stage::DrawBattleSkillTargetSelect(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"SELECT ENEMY",
+        L"대상 선택",
         titleRect,
         28,
         FW_HEAVY,
@@ -2540,7 +2785,7 @@ static void DrawBattleStageText(
 
 static void DrawBattleStageButton(HDC hMemDC, const RECT& rc, const std::wstring& text, COLORREF border, COLORREF textColor)
 {
-    HBRUSH hBrush = CreateSolidBrush(RGB(35, 35, 48));
+    HBRUSH hBrush = CreateSolidBrush(RGB(38, 44, 58));
     FillRect(hMemDC, &rc, hBrush);
     DeleteObject(hBrush);
 
@@ -2585,11 +2830,11 @@ void Battle_Stage::DrawBattleItemList(HDC hMemDC)
     panel.right = rects.right - 25;
     panel.bottom = 610;
 
-    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
     DeleteObject(hBrush);
 
-    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(100, 180, 255));
+    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
     Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
@@ -2603,11 +2848,11 @@ void Battle_Stage::DrawBattleItemList(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"BATTLE ITEM",
+        L"아이템",
         titleRect,
         28,
         FW_HEAVY,
-        RGB(120, 210, 255),
+        RGB(245, 220, 150),
         DT_CENTER | DT_VCENTER | DT_SINGLELINE
     );
 
@@ -2619,7 +2864,7 @@ void Battle_Stage::DrawBattleItemList(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"Select a consumable item.",
+        L"사용할 아이템을 선택하세요.",
         guideRect,
         16,
         FW_NORMAL,
@@ -2639,7 +2884,7 @@ void Battle_Stage::DrawBattleItemList(HDC hMemDC)
 
         DrawBattleStageText(
             hMemDC,
-            L"No usable item.",
+            L"사용 가능한 아이템이 없습니다.",
             emptyRect,
             22,
             FW_BOLD,
@@ -2689,7 +2934,7 @@ void Battle_Stage::DrawBattleItemList(HDC hMemDC)
     DrawBattleStageButton(
         hMemDC,
         GetBattleCancelRect(),
-        L"Cancel",
+        L"취소",
         RGB(170, 170, 170),
         RGB(230, 230, 230)
     );
@@ -2703,11 +2948,11 @@ void Battle_Stage::DrawBattleItemTargetSelect(HDC hMemDC)
     panel.right = rects.right - 25;
     panel.bottom = 610;
 
-    HBRUSH hBrush = CreateSolidBrush(RGB(18, 18, 26));
+    HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
     DeleteObject(hBrush);
 
-    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(120, 230, 140));
+    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
     Rectangle(hMemDC, panel.left, panel.top, panel.right, panel.bottom);
@@ -2721,11 +2966,11 @@ void Battle_Stage::DrawBattleItemTargetSelect(HDC hMemDC)
 
     DrawBattleStageText(
         hMemDC,
-        L"SELECT TARGET",
+        L"대상 선택",
         titleRect,
         28,
         FW_HEAVY,
-        RGB(130, 240, 150),
+        RGB(245, 220, 150),
         DT_CENTER | DT_VCENTER | DT_SINGLELINE
     );
 
@@ -3459,9 +3704,6 @@ void Battle_Stage::DrawBlockedMoveRange(HDC hMemDC)
 
     Location curPos = current->GetGridPos();
 
-    HPEN hPen = CreatePen(PS_SOLID, 3, RGB(255, 60, 60));
-    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
-
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
 
     for (int y = 0; y < H; ++y)
@@ -3475,10 +3717,25 @@ void Battle_Stage::DrawBlockedMoveRange(HDC hMemDC)
                 continue;
             }
 
-            if (!IsBlockedTile(x, y, current))
+            bool blocked = IsBlockedTile(x, y, current);
+            bool damageTile = IsDamageTile(x, y);
+
+            ETileType type = GetTileType(x, y);
+
+            if (type == ETileType::Lava && current->GetElement() == EElement::Fire)
+            {
+                damageTile = false;
+            }
+
+            if (!blocked && !damageTile)
             {
                 continue;
             }
+
+            COLORREF color = blocked ? RGB(255, 60, 60) : GetTileOverlayColor(type);
+
+            HPEN hPen = CreatePen(PS_SOLID, 3, color);
+            HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
 
             int sx = offsetX + x * TILE_SIZE;
             int sy = offsetY + y * TILE_SIZE;
@@ -3491,17 +3748,30 @@ void Battle_Stage::DrawBlockedMoveRange(HDC hMemDC)
                 sy + TILE_SIZE - 6
             );
 
-            MoveToEx(hMemDC, sx + 12, sy + 12, NULL);
-            LineTo(hMemDC, sx + TILE_SIZE - 12, sy + TILE_SIZE - 12);
+            if (blocked)
+            {
+                MoveToEx(hMemDC, sx + 12, sy + 12, NULL);
+                LineTo(hMemDC, sx + TILE_SIZE - 12, sy + TILE_SIZE - 12);
 
-            MoveToEx(hMemDC, sx + TILE_SIZE - 12, sy + 12, NULL);
-            LineTo(hMemDC, sx + 12, sy + TILE_SIZE - 12);
+                MoveToEx(hMemDC, sx + TILE_SIZE - 12, sy + 12, NULL);
+                LineTo(hMemDC, sx + 12, sy + TILE_SIZE - 12);
+            }
+            else if (damageTile)
+            {
+                // 이동은 가능하지만 피해가 들어가는 타일은 X 대신 마름모로 표시한다.
+                MoveToEx(hMemDC, sx + TILE_SIZE / 2, sy + 10, NULL);
+                LineTo(hMemDC, sx + TILE_SIZE - 10, sy + TILE_SIZE / 2);
+                LineTo(hMemDC, sx + TILE_SIZE / 2, sy + TILE_SIZE - 10);
+                LineTo(hMemDC, sx + 10, sy + TILE_SIZE / 2);
+                LineTo(hMemDC, sx + TILE_SIZE / 2, sy + 10);
+            }
+
+            SelectObject(hMemDC, hOldPen);
+            DeleteObject(hPen);
         }
     }
 
     SelectObject(hMemDC, hOldBrush);
-    SelectObject(hMemDC, hOldPen);
-    DeleteObject(hPen);
 }
 
 void Battle_Stage::Comp_NextStage(int ID)

@@ -81,7 +81,7 @@ void UTurnCharacterInfo::Draw(HDC hMemDC, HDC hMemDC1)
 
         HFONT oldFont = (HFONT)SelectObject(hMemDC, nameFont);
 
-        std::wstring name = isEnemy ? L"ENEMY" : L"HERO";
+        std::wstring name = isEnemy ? L"적" : L"아군";
         TextOutW(hMemDC, infoX, infoY, name.c_str(), (int)name.length());
 
         SelectObject(hMemDC, oldFont);
@@ -106,15 +106,15 @@ void UTurnCharacterInfo::Draw(HDC hMemDC, HDC hMemDC1)
         switch (owner->GetClassType())
         {
         case ECharacterClass::Warrior:
-            className = L"Warrior";
+            className = L"전사";
             break;
 
         case ECharacterClass::Archer:
-            className = L"Archer";
+            className = L"궁수";
             break;
 
         case ECharacterClass::Mage:
-            className = L"Mage";
+            className = L"마법사";
             break;
         }
 

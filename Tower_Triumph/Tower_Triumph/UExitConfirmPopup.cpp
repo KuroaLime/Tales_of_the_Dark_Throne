@@ -1,4 +1,4 @@
-#include "UExitConfirmPopup.h"
+﻿#include "UExitConfirmPopup.h"
 
 UExitConfirmPopup::UExitConfirmPopup()
     : btnYes(nullptr), btnNo(nullptr)
@@ -19,41 +19,48 @@ void UExitConfirmPopup::Draw(HDC hMemDC, HDC hMemDC1)
 {
     if (!bVisible) return;
 
-    // Draw background overlay (semi-transparent if possible, but here just a box)
-    // Actually, let's draw a centered box
-    int boxW = 400;
-    int boxH = 200;
+    int boxW = 420;
+    int boxH = 210;
     int startX = Loc.x - boxW / 2;
     int startY = Loc.y - boxH / 2;
 
-    HBRUSH hBrush = CreateSolidBrush(RGB(50, 50, 50));
+    RECT shadow = { startX + 4, startY + 4, startX + boxW + 4, startY + boxH + 4 };
+    HBRUSH shadowBrush = CreateSolidBrush(RGB(0, 0, 0));
+    FillRect(hMemDC, &shadow, shadowBrush);
+    DeleteObject(shadowBrush);
+
     RECT rect = { startX, startY, startX + boxW, startY + boxH };
-    FillRect(hMemDC, &rect, hBrush);
-    DeleteObject(hBrush);
+    HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
+    HPEN borderPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
+    HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, bgBrush);
+    HPEN oldPen = (HPEN)SelectObject(hMemDC, borderPen);
+    RoundRect(hMemDC, rect.left, rect.top, rect.right, rect.bottom, 12, 12);
+    SelectObject(hMemDC, oldBrush);
+    SelectObject(hMemDC, oldPen);
+    DeleteObject(bgBrush);
+    DeleteObject(borderPen);
 
-    HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
-    HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
-    MoveToEx(hMemDC, startX, startY, NULL);
-    LineTo(hMemDC, startX + boxW, startY);
-    LineTo(hMemDC, startX + boxW, startY + boxH);
-    LineTo(hMemDC, startX, startY + boxH);
-    LineTo(hMemDC, startX, startY);
-    SelectObject(hMemDC, hOldPen);
-    DeleteObject(hPen);
+    RECT titleBar = { startX + 18, startY + 16, startX + boxW - 18, startY + 50 };
+    HBRUSH titleBrush = CreateSolidBrush(RGB(48, 38, 24));
+    FillRect(hMemDC, &titleBar, titleBrush);
+    DeleteObject(titleBrush);
 
-    // Draw message
-    HFONT hFont = CreateFont(24, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
+    HFONT hFont = CreateFontW(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Malgun Gothic");
     HFONT hOldFont = (HFONT)SelectObject(hMemDC, hFont);
-    SetTextColor(hMemDC, RGB(255, 255, 255));
+    SetTextColor(hMemDC, RGB(245, 220, 150));
     SetBkMode(hMemDC, TRANSPARENT);
-    
-    RECT textRect = { startX, startY + 40, startX + boxW, startY + 100 };
-    DrawTextW(hMemDC, message.c_str(), -1, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
+    DrawTextW(hMemDC, L"종료", -1, &titleBar, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SelectObject(hMemDC, hOldFont);
     DeleteObject(hFont);
 
-    // Draw buttons
+    hFont = CreateFontW(21, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Malgun Gothic");
+    hOldFont = (HFONT)SelectObject(hMemDC, hFont);
+    SetTextColor(hMemDC, RGB(238, 232, 214));
+    RECT textRect = { startX + 20, startY + 70, startX + boxW - 20, startY + 125 };
+    DrawTextW(hMemDC, message.c_str(), -1, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    SelectObject(hMemDC, hOldFont);
+    DeleteObject(hFont);
+
     UContainerWidget::Draw(hMemDC, hMemDC1);
 }
 
@@ -67,14 +74,14 @@ void UExitConfirmPopup::Setup(HINSTANCE hInst, RECT clientRect)
     int spacing = 40;
 
     btnYes = new UButton();
-    btnYes->SetText(L"네");
-    btnYes->SetLocation(Loc.x - btnW - spacing / 2, Loc.y + 40);
+    btnYes->SetText(L"예");
+    btnYes->SetLocation(Loc.x - btnW / 2 - spacing / 2, Loc.y + 58);
     btnYes->SetSize(btnW, btnH);
     AddChild(btnYes);
 
     btnNo = new UButton();
-    btnNo->SetText(L"아니요");
-    btnNo->SetLocation(Loc.x + spacing / 2, Loc.y + 40);
+    btnNo->SetText(L"아니오");
+    btnNo->SetLocation(Loc.x + btnW / 2 + spacing / 2, Loc.y + 58);
     btnNo->SetSize(btnW, btnH);
     AddChild(btnNo);
 }

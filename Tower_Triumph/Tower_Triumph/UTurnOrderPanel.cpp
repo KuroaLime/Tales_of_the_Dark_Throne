@@ -1,4 +1,4 @@
-#include "UTurnOrderPanel.h"
+﻿#include "UTurnOrderPanel.h"
 #include <algorithm>
 
 UTurnOrderPanel::UTurnOrderPanel()
@@ -93,7 +93,7 @@ void UTurnOrderPanel::Draw(HDC hMemDC, HDC hMemDC1)
     if (!bVisible) return;
 
     // Draw Semi-transparent background
-    HBRUSH hBrush = CreateSolidBrush(RGB(10, 10, 10));
+    HBRUSH hBrush = CreateSolidBrush(RGB(12, 14, 20));
     RECT barRect = { 0, Loc.y - 60, Size.sX, Loc.y + 60 };
     FillRect(hMemDC, &barRect, hBrush);
     DeleteObject(hBrush);

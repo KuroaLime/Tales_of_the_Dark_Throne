@@ -1,4 +1,4 @@
-#include "UProfilePanel.h"
+﻿#include "UProfilePanel.h"
 
 #include <string>
 
@@ -26,7 +26,7 @@ void UProfilePanel::Setup(int x, int y)
     NameLabel = new UTextLabel();
     NameLabel->SetLocation(Loc.x, Loc.y - 165);
     NameLabel->SetSize(280, 36);
-    NameLabel->SetFont(24, FW_BOLD, L"Arial");
+    NameLabel->SetFont(24, FW_BOLD, L"Malgun Gothic");
     NameLabel->SetColor(RGB(255, 230, 120));
     NameLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     AddChild(NameLabel);
@@ -34,7 +34,7 @@ void UProfilePanel::Setup(int x, int y)
     LevelLabel = new UTextLabel();
     LevelLabel->SetLocation(Loc.x, Loc.y - 130);
     LevelLabel->SetSize(280, 28);
-    LevelLabel->SetFont(17, FW_BOLD, L"Arial");
+    LevelLabel->SetFont(17, FW_BOLD, L"Malgun Gothic");
     LevelLabel->SetColor(RGB(220, 220, 240));
     LevelLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     AddChild(LevelLabel);
@@ -42,7 +42,7 @@ void UProfilePanel::Setup(int x, int y)
     ElementLabel = new UTextLabel();
     ElementLabel->SetLocation(Loc.x, Loc.y + 170);
     ElementLabel->SetSize(280, 30);
-    ElementLabel->SetFont(18, FW_BOLD, L"Arial");
+    ElementLabel->SetFont(18, FW_BOLD, L"Malgun Gothic");
     ElementLabel->SetColor(RGB(160, 220, 255));
     ElementLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     AddChild(ElementLabel);
@@ -72,7 +72,7 @@ void UProfilePanel::SetCharacter(Character* character)
 
     if (ElementLabel)
     {
-        ElementLabel->SetText(L"Element: " + CurrentCharacter->GetElementName());
+        ElementLabel->SetText(L"속성: " + CurrentCharacter->GetElementName());
     }
 }
 
@@ -85,16 +85,16 @@ void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
 
     RECT panel = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
 
-    HBRUSH bgBrush = CreateSolidBrush(RGB(30, 32, 48));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, bgBrush);
     DeleteObject(bgBrush);
 
-    HBRUSH frameBrush = CreateSolidBrush(RGB(115, 120, 160));
+    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
     FrameRect(hMemDC, &panel, frameBrush);
     DeleteObject(frameBrush);
 
     RECT portraitBox = { panel.left + 42, panel.top + 105, panel.right - 42, panel.bottom - 62 };
-    HBRUSH innerBrush = CreateSolidBrush(RGB(16, 16, 24));
+    HBRUSH innerBrush = CreateSolidBrush(RGB(12, 12, 18));
     FillRect(hMemDC, &portraitBox, innerBrush);
     DeleteObject(innerBrush);
 

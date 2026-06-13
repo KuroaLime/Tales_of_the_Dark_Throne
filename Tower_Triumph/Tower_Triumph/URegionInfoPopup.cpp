@@ -1,4 +1,4 @@
-#include "URegionInfoPopup.h"
+﻿#include "URegionInfoPopup.h"
 
 URegionInfoPopup::URegionInfoPopup()
 {
@@ -14,7 +14,7 @@ void URegionInfoPopup::Setup(HINSTANCE hInst, RECT clientRect)
 	btnEnter = new UButton();
 	btnEnter->SetLocation(Loc.x, Loc.y + 140);
 	btnEnter->SetSize(100, 40);
-	btnEnter->SetText(L"ENTER");
+	btnEnter->SetText(L"입장");
 	btnEnter->SetOnClick([this]() { 
 		if (OnEnterClickCallback) OnEnterClickCallback();
 	});
@@ -23,7 +23,7 @@ void URegionInfoPopup::Setup(HINSTANCE hInst, RECT clientRect)
 	btnClose = new UButton();
 	btnClose->SetLocation(Loc.x, Loc.y + 200);
 	btnClose->SetSize(100, 40);
-	btnClose->SetText(L"CLOSE");
+	btnClose->SetText(L"닫기");
 	btnClose->SetOnClick([this]() { this->SetVisible(false); });
 	AddChild(btnClose);
 }
@@ -41,8 +41,8 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 	if (!bVisible) return;
 
 	// Background
-	HBRUSH bgBrush = CreateSolidBrush(RGB(40, 30, 20));
-	HPEN borderPen = CreatePen(PS_SOLID, 3, RGB(200, 160, 80));
+	HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
+	HPEN borderPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
 	HBRUSH oldB = (HBRUSH)SelectObject(hMemDC, bgBrush);
 	HPEN oldP = (HPEN)SelectObject(hMemDC, borderPen);
 
@@ -70,7 +70,7 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 	hFont = CreateFont(18, 0, 0, 0, FW_NORMAL, 1, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
 	SelectObject(hMemDC, hFont);
 	RECT envRect = { r.left + 20, r.top + 70, r.right - 20, r.top + 100 };
-	DrawTextW(hMemDC, (L"Env: " + rEnv).c_str(), -1, &envRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+	DrawTextW(hMemDC, (L"환경: " + rEnv).c_str(), -1, &envRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 	DeleteObject(hFont);
 
 	// Description (Multiline)

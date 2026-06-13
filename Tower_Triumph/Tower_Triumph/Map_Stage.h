@@ -9,6 +9,7 @@
 #include"UImage.h"
 #include "GameManager.h"
 #include "ItemData.h"
+#include "UNoticePopup.h"
 
 class Map_Stage : public CStage
 {
@@ -39,6 +40,7 @@ private:
 	URegionInfoPopup* infoPopup;
 	UMainMenuPopup* mainMenu;
 	ULocationIndicator* locationUI;
+	UNoticePopup* noticePopup;
 	UCanvasPanel screenUI;
 
 	class UMouseMark* MouseMark;

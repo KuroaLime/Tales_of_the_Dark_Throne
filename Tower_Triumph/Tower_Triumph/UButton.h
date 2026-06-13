@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Widget.h"
 #include <functional>
 #include <string>
@@ -7,8 +7,8 @@ class UButton : public UWidget
 {
 protected:
     bool isPressed;
-    bool isSelected;
-    bool bEnabled;
+    bool isSelected; // Added to indicate active tab/selection
+    bool bEnabled;   // Added to support disabled state
     std::function<void()> OnClickCallback;
     std::function<void()> OnRightClickCallback;
     std::function<void()> OnHoverCallback;
@@ -22,20 +22,18 @@ protected:
     float currentScale;
     bool bDrawTextFallbackBackground;
 
-    COLORREF FallbackNormalColor;
-    COLORREF FallbackHoverColor;
-    COLORREF FallbackPressedColor;
-    COLORREF FallbackSelectedColor;
-    COLORREF FallbackDisabledColor;
-
-    COLORREF TextNormalColor;
-    COLORREF TextHoverColor;
-    COLORREF TextPressedColor;
-    COLORREF TextSelectedColor;
-    COLORREF TextDisabledColor;
-
-    COLORREF FallbackBorderColor;
-    int FallbackBorderWidth;
+    COLORREF NormalColor;
+    COLORREF HoverColor;
+    COLORREF PressedColor;
+    COLORREF SelectedColor;
+    COLORREF DisabledColor;
+    COLORREF NormalTextColor;
+    COLORREF HoverTextColor;
+    COLORREF PressedTextColor;
+    COLORREF SelectedTextColor;
+    COLORREF DisabledTextColor;
+    COLORREF BorderColor;
+    int BorderWidth;
 
 protected:
     void Animation1();
@@ -46,7 +44,7 @@ public:
     virtual ~UButton();
     virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
     virtual void Update() override;
-
+    
     void SetFont(int nHeight, int nWeight, const std::wstring& fontName);
     void SetAnimationType(int type) { AnimationType = type; }
     void SetDrawTextFallbackBackground(bool New) { bDrawTextFallbackBackground = New; }

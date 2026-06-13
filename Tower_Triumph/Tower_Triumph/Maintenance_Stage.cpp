@@ -76,7 +76,7 @@ void Maintenance_Stage::Draw(HDC hMemDC, HDC hMemDC1)
 
     DrawCenteredText(
         hMemDC,
-        IsRewardMode() ? L"BATTLE REWARD" : L"TOWN / PREPARATION",
+        IsRewardMode() ? L"전투 보상" : L"정비",
         panel.top + 16,
         50,
         38,
@@ -547,12 +547,12 @@ void Maintenance_Stage::DrawTabs(HDC hMemDC)
     };
 
     TabInfo tabs[6] = {
-        { EMaintenanceTab::Reward, L"1. Reward" },
-        { EMaintenanceTab::Party, L"2. Party" },
-        { EMaintenanceTab::Inventory, L"3. Inventory" },
-        { EMaintenanceTab::Equipment, L"4. Equip" },
-        { EMaintenanceTab::Skill, L"5. Skill" },
-        { EMaintenanceTab::Shop, L"6. Shop" }
+        { EMaintenanceTab::Reward, L"1. 보상" },
+        { EMaintenanceTab::Party, L"2. 파티" },
+        { EMaintenanceTab::Inventory, L"3. 인벤토리" },
+        { EMaintenanceTab::Equipment, L"4. 장비" },
+        { EMaintenanceTab::Skill, L"5. 스킬" },
+        { EMaintenanceTab::Shop, L"6. 상점" }
     };
 
     for (int i = 0; i < 6; ++i)
@@ -577,7 +577,7 @@ void Maintenance_Stage::DrawContinueButton(HDC hMemDC)
     DrawBoxText(
         hMemDC,
         GetContinueRect(),
-        L"Back to Map",
+        L"맵으로",
         20,
         FW_BOLD,
         RGB(255, 255, 255),
@@ -600,7 +600,7 @@ void Maintenance_Stage::DrawNextStageButton(HDC hMemDC)
     DrawBoxText(
         hMemDC,
         GetNextStageRect(),
-        L"Next Stage",
+        L"다음 스테이지",
         20,
         FW_BOLD,
         RGB(255, 255, 255),

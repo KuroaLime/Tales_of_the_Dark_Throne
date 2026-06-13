@@ -12,21 +12,20 @@ UButton::UButton()
     currentScale = 1.0f;
     bDrawTextFallbackBackground = false;
 
-    // 기존 디버그 기본색은 유지한다. 필요한 버튼만 SetFallbackColors로 별도 지정한다.
-    FallbackNormalColor = RGB(255, 0, 0);
-    FallbackHoverColor = RGB(0, 255, 0);
-    FallbackPressedColor = RGB(100, 100, 100);
-    FallbackSelectedColor = RGB(180, 150, 0);
-    FallbackDisabledColor = RGB(50, 50, 50);
+    NormalColor = RGB(38, 44, 58);
+    HoverColor = RGB(60, 72, 98);
+    PressedColor = RGB(28, 33, 44);
+    SelectedColor = RGB(120, 86, 28);
+    DisabledColor = RGB(34, 36, 40);
 
-    TextNormalColor = RGB(255, 255, 255);
-    TextHoverColor = RGB(255, 215, 0);
-    TextPressedColor = RGB(150, 150, 150);
-    TextSelectedColor = RGB(255, 215, 0);
-    TextDisabledColor = RGB(100, 100, 100);
+    NormalTextColor = RGB(238, 232, 214);
+    HoverTextColor = RGB(255, 224, 142);
+    PressedTextColor = RGB(185, 175, 145);
+    SelectedTextColor = RGB(255, 235, 160);
+    DisabledTextColor = RGB(120, 120, 120);
 
-    FallbackBorderColor = RGB(255, 255, 255);
-    FallbackBorderWidth = 0;
+    BorderColor = RGB(160, 135, 76);
+    BorderWidth = 1;
 }
 
 UButton::~UButton()
@@ -36,6 +35,30 @@ UButton::~UButton()
         DeleteObject(hButtonFont);
         hButtonFont = NULL;
     }
+}
+
+void UButton::SetFallbackColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled)
+{
+    NormalColor = normal;
+    HoverColor = hover;
+    PressedColor = pressed;
+    SelectedColor = selected;
+    DisabledColor = disabled;
+}
+
+void UButton::SetFallbackTextColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled)
+{
+    NormalTextColor = normal;
+    HoverTextColor = hover;
+    PressedTextColor = pressed;
+    SelectedTextColor = selected;
+    DisabledTextColor = disabled;
+}
+
+void UButton::SetFallbackBorder(COLORREF color, int width)
+{
+    BorderColor = color;
+    BorderWidth = width;
 }
 
 void UButton::SetFont(int nHeight, int nWeight, const std::wstring& fontName)
@@ -62,30 +85,6 @@ void UButton::SetFont(int nHeight, int nWeight, const std::wstring& fontName)
         DEFAULT_PITCH | FF_DONTCARE,
         fontName.c_str()
     );
-}
-
-void UButton::SetFallbackColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled)
-{
-    FallbackNormalColor = normal;
-    FallbackHoverColor = hover;
-    FallbackPressedColor = pressed;
-    FallbackSelectedColor = selected;
-    FallbackDisabledColor = disabled;
-}
-
-void UButton::SetFallbackTextColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled)
-{
-    TextNormalColor = normal;
-    TextHoverColor = hover;
-    TextPressedColor = pressed;
-    TextSelectedColor = selected;
-    TextDisabledColor = disabled;
-}
-
-void UButton::SetFallbackBorder(COLORREF color, int width)
-{
-    FallbackBorderColor = color;
-    FallbackBorderWidth = width;
 }
 
 void UButton::Animation1()
@@ -219,38 +218,50 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
     }
     else
     {
-        if (ButtonText.empty() || bDrawTextFallbackBackground)
+        COLORREF fillColor = NormalColor;
+        COLORREF borderColor = BorderColor;
+        int borderWidth = BorderWidth;
+
+        if (!bEnabled)
         {
-            COLORREF bgColor = FallbackNormalColor;
-            if (!bEnabled) bgColor = FallbackDisabledColor;
-            else if (isPressed) bgColor = FallbackPressedColor;
-            else if (isSelected) bgColor = FallbackSelectedColor;
-            else if (IsPointed) bgColor = FallbackHoverColor;
-
-            HBRUSH bBrush = CreateSolidBrush(bgColor);
-            HPEN hPen = CreatePen(PS_SOLID, FallbackBorderWidth > 0 ? FallbackBorderWidth : 1, FallbackBorderColor);
-            HGDIOBJ penObj = (FallbackBorderWidth > 0) ? (HGDIOBJ)hPen : GetStockObject(NULL_PEN);
-            HPEN oldP = (HPEN)SelectObject(hMemDC, penObj);
-            HBRUSH oldB = (HBRUSH)SelectObject(hMemDC, bBrush);
-
-            RoundRect(hMemDC, visualRect.left, visualRect.top, visualRect.right, visualRect.bottom, 8, 8);
-
-            SelectObject(hMemDC, oldB);
-            SelectObject(hMemDC, oldP);
-            DeleteObject(hPen);
-            DeleteObject(bBrush);
+            fillColor = DisabledColor;
+            borderColor = RGB(72, 72, 78);
+        }
+        else if (isPressed)
+        {
+            fillColor = PressedColor;
+        }
+        else if (isSelected)
+        {
+            fillColor = SelectedColor;
+            borderColor = RGB(255, 220, 120);
+            borderWidth = 2;
+        }
+        else if (IsPointed)
+        {
+            fillColor = HoverColor;
+            borderColor = RGB(210, 178, 100);
         }
 
-        if (isSelected)
-        {
-            HPEN hPen = CreatePen(PS_SOLID, 3, RGB(255, 255, 255));
-            HPEN oldP = (HPEN)SelectObject(hMemDC, hPen);
-            HBRUSH oldB = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
-            RoundRect(hMemDC, visualRect.left, visualRect.top, visualRect.right, visualRect.bottom, 8, 8);
-            SelectObject(hMemDC, oldB);
-            SelectObject(hMemDC, oldP);
-            DeleteObject(hPen);
-        }
+        HBRUSH hBrush = CreateSolidBrush(fillColor);
+        HPEN hPen = CreatePen(PS_SOLID, borderWidth, borderColor);
+        HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
+        HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
+
+        RoundRect(
+            hMemDC,
+            visualRect.left,
+            visualRect.top,
+            visualRect.right,
+            visualRect.bottom,
+            8,
+            8
+        );
+
+        SelectObject(hMemDC, oldBrush);
+        SelectObject(hMemDC, oldPen);
+        DeleteObject(hBrush);
+        DeleteObject(hPen);
     }
 
     if (!ButtonText.empty())
@@ -264,14 +275,14 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
             oldFont = (HFONT)SelectObject(hMemDC, hButtonFont);
         }
 
-        COLORREF textColor = TextNormalColor;
-        if (!bEnabled) textColor = TextDisabledColor;
-        else if (isPressed) textColor = TextPressedColor;
-        else if (isSelected) textColor = TextSelectedColor;
-        else if (IsPointed) textColor = TextHoverColor;
+        COLORREF textColor;
+        if (!bEnabled) textColor = DisabledTextColor;
+        else if (isPressed) textColor = PressedTextColor;
+        else if (IsPointed) textColor = HoverTextColor;
+        else if (isSelected) textColor = SelectedTextColor;
+        else textColor = NormalTextColor;
 
-        // 한글 텍스트가 살짝 위로 떠 보이므로 행동창 버튼만 아래로 보정
-        int textYOffset = bDrawTextFallbackBackground ? 2 : 0;
+        int textYOffset = (frame == -1 || bDrawTextFallbackBackground) ? 2 : 0;
 
         RECT textRect = visualRect;
         OffsetRect(&textRect, 0, textYOffset);
@@ -280,22 +291,10 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
         OffsetRect(&shadowRect, 2, 2 + textYOffset);
 
         SetTextColor(hMemDC, RGB(0, 0, 0));
-        DrawTextW(
-            hMemDC,
-            ButtonText.c_str(),
-            -1,
-            &shadowRect,
-            DT_CENTER | DT_VCENTER | DT_SINGLELINE
-        );
+        DrawTextW(hMemDC, ButtonText.c_str(), -1, &shadowRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
         SetTextColor(hMemDC, textColor);
-        DrawTextW(
-            hMemDC,
-            ButtonText.c_str(),
-            -1,
-            &textRect,
-            DT_CENTER | DT_VCENTER | DT_SINGLELINE
-        );
+        DrawTextW(hMemDC, ButtonText.c_str(), -1, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
         if (oldFont != NULL)
         {
@@ -306,6 +305,7 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
         SetBkMode(hMemDC, oldMode);
     }
 }
+
 
 void UButton::Click()
 {

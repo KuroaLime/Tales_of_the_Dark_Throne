@@ -10,6 +10,7 @@ Map_Stage::Map_Stage() {
 	infoPopup = nullptr;
 	mainMenu = nullptr;
 	locationUI = nullptr;
+	noticePopup = nullptr;
 	MouseMark = nullptr;
 	CurStageID = MAP_STAGE;
 	NextStageID = -2;
@@ -23,6 +24,7 @@ Map_Stage::~Map_Stage() {
 	if (infoPopup) delete infoPopup;
 	if (mainMenu) delete mainMenu;
 	if (locationUI) delete locationUI;
+	if (noticePopup) delete noticePopup;
 	if (MouseMark) delete MouseMark;
 }
 
@@ -60,24 +62,36 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	Markers.push_back(town);
 	MarkerBattleStageIds.push_back(0);
 
-	// Clickable battle stage markers. All markers currently use Test01 resources.
+	// Clickable battle stage markers. Debug mode: all 5 stages are reachable.
 	URegionMarker* m1 = new URegionMarker();
 	m1->Setup(g_hInst, 400, 300, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
-	m1->SetRegionInfo(L"Stage 01", L"Graveyard Entrance", L"First battle stage. Clear it to unlock Stage 02.", L"Test01 resource");
+	m1->SetRegionInfo(L"Stage 01", L"묘지", L"현재 기준이 되는 묘지 전투 스테이지입니다.", L"Graveyard");
 	Markers.push_back(m1);
 	MarkerBattleStageIds.push_back(1);
 
 	URegionMarker* m2 = new URegionMarker();
-	m2->Setup(g_hInst, 1200, 800, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
-	m2->SetRegionInfo(L"Stage 02", L"Cursed Library", L"Second battle stage. Clear Stage 01 first.", L"Test01 resource");
+	m2->Setup(g_hInst, 850, 430, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m2->SetRegionInfo(L"Stage 02", L"천상 성전", L"공중에 떠 있는 발판과 빈 공간이 있는 스테이지입니다.", L"Heaven");
 	Markers.push_back(m2);
 	MarkerBattleStageIds.push_back(2);
 
 	URegionMarker* m3 = new URegionMarker();
-	m3->Setup(g_hInst, 1850, 520, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
-	m3->SetRegionInfo(L"Stage 03", L"Final Graveyard", L"Final battle stage. Clear Stage 02 first.", L"Test01 resource");
+	m3->Setup(g_hInst, 1250, 780, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m3->SetRegionInfo(L"Stage 03", L"기본 방", L"기믹 없는 기본 전투 확인용 스테이지입니다.", L"Default");
 	Markers.push_back(m3);
 	MarkerBattleStageIds.push_back(3);
+
+	URegionMarker* m4 = new URegionMarker();
+	m4->Setup(g_hInst, 1750, 520, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m4->SetRegionInfo(L"Stage 04", L"바다 폐허", L"물 타일이 이동을 제한하는 해안 전투 스테이지입니다.", L"Sea");
+	Markers.push_back(m4);
+	MarkerBattleStageIds.push_back(4);
+
+	URegionMarker* m5 = new URegionMarker();
+	m5->Setup(g_hInst, 2250, 850, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m5->SetRegionInfo(L"Stage 05", L"용암지대", L"용암 타일이 피해를 주는 화산 전투 스테이지입니다.", L"Lava");
+	Markers.push_back(m5);
+	MarkerBattleStageIds.push_back(5);
 
 	//지역 마커 클릭시 띄울 UI 설정
 	infoPopup = new URegionInfoPopup();
@@ -93,6 +107,10 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	//마우스 위치의 지역을 정보를 실시간으로 띄워주는 UI
 	locationUI = new ULocationIndicator();
 	locationUI->Setup(rects);
+
+	// 윈도우 기본 MessageBox 대신 사용하는 게임 내부 알림 팝업
+	noticePopup = new UNoticePopup();
+	noticePopup->Setup(rects);
 
 	HBITMAP hMenuBG = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP1));
 	mainMenu->SetBackgroundImage(hMenuBG);
@@ -161,6 +179,7 @@ void Map_Stage::Update(HWND hWnd) {
 
 	for (auto m : Markers) m->Update();
 	screenUI.Update();
+	if (noticePopup) noticePopup->Update();
 	Camera->Update(W, H, TILE_SIZE, 1280, 720);
 
 	if (MouseMark) {
@@ -219,6 +238,8 @@ void Map_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
 	screenUI.Draw(hMemDC, hMemDC1);
 
 	if (MouseMark) MouseMark->Draw(hMemDC, hMemDC1);
+
+	if (noticePopup) noticePopup->Draw(hMemDC, hMemDC1);
 }
 
 void Map_Stage::BackgroundMove(int x, int y) {
@@ -229,6 +250,51 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	std::pair<float, float> CameraOffset = Camera->Getg_Cam();
 	int camX = (int)CameraOffset.first;
 	int camY = (int)CameraOffset.second;
+
+	if (noticePopup && noticePopup->IsOpened())
+	{
+		switch (uMsg)
+		{
+		case WM_MOUSEMOVE:
+			CLK_X = LOWORD(lParam);
+			CLK_Y = HIWORD(lParam);
+			noticePopup->UpdateMouseHover(CLK_X, CLK_Y);
+			break;
+
+		case WM_LBUTTONDOWN:
+			CLK_X = LOWORD(lParam);
+			CLK_Y = HIWORD(lParam);
+			if (UWidget* w = noticePopup->FindWidgetUnderMouse(CLK_X, CLK_Y))
+			{
+				if (UButton* btn = dynamic_cast<UButton*>(w))
+				{
+					btn->SetIsPressed(true);
+				}
+			}
+			break;
+
+		case WM_LBUTTONUP:
+			CLK_X = LOWORD(lParam);
+			CLK_Y = HIWORD(lParam);
+			if (UWidget* w = noticePopup->FindWidgetUnderMouse(CLK_X, CLK_Y))
+			{
+				if (UButton* btn = dynamic_cast<UButton*>(w))
+				{
+					btn->Click();
+				}
+			}
+			break;
+
+		case WM_KEYDOWN:
+			if (wParam == VK_ESCAPE || wParam == VK_RETURN || wParam == VK_SPACE)
+			{
+				noticePopup->CloseNotice();
+			}
+			break;
+		}
+
+		return -2;
+	}
 
 	switch (uMsg) {
 	case WM_MOUSEMOVE:
@@ -314,8 +380,11 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 					std::wstring itemName = ItemData::GetName(itemID);
 					it = stageItems.erase(it);
 
-					std::wstring msg = itemName + L" acquired!";
-					MessageBoxW(hWnd, msg.c_str(), L"Item", MB_OK);
+					std::wstring msg = itemName + L"을(를) 획득했습니다.";
+					if (noticePopup)
+					{
+						noticePopup->ShowNotice(L"획득", msg);
+					}
 					if (mainMenu) {
 						mainMenu->SetTeamData(GameManager::Get().GetParty());
 					}
@@ -336,7 +405,10 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				}
 
 				if (stageId > 0 && !GameManager::Get().IsBattleStageUnlocked(stageId)) {
-					MessageBoxW(hWnd, L"This stage is locked. Clear the previous stage first.", L"Locked", MB_OK);
+					if (noticePopup)
+					{
+						noticePopup->ShowNotice(L"잠김", L"이전 스테이지를 먼저 클리어하세요.");
+					}
 					return -2;
 				}
 

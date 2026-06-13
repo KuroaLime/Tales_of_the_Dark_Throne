@@ -10,7 +10,9 @@ enum class EBattleMapId
     Test01,
     Stage01,
     Stage02,
-    Stage03
+    Stage03,
+    Stage04,
+    Stage05
 };
 
 enum class ETileType
@@ -25,33 +27,35 @@ enum class ETileType
     Grave,
     MagicHazard,
     CursedGround,
-    Lava
+    Lava,
+    SkyVoid
 };
 
 struct SBattleStartInfo
 {
-    ECharacterClass classType;
-    std::wstring name;
-    int x;
-    int y;
-    int spd;
+    ECharacterClass classType = ECharacterClass::Warrior;
+    std::wstring name = L"";
+    int x = 0;
+    int y = 0;
+    int spd = 0;
 };
 
 struct SBattleMapData
 {
-    EBattleMapId mapId;
-    std::wstring mapName;
+    EBattleMapId mapId = EBattleMapId::Test01;
+    std::wstring mapName = L"";
 
-    int backgroundResourceId;
+    int backgroundResourceId = 0;
+    std::wstring backgroundFilePath = L"";
 
-    int width;
-    int height;
-    int tileSize;
+    int width = 0;
+    int height = 0;
+    int tileSize = 0;
 
-    int cameraStartX;
-    int cameraStartY;
+    int cameraStartX = 0;
+    int cameraStartY = 0;
 
-    bool drawTileDebug;
+    bool drawTileDebug = false;
 
     std::vector<SBattleStartInfo> playerStarts;
     std::vector<SBattleStartInfo> enemyStarts;
@@ -62,6 +66,8 @@ struct SBattleMapData
 class BattleMapData
 {
 public:
+    static EBattleMapId FromStageId(int stageId);
+    static SBattleMapData LoadByStageId(int stageId);
     static SBattleMapData Load(EBattleMapId mapId);
 
 private:
@@ -69,4 +75,6 @@ private:
     static SBattleMapData BuildStage01();
     static SBattleMapData BuildStage02();
     static SBattleMapData BuildStage03();
+    static SBattleMapData BuildStage04();
+    static SBattleMapData BuildStage05();
 };

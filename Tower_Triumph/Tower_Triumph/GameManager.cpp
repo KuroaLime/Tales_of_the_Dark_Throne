@@ -29,7 +29,7 @@ static void ApplyItemStatBonusToCharacter(Character* target, int itemID, int sig
 GameManager::GameManager()
     : PartyGold(0),
       CurrentBattleStageId(1),
-      MaxUnlockedBattleStageId(1)
+      MaxUnlockedBattleStageId(5)
 {
 }
 
@@ -57,7 +57,7 @@ void GameManager::Clear()
     CollectedMapItemIDs.clear();
     PartyGold = 0;
     CurrentBattleStageId = 1;
-    MaxUnlockedBattleStageId = 1;
+    MaxUnlockedBattleStageId = 5;
 }
 
 static Character* CreateRosterCharacter(int id, ECharacterClass classType, EElement element, const std::wstring& name)
@@ -294,9 +294,9 @@ void GameManager::SetCurrentBattleStageId(int stageId)
         stageId = 1;
     }
 
-    if (stageId > 3)
+    if (stageId > 5)
     {
-        stageId = 3;
+        stageId = 5;
     }
 
     if (!IsBattleStageUnlocked(stageId))
@@ -324,9 +324,9 @@ void GameManager::UnlockBattleStage(int stageId)
         return;
     }
 
-    if (stageId > 3)
+    if (stageId > 5)
     {
-        stageId = 3;
+        stageId = 5;
     }
 
     if (stageId > MaxUnlockedBattleStageId)
