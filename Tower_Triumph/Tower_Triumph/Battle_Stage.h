@@ -6,8 +6,11 @@
 #include "UTurnOrderPanel.h"
 #include "UBattleActionMenu.h"
 #include "BattleMapData.h"
+#include "SkillData.h"
 
 #include <vector>
+#include <map>
+#include <string>
 
 enum class EBattleControlMode
 {
@@ -65,6 +68,22 @@ private:
 
     std::vector<DamageText> DamageTexts;
 
+    struct SkillEffectAnim
+    {
+        int skillID;
+        int gridX;
+        int gridY;
+        ESkillAreaType areaType;
+        int frameIndex;
+        int frameTick;
+        int frameDelay;
+        int maxFrame;
+    };
+
+    std::vector<SkillEffectAnim> ActiveSkillEffects;
+    std::map<int, HBITMAP> SkillEffectBitmaps;
+    std::map<int, BITMAP> SkillEffectBitmapInfos;
+
     int SelectedBattleSkillID;
     bool bSelectingBattleSkillTarget;
     std::vector<int> BattleSkillIDs;
@@ -108,6 +127,14 @@ private:
     void AddDamageText(Character* target, int damage, COLORREF color);
     void UpdateDamageTexts();
     void DrawDamageTexts(HDC hMemDC);
+
+    std::wstring GetSkillEffectRelativePath(int skillID) const;
+    HBITMAP LoadSkillEffectBitmap(int skillID, BITMAP* outInfo);
+    void ReleaseSkillEffectBitmaps();
+    int GetSkillEffectDrawSize(ESkillAreaType areaType) const;
+    void PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType);
+    void UpdateSkillEffects();
+    void DrawSkillEffects(HDC hMemDC, HDC hMemDC1);
 
     void RefreshBattleSkillList(Character* current);
     void ClearBattleSkillSelection();
