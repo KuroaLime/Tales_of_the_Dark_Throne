@@ -83,6 +83,7 @@ private:
     std::vector<SkillEffectAnim> ActiveSkillEffects;
     std::map<int, HBITMAP> SkillEffectBitmaps;
     std::map<int, BITMAP> SkillEffectBitmapInfos;
+    std::map<int, COLORREF> SkillEffectColorKeys;
 
     int SelectedBattleSkillID;
     bool bSelectingBattleSkillTarget;

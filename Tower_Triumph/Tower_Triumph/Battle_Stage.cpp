@@ -1749,36 +1749,36 @@ std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
     case 1501: return L"Skill\\Warrior\\Dark\\1501_Dark_Slash.bmp";
     case 1502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 1503: return L"Skill\\Warrior\\Dark\\1503_Abyss_Cleave.bmp";
-    case 2101: return L"Skill\\Archer\\Fire\\2101_Flame_Arrow.bmp";
+    case 2101: return L"Skill\\Warrior\\Fire\\1101_Flame_Slash.bmp";
     case 2102: return L"Skill\\Archer\\Fire\\2102_Explosive_Arrow.bmp";
     case 2103: return L"Skill\\Archer\\Fire\\2103_Blazing_Snipe.bmp";
     case 2201: return L"Skill\\Archer\\Water\\2201_Aqua_Arrow.bmp";
-    case 2202: return L"Skill\\Archer\\Water\\2202_Piercing_Wave.bmp";
+    case 2202: return L"Skill\\Warrior\\Water\\1202_Wave_Cutter.bmp";
     case 2203: return L"Skill\\Archer\\Water\\2203_Tidal_Snipe.bmp";
     case 2301: return L"Skill\\Archer\\Grass\\2301_Thorn_Arrow.bmp";
     case 2302: return L"Skill\\Archer\\Grass\\2302_Vine_Volley.bmp";
     case 2303: return L"Skill\\Archer\\Grass\\2303_Root_Snipe.bmp";
-    case 2401: return L"Skill\\Archer\\Light\\2401_Holy_Arrow.bmp";
+    case 2401: return L"Skill\\Warrior\\Light\\1401_Holy_Slash.bmp";
     case 2402: return L"Skill\\Archer\\Light\\2402_Radiant_Shot.bmp";
     case 2403: return L"Skill\\Archer\\Light\\2403_Judgment_Rain.bmp";
     case 2501: return L"Skill\\Archer\\Dark\\2501_Dark_Arrow.bmp";
     case 2502: return L"Skill\\Archer\\Dark\\2502_Shadow_Pierce.bmp";
     case 2503: return L"Skill\\Archer\\Dark\\2503_Abyss_Snipe.bmp";
-    case 3101: return L"Skill\\Mage\\Fire\\3101_Fire_Bolt.bmp";
-    case 3102: return L"Skill\\Mage\\Fire\\3102_Flame_Burst.bmp";
-    case 3103: return L"Skill\\Mage\\Fire\\3103_Meteor_Burst.bmp";
-    case 3201: return L"Skill\\Mage\\Water\\3201_Water_Shot.bmp";
-    case 3202: return L"Skill\\Mage\\Water\\3202_Aqua_Wave.bmp";
-    case 3203: return L"Skill\\Mage\\Water\\3203_Tidal_Blast.bmp";
-    case 3301: return L"Skill\\Mage\\Grass\\3301_Vine_Whip.bmp";
-    case 3302: return L"Skill\\Mage\\Grass\\3302_Thorn_Field.bmp";
-    case 3303: return L"Skill\\Mage\\Grass\\3303_Root_Storm.bmp";
-    case 3401: return L"Skill\\Mage\\Light\\3401_Holy_Ray.bmp";
-    case 3402: return L"Skill\\Mage\\Light\\3402_Smite_Undead.bmp";
-    case 3403: return L"Skill\\Mage\\Light\\3403_Sanctuary_Burst.bmp";
-    case 3501: return L"Skill\\Mage\\Dark\\3501_Dark_Ball.bmp";
-    case 3502: return L"Skill\\Mage\\Dark\\3502_Shadow_Spike.bmp";
-    case 3503: return L"Skill\\Mage\\Dark\\3503_Abyss_Blast.bmp";
+    case 3101: return L"Skill\\Warrior\\Fire\\1103_Blaze_Break.bmp";
+    case 3102: return L"Skill\\Archer\\Fire\\2102_Explosive_Arrow.bmp";
+    case 3103: return L"Skill\\Archer\\Fire\\2103_Blazing_Snipe.bmp";
+    case 3201: return L"Skill\\Archer\\Water\\2201_Aqua_Arrow.bmp";
+    case 3202: return L"Skill\\Warrior\\Water\\1202_Wave_Cutter.bmp";
+    case 3203: return L"Skill\\Warrior\\Water\\1203_Tide_Breaker.bmp";
+    case 3301: return L"Skill\\Warrior\\Grass\\1301_Vine_Slash.bmp";
+    case 3302: return L"Skill\\Warrior\\Grass\\1302_Thorn_Cleave.bmp";
+    case 3303: return L"Skill\\Warrior\\Grass\\1303_Root_Crusher.bmp";
+    case 3401: return L"Skill\\Warrior\\Light\\1402_Radiant_Break.bmp";
+    case 3402: return L"Skill\\Archer\\Light\\2402_Radiant_Shot.bmp";
+    case 3403: return L"Skill\\Archer\\Light\\2403_Judgment_Rain.bmp";
+    case 3501: return L"Skill\\Warrior\\Dark\\1501_Dark_Slash.bmp";
+    case 3502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
+    case 3503: return L"Skill\\Archer\\Dark\\2503_Abyss_Snipe.bmp";
     default:
         return L"";
     }
@@ -1828,8 +1828,32 @@ HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
             BITMAP info = {};
             GetObject(hBitmap, sizeof(BITMAP), &info);
 
+            COLORREF colorKey = RGB(0, 0, 0);
+            HDC hScreenDC = GetDC(nullptr);
+            HDC hTempDC = CreateCompatibleDC(hScreenDC);
+
+            if (hTempDC != nullptr)
+            {
+                HBITMAP hOldBitmap = (HBITMAP)SelectObject(hTempDC, hBitmap);
+                COLORREF sampledColor = GetPixel(hTempDC, 0, 0);
+
+                if (sampledColor != CLR_INVALID)
+                {
+                    colorKey = sampledColor;
+                }
+
+                SelectObject(hTempDC, hOldBitmap);
+                DeleteDC(hTempDC);
+            }
+
+            if (hScreenDC != nullptr)
+            {
+                ReleaseDC(nullptr, hScreenDC);
+            }
+
             SkillEffectBitmaps[skillID] = hBitmap;
             SkillEffectBitmapInfos[skillID] = info;
+            SkillEffectColorKeys[skillID] = colorKey;
 
             if (outInfo != nullptr)
             {
@@ -1855,22 +1879,25 @@ void Battle_Stage::ReleaseSkillEffectBitmaps()
 
     SkillEffectBitmaps.clear();
     SkillEffectBitmapInfos.clear();
+    SkillEffectColorKeys.clear();
     ActiveSkillEffects.clear();
 }
 
 int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
 {
+    // The effect sheet frames are tall, so reduce width aggressively.
+    // Height is calculated from the source frame ratio in DrawSkillEffects().
     switch (areaType)
     {
     case ESkillAreaType::Splash2:
-        return TILE_SIZE * 5;
+        return TILE_SIZE * 5 / 2;      // Wide skill: about 2.5 tiles wide
     case ESkillAreaType::Splash1:
-        return TILE_SIZE * 3;
+        return TILE_SIZE * 7 / 4;      // Small area skill: about 1.75 tiles wide
     case ESkillAreaType::Line:
-        return TILE_SIZE * 4;
+        return TILE_SIZE * 2;          // Line skill: about 2 tiles wide
     case ESkillAreaType::Single:
     default:
-        return TILE_SIZE * 3;
+        return TILE_SIZE * 3 / 2;      // Single target: about 1.5 tiles wide
     }
 }
 
@@ -1983,6 +2010,14 @@ void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
         int drawX = centerX - drawWidth / 2;
         int drawY = centerY - drawHeight / 2;
 
+        COLORREF colorKey = RGB(0, 0, 0);
+        auto colorKeyFound = SkillEffectColorKeys.find(effect.skillID);
+
+        if (colorKeyFound != SkillEffectColorKeys.end())
+        {
+            colorKey = colorKeyFound->second;
+        }
+
         HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC1, hBitmap);
 
         TransparentBlt(
@@ -1996,7 +2031,7 @@ void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
             srcY,
             frameWidth,
             frameHeight,
-            RGB(0, 0, 0)
+            colorKey
         );
 
         SelectObject(hMemDC1, hOldBitmap);
