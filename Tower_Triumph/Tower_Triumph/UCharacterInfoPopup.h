@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "UContainerWidget.h"
 #include "UButton.h"
 #include "UProfilePanel.h"
 #include "UStatePanel.h"
 #include "Character.h"
+#include "UTextLabel.h"
 
 #include <functional>
 #include <vector>
@@ -12,13 +13,14 @@
 class UCharacterInfoPopup : public UContainerWidget
 {
 private:
-    Character* SelectedCharacter;
-    std::vector<Character*> TeamMembers;
+    Character* selectedCharacter;
+    std::vector<Character*> teamMembers;
 
-    UProfilePanel* ProfilePanel;
-    UStatePanel* StatePanel;
-    std::vector<UButton*> CharacterButtons;
-    UButton* BackButton;
+    UProfilePanel* profilePanel;
+    UStatePanel* statePanel;
+    UTextLabel* titleLabel;
+    std::vector<UButton*> charSelectButtons;
+    UButton* backButton;
 
 private:
     void RebuildCharacterButtons();

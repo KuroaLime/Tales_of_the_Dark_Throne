@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "UContainerWidget.h"
 #include "UButton.h"
 #include "GameManager.h"
 #include "ItemData.h"
 #include "Character.h"
+#include "UTextLabel.h"
 
 #include <functional>
 #include <string>
@@ -13,18 +14,23 @@
 class UInventoryPopup : public UContainerWidget
 {
 private:
-    std::vector<Character*> TeamMembers;
-    std::vector<UButton*> ItemButtons;
-    std::vector<UButton*> TargetButtons;
+    std::vector<Character*> teamMembers;
+    std::vector<UButton*> itemIconButtons;
+    std::vector<UButton*> targetButtons;
 
-    UContainerWidget* TargetPanel;
-    UButton* BackButton;
+    UContainerWidget* targetPanel;
+    UButton* backButton;
 
-    int SelectedItemID;
+    UTextLabel* titleLabel;
+    UTextLabel* goldLabel;
+    UTextLabel* guideLabel;
+    UTextLabel* emptyLabel;
+
+    int selectedItemID;
     bool bShowTooltip;
-    std::wstring TooltipTitle;
-    std::wstring TooltipDesc;
-    Location TooltipLoc;
+    std::wstring tooltipTitle;
+    std::wstring tooltipDesc;
+    Location tooltipLoc;
 
 private:
     void UpdateInventoryGrid();

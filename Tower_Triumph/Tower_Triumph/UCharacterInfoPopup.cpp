@@ -1,10 +1,11 @@
 ﻿#include "UCharacterInfoPopup.h"
 
 UCharacterInfoPopup::UCharacterInfoPopup()
-    : SelectedCharacter(nullptr),
-      ProfilePanel(nullptr),
-      StatePanel(nullptr),
-      BackButton(nullptr)
+    : selectedCharacter(nullptr),
+      profilePanel(nullptr),
+      statePanel(nullptr),
+      titleLabel(nullptr),
+      backButton(nullptr)
 {
     bVisible = false;
 }
@@ -24,20 +25,29 @@ void UCharacterInfoPopup::Setup(RECT clientRect)
     Loc.x = clientRect.right / 2;
     Loc.y = clientRect.bottom / 2;
 
-    ProfilePanel = new UProfilePanel();
-    ProfilePanel->Setup(Loc.x - 420, Loc.y + 40);
-    AddChild(ProfilePanel);
+    titleLabel = new UTextLabel();
+    titleLabel->SetText(L"캐릭터");
+    titleLabel->SetLocation(Loc.x, 45);
+    titleLabel->SetSize(Size.sX, 50);
+    titleLabel->SetFont(34, FW_HEAVY, L"Arial");
+    titleLabel->SetColor(RGB(255, 230, 120));
+    titleLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    AddChild(titleLabel);
 
-    StatePanel = new UStatePanel();
-    StatePanel->Setup(Loc.x + 80, Loc.y + 85);
-    AddChild(StatePanel);
+    profilePanel = new UProfilePanel();
+    profilePanel->Setup(Loc.x - 420, Loc.y + 40);
+    AddChild(profilePanel);
 
-    BackButton = new UButton();
-    BackButton->SetText(L"뒤로");
-    BackButton->SetSize(120, 46);
-    BackButton->SetFont(18, FW_BOLD, L"Malgun Gothic");
-    BackButton->SetLocation(clientRect.right - 90, 58);
-    BackButton->SetOnClick([this]() {
+    statePanel = new UStatePanel();
+    statePanel->Setup(Loc.x + 80, Loc.y + 85);
+    AddChild(statePanel);
+
+    backButton = new UButton();
+    backButton->SetText(L"뒤로");
+    backButton->SetSize(120, 46);
+    backButton->SetFont(18, FW_BOLD, L"Malgun Gothic");
+    backButton->SetLocation(clientRect.right - 90, 58);
+    backButton->SetOnClick([this]() {
         if (OnBackCallback)
         {
             OnBackCallback();
@@ -47,41 +57,41 @@ void UCharacterInfoPopup::Setup(RECT clientRect)
             SetVisible(false);
         }
     });
-    AddChild(BackButton);
+    AddChild(backButton);
 }
 
 void UCharacterInfoPopup::SetTeamData(const std::vector<Character*>& team)
 {
-    TeamMembers = team;
+    teamMembers = team;
 
-    if (!TeamMembers.empty() && SelectedCharacter == nullptr)
+    if (!teamMembers.empty() && selectedCharacter == nullptr)
     {
-        SelectedCharacter = TeamMembers[0];
+        selectedCharacter = teamMembers[0];
     }
 
     RebuildCharacterButtons();
-    SelectCharacter(SelectedCharacter);
+    SelectCharacter(selectedCharacter);
 }
 
 void UCharacterInfoPopup::RebuildCharacterButtons()
 {
-    for (UButton* button : CharacterButtons)
+    for (UButton* button : charSelectButtons)
     {
         RemoveChild(button, true);
     }
-    CharacterButtons.clear();
+    charSelectButtons.clear();
 
     int btnW = 130;
     int btnH = 38;
     int gap = 12;
-    int count = (int)TeamMembers.size();
+    int count = (int)teamMembers.size();
     int totalW = count * btnW + (count > 0 ? (count - 1) * gap : 0);
     int startX = Loc.x - totalW / 2 + btnW / 2;
     int y = 96;
 
     for (int i = 0; i < count; ++i)
     {
-        Character* character = TeamMembers[i];
+        Character* character = teamMembers[i];
         UButton* button = new UButton();
         button->SetText(character ? character->GetName() : L"None");
         button->SetSize(btnW, btnH);
@@ -93,34 +103,34 @@ void UCharacterInfoPopup::RebuildCharacterButtons()
         });
 
         AddChild(button);
-        CharacterButtons.push_back(button);
+        charSelectButtons.push_back(button);
     }
 }
 
 void UCharacterInfoPopup::SelectCharacter(Character* character)
 {
-    SelectedCharacter = character;
+    selectedCharacter = character;
 
-    if (ProfilePanel)
+    if (profilePanel)
     {
-        ProfilePanel->SetCharacter(SelectedCharacter);
+        profilePanel->SetCharacter(selectedCharacter);
     }
 
-    if (StatePanel)
+    if (statePanel)
     {
-        StatePanel->SetCharacter(SelectedCharacter);
+        statePanel->SetCharacter(selectedCharacter);
     }
 
-    for (UButton* button : CharacterButtons)
+    for (UButton* button : charSelectButtons)
     {
         button->SetSelected(false);
     }
 
-    for (size_t i = 0; i < TeamMembers.size() && i < CharacterButtons.size(); ++i)
+    for (size_t i = 0; i < teamMembers.size() && i < charSelectButtons.size(); ++i)
     {
-        if (TeamMembers[i] == SelectedCharacter)
+        if (teamMembers[i] == selectedCharacter)
         {
-            CharacterButtons[i]->SetSelected(true);
+            charSelectButtons[i]->SetSelected(true);
             break;
         }
     }
@@ -137,15 +147,6 @@ void UCharacterInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
     HBRUSH bgBrush = CreateSolidBrush(RGB(6, 8, 12));
     FillRect(hMemDC, &bg, bgBrush);
     DeleteObject(bgBrush);
-
-    SetBkMode(hMemDC, TRANSPARENT);
-    SetTextColor(hMemDC, RGB(255, 230, 120));
-    HFONT titleFont = CreateFontW(34, 0, 0, 0, FW_HEAVY, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldFont = (HFONT)SelectObject(hMemDC, titleFont);
-    RECT title = { 0, 20, Size.sX, 70 };
-    DrawTextW(hMemDC, L"캐릭터", -1, &title, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    SelectObject(hMemDC, oldFont);
-    DeleteObject(titleFont);
 
     UContainerWidget::Draw(hMemDC, hMemDC1);
 }

@@ -6,12 +6,19 @@ UMainMenuPopup::UMainMenuPopup()
       invState(EInventoryState::Normal),
       selectedCharacter(nullptr),
       selectedItemID(-1),
-      btnTabChar(nullptr),
-      btnTabInv(nullptr),
+      btnOpenChar(nullptr),
+      btnOpenInv(nullptr),
       btnExit(nullptr),
       btnClose(nullptr),
-      btnOpenCharPopup(nullptr),
-      btnOpenInvPopup(nullptr),
+      btnOpenCharDetail(nullptr),
+      btnOpenInvDetail(nullptr),
+      navLayer(nullptr),
+      charLayer(nullptr),
+      invLayer(nullptr),
+      guideLabel(nullptr),
+      invTitleLabel(nullptr),
+      invGuideLabel(nullptr),
+      invEmptyLabel(nullptr),
       itemActionPanel(nullptr),
       btnItemAction1(nullptr),
       btnItemAction2(nullptr),
@@ -43,6 +50,24 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     Loc.x = clientRect.right / 2;
     Loc.y = clientRect.bottom / 2;
 
+    // 친구 코드 방식: UI를 직접 그리는 대신 레이어 컨테이너에 등록해두고
+    // 상태 전환은 SetVisible로 처리한다.
+    navLayer = new UContainerWidget();
+    navLayer->SetSize(0, 0);
+    navLayer->SetLocation(Loc.x, Loc.y);
+    AddChild(navLayer);
+
+    charLayer = new UContainerWidget();
+    charLayer->SetSize(0, 0);
+    charLayer->SetLocation(Loc.x, Loc.y);
+    AddChild(charLayer);
+
+    invLayer = new UContainerWidget();
+    invLayer->SetSize(0, 0);
+    invLayer->SetLocation(Loc.x, Loc.y);
+    invLayer->SetVisible(false);
+    AddChild(invLayer);
+
     int topY = 88;
     int btnW = 145;
     int btnH = 38;
@@ -51,20 +76,20 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     int groupWidth = (btnW * 3) + (spacing * 2);
     int groupStartX = Loc.x - (groupWidth / 2);
 
-    btnTabChar = new UButton();
-    btnTabChar->SetText(L"상태");
-    btnTabChar->SetLocation(groupStartX + (btnW / 2), topY);
-    btnTabChar->SetSize(btnW, btnH);
-    btnTabChar->SetOnClick([this]() { this->SelectTab(EMenuTab::CharacterInfo); });
-    btnTabChar->SetSelected(true);
-    AddChild(btnTabChar);
+    btnOpenChar = new UButton();
+    btnOpenChar->SetText(L"상태");
+    btnOpenChar->SetLocation(groupStartX + (btnW / 2), topY);
+    btnOpenChar->SetSize(btnW, btnH);
+    btnOpenChar->SetOnClick([this]() { this->SelectTab(EMenuTab::CharacterInfo); });
+    btnOpenChar->SetSelected(true);
+    navLayer->AddChild(btnOpenChar);
 
-    btnTabInv = new UButton();
-    btnTabInv->SetText(L"인벤토리");
-    btnTabInv->SetLocation(groupStartX + btnW + spacing + (btnW / 2), topY);
-    btnTabInv->SetSize(btnW, btnH);
-    btnTabInv->SetOnClick([this]() { this->SelectTab(EMenuTab::Inventory); });
-    AddChild(btnTabInv);
+    btnOpenInv = new UButton();
+    btnOpenInv->SetText(L"인벤토리");
+    btnOpenInv->SetLocation(groupStartX + btnW + spacing + (btnW / 2), topY);
+    btnOpenInv->SetSize(btnW, btnH);
+    btnOpenInv->SetOnClick([this]() { this->SelectTab(EMenuTab::Inventory); });
+    navLayer->AddChild(btnOpenInv);
 
     btnExit = new UButton();
     btnExit->SetText(L"종료");
@@ -75,32 +100,70 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
             exitPopup->SetVisible(true);
         }
     });
-    AddChild(btnExit);
+    navLayer->AddChild(btnExit);
 
     btnClose = new UButton();
     btnClose->SetText(L"X");
     btnClose->SetLocation(clientRect.right - 46, topY);
     btnClose->SetSize(42, 42);
     btnClose->SetOnClick([this]() { this->CloseSubPopups(); this->SetVisible(false); });
-    AddChild(btnClose);
+    navLayer->AddChild(btnClose);
 
-    btnOpenCharPopup = new UButton();
-    btnOpenCharPopup->SetText(L"상세 보기");
-    btnOpenCharPopup->SetLocation(Loc.x - 120, topY + 62);
-    btnOpenCharPopup->SetSize(150, 34);
-    btnOpenCharPopup->SetFont(18, FW_BOLD, L"Arial");
-    btnOpenCharPopup->SetAnimationType(1);
-    btnOpenCharPopup->SetOnClick([this]() { this->OpenCharacterPopup(); });
-    AddChild(btnOpenCharPopup);
+    btnOpenCharDetail = new UButton();
+    btnOpenCharDetail->SetText(L"상세 보기");
+    btnOpenCharDetail->SetLocation(Loc.x - 120, topY + 62);
+    btnOpenCharDetail->SetSize(150, 34);
+    btnOpenCharDetail->SetFont(18, FW_BOLD, L"Arial");
+    btnOpenCharDetail->SetAnimationType(1);
+    btnOpenCharDetail->SetOnClick([this]() { this->OpenCharacterPopup(); });
+    navLayer->AddChild(btnOpenCharDetail);
 
-    btnOpenInvPopup = new UButton();
-    btnOpenInvPopup->SetText(L"가방 보기");
-    btnOpenInvPopup->SetLocation(Loc.x + 120, topY + 62);
-    btnOpenInvPopup->SetSize(150, 34);
-    btnOpenInvPopup->SetFont(18, FW_BOLD, L"Arial");
-    btnOpenInvPopup->SetAnimationType(1);
-    btnOpenInvPopup->SetOnClick([this]() { this->OpenInventoryPopup(); });
-    AddChild(btnOpenInvPopup);
+    btnOpenInvDetail = new UButton();
+    btnOpenInvDetail->SetText(L"가방 보기");
+    btnOpenInvDetail->SetLocation(Loc.x + 120, topY + 62);
+    btnOpenInvDetail->SetSize(150, 34);
+    btnOpenInvDetail->SetFont(18, FW_BOLD, L"Arial");
+    btnOpenInvDetail->SetAnimationType(1);
+    btnOpenInvDetail->SetOnClick([this]() { this->OpenInventoryPopup(); });
+    navLayer->AddChild(btnOpenInvDetail);
+
+    guideLabel = new UTextLabel();
+    guideLabel->SetText(L"캐릭터를 선택하면 능력치와 장비 정보를 확인할 수 있습니다.");
+    guideLabel->SetLocation(Loc.x, Loc.y - Size.sY / 2 + 181);
+    guideLabel->SetSize(Size.sX - 160, 34);
+    guideLabel->SetFont(20, FW_BOLD, L"Arial");
+    guideLabel->SetColor(RGB(230, 230, 240));
+    guideLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    charLayer->AddChild(guideLabel);
+
+    int invTextLeft = Loc.x - Size.sX / 2 + 105;
+
+    invTitleLabel = new UTextLabel();
+    invTitleLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 184);
+    invTitleLabel->SetSize(860, 34);
+    invTitleLabel->SetFont(25, FW_BOLD, L"Arial");
+    invTitleLabel->SetColor(RGB(238, 232, 214));
+    invTitleLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    invLayer->AddChild(invTitleLabel);
+
+    invGuideLabel = new UTextLabel();
+    invGuideLabel->SetText(L"장비 또는 소비 아이템을 선택한 뒤 대상 캐릭터를 고르세요.");
+    invGuideLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 222);
+    invGuideLabel->SetSize(860, 30);
+    invGuideLabel->SetFont(18, FW_NORMAL, L"Arial");
+    invGuideLabel->SetColor(RGB(215, 215, 225));
+    invGuideLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    invLayer->AddChild(invGuideLabel);
+
+    invEmptyLabel = new UTextLabel();
+    invEmptyLabel->SetText(L"아이템이 없습니다.");
+    invEmptyLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 277);
+    invEmptyLabel->SetSize(860, 30);
+    invEmptyLabel->SetFont(18, FW_NORMAL, L"Arial");
+    invEmptyLabel->SetColor(RGB(215, 215, 225));
+    invEmptyLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    invEmptyLabel->SetVisible(false);
+    invLayer->AddChild(invEmptyLabel);
 
     itemActionPanel = new UContainerWidget();
     itemActionPanel->SetSize(180, 100);
@@ -128,12 +191,12 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     profilePanel = new UProfilePanel();
     profilePanel->Setup(Loc.x - 400, Loc.y + 10);
     profilePanel->SetVisible(false);
-    AddChild(profilePanel);
+    charLayer->AddChild(profilePanel);
 
     statePanel = new UStatePanel();
     statePanel->Setup(Loc.x + 80, Loc.y + 85);
     statePanel->SetVisible(false);
-    AddChild(statePanel);
+    charLayer->AddChild(statePanel);
 
     exitPopup = new UExitConfirmPopup();
     exitPopup->Setup(hInst, clientRect);
@@ -147,6 +210,10 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
         if (charPopup) {
             charPopup->SetVisible(false);
         }
+        if (navLayer) {
+            navLayer->SetVisible(true);
+        }
+        SelectTab(currentTab);
     };
     charPopup->SetVisible(false);
     AddChild(charPopup);
@@ -157,6 +224,10 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
         if (invPopup) {
             invPopup->SetVisible(false);
         }
+        if (navLayer) {
+            navLayer->SetVisible(true);
+        }
+        SelectTab(currentTab);
     };
     invPopup->SetVisible(false);
     AddChild(invPopup);
@@ -165,7 +236,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
         UButton* btn = new UButton();
         btn->SetSize(240, 54);
         btn->SetVisible(false);
-        AddChild(btn);
+        charLayer->AddChild(btn);
         equipSlotButtons.push_back(btn);
     }
 }
@@ -202,7 +273,8 @@ void UMainMenuPopup::SetTeamData(const std::vector<Character*>& team)
 void UMainMenuPopup::UpdateCharList()
 {
     for (auto b : charSelectButtons) {
-        RemoveChild(b, true);
+        if (charLayer) charLayer->RemoveChild(b, true);
+        else RemoveChild(b, true);
     }
     charSelectButtons.clear();
 
@@ -232,7 +304,8 @@ void UMainMenuPopup::UpdateCharList()
             btn->SetSelected(true);
         }
 
-        AddChild(btn);
+        if (charLayer) charLayer->AddChild(btn);
+        else AddChild(btn);
         charSelectButtons.push_back(btn);
     }
 
@@ -242,7 +315,8 @@ void UMainMenuPopup::UpdateCharList()
 void UMainMenuPopup::UpdateInventoryGrid()
 {
     for (auto b : itemIconButtons) {
-        RemoveChild(b, true);
+        if (invLayer) invLayer->RemoveChild(b, true);
+        else RemoveChild(b, true);
     }
     itemIconButtons.clear();
 
@@ -254,6 +328,13 @@ void UMainMenuPopup::UpdateInventoryGrid()
     int boxTop = Loc.y - Size.sY / 2 + 245;
 
     const auto& inventory = GameManager::Get().GetInventory();
+
+    if (invTitleLabel) {
+        invTitleLabel->SetText(L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold()));
+    }
+    if (invEmptyLabel) {
+        invEmptyLabel->SetVisible(inventory.empty());
+    }
 
     int colCount = 5;
     int slotW = 160;
@@ -286,7 +367,8 @@ void UMainMenuPopup::UpdateInventoryGrid()
             this->ShowActionMenu(itemID, loc.x, loc.y);
         });
 
-        AddChild(btn);
+        if (invLayer) invLayer->AddChild(btn);
+        else AddChild(btn);
         itemIconButtons.push_back(btn);
     }
 }
@@ -346,6 +428,15 @@ void UMainMenuPopup::ShowTargetSelection()
 
     targetSelectPanel->SetSize(panelW, panelH);
     targetSelectPanel->SetLocation(panelCenterX, panelCenterY + 25);
+
+    UTextLabel* targetTitleLabel = new UTextLabel();
+    targetTitleLabel->SetText(L"대상 선택: " + ItemData::GetName(selectedItemID));
+    targetTitleLabel->SetLocation(panelCenterX, panelCenterY - 85);
+    targetTitleLabel->SetSize(panelW, 36);
+    targetTitleLabel->SetFont(24, FW_BOLD, L"Arial");
+    targetTitleLabel->SetColor(RGB(238, 232, 214));
+    targetTitleLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    targetSelectPanel->AddChild(targetTitleLabel);
 
     int totalW = colCount * btnW + (colCount - 1) * gapX;
     int startX = panelCenterX - totalW / 2 + btnW / 2;
@@ -426,10 +517,17 @@ void UMainMenuPopup::SelectTab(EMenuTab tab)
     currentTab = tab;
     HideSubMenus();
 
-    btnTabChar->SetSelected(currentTab == EMenuTab::CharacterInfo);
-    btnTabInv->SetSelected(currentTab == EMenuTab::Inventory);
+    btnOpenChar->SetSelected(currentTab == EMenuTab::CharacterInfo);
+    btnOpenInv->SetSelected(currentTab == EMenuTab::Inventory);
 
     bool showCharLists = (currentTab == EMenuTab::CharacterInfo);
+    if (charLayer) {
+        charLayer->SetVisible(showCharLists);
+    }
+    if (invLayer) {
+        invLayer->SetVisible(!showCharLists);
+    }
+
     for (auto btn : charSelectButtons) {
         btn->SetVisible(showCharLists);
     }
@@ -480,6 +578,7 @@ void UMainMenuPopup::ShowNavigation()
 {
     CloseSubPopups();
     HideTooltip();
+    if (navLayer) { navLayer->SetVisible(true); }
     SelectTab(currentTab);
     SetVisible(true);
 }
@@ -495,6 +594,10 @@ void UMainMenuPopup::OpenCharacterPopup()
     if (invPopup) {
         invPopup->SetVisible(false);
     }
+
+    if (navLayer) { navLayer->SetVisible(false); }
+    if (charLayer) { charLayer->SetVisible(false); }
+    if (invLayer) { invLayer->SetVisible(false); }
 
     charPopup->SetTeamData(teamMembers);
     RemoveChild(charPopup, false);
@@ -513,6 +616,10 @@ void UMainMenuPopup::OpenInventoryPopup()
     if (charPopup) {
         charPopup->SetVisible(false);
     }
+
+    if (navLayer) { navLayer->SetVisible(false); }
+    if (charLayer) { charLayer->SetVisible(false); }
+    if (invLayer) { invLayer->SetVisible(false); }
 
     invPopup->SetTeamData(teamMembers);
     invPopup->Refresh();
@@ -534,7 +641,13 @@ void UMainMenuPopup::CloseSubPopups()
     if (exitPopup) {
         exitPopup->SetVisible(false);
     }
+
+    if (navLayer) {
+        navLayer->SetVisible(true);
+    }
+    SelectTab(currentTab);
 }
+
 
 bool UMainMenuPopup::HandleBack()
 {
@@ -545,11 +658,15 @@ bool UMainMenuPopup::HandleBack()
 
     if (charPopup && charPopup->GetVisible()) {
         charPopup->SetVisible(false);
+        if (navLayer) { navLayer->SetVisible(true); }
+        SelectTab(currentTab);
         return true;
     }
 
     if (invPopup && invPopup->GetVisible()) {
         invPopup->SetVisible(false);
+        if (navLayer) { navLayer->SetVisible(true); }
+        SelectTab(currentTab);
         return true;
     }
 
@@ -614,13 +731,7 @@ void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
     DeleteObject(panelBrush);
     DeleteObject(panelPen);
 
-    if (currentTab == EMenuTab::CharacterInfo) {
-        DrawCharacterInfo(hMemDC);
-    }
-    else {
-        DrawInventory(hMemDC);
-    }
-
+    // 텍스트/버튼/패널은 Setup에서 만든 레이어 위젯들이 그린다.
     DrawSubMenuBackgrounds(hMemDC);
     UContainerWidget::Draw(hMemDC, hMemDC1);
 
@@ -631,61 +742,12 @@ void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
 
 void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
 {
-    if (!selectedCharacter) {
-        return;
-    }
-
-    int boxLeft = Loc.x - Size.sX / 2 + 80;
-    int boxTop = Loc.y - Size.sY / 2 + 160;
-    int width = Size.sX - 160;
-
-    SetBkMode(hMemDC, TRANSPARENT);
-    SetTextColor(hMemDC, RGB(230, 230, 240));
-
-    HFONT hFont = CreateFontW(20, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-
-    std::wstring guide = L"캐릭터를 선택하면 능력치와 장비 정보를 확인할 수 있습니다.";
-    RECT guideRect = { boxLeft + 20, boxTop + 5, boxLeft + width - 20, boxTop + 38 };
-    DrawTextW(hMemDC, guide.c_str(), -1, &guideRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hFont);
+    // 친구식 레이어 구조로 전환됨: guideLabel / UProfilePanel / UStatePanel이 출력 담당.
 }
 
 void UMainMenuPopup::DrawInventory(HDC hMemDC)
 {
-    int boxLeft = Loc.x - Size.sX / 2 + 105;
-    int boxTop = Loc.y - Size.sY / 2 + 170;
-
-    int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
-    COLORREF oldColor = SetTextColor(hMemDC, RGB(238, 232, 214));
-
-    HFONT hFont = CreateFontW(25, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-
-    std::wstring title = L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold());
-    TextOutW(hMemDC, boxLeft, boxTop, title.c_str(), (int)title.length());
-
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hFont);
-
-    hFont = CreateFontW(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    oldF = (HFONT)SelectObject(hMemDC, hFont);
-    SetTextColor(hMemDC, RGB(215, 215, 225));
-    std::wstring guide = L"장비 또는 소비 아이템을 선택한 뒤 대상 캐릭터를 고르세요.";
-    TextOutW(hMemDC, boxLeft, boxTop + 38, guide.c_str(), (int)guide.length());
-
-    if (GameManager::Get().GetInventory().empty()) {
-        std::wstring emptyText = L"아이템이 없습니다.";
-        TextOutW(hMemDC, boxLeft, boxTop + 95, emptyText.c_str(), (int)emptyText.length());
-    }
-
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hFont);
-
-    SetTextColor(hMemDC, oldColor);
-    SetBkMode(hMemDC, oldBkMode);
+    // 친구식 레이어 구조로 전환됨: invTitleLabel / invGuideLabel / invEmptyLabel / item buttons가 출력 담당.
 }
 
 void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)
@@ -714,18 +776,6 @@ void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)
             DeleteObject(hPen);
         }
 
-        SetBkMode(hMemDC, TRANSPARENT);
-        SetTextColor(hMemDC, RGB(238, 232, 214));
-
-        HFONT hFont = CreateFontW(24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-        HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-
-        std::wstring title = L"대상 선택: " + ItemData::GetName(selectedItemID);
-        RECT titleRect = { pr.left, pr.top + 25, pr.right, pr.top + 60 };
-        DrawTextW(hMemDC, title.c_str(), (int)title.length(), &titleRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-        SelectObject(hMemDC, oldF);
-        DeleteObject(hFont);
     }
 }
 

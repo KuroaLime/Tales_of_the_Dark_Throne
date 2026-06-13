@@ -10,6 +10,7 @@
 #include "UStatePanel.h"
 #include "UCharacterInfoPopup.h"
 #include "UInventoryPopup.h"
+#include "UTextLabel.h"
 
 #include <vector>
 #include <string>
@@ -36,12 +37,22 @@ private:
     Character* selectedCharacter;
     int selectedItemID;
 
-    UButton* btnTabChar;
-    UButton* btnTabInv;
+    UButton* btnOpenChar;
+    UButton* btnOpenInv;
     UButton* btnExit;
     UButton* btnClose;
-    UButton* btnOpenCharPopup;
-    UButton* btnOpenInvPopup;
+    UButton* btnOpenCharDetail;
+    UButton* btnOpenInvDetail;
+
+    // 친구 코드처럼 화면 단위를 레이어로 나눠 SetVisible로 전환한다.
+    UContainerWidget* navLayer;
+    UContainerWidget* charLayer;
+    UContainerWidget* invLayer;
+
+    UTextLabel* guideLabel;
+    UTextLabel* invTitleLabel;
+    UTextLabel* invGuideLabel;
+    UTextLabel* invEmptyLabel;
 
     std::vector<UButton*> charSelectButtons;
     std::vector<UButton*> itemIconButtons;
