@@ -615,7 +615,7 @@ void Maintenance_Stage::DrawRewardTab(HDC hMemDC, const RECT& panel)
     BattleRewardManager& reward = BattleRewardManager::Get();
 
     int left = panel.left + 65;
-    int top = panel.top + 150;
+    int top = panel.top + 95;
     int width = panel.right - panel.left - 130;
 
     DrawLeftText(
@@ -685,7 +685,7 @@ void Maintenance_Stage::DrawRewardTab(HDC hMemDC, const RECT& panel)
     DrawLeftText(hMemDC, L"Party Gold: " + std::to_wstring(GameManager::Get().GetGold()), left, top, width, 30, 22, FW_BOLD, RGB(255, 220, 90));
 
     int levelLeft = panel.left + 555;
-    int levelTop = panel.top + 150;
+    int levelTop = panel.top + 95;
     int levelWidth = panel.right - levelLeft - 65;
 
     DrawLeftText(hMemDC, L"LEVEL / EXP RESULT", levelLeft, levelTop, levelWidth, 32, 26, FW_HEAVY, RGB(120, 200, 255));

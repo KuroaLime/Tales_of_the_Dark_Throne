@@ -46,7 +46,7 @@ void UStatePanel::Setup(int x, int y)
     SetupLabel(weaponLabel, Loc.x, Loc.y - 156, 260, 28, 20, FW_BOLD, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(armorLabel, Loc.x, Loc.y - 109, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(accessoryLabel, Loc.x, Loc.y - 84, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
+    
     SetupLabel(strLabel, Loc.x - 55, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(intLabel, Loc.x - 55, Loc.y + 148, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(defLabel, Loc.x + 105, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
