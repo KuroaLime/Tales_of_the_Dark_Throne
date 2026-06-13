@@ -286,6 +286,11 @@ SBattleMapData BattleMapData::BuildStage01()
     map.cameraStartX = 15;
     map.cameraStartY = 10;
 
+    // 첫 번째 묘지맵은 기존 하드코딩 장애물이 그림과 어긋나던 문제가 있어
+    // 전투 확인용으로 일단 전체를 이동 가능 지형으로 초기화한다.
+    FillMapTiles(map, ETileType::Normal);
+    map.drawTileDebug = false;
+
     // 아군은 화면 시작 시 바로 보이도록 중앙-서쪽 개활지에 배치.
     AddPlayerStarts(map, {
         { 8, 11 },
@@ -295,9 +300,10 @@ SBattleMapData BattleMapData::BuildStage01()
         { 12, 11 }
     });
 
-    // 묘지는 저주지대와 묘비 타일 중심.
-    SetMapRect(map, 3, 12, 5, 14, ETileType::CursedGround);
-    SetMapRect(map, 29, 0, 34, 2, ETileType::CursedGround);
+    // 묘지 기믹: 이동은 가능하지만 피해를 주는 저주지대/마법진만 배치.
+    SetMapRect(map, 13, 10, 15, 12, ETileType::CursedGround);
+    SetMapRect(map, 20, 12, 22, 14, ETileType::MagicHazard);
+    SetMapRect(map, 3, 16, 5, 18, ETileType::CursedGround);
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 22, 10, 10 });
     map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    24, 11, 20 });
