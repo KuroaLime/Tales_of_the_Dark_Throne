@@ -11,6 +11,7 @@ UButton::UButton()
     currentVisualOffsetY = 0.0f;
     currentScale = 1.0f;
     bDrawTextFallbackBackground = false;
+    bDrawOnlyText = false;
 
     NormalColor = RGB(38, 44, 58);
     HoverColor = RGB(60, 72, 98);
@@ -218,50 +219,53 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
     }
     else
     {
-        COLORREF fillColor = NormalColor;
-        COLORREF borderColor = BorderColor;
-        int borderWidth = BorderWidth;
-
-        if (!bEnabled)
+        if (!bDrawOnlyText)
         {
-            fillColor = DisabledColor;
-            borderColor = RGB(72, 72, 78);
-        }
-        else if (isPressed)
-        {
-            fillColor = PressedColor;
-        }
-        else if (isSelected)
-        {
-            fillColor = SelectedColor;
-            borderColor = RGB(255, 220, 120);
-            borderWidth = 2;
-        }
-        else if (IsPointed)
-        {
-            fillColor = HoverColor;
-            borderColor = RGB(210, 178, 100);
-        }
+            COLORREF fillColor = NormalColor;
+            COLORREF borderColor = BorderColor;
+            int borderWidth = BorderWidth;
 
-        HBRUSH hBrush = CreateSolidBrush(fillColor);
-        HPEN hPen = CreatePen(PS_SOLID, borderWidth, borderColor);
-        HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
-        HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
+            if (!bEnabled)
+            {
+                fillColor = DisabledColor;
+                borderColor = RGB(72, 72, 78);
+            }
+            else if (isPressed)
+            {
+                fillColor = PressedColor;
+            }
+            else if (isSelected)
+            {
+                fillColor = SelectedColor;
+                borderColor = RGB(255, 220, 120);
+                borderWidth = 2;
+            }
+            else if (IsPointed)
+            {
+                fillColor = HoverColor;
+                borderColor = RGB(210, 178, 100);
+            }
 
-        RoundRect(
-            hMemDC,
-            visualRect.left,
-            visualRect.top,
-            visualRect.right,
-            visualRect.bottom,
-            8,
-            8
-        );
+            HBRUSH hBrush = CreateSolidBrush(fillColor);
+            HPEN hPen = CreatePen(PS_SOLID, borderWidth, borderColor);
+            HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
+            HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
 
-        SelectObject(hMemDC, oldBrush);
-        SelectObject(hMemDC, oldPen);
-        DeleteObject(hBrush);
-        DeleteObject(hPen);
+            RoundRect(
+                hMemDC,
+                visualRect.left,
+                visualRect.top,
+                visualRect.right,
+                visualRect.bottom,
+                8,
+                8
+            );
+
+            SelectObject(hMemDC, oldBrush);
+            SelectObject(hMemDC, oldPen);
+            DeleteObject(hBrush);
+            DeleteObject(hPen);
+        }
     }
 
     if (!ButtonText.empty())

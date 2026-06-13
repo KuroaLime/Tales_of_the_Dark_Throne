@@ -44,9 +44,9 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     Loc.y = clientRect.bottom / 2;
 
     int topY = 88;
-    int btnW = 180;
-    int btnH = 50;
-    int spacing = 20;
+    int btnW = 145;
+    int btnH = 38;
+    int spacing = 16;
 
     int groupWidth = (btnW * 3) + (spacing * 2);
     int groupStartX = Loc.x - (groupWidth / 2);
@@ -79,15 +79,15 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
 
     btnClose = new UButton();
     btnClose->SetText(L"X");
-    btnClose->SetLocation(clientRect.right - 50, topY);
-    btnClose->SetSize(50, 50);
+    btnClose->SetLocation(clientRect.right - 46, topY);
+    btnClose->SetSize(42, 42);
     btnClose->SetOnClick([this]() { this->CloseSubPopups(); this->SetVisible(false); });
     AddChild(btnClose);
 
     btnOpenCharPopup = new UButton();
     btnOpenCharPopup->SetText(L"상세 보기");
     btnOpenCharPopup->SetLocation(Loc.x - 120, topY + 62);
-    btnOpenCharPopup->SetSize(190, 42);
+    btnOpenCharPopup->SetSize(150, 34);
     btnOpenCharPopup->SetFont(18, FW_BOLD, L"Arial");
     btnOpenCharPopup->SetAnimationType(1);
     btnOpenCharPopup->SetOnClick([this]() { this->OpenCharacterPopup(); });
@@ -96,7 +96,7 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     btnOpenInvPopup = new UButton();
     btnOpenInvPopup->SetText(L"가방 보기");
     btnOpenInvPopup->SetLocation(Loc.x + 120, topY + 62);
-    btnOpenInvPopup->SetSize(190, 42);
+    btnOpenInvPopup->SetSize(150, 34);
     btnOpenInvPopup->SetFont(18, FW_BOLD, L"Arial");
     btnOpenInvPopup->SetAnimationType(1);
     btnOpenInvPopup->SetOnClick([this]() { this->OpenInventoryPopup(); });
@@ -126,12 +126,12 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     AddChild(targetSelectPanel);
 
     profilePanel = new UProfilePanel();
-    profilePanel->Setup(Loc.x - 285, Loc.y + 70);
+    profilePanel->Setup(Loc.x - 400, Loc.y + 10);
     profilePanel->SetVisible(false);
     AddChild(profilePanel);
 
     statePanel = new UStatePanel();
-    statePanel->Setup(Loc.x + 235, Loc.y + 70);
+    statePanel->Setup(Loc.x + 80, Loc.y + 85);
     statePanel->SetVisible(false);
     AddChild(statePanel);
 
@@ -210,13 +210,13 @@ void UMainMenuPopup::UpdateCharList()
     int listStartX = panelRight - 85;
     int listStartY = Loc.y - Size.sY / 2 + 185;
 
-    int btnW = 155;
-    int btnH = 44;
+    int btnW = 130;
+    int btnH = 34;
 
     for (size_t i = 0; i < teamMembers.size(); ++i) {
         UButton* btn = new UButton();
         btn->SetText(teamMembers[i]->GetName());
-        btn->SetLocation(listStartX, listStartY + (int)i * 54);
+        btn->SetLocation(listStartX, listStartY + (int)i * 44);
         btn->SetSize(btnW, btnH);
 
         Character* charPtr = teamMembers[i];

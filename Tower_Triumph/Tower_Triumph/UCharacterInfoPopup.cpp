@@ -25,11 +25,11 @@ void UCharacterInfoPopup::Setup(RECT clientRect)
     Loc.y = clientRect.bottom / 2;
 
     ProfilePanel = new UProfilePanel();
-    ProfilePanel->Setup(Loc.x - 285, Loc.y + 65);
+    ProfilePanel->Setup(Loc.x - 420, Loc.y + 40);
     AddChild(ProfilePanel);
 
     StatePanel = new UStatePanel();
-    StatePanel->Setup(Loc.x + 235, Loc.y + 65);
+    StatePanel->Setup(Loc.x + 80, Loc.y + 85);
     AddChild(StatePanel);
 
     BackButton = new UButton();
@@ -71,9 +71,9 @@ void UCharacterInfoPopup::RebuildCharacterButtons()
     }
     CharacterButtons.clear();
 
-    int btnW = 145;
-    int btnH = 42;
-    int gap = 14;
+    int btnW = 130;
+    int btnH = 38;
+    int gap = 12;
     int count = (int)TeamMembers.size();
     int totalW = count * btnW + (count > 0 ? (count - 1) * gap : 0);
     int startX = Loc.x - totalW / 2 + btnW / 2;
@@ -134,7 +134,7 @@ void UCharacterInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
     }
 
     RECT bg = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-    HBRUSH bgBrush = CreateSolidBrush(RGB(8, 8, 12));
+    HBRUSH bgBrush = CreateSolidBrush(RGB(6, 8, 12));
     FillRect(hMemDC, &bg, bgBrush);
     DeleteObject(bgBrush);
 

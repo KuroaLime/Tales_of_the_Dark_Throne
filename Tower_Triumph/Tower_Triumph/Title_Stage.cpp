@@ -6,6 +6,7 @@ Title_Stage::Title_Stage()
     NextStageID = -2;
     menuGroup = nullptr;
     settingPopup = nullptr;
+    titleName = nullptr;
     btnStart = nullptr;
     btnSetting = nullptr;
     btnEnd = nullptr;
@@ -30,10 +31,24 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
 
-    hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
+    // Friend title resource background restored.
+    hBitBackground = (HBITMAP)LoadImageW(
+        NULL,
+        L"Resource\\Title\\Title_Background.bmp",
+        IMAGE_BITMAP,
+        0,
+        0,
+        LR_LOADFROMFILE | LR_CREATEDIBSECTION
+    );
+
     if (!hBitBackground)
     {
-        hBitBackground = (HBITMAP)LoadImage(
+        hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
+    }
+
+    if (!hBitBackground)
+    {
+        hBitBackground = (HBITMAP)LoadImageW(
             NULL,
             L"Source\\SMap\\background\\Test00.bmp",
             IMAGE_BITMAP,
@@ -64,26 +79,46 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     settingPopup = new USettingPopup();
     settingPopup->Setup(g_hInst, rects);
 
+    titleName = new UImage();
+    titleName->SetFrameFromFile({ L"Resource\\Title\\Title_Name.bmp" });
+    if (!titleName->GetBitmap().empty())
+    {
+        BITMAP info = titleName->GetMapInfo()[0];
+        titleName->SetSize(info.bmWidth / 2, info.bmHeight / 2);
+    }
+    titleName->SetTransColor(RGB(255, 255, 255));
+    titleName->SetLocation(rects.right / 2, rects.bottom / 4);
+    menuGroup->AddChild(titleName);
+
     int startY = rects.bottom / 2 + 50;
 
     btnStart = new UButton();
     btnStart->SetLocation(rects.right / 2, startY);
     btnStart->SetUIID(0);
     btnStart->SetText(L"START GAME");
+    btnStart->SetFont(72, FW_NORMAL, L"Gabriola");
+    btnStart->SetSize(400, 80);
+    btnStart->SetDrawOnlyText(true);
     btnStart->SetOnClick([this]() { this->NextStageID = MAP_STAGE; });
     menuGroup->AddChild(btnStart);
 
     btnSetting = new UButton();
-    btnSetting->SetLocation(rects.right / 2, startY + 80);
+    btnSetting->SetLocation(rects.right / 2, startY + 110);
     btnSetting->SetUIID(1);
     btnSetting->SetText(L"SETTINGS");
+    btnSetting->SetFont(72, FW_NORMAL, L"Gabriola");
+    btnSetting->SetSize(400, 80);
+    btnSetting->SetDrawOnlyText(true);
     btnSetting->SetOnClick([this]() { this->settingPopup->SetVisible(true); });
     menuGroup->AddChild(btnSetting);
 
     btnEnd = new UButton();
-    btnEnd->SetLocation(rects.right / 2, startY + 160);
+    btnEnd->SetLocation(rects.right / 2, startY + 220);
     btnEnd->SetUIID(2);
     btnEnd->SetText(L"EXIT");
+    btnEnd->SetFont(72, FW_NORMAL, L"Gabriola");
+    btnEnd->SetSize(400, 80);
+    btnEnd->SetDrawOnlyText(true);
     btnEnd->SetOnClick([this]() { this->NextStageID = GAME_END; });
     menuGroup->AddChild(btnEnd);
 

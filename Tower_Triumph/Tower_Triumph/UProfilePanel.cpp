@@ -1,154 +1,108 @@
 ﻿#include "UProfilePanel.h"
-
 #include <string>
 
-UProfilePanel::UProfilePanel()
-    : CurrentCharacter(nullptr),
-      NameLabel(nullptr),
-      LevelLabel(nullptr),
-      ElementLabel(nullptr)
+UProfilePanel::UProfilePanel() : currentCharacter(nullptr)
 {
-    Size.sX = 320;
-    Size.sY = 410;
-}
-
-UProfilePanel::~UProfilePanel()
-{
+    bgImage = nullptr;
+    nameLabel = nullptr;
+    levelLabel = nullptr;
 }
 
 void UProfilePanel::Setup(int x, int y)
 {
     Loc.x = x;
     Loc.y = y;
-    Size.sX = 320;
-    Size.sY = 410;
 
-    NameLabel = new UTextLabel();
-    NameLabel->SetLocation(Loc.x, Loc.y - 165);
-    NameLabel->SetSize(280, 36);
-    NameLabel->SetFont(24, FW_BOLD, L"Malgun Gothic");
-    NameLabel->SetColor(RGB(255, 230, 120));
-    NameLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    AddChild(NameLabel);
+    bgImage = new UImage();
+    bgImage->SetFrameFromFile({ L"Resource/Map/UI/CharacterUI_Character.bmp" });
+    if (!bgImage->GetBitmap().empty()) {
+        BITMAP info = bgImage->GetMapInfo()[0];
+        bgImage->SetSize(info.bmWidth, info.bmHeight);
+        Size = bgImage->GetSize();
+    }
+    bgImage->SetTransColor(RGB(255, 174, 201));
+    // Original's bgImage position was offset relative to Setup(x,y)
+    bgImage->SetLocation(Loc.x, Loc.y); 
+    AddChild(bgImage);
 
-    LevelLabel = new UTextLabel();
-    LevelLabel->SetLocation(Loc.x, Loc.y - 130);
-    LevelLabel->SetSize(280, 28);
-    LevelLabel->SetFont(17, FW_BOLD, L"Malgun Gothic");
-    LevelLabel->SetColor(RGB(220, 220, 240));
-    LevelLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    AddChild(LevelLabel);
+    // Labels positioned relative to the panel center
+    nameLabel = new UTextLabel();
+    nameLabel->SetFont(24, FW_BOLD, L"Arial");
+    nameLabel->SetLocation(Loc.x-83, Loc.y + 135);
+    nameLabel->SetSize(250, 40);
+    nameLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    AddChild(nameLabel);
 
-    ElementLabel = new UTextLabel();
-    ElementLabel->SetLocation(Loc.x, Loc.y + 170);
-    ElementLabel->SetSize(280, 30);
-    ElementLabel->SetFont(18, FW_BOLD, L"Malgun Gothic");
-    ElementLabel->SetColor(RGB(160, 220, 255));
-    ElementLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    AddChild(ElementLabel);
+    levelLabel = new UTextLabel();
+    levelLabel->SetFont(26, FW_NORMAL, L"Arial");
+    levelLabel->SetLocation(Loc.x-78, Loc.y + 90);
+    levelLabel->SetSize(250, 40);
+    levelLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    AddChild(levelLabel);
 }
 
 void UProfilePanel::SetCharacter(Character* character)
 {
-    CurrentCharacter = character;
-
-    if (CurrentCharacter == nullptr)
-    {
-        if (NameLabel) NameLabel->SetText(L"");
-        if (LevelLabel) LevelLabel->SetText(L"");
-        if (ElementLabel) ElementLabel->SetText(L"");
-        return;
-    }
-
-    if (NameLabel)
-    {
-        NameLabel->SetText(CurrentCharacter->GetName());
-    }
-
-    if (LevelLabel)
-    {
-        LevelLabel->SetText(L"Lv. " + std::to_wstring(CurrentCharacter->GetLevel()) + L"    EXP " + std::to_wstring(CurrentCharacter->GetExp()));
-    }
-
-    if (ElementLabel)
-    {
-        ElementLabel->SetText(L"속성: " + CurrentCharacter->GetElementName());
+    currentCharacter = character;
+    if (currentCharacter) {
+        nameLabel->SetText(currentCharacter->GetName());
+        levelLabel->SetText(L"Lv. " + std::to_wstring(currentCharacter->GetLevel()) + L"  EXP: " + std::to_wstring(currentCharacter->GetExp()));
+    } else {
+        nameLabel->SetText(L"");
+        levelLabel->SetText(L"");
     }
 }
 
 void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
 {
-    if (!bVisible)
-    {
-        return;
-    }
+    if (!bVisible) return;
+    
+    UContainerWidget::Draw(hMemDC, hMemDC1);
 
-    RECT panel = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-
-    HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
-    FillRect(hMemDC, &panel, bgBrush);
-    DeleteObject(bgBrush);
-
-    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
-    FrameRect(hMemDC, &panel, frameBrush);
-    DeleteObject(frameBrush);
-
-    RECT portraitBox = { panel.left + 42, panel.top + 105, panel.right - 42, panel.bottom - 62 };
-    HBRUSH innerBrush = CreateSolidBrush(RGB(12, 12, 18));
-    FillRect(hMemDC, &portraitBox, innerBrush);
-    DeleteObject(innerBrush);
-
-    if (CurrentCharacter != nullptr)
-    {
-        HBITMAP hPortrait = CurrentCharacter->GetIllustration();
-        const BITMAP* portraitInfo = CurrentCharacter->GetIllustrationInfo();
-        bool useSpriteFallback = false;
-
-        if (hPortrait == NULL || portraitInfo == nullptr)
-        {
-            hPortrait = CurrentCharacter->GetSpriteIdle();
-            useSpriteFallback = true;
+    if (currentCharacter) {
+        HBITMAP hIllustration = currentCharacter->GetIllustration();
+        const BITMAP* info = currentCharacter->GetIllustrationInfo();
+        
+        bool isFallback = false;
+        if (!hIllustration || !info) {
+            hIllustration = currentCharacter->GetSpriteIdle();
+            isFallback = true;
         }
 
-        if (hPortrait != NULL)
-        {
+        if (hIllustration) {
+            HDC hSpriteDC = CreateCompatibleDC(hMemDC);
+            HBITMAP hOld = (HBITMAP)SelectObject(hSpriteDC, hIllustration);
+            
             BITMAP bm;
-            GetObject(hPortrait, sizeof(BITMAP), &bm);
+            GetObject(hIllustration, sizeof(BITMAP), &bm);
 
             int srcW = bm.bmWidth;
             int srcH = bm.bmHeight;
-
-            if (useSpriteFallback)
-            {
+            if (isFallback) {
                 srcW = bm.bmWidth / CHARACTER_SHEET_COL;
                 srcH = bm.bmHeight / CHARACTER_SHEET_ROW;
             }
 
-            HDC hTempDC = CreateCompatibleDC(hMemDC);
-            HBITMAP hOld = (HBITMAP)SelectObject(hTempDC, hPortrait);
+            // Draw illustration centered in the upper part of the panel
+            int drawW = srcW;
+            int drawH = srcH;
 
-            int dstW = portraitBox.right - portraitBox.left;
-            int dstH = portraitBox.bottom - portraitBox.top;
-            COLORREF transColor = useSpriteFallback ? CHARACTER_TRANSPARENT_COLOR : RGB(255, 255, 255);
+            // Scale down if too large for panel
+            float scale = 1.0f;
+            if (drawW > 240) scale = 240.0f / drawW;
+            if (drawH * scale > 300) scale = 300.0f / drawH;
+            
+            drawW = (int)(drawW * scale);
+            drawH = (int)(drawH * scale);
 
-            TransparentBlt(
-                hMemDC,
-                portraitBox.left,
-                portraitBox.top,
-                dstW,
-                dstH,
-                hTempDC,
-                0,
-                0,
-                srcW,
-                srcH,
-                transColor
-            );
+            int drawX = Loc.x - drawW / 2;
+            int drawY = Loc.y - 260; // Adjusted upward
 
-            SelectObject(hTempDC, hOld);
-            DeleteDC(hTempDC);
+            COLORREF transColor = isFallback ? CHARACTER_TRANSPARENT_COLOR : RGB(255, 255, 255);
+            TransparentBlt(hMemDC, drawX, drawY, drawW, drawH, hSpriteDC, 0, 0, srcW, srcH, transColor);
+
+            SelectObject(hSpriteDC, hOld);
+            DeleteDC(hSpriteDC);
         }
     }
-
-    UContainerWidget::Draw(hMemDC, hMemDC1);
 }

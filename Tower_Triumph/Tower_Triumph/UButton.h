@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Widget.h"
 #include <functional>
 #include <string>
@@ -21,6 +21,7 @@ protected:
     float currentVisualOffsetY;
     float currentScale;
     bool bDrawTextFallbackBackground;
+    bool bDrawOnlyText;
 
     COLORREF NormalColor;
     COLORREF HoverColor;
@@ -49,6 +50,8 @@ public:
     void SetAnimationType(int type) { AnimationType = type; }
     void SetDrawTextFallbackBackground(bool New) { bDrawTextFallbackBackground = New; }
     bool GetDrawTextFallbackBackground() const { return bDrawTextFallbackBackground; }
+    void SetDrawOnlyText(bool New) { bDrawOnlyText = New; }
+    bool GetDrawOnlyText() const { return bDrawOnlyText; }
 
     void SetFallbackColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled);
     void SetFallbackTextColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled);

@@ -1,163 +1,82 @@
-﻿#include "UStatePanel.h"
-
+#include "UStatePanel.h"
 #include <string>
 
 UStatePanel::UStatePanel()
-    : CurrentCharacter(nullptr)
+    : bgImage(nullptr),
+      weaponLabel(nullptr), armorLabel(nullptr), accessoryLabel(nullptr),
+      strLabel(nullptr), intLabel(nullptr), defLabel(nullptr), spdLabel(nullptr),
+      currentCharacter(nullptr)
 {
-    Size.sX = 470;
-    Size.sY = 410;
-
-    for (int i = 0; i < 8; ++i)
-    {
-        StatLabels[i] = nullptr;
-    }
-
-    for (int i = 0; i < 3; ++i)
-    {
-        EquipLabels[i] = nullptr;
-    }
 }
 
-UStatePanel::~UStatePanel()
+void UStatePanel::SetupLabel(UTextLabel*& label, int x, int y, int w, int h, int fontSize, int weight, int align)
 {
+    label = new UTextLabel();
+    label->SetFont(fontSize, weight, L"Arial");
+    label->SetColor(RGB(245, 245, 245));
+    label->SetAlign(align);
+    label->SetLocation(x, y);
+    label->SetSize(w, h);
+    AddChild(label);
 }
 
 void UStatePanel::Setup(int x, int y)
 {
     Loc.x = x;
     Loc.y = y;
-    Size.sX = 470;
-    Size.sY = 410;
 
-    int leftX = Loc.x - Size.sX / 2 + 140;
-    int rightX = Loc.x + 95;
-    int statY = Loc.y - 120;
-
-    for (int i = 0; i < 8; ++i)
+    bgImage = new UImage();
+    bgImage->SetFrameFromFile({ L"Resource/Map/UI/CharacterUI_State.bmp" });
+    if (!bgImage->GetBitmap().empty())
     {
-        StatLabels[i] = new UTextLabel();
-        StatLabels[i]->SetFont(19, FW_BOLD, L"Malgun Gothic");
-        StatLabels[i]->SetColor(RGB(235, 235, 245));
-        StatLabels[i]->SetSize(190, 28);
-        StatLabels[i]->SetLocation((i < 4) ? leftX : rightX, statY + (i % 4) * 34);
-        AddChild(StatLabels[i]);
+        BITMAP info = bgImage->GetMapInfo()[0];
+        bgImage->SetSize(info.bmWidth, info.bmHeight);
+        Size = bgImage->GetSize();
     }
-
-    int equipY = Loc.y + 65;
-    for (int i = 0; i < 3; ++i)
+    else
     {
-        EquipLabels[i] = new UTextLabel();
-        EquipLabels[i]->SetFont(18, FW_BOLD, L"Malgun Gothic");
-        EquipLabels[i]->SetColor(RGB(220, 220, 235));
-        EquipLabels[i]->SetSize(360, 32);
-        EquipLabels[i]->SetLocation(Loc.x + 20, equipY + i * 42);
-        EquipLabels[i]->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-        AddChild(EquipLabels[i]);
+        Size.sX = 352;
+        Size.sY = 392;
     }
-}
+    bgImage->SetTransColor(RGB(255, 174, 201));
+    bgImage->SetLocation(Loc.x, Loc.y);
+    AddChild(bgImage);
 
-std::wstring UStatePanel::GetEquipLine(EEquipPart part, int itemID) const
-{
-    std::wstring partName = L"UNKNOWN";
+    // Coordinates are based on the imported CharacterUI_State.bmp skin.
+    SetupLabel(weaponLabel, Loc.x, Loc.y - 156, 260, 28, 20, FW_BOLD, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    SetupLabel(armorLabel, Loc.x, Loc.y - 109, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    SetupLabel(accessoryLabel, Loc.x, Loc.y - 84, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-    switch (part)
-    {
-    case EEquipPart::Weapon:
-        partName = L"무기";
-        break;
-    case EEquipPart::Armor:
-        partName = L"방어구";
-        break;
-    case EEquipPart::Accessory:
-        partName = L"장신구";
-        break;
-    }
-
-    if (itemID < 0)
-    {
-        return partName + L": 없음";
-    }
-
-    return partName + L": " + ItemData::GetName(itemID);
+    SetupLabel(strLabel, Loc.x - 55, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    SetupLabel(intLabel, Loc.x - 55, Loc.y + 148, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    SetupLabel(defLabel, Loc.x + 105, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    SetupLabel(spdLabel, Loc.x + 105, Loc.y + 148, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 }
 
 void UStatePanel::SetCharacter(Character* character)
 {
-    CurrentCharacter = character;
-
-    if (CurrentCharacter == nullptr)
+    currentCharacter = character;
+    if (!currentCharacter)
     {
-        for (int i = 0; i < 8; ++i)
-        {
-            if (StatLabels[i]) StatLabels[i]->SetText(L"");
-        }
-
-        for (int i = 0; i < 3; ++i)
-        {
-            if (EquipLabels[i]) EquipLabels[i]->SetText(L"");
-        }
-
+        weaponLabel->SetText(L"Weapon: Empty");
+        armorLabel->SetText(L"Armor: Empty");
+        accessoryLabel->SetText(L"Accessory: Empty");
+        strLabel->SetText(L"STR: 0");
+        intLabel->SetText(L"INT: 0");
+        defLabel->SetText(L"DEF: 0");
+        spdLabel->SetText(L"SPD: 0");
         return;
     }
 
-    CharacterStat stat = CurrentCharacter->GetStat();
+    CharacterEquipment equip = currentCharacter->GetEquipment();
 
-    std::wstring lines[8] =
-    {
-        L"HP  " + std::to_wstring(stat.CurHP) + L" / " + std::to_wstring(stat.MaxHP),
-        L"MP  " + std::to_wstring(stat.CurMP) + L" / " + std::to_wstring(stat.MaxMP),
-        L"STR " + std::to_wstring(stat.STR),
-        L"INT " + std::to_wstring(stat.INT),
-        L"DEF " + std::to_wstring(stat.DEF),
-        L"SPD " + std::to_wstring(stat.SPD),
-        L"AP  " + std::to_wstring(CurrentCharacter->GetAP()),
-        L"EXP " + std::to_wstring(CurrentCharacter->GetExp())
-    };
+    weaponLabel->SetText(L"Weapon: " + (equip.WeaponID >= 0 ? ItemData::GetName(equip.WeaponID) : std::wstring(L"Empty")));
+    armorLabel->SetText(L"Armor: " + (equip.ArmorID >= 0 ? ItemData::GetName(equip.ArmorID) : std::wstring(L"Empty")));
+    accessoryLabel->SetText(L"Accessory: " + (equip.AccessoryID >= 0 ? ItemData::GetName(equip.AccessoryID) : std::wstring(L"Empty")));
 
-    for (int i = 0; i < 8; ++i)
-    {
-        if (StatLabels[i]) StatLabels[i]->SetText(lines[i]);
-    }
-
-    CharacterEquipment equip = CurrentCharacter->GetEquipment();
-
-    if (EquipLabels[0]) EquipLabels[0]->SetText(GetEquipLine(EEquipPart::Weapon, equip.WeaponID));
-    if (EquipLabels[1]) EquipLabels[1]->SetText(GetEquipLine(EEquipPart::Armor, equip.ArmorID));
-    if (EquipLabels[2]) EquipLabels[2]->SetText(GetEquipLine(EEquipPart::Accessory, equip.AccessoryID));
-}
-
-void UStatePanel::Draw(HDC hMemDC, HDC hMemDC1)
-{
-    if (!bVisible)
-    {
-        return;
-    }
-
-    RECT panel = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-
-    HBRUSH bgBrush = CreateSolidBrush(RGB(19, 23, 31));
-    FillRect(hMemDC, &panel, bgBrush);
-    DeleteObject(bgBrush);
-
-    HBRUSH frameBrush = CreateSolidBrush(RGB(176, 146, 78));
-    FrameRect(hMemDC, &panel, frameBrush);
-    DeleteObject(frameBrush);
-
-    SetBkMode(hMemDC, TRANSPARENT);
-    SetTextColor(hMemDC, RGB(255, 230, 120));
-
-    HFONT titleFont = CreateFontW(22, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldFont = (HFONT)SelectObject(hMemDC, titleFont);
-
-    RECT statTitle = { panel.left + 28, panel.top + 22, panel.right - 28, panel.top + 55 };
-    DrawTextW(hMemDC, L"상태", -1, &statTitle, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-
-    RECT equipTitle = { panel.left + 28, Loc.y + 28, panel.right - 28, Loc.y + 62 };
-    DrawTextW(hMemDC, L"장비", -1, &equipTitle, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-
-    SelectObject(hMemDC, oldFont);
-    DeleteObject(titleFont);
-
-    UContainerWidget::Draw(hMemDC, hMemDC1);
+    CharacterStat stat = currentCharacter->GetStat();
+    strLabel->SetText(L"STR: " + std::to_wstring(stat.STR));
+    intLabel->SetText(L"INT: " + std::to_wstring(stat.INT));
+    defLabel->SetText(L"DEF: " + std::to_wstring(stat.DEF));
+    spdLabel->SetText(L"SPD: " + std::to_wstring(stat.SPD));
 }
