@@ -1,0 +1,5 @@
+BMP count: 45
+Class/Element groups: 3 classes x 5 elements x 3 skills
+Uploaded zip entries: 46
+Uploaded unique images: 43
+Uploaded duplicate images: 3
