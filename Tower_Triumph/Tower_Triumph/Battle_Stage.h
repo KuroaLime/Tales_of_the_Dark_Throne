@@ -93,6 +93,7 @@ private:
     void UpdatePreviewMovePathByMouse(int mouseX, int mouseY);
 
     void LoadBattleMap(EBattleMapId mapId);
+    Location FindNearestValidStartTile(Character* unit, int startX, int startY, bool avoidDamage) const;
 
     ETileType GetTileType(int gx, int gy) const;
     bool IsBlockedTile(int gx, int gy, Character* unit = nullptr) const;

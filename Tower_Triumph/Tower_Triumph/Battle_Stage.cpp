@@ -317,8 +317,9 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         }
 
         const auto& start = CurrentMap.playerStarts[i];
+        Location safeStart = FindNearestValidStartTile(c, start.x, start.y, true);
 
-        c->SetGridPos(start.x, start.y);
+        c->SetGridPos(safeStart.x, safeStart.y);
         c->LoadSprites(L"Resource");
         c->SyncWorldPixelToGrid(TILE_SIZE);
         c->ResetTurnState();
@@ -336,6 +337,9 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         Character* e = new Character();
         e->Init(start.classType, start.x, start.y);
         e->SetName(start.name);
+
+        Location safeStart = FindNearestValidStartTile(e, start.x, start.y, true);
+        e->SetGridPos(safeStart.x, safeStart.y);
         e->LoadSprites(L"Resource");
         e->SyncWorldPixelToGrid(TILE_SIZE);
 
@@ -389,6 +393,90 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         camPosX = (float)targetX;
         camPosY = (float)targetY;
     }
+}
+
+Location Battle_Stage::FindNearestValidStartTile(Character* unit, int startX, int startY, bool avoidDamage) const
+{
+    Location fallback;
+    fallback.x = startX;
+    fallback.y = startY;
+
+    if (unit == nullptr || W <= 0 || H <= 0)
+    {
+        return fallback;
+    }
+
+    if (IsInsideGrid(startX, startY) &&
+        !IsBlockedTile(startX, startY, unit) &&
+        (!avoidDamage || !IsDamageTile(startX, startY)))
+    {
+        return fallback;
+    }
+
+    std::vector<std::vector<bool>> visited;
+    visited.resize(H);
+
+    for (int y = 0; y < H; ++y)
+    {
+        visited[y].resize(W, false);
+    }
+
+    std::queue<Location> q;
+
+    if (IsInsideGrid(startX, startY))
+    {
+        q.push({ startX, startY });
+        visited[startY][startX] = true;
+    }
+    else
+    {
+        int clampedX = startX;
+        int clampedY = startY;
+
+        if (clampedX < 0) clampedX = 0;
+        if (clampedX >= W) clampedX = W - 1;
+        if (clampedY < 0) clampedY = 0;
+        if (clampedY >= H) clampedY = H - 1;
+
+        q.push({ clampedX, clampedY });
+        visited[clampedY][clampedX] = true;
+    }
+
+    const int dx[4] = { 1, -1, 0, 0 };
+    const int dy[4] = { 0, 0, 1, -1 };
+
+    while (!q.empty())
+    {
+        Location cur = q.front();
+        q.pop();
+
+        if (!IsBlockedTile(cur.x, cur.y, unit) &&
+            (!avoidDamage || !IsDamageTile(cur.x, cur.y)))
+        {
+            return cur;
+        }
+
+        for (int i = 0; i < 4; ++i)
+        {
+            int nx = cur.x + dx[i];
+            int ny = cur.y + dy[i];
+
+            if (!IsInsideGrid(nx, ny))
+            {
+                continue;
+            }
+
+            if (visited[ny][nx])
+            {
+                continue;
+            }
+
+            visited[ny][nx] = true;
+            q.push({ nx, ny });
+        }
+    }
+
+    return fallback;
 }
 
 void Battle_Stage::LoadBattleMap(EBattleMapId mapId)
