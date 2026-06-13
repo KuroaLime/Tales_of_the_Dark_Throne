@@ -288,11 +288,11 @@ SBattleMapData BattleMapData::BuildStage01()
 
     // 아군은 화면 시작 시 바로 보이도록 중앙-서쪽 개활지에 배치.
     AddPlayerStarts(map, {
-        { 8, 11 },
-        { 10, 11 },
-        { 9, 12 },
-        { 11, 12 },
-        { 12, 11 }
+        { 8, 5 },
+        { 10, 6 },
+        { 9, 7 },
+        { 11, 7 },
+        { 12, 6 }
     });
 
     // 묘지는 저주지대와 묘비 타일 중심.
@@ -330,11 +330,11 @@ SBattleMapData BattleMapData::BuildStage02()
     SetMapRect(map, 39, 11, 43, 16, ETileType::SkyVoid);
 
     AddPlayerStarts(map, {
-        { 8, 10 },
-        { 9, 11 },
-        { 10, 10 },
-        { 11, 11 },
-        { 12, 10 }
+        { 8, 5 },
+        { 9, 6 },
+        { 10, 5 },
+        { 11, 6 },
+        { 12, 5 }
     });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Sky Guard", 33, 10, 12 });
@@ -360,11 +360,11 @@ SBattleMapData BattleMapData::BuildStage03()
     FillMapTiles(map, ETileType::Normal);
 
     AddPlayerStarts(map, {
-        { 8, 12 },
-        { 10, 12 },
-        { 9, 13 },
-        { 11, 13 },
-        { 12, 12 }
+        { 8, 5 },
+        { 10, 6 },
+        { 9, 7 },
+        { 11, 7 },
+        { 12, 6 }
     });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Training Guard", 32, 11, 10 });
@@ -398,11 +398,11 @@ SBattleMapData BattleMapData::BuildStage04()
     SetMapRect(map, 38, 13, 43, 20, ETileType::Water);
 
     AddPlayerStarts(map, {
-        { 9, 10 },
-        { 10, 11 },
-        { 11, 10 },
-        { 12, 11 },
-        { 13, 10 }
+        { 9, 6 },
+        { 10, 5 },
+        { 11, 6 },
+        { 12, 5 },
+        { 13, 6 }
     });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 32, 10, 12 });
@@ -437,11 +437,11 @@ SBattleMapData BattleMapData::BuildStage05()
     SetMapRect(map, 37, 15, 42, 19, ETileType::Lava);
 
     AddPlayerStarts(map, {
-        { 10, 10 },
-        { 11, 11 },
-        { 12, 10 },
-        { 13, 11 },
-        { 14, 10 }
+        { 10, 5 },
+        { 11, 6 },
+        { 12, 5 },
+        { 13, 6 },
+        { 14, 5 }
     });
 
     map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 32, 10, 14 });
