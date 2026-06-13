@@ -1061,6 +1061,19 @@ void Battle_Stage::OnMenuEndTurn()
 
     if (turnSystem)
     {
+        Character* current = turnSystem->GetCurrentTurnCharacter();
+
+        if (current != nullptr && current->IsAlive())
+        {
+            ApplyTileEffect(current);
+            CheckBattleEnd();
+
+            if (BattleEnded)
+            {
+                return;
+            }
+        }
+
         turnSystem->NextTurn();
     }
 

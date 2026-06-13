@@ -283,25 +283,25 @@ SBattleMapData BattleMapData::BuildStage01()
     map.mapId = EBattleMapId::Stage01;
     map.mapName = L"Stage 01 - 묘지";
     map.backgroundFilePath = L"Source\\SMap\\background\\Test01.bmp";
-    map.cameraStartX = 11;
-    map.cameraStartY = 11;
+    map.cameraStartX = 15;
+    map.cameraStartY = 10;
 
     // 아군은 화면 시작 시 바로 보이도록 중앙-서쪽 개활지에 배치.
     AddPlayerStarts(map, {
-        { 8, 5 },
-        { 10, 6 },
-        { 9, 7 },
-        { 11, 7 },
-        { 12, 6 }
+        { 8, 11 },
+        { 10, 11 },
+        { 9, 12 },
+        { 11, 12 },
+        { 12, 11 }
     });
 
     // 묘지는 저주지대와 묘비 타일 중심.
     SetMapRect(map, 3, 12, 5, 14, ETileType::CursedGround);
     SetMapRect(map, 29, 0, 34, 2, ETileType::CursedGround);
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 32, 11, 10 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    34, 12, 20 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Enemy Archer",  36, 11, 18 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 22, 10, 10 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    24, 11, 20 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Enemy Archer",  26, 10, 18 });
 
     return map;
 }
@@ -314,33 +314,48 @@ SBattleMapData BattleMapData::BuildStage02()
     map.mapId = EBattleMapId::Stage02;
     map.mapName = L"Stage 02 - 천상 성전";
     map.backgroundFilePath = L"Source\\SMap\\background\\Test02.bmp";
-    map.cameraStartX = 10;
+    map.cameraStartX = 15;
     map.cameraStartY = 10;
 
-    FillMapTiles(map, ETileType::Normal);
+    // 천상맵은 기본을 SkyVoid로 깔고, 실제 발판만 Normal로 복구한다.
+    // 따라서 빛속성 외 캐릭터는 발판 밖으로 이동할 수 없다.
+    FillMapTiles(map, ETileType::SkyVoid);
 
-    // 천당/공중맵: 하늘/구름 빈 공간은 이동 불가 SkyVoid로 처리.
-    SetMapRect(map, 0, 0, 4, 5, ETileType::SkyVoid);
-    SetMapRect(map, 10, 1, 13, 6, ETileType::SkyVoid);
-    SetMapRect(map, 21, 0, 24, 5, ETileType::SkyVoid);
-    SetMapRect(map, 33, 2, 37, 7, ETileType::SkyVoid);
-    SetMapRect(map, 4, 12, 7, 16, ETileType::SkyVoid);
-    SetMapRect(map, 16, 15, 20, 19, ETileType::SkyVoid);
-    SetMapRect(map, 29, 14, 33, 18, ETileType::SkyVoid);
-    SetMapRect(map, 39, 11, 43, 16, ETileType::SkyVoid);
+    // 서쪽 시작 발판
+    SetMapRect(map, 5, 8, 13, 12, ETileType::Normal);
+    SetMapRect(map, 6, 13, 11, 15, ETileType::Normal);
+
+    // 중앙 성전 발판
+    SetMapRect(map, 15, 5, 26, 14, ETileType::Normal);
+    SetMapRect(map, 18, 15, 24, 18, ETileType::Normal);
+
+    // 동쪽 적 발판
+    SetMapRect(map, 30, 8, 39, 14, ETileType::Normal);
+    SetMapRect(map, 31, 15, 37, 17, ETileType::Normal);
+
+    // 다리/연결로
+    SetMapRect(map, 13, 9, 16, 11, ETileType::Normal);
+    SetMapRect(map, 26, 9, 31, 11, ETileType::Normal);
+    SetMapRect(map, 9, 16, 17, 18, ETileType::Normal);
+    SetMapRect(map, 24, 16, 31, 18, ETileType::Normal);
+
+    // 하단 보조 발판
+    SetMapRect(map, 8, 18, 18, 22, ETileType::Normal);
+    SetMapRect(map, 21, 18, 28, 22, ETileType::Normal);
+    SetMapRect(map, 31, 18, 36, 22, ETileType::Normal);
 
     AddPlayerStarts(map, {
-        { 8, 5 },
-        { 9, 6 },
-        { 10, 5 },
-        { 11, 6 },
-        { 12, 5 }
+        { 7, 10 },
+        { 8, 11 },
+        { 9, 10 },
+        { 10, 11 },
+        { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Sky Guard", 33, 10, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Sky Archer",34, 11, 20 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Sky Mage",  35, 10, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Angel",     36, 11, 24 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Sky Guard", 21, 10, 12 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Sky Archer",23, 11, 20 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Sky Mage",  24, 10, 22 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Angel",     25, 11, 24 });
 
     return map;
 }
@@ -353,23 +368,23 @@ SBattleMapData BattleMapData::BuildStage03()
     map.mapId = EBattleMapId::Stage03;
     map.mapName = L"Stage 03 - 기본 방";
     map.backgroundFilePath = L"Source\\SMap\\background\\Test05.bmp";
-    map.cameraStartX = 10;
-    map.cameraStartY = 12;
+    map.cameraStartX = 15;
+    map.cameraStartY = 10;
 
     // 기본 방: 기믹 없는 전투 확인용.
     FillMapTiles(map, ETileType::Normal);
 
     AddPlayerStarts(map, {
-        { 8, 5 },
-        { 10, 6 },
-        { 9, 7 },
-        { 11, 7 },
-        { 12, 6 }
+        { 7, 10 },
+        { 8, 11 },
+        { 9, 10 },
+        { 10, 11 },
+        { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Training Guard", 32, 11, 10 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Training Mage",  34, 12, 18 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Training Archer",36, 11, 18 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Training Guard", 22, 10, 10 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Training Mage",  24, 11, 18 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Training Archer",26, 10, 18 });
 
     return map;
 }
@@ -382,33 +397,42 @@ SBattleMapData BattleMapData::BuildStage04()
     map.mapId = EBattleMapId::Stage04;
     map.mapName = L"Stage 04 - 바다 폐허";
     map.backgroundFilePath = L"Source\\SMap\\background\\Test04.bmp";
-    map.cameraStartX = 11;
+    map.cameraStartX = 15;
     map.cameraStartY = 10;
 
     FillMapTiles(map, ETileType::Normal);
 
-    // 바다맵: 중간중간 물 타일을 이동 불가 기믹으로 배치.
-    SetMapRect(map, 0, 2, 6, 8, ETileType::Water);
-    SetMapRect(map, 10, 2, 15, 6, ETileType::Water);
-    SetMapRect(map, 21, 3, 26, 8, ETileType::Water);
-    SetMapRect(map, 35, 1, 43, 7, ETileType::Water);
+    // 바다맵: 실제 이미지의 물길/침수 구역을 좌표로 지정.
+    // 물속성 외 캐릭터는 Water에 진입할 수 없다.
+    SetMapRect(map, 0, 0, 6, 8, ETileType::Water);
+    SetMapRect(map, 11, 0, 14, 4, ETileType::Water);
+    SetMapRect(map, 20, 0, 26, 7, ETileType::Water);
+    SetMapRect(map, 35, 0, 43, 7, ETileType::Water);
+
+    // 시작 지점 근처 물길: Move 테스트 시 바로 보이게 배치
+    SetMapRect(map, 12, 10, 14, 12, ETileType::Water);
+
     SetMapRect(map, 4, 13, 8, 17, ETileType::Water);
-    SetMapRect(map, 14, 12, 20, 18, ETileType::Water);
-    SetMapRect(map, 26, 13, 32, 19, ETileType::Water);
-    SetMapRect(map, 38, 13, 43, 20, ETileType::Water);
+    SetMapRect(map, 14, 13, 20, 18, ETileType::Water);
+    SetMapRect(map, 24, 13, 31, 18, ETileType::Water);
+    SetMapRect(map, 37, 12, 43, 20, ETileType::Water);
+
+    SetMapRect(map, 0, 20, 7, 23, ETileType::Water);
+    SetMapRect(map, 18, 20, 24, 23, ETileType::Water);
+    SetMapRect(map, 33, 20, 43, 23, ETileType::Water);
 
     AddPlayerStarts(map, {
-        { 9, 6 },
-        { 10, 5 },
-        { 11, 6 },
-        { 12, 5 },
-        { 13, 6 }
+        { 7, 10 },
+        { 8, 11 },
+        { 9, 10 },
+        { 10, 11 },
+        { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 32, 10, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 34, 11, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Tide Mage",   36, 10, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Coast Archer",35, 11, 20 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 22, 10, 12 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 24, 11, 12 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Tide Mage",   26, 10, 22 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Coast Archer",25, 11, 20 });
 
     return map;
 }
@@ -421,34 +445,38 @@ SBattleMapData BattleMapData::BuildStage05()
     map.mapId = EBattleMapId::Stage05;
     map.mapName = L"Stage 05 - 용암지대";
     map.backgroundFilePath = L"Source\\SMap\\background\\Test03.bmp";
-    map.cameraStartX = 12;
+    map.cameraStartX = 15;
     map.cameraStartY = 10;
 
     FillMapTiles(map, ETileType::Normal);
 
-    // 용암맵: 중간중간 용암 타일을 피해 기믹으로 배치.
-    SetMapRect(map, 2, 3, 6, 6, ETileType::Lava);
+    // 용암맵: 용암은 이동 가능하지만 불속성 외 유닛에게 피해를 준다.
+    // 시작 지점 바로 동쪽에 용암을 둬서 Move/피해 테스트가 바로 되게 한다.
+    SetMapRect(map, 12, 10, 15, 12, ETileType::Lava);
+
+    SetMapRect(map, 2, 3, 6, 7, ETileType::Lava);
     SetMapRect(map, 10, 4, 14, 7, ETileType::Lava);
     SetMapRect(map, 20, 3, 24, 6, ETileType::Lava);
     SetMapRect(map, 34, 3, 39, 7, ETileType::Lava);
-    SetMapRect(map, 5, 13, 9, 16, ETileType::Lava);
-    SetMapRect(map, 16, 14, 21, 17, ETileType::Lava);
+
+    SetMapRect(map, 5, 14, 10, 17, ETileType::Lava);
+    SetMapRect(map, 17, 14, 22, 17, ETileType::Lava);
     SetMapRect(map, 27, 13, 31, 18, ETileType::Lava);
-    SetMapRect(map, 37, 15, 42, 19, ETileType::Lava);
+    SetMapRect(map, 37, 14, 42, 19, ETileType::Lava);
 
     AddPlayerStarts(map, {
-        { 10, 5 },
-        { 11, 6 },
-        { 12, 5 },
-        { 13, 6 },
-        { 14, 5 }
+        { 7, 10 },
+        { 8, 11 },
+        { 9, 10 },
+        { 10, 11 },
+        { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 32, 10, 14 });
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 34, 11, 14 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Mage",  36, 10, 24 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Lava Archer",35, 11, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Boss",  33, 12, 26 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 22, 10, 14 });
+    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 24, 11, 14 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Mage",  26, 10, 24 });
+    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Lava Archer",25, 11, 22 });
+    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Boss",  23, 12, 26 });
 
     return map;
 }
