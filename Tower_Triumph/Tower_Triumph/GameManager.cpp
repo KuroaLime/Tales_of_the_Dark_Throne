@@ -29,7 +29,7 @@ static void ApplyItemStatBonusToCharacter(Character* target, int itemID, int sig
 GameManager::GameManager()
     : PartyGold(0),
       CurrentBattleStageId(1),
-      MaxUnlockedBattleStageId(5)
+      MaxUnlockedBattleStageId(5) //스테이지 언락 어디까지~
 {
 }
 

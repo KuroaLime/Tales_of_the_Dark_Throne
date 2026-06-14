@@ -49,9 +49,9 @@ static void FillMapTiles(SBattleMapData& map, ETileType type)
 static void InitBaseMap(SBattleMapData& map)
 {
     map.backgroundResourceId = IDB_BITMAP3;
-    map.tileSize = 64;
-    map.width = 44;
-    map.height = 24;
+    map.tileSize = 48;
+    map.width = 33;
+    map.height = 18;
     map.cameraStartX = 12;
     map.cameraStartY = 18;
     map.drawTileDebug = false;

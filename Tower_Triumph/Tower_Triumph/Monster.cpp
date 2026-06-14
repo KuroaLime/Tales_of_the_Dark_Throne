@@ -1,5 +1,58 @@
-﻿#include "Monster.h"
+#include "Monster.h"
 #include "Character.h"
+
+
+// ============================================================
+// 몬스터 스프라이트 시트 판정 유틸
+// ============================================================
+
+static bool IsMonsterSixByThreeSheet(const BITMAP* info)
+{
+	if (info == nullptr || info->bmWidth <= 0 || info->bmHeight <= 0)
+	{
+		return false;
+	}
+
+	int frameW = info->bmWidth / MONSTER_6X3_SHEET_COL;
+	int frameH = info->bmHeight / MONSTER_6X3_SHEET_ROW;
+
+	if (frameW <= 0 || frameH <= 0)
+	{
+		return false;
+	}
+
+	// 6x3 몬스터 시트는 보통 한 칸이 거의 정사각형이다.
+	// 이미지 생성본처럼 1~2px 정도 안 맞을 수 있으니 25% 오차를 허용한다.
+	int diff = abs(frameW - frameH);
+	int bigger = (frameW > frameH) ? frameW : frameH;
+
+	return diff * 4 <= bigger;
+}
+
+static int GetMonsterSheetCol(const BITMAP* info)
+{
+	return IsMonsterSixByThreeSheet(info) ? MONSTER_6X3_SHEET_COL : MONSTER_SHEET_COL;
+}
+
+static int GetMonsterSheetRow(const BITMAP* info)
+{
+	return IsMonsterSixByThreeSheet(info) ? MONSTER_6X3_SHEET_ROW : MONSTER_SHEET_ROW;
+}
+
+static int GetMonsterFrameCount(const BITMAP* info)
+{
+	int col = GetMonsterSheetCol(info);
+	int row = GetMonsterSheetRow(info);
+
+	int count = col * row;
+
+	if (count <= 0)
+	{
+		count = 1;
+	}
+
+	return count;
+}
 
 
 // ============================================================
@@ -818,15 +871,16 @@ int Monster::GetDirectionRow() const
 
 bool Monster::IsNeedFlip() const
 {
-	// 기본 가정:
-	// 원본 몬스터 스프라이트는 왼쪽 방향 기준.
-	// 오른쪽 방향일 때 좌우 반전한다.
-	return Direction == EMonsterDirection::Right;
+	// 신규 몬스터 스프라이트 원본은 오른쪽 방향 기준이다.
+	// 따라서 왼쪽 방향으로 출력할 때만 좌우 반전한다.
+	return Direction == EMonsterDirection::Left;
 }
 
 void Monster::UpdateMaxFrameByState()
 {
-	MaxFrame = MONSTER_SHEET_COL;
+	const BITMAP* curInfo = GetCurrentSpriteInfo();
+
+	MaxFrame = GetMonsterFrameCount(curInfo);
 
 	if (MaxFrame <= 0)
 	{
@@ -875,15 +929,45 @@ void Monster::Update()
 		}
 	}
 
-	if (State == EMonsterState::Idle)
+	const BITMAP* curInfo = GetCurrentSpriteInfo();
+	bool useSixByThree = IsMonsterSixByThreeSheet(curInfo);
+
+	// 기존 4x1 Idle 시트는 기존처럼 0번 프레임만 사용한다.
+	// 신규 6x3 Idle 시트는 18프레임 Idle 애니메이션을 재생한다.
+	if (State == EMonsterState::Idle && !useSixByThree)
 	{
 		CurFrame = 0;
 		return;
 	}
 
+	int currentAniDelay = AniDelay;
+
+	if (useSixByThree)
+	{
+		switch (State)
+		{
+		case EMonsterState::Idle:
+			currentAniDelay = 5;
+			break;
+
+		case EMonsterState::Walk:
+			currentAniDelay = 3;
+			break;
+
+		case EMonsterState::Attack:
+		case EMonsterState::Hit:
+			currentAniDelay = 2;
+			break;
+
+		case EMonsterState::Dead:
+			currentAniDelay = 3;
+			break;
+		}
+	}
+
 	AniTick++;
 
-	if (AniTick < AniDelay)
+	if (AniTick < currentAniDelay)
 	{
 		return;
 	}
@@ -895,6 +979,7 @@ void Monster::Update()
 	{
 		switch (State)
 		{
+		case EMonsterState::Idle:
 		case EMonsterState::Walk:
 			CurFrame = 0;
 			break;
@@ -933,30 +1018,27 @@ void Monster::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		return;
 	}
 
-	int frameW = curInfo->bmWidth / MONSTER_SHEET_COL;
+	int sheetCol = GetMonsterSheetCol(curInfo);
+	int sheetRow = GetMonsterSheetRow(curInfo);
 
-	if (frameW <= 0)
+	if (sheetCol <= 0 || sheetRow <= 0)
 	{
 		return;
 	}
 
-	int rowCount = 1;
+	int frameW = curInfo->bmWidth / sheetCol;
+	int frameH = curInfo->bmHeight / sheetRow;
 
-	if (curInfo->bmHeight % 3 == 0)
-	{
-		int candidateFrameH = curInfo->bmHeight / 3;
-
-		if (candidateFrameH == frameW)
-		{
-			rowCount = 3;
-		}
-	}
-
-	int frameH = curInfo->bmHeight / rowCount;
-
-	if (frameH <= 0)
+	if (frameW <= 0 || frameH <= 0)
 	{
 		return;
+	}
+
+	int frameCount = sheetCol * sheetRow;
+
+	if (frameCount <= 0)
+	{
+		frameCount = 1;
 	}
 
 	if (CurFrame < 0)
@@ -964,9 +1046,9 @@ void Monster::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		CurFrame = 0;
 	}
 
-	if (CurFrame >= MONSTER_SHEET_COL)
+	if (CurFrame >= frameCount)
 	{
-		CurFrame = MONSTER_SHEET_COL - 1;
+		CurFrame = frameCount - 1;
 	}
 
 	if (drawW <= 0)
@@ -979,14 +1061,10 @@ void Monster::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		drawH = frameH;
 	}
 
-	int srcRow = 0;
+	int srcCol = CurFrame % sheetCol;
+	int srcRow = CurFrame / sheetCol;
 
-	if (rowCount == 3)
-	{
-		srcRow = 1;
-	}
-
-	int srcX = CurFrame * frameW;
+	int srcX = srcCol * frameW;
 	int srcY = srcRow * frameH;
 
 	int dstX = PixelPos.x;

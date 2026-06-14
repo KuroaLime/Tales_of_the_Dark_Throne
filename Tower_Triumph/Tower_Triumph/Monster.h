@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Windows.h>
 #include <string>
@@ -16,18 +16,20 @@ class Character;
 // Monster Sprite 설정
 // ============================================================
 
-// 몬스터 스프라이트는 좌우 방향만 사용한다.
-// 실제 BMP는 1행 4프레임 구조로 사용한다.
+// 기존 몬스터 스프라이트는 1행 4프레임 구조를 기본으로 사용한다.
+// 새 몬스터 스프라이트는 6열 x 3행 = 총 18프레임 구조도 지원한다.
 //
 // 예)
-// Skeleton_Idle.bmp
-// [0][1][2][3]
+// Skeleton_Idle.bmp        : 4 x 1 기존 시트
+// FireSlime_Attack.bmp    : 6 x 3 신규 시트
 //
 // 프레임 크기는 Monster.cpp에서 BMP 실제 크기를 이용해 자동 계산한다.
-// frameW = 전체 BMP 가로 / MONSTER_SHEET_COL
-// frameH = 전체 BMP 세로 / MONSTER_SHEET_ROW
 #define MONSTER_SHEET_COL 4
 #define MONSTER_SHEET_ROW 1
+
+#define MONSTER_6X3_SHEET_COL 6
+#define MONSTER_6X3_SHEET_ROW 3
+#define MONSTER_6X3_FRAME_COUNT (MONSTER_6X3_SHEET_COL * MONSTER_6X3_SHEET_ROW)
 
 // TransparentBlt에서 사용할 투명 컬러키
 // BMP 배경은 반드시 순수 마젠타 RGB(255, 0, 255)여야 한다.
@@ -282,7 +284,7 @@ private:
 	// Resource\\Skeleton_Hit.bmp
 	// Resource\\Skeleton_Dead.bmp
 	//
-	// 각 BMP는 1행 4프레임 구조를 기본으로 한다.
+	// 각 BMP는 기존 4x1 또는 신규 6x3 구조를 지원한다.
 	// ------------------------------------------------------------
 	HBITMAP hSpriteIdle;
 	HBITMAP hSpriteWalk;
@@ -307,12 +309,12 @@ private:
 	// 현재 State에 맞는 BITMAP 정보 반환
 	const BITMAP* GetCurrentSpriteInfo() const;
 
-	// 몬스터는 1행 스프라이트만 사용하므로 항상 0을 반환
+	// 현재는 Draw 내부에서 동적 행 계산을 하므로 호환용으로 남겨둔다.
 	int GetDirectionRow() const;
 
 	// 좌우 반전 출력이 필요한지 확인
-	// 기본 가정: 원본 스프라이트는 왼쪽 방향 기준
-	// Right 방향이면 반전한다.
+	// 기본 가정: 신규 원본 스프라이트는 오른쪽 방향 기준
+	// Left 방향이면 반전한다.
 	bool IsNeedFlip() const;
 
 	// 현재 State에 맞게 MaxFrame 설정

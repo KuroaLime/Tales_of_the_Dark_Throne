@@ -4054,8 +4054,9 @@ void Battle_Stage::FocusCameraOnWorldPos(int wx, int wy)
     int minX = halfW;
     int minY = halfH;
 
-    int maxX = BackgroundInfo.bmWidth - halfW;
-    int maxY = BackgroundInfo.bmHeight - halfH;
+    // Use logical grid dimensions (W * TILE_SIZE) because the background is stretched to match them.
+    int maxX = W * TILE_SIZE - halfW;
+    int maxY = H * TILE_SIZE - halfH;
 
     if (maxX < minX)
     {
@@ -4448,15 +4449,18 @@ void Battle_Stage::DrawBackground(HDC hMemDC, HDC hMemDC1)
 
     HBITMAP hOld = (HBITMAP)SelectObject(hMemDC1, hBitBackground);
 
-    BitBlt(
+    // Stretch the background to exactly match the logical grid dimensions (W * TILE_SIZE)
+    StretchBlt(
         hMemDC,
         offsetX,
         offsetY,
-        BackgroundInfo.bmWidth,
-        BackgroundInfo.bmHeight,
+        W * TILE_SIZE,
+        H * TILE_SIZE,
         hMemDC1,
         0,
         0,
+        BackgroundInfo.bmWidth,
+        BackgroundInfo.bmHeight,
         SRCCOPY
     );
 
