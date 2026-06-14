@@ -98,38 +98,44 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	MarkerBattleStageIds.clear();
 
 	URegionMarker* town = new URegionMarker();
-	town->Setup(g_hInst, BackgroundInfo.bmWidth / 2+10, BackgroundInfo.bmHeight / 2-40, L"Source\\SMap\\background\\TOWN_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	town->Setup(g_hInst, BackgroundInfo.bmWidth / 2+10, BackgroundInfo.bmHeight / 2-40, L"Source\\SMap\\background\\TOWN_Marker.bmp");
 	town->SetRegionInfo(L"Town", L"Preparation Camp", L"Manage party, equipment, inventory, skills, and shop before entering a stage.", L"Always available");
+	town->SetIsUnlocked(true); // Town is always open
 	Markers.push_back(town);
 	MarkerBattleStageIds.push_back(0);
 
 	URegionMarker* m1 = new URegionMarker();
-	m1->Setup(g_hInst, 1250, 540, L"Source\\SMap\\background\\MyoG_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	m1->Setup(g_hInst, 1250, 540, L"Source\\SMap\\background\\MyoG_Marker.bmp");
 	m1->SetRegionInfo(L"Stage 01", L"묘지", L"현재 기준이 되는 묘지 전투 스테이지입니다.", L"Graveyard");
+	m1->SetIsUnlocked(GameManager::Get().IsBattleStageUnlocked(1));
 	Markers.push_back(m1);
 	MarkerBattleStageIds.push_back(1);
 
 	URegionMarker* m2 = new URegionMarker();
-	m2->Setup(g_hInst, 440, 280, L"Source\\SMap\\background\\SkySum_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	m2->Setup(g_hInst, 440, 280, L"Source\\SMap\\background\\SkySum_Marker.bmp");
 	m2->SetRegionInfo(L"Stage 02", L"천상 성전", L"공중에 떠 있는 발판과 빈 공간이 있는 스테이지입니다.", L"Heaven");
+	m2->SetIsUnlocked(GameManager::Get().IsBattleStageUnlocked(2));
 	Markers.push_back(m2);
 	MarkerBattleStageIds.push_back(2);
 
 	URegionMarker* m3 = new URegionMarker();
-	m3->Setup(g_hInst, 440, 540, L"Source\\SMap\\background\\GisaSung_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	m3->Setup(g_hInst, 440, 540, L"Source\\SMap\\background\\GisaSung_Marker.bmp");
 	m3->SetRegionInfo(L"Stage 03", L"기본 방", L"기믹 없는 기본 전투 확인용 스테이지입니다.", L"Default");
+	m3->SetIsUnlocked(GameManager::Get().IsBattleStageUnlocked(3));
 	Markers.push_back(m3);
 	MarkerBattleStageIds.push_back(3);
 
 	URegionMarker* m4 = new URegionMarker();
-	m4->Setup(g_hInst, 670, 740, L"Source\\SMap\\background\\Ghost_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	m4->Setup(g_hInst, 670, 740, L"Source\\SMap\\background\\Ghost_Marker.bmp");
 	m4->SetRegionInfo(L"Stage 04", L"바다 폐허", L"물 타일이 이동을 제한하는 해안 전투 스테이지입니다.", L"Sea");
+	m4->SetIsUnlocked(GameManager::Get().IsBattleStageUnlocked(4));
 	Markers.push_back(m4);
 	MarkerBattleStageIds.push_back(4);
 
 	URegionMarker* m5 = new URegionMarker();
-	m5->Setup(g_hInst, 1250, 280, L"Source\\SMap\\background\\LavaMaul_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
+	m5->Setup(g_hInst, 1250, 280, L"Source\\SMap\\background\\LavaMaul_Marker.bmp");
 	m5->SetRegionInfo(L"Stage 05", L"용암지대", L"용암 타일이 피해를 주는 화산 전투 스테이지입니다.", L"Lava");
+	m5->SetIsUnlocked(GameManager::Get().IsBattleStageUnlocked(5));
 	Markers.push_back(m5);
 	MarkerBattleStageIds.push_back(5);
 
