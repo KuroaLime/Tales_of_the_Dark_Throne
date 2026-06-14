@@ -27,7 +27,6 @@ void URegionMarker::Setup(HINSTANCE hInst, int x, int y, const std::wstring& reg
 	iconImage = new UImage();
 	baseIconY = y - 70;
 	iconImage->SetLocation(x, baseIconY);
-	// Frame 0: Closed, Frame 1: Open
 	iconImage->SetFrameFromFile({ L"Source\\SMap\\background\\QuestClosed.bmp", L"Source\\SMap\\background\\QuestOPEN.bmp" });
 	iconImage->SetUIID(101);
 }
@@ -44,12 +43,10 @@ void URegionMarker::Update()
 {
 	if (!bVisible) return;
 
-	// Floating Animation
 	animationTime += 0.05f;
 	int offsetY = (int)(sin(animationTime) * floatingRange);
 	iconImage->SetLocation(Loc.x, baseIconY + offsetY);
 
-	// Scale Interpolation
 	currentScale += (targetScale - currentScale) * 0.2f;
 
 	UContainerWidget::Update();
@@ -66,7 +63,6 @@ void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int off
 	int drawX = (int)((Loc.x - offsetX) * zoom);
 	int drawY = (int)((Loc.y - offsetY) * zoom);
 
-	// Draw Region Image with Scale
 	int scaledSX = (int)(Size.sX * currentScale * zoom);
 	int scaledSY = (int)(Size.sY * currentScale * zoom);
 
@@ -79,13 +75,11 @@ void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int off
 		SelectObject(hMemDC1, old);
 	}
 
-	// Draw Icon Image
 	int iconWorldY = iconImage->GetLocation().y;
 	int iconDrawY = (int)((iconWorldY - offsetY) * zoom);
 	int iconSize = (int)(64 * zoom);
 
 	if (iconImage && !iconImage->GetBitmap().empty()) {
-		// Frame 0: Closed, Frame 1: Open
 		int frame = bIsUnlocked ? 1 : 0;
 		HBITMAP hBit = iconImage->GetBitmap()[frame];
 		BITMAP info = iconImage->GetMapInfo()[frame];

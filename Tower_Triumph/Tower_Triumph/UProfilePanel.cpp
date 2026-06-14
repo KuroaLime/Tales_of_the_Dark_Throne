@@ -21,11 +21,9 @@ void UProfilePanel::Setup(int x, int y)
         Size = bgImage->GetSize();
     }
     bgImage->SetTransColor(RGB(255, 174, 201));
-    // Original's bgImage position was offset relative to Setup(x,y)
     bgImage->SetLocation(Loc.x, Loc.y); 
     AddChild(bgImage);
 
-    // Labels positioned relative to the panel center
     nameLabel = new UTextLabel();
     nameLabel->SetFont(24, FW_BOLD, L"Arial");
     nameLabel->SetLocation(Loc.x-83, Loc.y + 135);
@@ -83,11 +81,9 @@ void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
                 srcH = bm.bmHeight / CHARACTER_SHEET_ROW;
             }
 
-            // Draw illustration centered in the upper part of the panel
             int drawW = srcW;
             int drawH = srcH;
 
-            // Scale down if too large for panel
             float scale = 1.0f;
             if (drawW > 240) scale = 240.0f / drawW;
             if (drawH * scale > 300) scale = 300.0f / drawH;
@@ -96,7 +92,7 @@ void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
             drawH = (int)(drawH * scale);
 
             int drawX = Loc.x - drawW / 2;
-            int drawY = Loc.y - 260; // Adjusted upward
+            int drawY = Loc.y - 260; 
 
             COLORREF transColor = isFallback ? CHARACTER_TRANSPARENT_COLOR : RGB(255, 255, 255);
             TransparentBlt(hMemDC, drawX, drawY, drawW, drawH, hSpriteDC, 0, 0, srcW, srcH, transColor);

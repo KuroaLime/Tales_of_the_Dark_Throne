@@ -27,7 +27,6 @@ public:
     void RemoveItem(AItemBase* item);
     const std::vector<AItemBase*>& GetInventory() const { return Inventory; }
 
-    // 장비 장착 로직
     void EquipArmor(Character* target, class AArmor* newArmor);
     void UnequipArmor(Character* target, EArmorPart part);
 };

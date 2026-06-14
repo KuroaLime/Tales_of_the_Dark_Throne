@@ -43,7 +43,6 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 {
 	if (!bVisible) return;
 
-	// Background
 	HBRUSH bgBrush = CreateSolidBrush(RGB(40, 30, 20));
 	HPEN borderPen = CreatePen(PS_SOLID, 3, RGB(200, 160, 80));
 	HBRUSH oldB = (HBRUSH)SelectObject(hMemDC, bgBrush);
@@ -57,10 +56,8 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 	DeleteObject(bgBrush);
 	DeleteObject(borderPen);
 
-	// Text Info
 	SetBkMode(hMemDC, TRANSPARENT);
 	
-	// Name
 	SetTextColor(hMemDC, RGB(255, 255, 100));
 	HFONT hFont = CreateFont(28, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
 	HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
@@ -68,7 +65,6 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 	DrawTextW(hMemDC, rName.c_str(), -1, &nameRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 	DeleteObject(hFont);
 
-	// Environment
 	SetTextColor(hMemDC, RGB(150, 200, 255));
 	hFont = CreateFont(18, 0, 0, 0, FW_NORMAL, 1, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
 	SelectObject(hMemDC, hFont);
@@ -76,7 +72,6 @@ void URegionInfoPopup::Draw(HDC hMemDC, HDC hMemDC1)
 	DrawTextW(hMemDC, (L"Env: " + rEnv).c_str(), -1, &envRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 	DeleteObject(hFont);
 
-	// Description (Multiline)
 	SetTextColor(hMemDC, RGB(220, 220, 220));
 	hFont = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
 	SelectObject(hMemDC, hFont);

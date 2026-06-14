@@ -18,21 +18,13 @@ void UCanvasPanel::Update(){
 }
 void UCanvasPanel::UpdateMouseHover(int MouseX, int MouseY) {
 	bool bFoundTop = false;
-	// Respect Z-order: Iterate from top-most to bottom-most
 	for (int i = static_cast<int>(Containers.size()) - 1; i >= 0; i--) {
 		if (!bFoundTop) {
 			Containers[i]->UpdateMouseHover(MouseX, MouseY);
-			// If we found a widget under mouse in this container, 
-			// it should block hover for containers below it.
-			// However, our current UpdateMouseHover handles full hierarchy.
-			// For simplicity, let's just let everyone check, 
-			// but we could optimize to block hover for lower containers.
 			if (Containers[i]->FindWidgetUnderMouse(MouseX, MouseY)) {
-				// bFoundTop = true; // Optional: block lower hover
 			}
 		}
 		else {
-			// Reset hover for lower containers
 			Containers[i]->UpdateMouseHover(-9999, -9999);
 		}
 	}

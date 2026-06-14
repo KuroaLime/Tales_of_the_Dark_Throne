@@ -7,8 +7,8 @@ class UButton : public UWidget
 {
 protected:
     bool isPressed;
-    bool isSelected; // Added to indicate active tab/selection
-    bool bEnabled;   // Added to support disabled state
+    bool isSelected;
+    bool bEnabled;  
     std::function<void()> OnClickCallback;
     std::function<void()> OnRightClickCallback;
     std::function<void()> OnHoverCallback;

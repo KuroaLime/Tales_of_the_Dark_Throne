@@ -212,7 +212,6 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
 
-    // 전투 BGM
     SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Fantasy_Battle_Loop_64s.wav", true);
 
     BattleEnded = false;
@@ -228,8 +227,6 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     hBitBackground = nullptr;
 
-    // 배경 파일은 절대 경로를 쓰지 않는다.
-    // Visual Studio 실행 위치가 솔루션 루트일 때와 프로젝트 폴더일 때를 모두 처리한다.
     if (!CurrentMap.backgroundFilePath.empty())
     {
         std::vector<std::wstring> backgroundPathCandidates;
@@ -345,14 +342,11 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         e->Init(start.classType, start.x, start.y);
         e->SetName(start.name);
 
-        // 몬스터 지형 판정용 속성 적용.
-        // Water/SkyVoid 시작 위치 보정 전에 넣어야 FindNearestValidStartTile이 제대로 동작한다.
         if (start.element != EElement::None)
         {
             e->SetElement(start.element);
         }
 
-        // BattleMapData에 적어둔 SPD를 실제 턴 순서에 반영한다.
         if (start.spd > 0)
         {
             CharacterStat stat = e->GetStat();
@@ -369,11 +363,8 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         {
             std::vector<std::wstring> monsterPathCandidates;
 
-            // Character BMP가 Resource\*.bmp에서 로드된다면,
-            // 몬스터는 그 아래 Monster 폴더에서 로드한다.
             monsterPathCandidates.push_back(L"Resource\\Monster");
 
-            // 실행 위치가 솔루션 루트/상위 폴더로 잡힌 경우까지 대응.
             monsterPathCandidates.push_back(L"Tower_Triumph\\Tower_Triumph\\Resource\\Monster");
             monsterPathCandidates.push_back(L"Tower_Triumph\\Resource\\Monster");
             monsterPathCandidates.push_back(L"..\\Tower_Triumph\\Tower_Triumph\\Resource\\Monster");
@@ -424,9 +415,6 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     ResetTurnActions();
 
-    // 첫 진입 카메라는 보간 없이 즉시 시작 위치로 맞춘다.
-    // 기존 FocusCameraOnGrid는 camPosX/Y가 0인 상태에서 0.1 보간을 해서
-    // 실제 캐릭터 시작 위치가 화면 밖으로 밀려 보일 수 있었다.
     {
         int halfW = rects.right / 2;
         int halfH = rects.bottom / 2;
@@ -670,9 +658,6 @@ void Battle_Stage::Update(HWND hWnd)
                 }
                 else
                 {
-                    // The current moving unit can be removed by terrain damage.
-                    // In that case, do not call NextTurn(), because the next unit is
-                    // already at the front of the turn queue after RemoveDeadUnits().
                     turnSystem->RemoveDeadUnits();
                 }
             }
@@ -1285,7 +1270,11 @@ void Battle_Stage::CheckBattleEnd()
         int clearedStageId = GameManager::Get().GetCurrentBattleStageId();
         int nextStageId = clearedStageId + 1;
 
-        if (nextStageId > 5)
+        if (clearedStageId >= 1 && clearedStageId <= 3)
+        {
+            nextStageId = 5;
+        }
+        else if (nextStageId > 5)
         {
             nextStageId = 5;
         }
@@ -1472,11 +1461,9 @@ bool Battle_Stage::IsBlockedTile(int gx, int gy, Character* unit) const
     switch (type)
     {
     case ETileType::Water:
-        // 바다/물 타일은 수속성 유닛만 이동 가능.
         return !(unit != nullptr && unit->GetElement() == EElement::Water);
 
     case ETileType::SkyVoid:
-        // 천상/공중 빈 공간은 빛속성 유닛만 이동 가능.
         return !(unit != nullptr && unit->GetElement() == EElement::Light);
 
     case ETileType::Building:
@@ -1541,7 +1528,6 @@ void Battle_Stage::ApplyTileEffect(Character* unit)
 
     ETileType type = GetTileType(pos.x, pos.y);
 
-    // 용암은 누구나 밟을 수 있지만, 불속성은 피해를 받지 않는다.
     if (type == ETileType::Lava && unit->GetElement() == EElement::Fire)
     {
         return;
@@ -1948,19 +1934,17 @@ void Battle_Stage::ReleaseSkillEffectBitmaps()
 
 int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
 {
-    // The effect sheet frames are tall, so reduce width aggressively.
-    // Height is calculated from the source frame ratio in DrawSkillEffects().
     switch (areaType)
     {
     case ESkillAreaType::Splash2:
-        return TILE_SIZE * 5 / 2;      // Wide skill: about 2.5 tiles wide
+        return TILE_SIZE * 5 / 2;
     case ESkillAreaType::Splash1:
-        return TILE_SIZE * 7 / 4;      // Small area skill: about 1.75 tiles wide
+        return TILE_SIZE * 7 / 4; 
     case ESkillAreaType::Line:
-        return TILE_SIZE * 2;          // Line skill: about 2 tiles wide
+        return TILE_SIZE * 2;        
     case ESkillAreaType::Single:
     default:
-        return TILE_SIZE * 3 / 2;      // Single target: about 1.5 tiles wide
+        return TILE_SIZE * 3 / 2;     
     }
 }
 
@@ -2856,7 +2840,6 @@ bool Battle_Stage::UseSelectedBattleSkill(Character* user, Character* target)
     Location userPos = user->GetGridPos();
     Location targetPos = target->GetGridPos();
 
-    // Skill effects are anchored to the selected target tile, not the caster tile.
     PlaySkillEffect(SelectedBattleSkillID, targetPos.x, targetPos.y, info->AreaType);
 
     user->LookAtGrid(targetPos.x, targetPos.y);
@@ -4074,7 +4057,6 @@ void Battle_Stage::DrawBlockedMoveRange(HDC hMemDC)
             }
             else if (damageTile)
             {
-                // 이동은 가능하지만 피해가 들어가는 타일은 X 대신 마름모로 표시한다.
                 MoveToEx(hMemDC, sx + TILE_SIZE / 2, sy + 10, NULL);
                 LineTo(hMemDC, sx + TILE_SIZE - 10, sy + TILE_SIZE / 2);
                 LineTo(hMemDC, sx + TILE_SIZE / 2, sy + TILE_SIZE - 10);
@@ -4120,7 +4102,6 @@ void Battle_Stage::FocusCameraOnWorldPos(int wx, int wy)
     int minX = halfW;
     int minY = halfH;
 
-    // Use logical grid dimensions (W * TILE_SIZE) because the background is stretched to match them.
     int maxX = W * TILE_SIZE - halfW;
     int maxY = H * TILE_SIZE - halfH;
 
@@ -4515,7 +4496,6 @@ void Battle_Stage::DrawBackground(HDC hMemDC, HDC hMemDC1)
 
     HBITMAP hOld = (HBITMAP)SelectObject(hMemDC1, hBitBackground);
 
-    // Stretch the background to exactly match the logical grid dimensions (W * TILE_SIZE)
     StretchBlt(
         hMemDC,
         offsetX,

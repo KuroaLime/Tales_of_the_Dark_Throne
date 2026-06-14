@@ -20,33 +20,25 @@ void ACamera::Reset() {
     targetZoom = 1.5f;
 }
 void ACamera::Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT) {
-    // Smooth zoom transition
     currentZoom += (targetZoom - currentZoom) * 0.1f;
 
-    // Center on the target point (PointGrid is in tile units, so convert to pixels)
     float targetX = (float)(PointGridX * TILE_SIZE - (WIN_WIDTH / 2.0f) / currentZoom);
     float targetY = (float)(PointGridY * TILE_SIZE - (WIN_HEIGHT / 2.0f) / currentZoom);
 
-    // Map pixel dimensions
     float mapW = (float)TILE_W * TILE_SIZE;
     float mapH = (float)TILE_H * TILE_SIZE;
     
-    // Viewport dimensions in world space
     float viewW = (float)WIN_WIDTH / currentZoom;
     float viewH = (float)WIN_HEIGHT / currentZoom;
 
-    // Horizontal bounds
     if (mapW <= viewW) {
-        // Map is smaller than screen; center it
         targetX = (mapW - viewW) / 2.0f;
     } else {
         if (targetX < 0) targetX = 0;
         if (targetX > (mapW - viewW)) targetX = mapW - viewW;
     }
 
-    // Vertical bounds
     if (mapH <= viewH) {
-        // Map is smaller than screen; center it
         targetY = (mapH - viewH) / 2.0f;
     } else {
         if (targetY < 0) targetY = 0;

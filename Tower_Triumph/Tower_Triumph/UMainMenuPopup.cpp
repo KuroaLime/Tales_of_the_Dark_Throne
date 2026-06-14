@@ -50,8 +50,6 @@ void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
     Loc.x = clientRect.right / 2;
     Loc.y = clientRect.bottom / 2;
 
-    // 친구 코드 방식: UI를 직접 그리는 대신 레이어 컨테이너에 등록해두고
-    // 상태 전환은 SetVisible로 처리한다.
     navLayer = new UContainerWidget();
     navLayer->SetSize(0, 0);
     navLayer->SetLocation(Loc.x, Loc.y);
@@ -375,8 +373,6 @@ void UMainMenuPopup::UpdateInventoryGrid()
 
 void UMainMenuPopup::UpdateEquipmentSlots()
 {
-    // 상태 화면에서는 UStatePanel 안에 장비 정보가 이미 표시된다.
-    // 별도의 큰 장비 버튼을 같이 띄우면 캐릭터 선택 버튼과 겹치므로 숨긴다.
     for (auto b : equipSlotButtons)
     {
         if (b)
@@ -417,7 +413,6 @@ void UMainMenuPopup::ShowTargetSelection()
     int panelCenterX = Loc.x;
     int panelCenterY = Loc.y;
 
-    // 5명 + 취소 버튼을 한 줄에 모두 넣으면 패널 밖으로 튀어나가므로 3열 2행으로 배치한다.
     const int panelW = 820;
     const int panelH = 300;
     const int colCount = 3;
@@ -731,7 +726,6 @@ void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
     DeleteObject(panelBrush);
     DeleteObject(panelPen);
 
-    // 텍스트/버튼/패널은 Setup에서 만든 레이어 위젯들이 그린다.
     DrawSubMenuBackgrounds(hMemDC);
     UContainerWidget::Draw(hMemDC, hMemDC1);
 
@@ -742,12 +736,10 @@ void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
 
 void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
 {
-    // 친구식 레이어 구조로 전환됨: guideLabel / UProfilePanel / UStatePanel이 출력 담당.
 }
 
 void UMainMenuPopup::DrawInventory(HDC hMemDC)
 {
-    // 친구식 레이어 구조로 전환됨: invTitleLabel / invGuideLabel / invEmptyLabel / item buttons가 출력 담당.
 }
 
 void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)

@@ -29,7 +29,6 @@ void ULocationIndicator::Draw(HDC hMemDC, HDC hMemDC1)
 {
     if (!bVisible) return;
 
-    // 1. Semi-transparent background
     HDC hTempDC = CreateCompatibleDC(hMemDC);
     HBITMAP hTempBit = CreateCompatibleBitmap(hMemDC, Size.sX, Size.sY);
     HBITMAP hOldBit = (HBITMAP)SelectObject(hTempDC, hTempBit);
@@ -42,7 +41,7 @@ void ULocationIndicator::Draw(HDC hMemDC, HDC hMemDC1)
     BLENDFUNCTION bf;
     bf.BlendOp = AC_SRC_OVER;
     bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = 160; // ~60%
+    bf.SourceConstantAlpha = 160; 
     bf.AlphaFormat = 0;
 
     AlphaBlend(hMemDC, Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Size.sX, Size.sY,
@@ -52,7 +51,6 @@ void ULocationIndicator::Draw(HDC hMemDC, HDC hMemDC1)
     DeleteObject(hTempBit);
     DeleteDC(hTempDC);
 
-    // 2. Thumbnail
     int drawX = Loc.x - Size.sX / 2 + 10;
     int drawY = Loc.y - Size.sY / 2 + 10;
     int thumbSize = 80;
@@ -69,7 +67,6 @@ void ULocationIndicator::Draw(HDC hMemDC, HDC hMemDC1)
         DeleteObject(hB);
     }
 
-    // 3. Text
     int textX = drawX + thumbSize + 20;
     SetBkMode(hMemDC, TRANSPARENT);
     

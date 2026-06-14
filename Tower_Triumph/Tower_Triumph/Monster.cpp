@@ -1,11 +1,9 @@
-#include "Monster.h"
+﻿#include "Monster.h"
 #include "Character.h"
 #include "SoundManager.h"
+#include "SkillData.h"
 
 
-// ============================================================
-// 몬스터 스프라이트 시트 판정 유틸
-// ============================================================
 
 static bool IsMonsterSixByThreeSheet(const BITMAP* info)
 {
@@ -22,8 +20,6 @@ static bool IsMonsterSixByThreeSheet(const BITMAP* info)
 		return false;
 	}
 
-	// 6x3 몬스터 시트는 보통 한 칸이 거의 정사각형이다.
-	// 이미지 생성본처럼 1~2px 정도 안 맞을 수 있으니 25% 오차를 허용한다.
 	int diff = abs(frameW - frameH);
 	int bigger = (frameW > frameH) ? frameW : frameH;
 
@@ -56,9 +52,6 @@ static int GetMonsterFrameCount(const BITMAP* info)
 }
 
 
-// ============================================================
-// 생성자 / 소멸자
-// ============================================================
 
 Monster::Monster()
 {
@@ -69,6 +62,7 @@ Monster::Monster()
 	AIType = EMonsterAIType::None;
 	AIState = EMonsterAIState::Wait;
 	Direction = EMonsterDirection::Left;
+	Element = EElement::None;
 
 	IsBossMonster = false;
 
@@ -120,10 +114,6 @@ Monster::~Monster()
 	Release();
 }
 
-// ============================================================
-// 이동 생성자 / 이동 대입 연산자
-// HBITMAP 중복 삭제 방지용
-// ============================================================
 
 Monster::Monster(Monster&& other) noexcept
 {
@@ -134,6 +124,7 @@ Monster::Monster(Monster&& other) noexcept
 	AIType = other.AIType;
 	AIState = other.AIState;
 	Direction = other.Direction;
+	Element = other.Element;
 
 	IsBossMonster = other.IsBossMonster;
 
@@ -202,6 +193,7 @@ Monster& Monster::operator=(Monster&& other) noexcept
 	AIType = other.AIType;
 	AIState = other.AIState;
 	Direction = other.Direction;
+	Element = other.Element;
 
 	IsBossMonster = other.IsBossMonster;
 
@@ -256,9 +248,6 @@ Monster& Monster::operator=(Monster&& other) noexcept
 	return *this;
 }
 
-// ============================================================
-// 초기화 / 해제
-// ============================================================
 
 void Monster::Init(EMonsterType monsterType, int gridX, int gridY)
 {
@@ -267,6 +256,7 @@ void Monster::Init(EMonsterType monsterType, int gridX, int gridY)
 	State = EMonsterState::Idle;
 	AIState = EMonsterAIState::Wait;
 	Direction = EMonsterDirection::Left;
+	Element = EElement::None;
 
 	GridPos.x = gridX;
 	GridPos.y = gridY;
@@ -345,17 +335,16 @@ void Monster::Release()
 	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
 }
 
-// ============================================================
-// 몬스터 타입별 기본값
-// ============================================================
 
 void Monster::InitMonsterValue()
 {
 	IsBossMonster = false;
+	Element = EElement::None;
 
 	switch (Type)
 	{
 	case EMonsterType::Slime:
+		Element = EElement::Water;
 		Stat.MaxHP = 40;
 		Stat.CurHP = 40;
 		Stat.MaxMP = 0;
@@ -376,6 +365,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Goblin:
+		Element = EElement::Grass;
 		Stat.MaxHP = 55;
 		Stat.CurHP = 55;
 		Stat.MaxMP = 0;
@@ -396,6 +386,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Skeleton:
+		Element = EElement::Dark;
 		Stat.MaxHP = 70;
 		Stat.CurHP = 70;
 		Stat.MaxMP = 0;
@@ -416,6 +407,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Zombie:
+		Element = EElement::Dark;
 		Stat.MaxHP = 95;
 		Stat.CurHP = 95;
 		Stat.MaxMP = 0;
@@ -436,6 +428,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Ghost:
+		Element = EElement::Dark;
 		Stat.MaxHP = 55;
 		Stat.CurHP = 55;
 		Stat.MaxMP = 30;
@@ -456,6 +449,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::DarkKnight:
+		Element = EElement::Dark;
 		Stat.MaxHP = 130;
 		Stat.CurHP = 130;
 		Stat.MaxMP = 20;
@@ -476,6 +470,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::FireSlime:
+		Element = EElement::Fire;
 		Stat.MaxHP = 60;
 		Stat.CurHP = 60;
 		Stat.MaxMP = 0;
@@ -496,6 +491,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::LavaGolem:
+		Element = EElement::Fire;
 		Stat.MaxHP = 160;
 		Stat.CurHP = 160;
 		Stat.MaxMP = 0;
@@ -516,6 +512,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::FlameDemon:
+		Element = EElement::Fire;
 		Stat.MaxHP = 120;
 		Stat.CurHP = 120;
 		Stat.MaxMP = 60;
@@ -536,6 +533,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::SeaSlime:
+		Element = EElement::Water;
 		Stat.MaxHP = 50;
 		Stat.CurHP = 50;
 		Stat.MaxMP = 0;
@@ -556,6 +554,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Mermaid:
+		Element = EElement::Water;
 		Stat.MaxHP = 75;
 		Stat.CurHP = 75;
 		Stat.MaxMP = 45;
@@ -576,6 +575,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::SeaSerpent:
+		Element = EElement::Water;
 		Stat.MaxHP = 140;
 		Stat.CurHP = 140;
 		Stat.MaxMP = 30;
@@ -596,6 +596,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Harpy:
+		Element = EElement::Light;
 		Stat.MaxHP = 65;
 		Stat.CurHP = 65;
 		Stat.MaxMP = 0;
@@ -616,6 +617,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::AngelGuardian:
+		Element = EElement::Light;
 		Stat.MaxHP = 110;
 		Stat.CurHP = 110;
 		Stat.MaxMP = 40;
@@ -636,6 +638,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::SkySpirit:
+		Element = EElement::Light;
 		Stat.MaxHP = 70;
 		Stat.CurHP = 70;
 		Stat.MaxMP = 50;
@@ -656,6 +659,7 @@ void Monster::InitMonsterValue()
 		break;
 
 	case EMonsterType::Boss:
+		Element = EElement::Dark;
 		Stat.MaxHP = 300;
 		Stat.CurHP = 300;
 		Stat.MaxMP = 100;
@@ -688,9 +692,6 @@ void Monster::InitMonsterValue()
 	}
 }
 
-// ============================================================
-// 스프라이트 로드
-// ============================================================
 
 HBITMAP Monster::LoadBitmapFromFile(const std::wstring& filePath, BITMAP* outInfo)
 {
@@ -805,9 +806,6 @@ HBITMAP Monster::GetSpriteIdle() const
 	return hSpriteIdle;
 }
 
-// ============================================================
-// 현재 상태에 맞는 스프라이트 반환
-// ============================================================
 
 HBITMAP Monster::GetCurrentSprite() const
 {
@@ -872,8 +870,6 @@ int Monster::GetDirectionRow() const
 
 bool Monster::IsNeedFlip() const
 {
-	// 신규 몬스터 스프라이트 원본은 오른쪽 방향 기준이다.
-	// 따라서 왼쪽 방향으로 출력할 때만 좌우 반전한다.
 	return Direction == EMonsterDirection::Left;
 }
 
@@ -894,9 +890,6 @@ void Monster::UpdateMaxFrameByState()
 	}
 }
 
-// ============================================================
-// Update / Draw
-// ============================================================
 
 void Monster::Update()
 {
@@ -933,8 +926,6 @@ void Monster::Update()
 	const BITMAP* curInfo = GetCurrentSpriteInfo();
 	bool useSixByThree = IsMonsterSixByThreeSheet(curInfo);
 
-	// 기존 4x1 Idle 시트는 기존처럼 0번 프레임만 사용한다.
-	// 신규 6x3 Idle 시트는 18프레임 Idle 애니메이션을 재생한다.
 	if (State == EMonsterState::Idle && !useSixByThree)
 	{
 		CurFrame = 0;
@@ -1148,9 +1139,6 @@ void Monster::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 	SelectObject(hMemDC1, hOldBitmap);
 }
 
-// ============================================================
-// 상태
-// ============================================================
 
 void Monster::SetState(EMonsterState newState)
 {
@@ -1167,7 +1155,6 @@ void Monster::SetState(EMonsterState newState)
 
 	UpdateMaxFrameByState();
 
-	// 몬스터 상태별 효과음
 	std::wstring soundFolder = L"Resource\\Sound\\";
 	std::wstring prefix = GetMonsterPrefix();
 
@@ -1236,9 +1223,6 @@ void Monster::SetIsActionEnd(bool value)
 	IsActionEnd = value;
 }
 
-// ============================================================
-// ID / 타입
-// ============================================================
 
 void Monster::SetMonsterID(int id)
 {
@@ -1255,6 +1239,21 @@ EMonsterType Monster::GetMonsterType() const
 	return Type;
 }
 
+void Monster::SetElement(EElement newElement)
+{
+	Element = newElement;
+}
+
+EElement Monster::GetElement() const
+{
+	return Element;
+}
+
+std::wstring Monster::GetElementName() const
+{
+	return SkillData::GetElementName(Element);
+}
+
 bool Monster::GetIsBossMonster() const
 {
 	return IsBossMonster;
@@ -1265,9 +1264,6 @@ void Monster::SetIsBossMonster(bool value)
 	IsBossMonster = value;
 }
 
-// ============================================================
-// 위치
-// ============================================================
 
 void Monster::SetGridPos(int gx, int gy)
 {
@@ -1374,9 +1370,6 @@ bool Monster::MoveToGrid(int targetX, int targetY)
 	return true;
 }
 
-// ============================================================
-// 스탯
-// ============================================================
 
 MonsterStat Monster::GetStat() const
 {
@@ -1483,9 +1476,6 @@ void Monster::SetAttackRange(int newRange)
 	}
 }
 
-// ============================================================
-// 보상
-// ============================================================
 
 MonsterReward Monster::GetReward() const
 {
@@ -1506,10 +1496,6 @@ void Monster::SetReward(const MonsterReward& newReward)
 		Reward.DropRate = 100;
 	}
 }
-
-// ============================================================
-// 전투 판정
-// ============================================================
 
 bool Monster::IsAlive() const
 {
@@ -1543,7 +1529,17 @@ int Monster::CalcAttackDamage(const Character& target) const
 {
 	CharacterStat targetStat = target.GetStat();
 
-	int damage = Stat.STR * 2 - targetStat.DEF;
+	int attackPower = Stat.STR * 2;
+
+	if (AIType == EMonsterAIType::Caster && Stat.INT > Stat.STR)
+	{
+		attackPower = Stat.INT * 2;
+	}
+
+	int damage = attackPower - targetStat.DEF;
+
+	float elementRate = SkillData::GetElementRate(Element, target.GetElement());
+	damage = (int)(damage * elementRate);
 
 	if (damage < 1)
 	{
@@ -1587,9 +1583,6 @@ void Monster::Die()
 	AIState = EMonsterAIState::Dead;
 }
 
-// ============================================================
-// AI 보조
-// ============================================================
 
 void Monster::LookAtGrid(int targetX, int targetY)
 {

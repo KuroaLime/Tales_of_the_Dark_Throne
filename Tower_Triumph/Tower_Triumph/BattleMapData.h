@@ -39,14 +39,10 @@ struct SBattleStartInfo
     int y = 0;
     int spd = 0;
 
-    // 비어 있으면 기존 Warrior/Archer/Mage 스프라이트를 사용한다.
-    // 값이 있으면 Resource\Monster 아래의 단일 6x3 몬스터 시트를 사용한다.
     std::wstring monsterSheetFile = L"";
 
-    // 원본 스프라이트가 오른쪽을 보고 있으면 true, 왼쪽을 보고 있으면 false.
     bool monsterSourceFacesRight = true;
 
-    // 몬스터 지형 판정용 속성. None이면 직업 기본 속성을 유지한다.
     EElement element = EElement::None;
 };
 

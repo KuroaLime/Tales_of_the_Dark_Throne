@@ -240,8 +240,6 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         return;
     }
 
-    // 적군은 몬스터 6x3 시트를 직접 잘라 쓰지 않고,
-    // 턴 표시 전용 단일 BMP를 사용한다.
     if (isEnemy)
     {
         std::wstring iconFileName = GetEnemyTurnIconFileName(owner->GetName());

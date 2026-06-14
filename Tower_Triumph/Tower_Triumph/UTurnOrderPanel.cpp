@@ -9,9 +9,6 @@ UTurnOrderPanel::UTurnOrderPanel()
 
 UTurnOrderPanel::~UTurnOrderPanel()
 {
-    // icons 벡터는 자식 포인터를 복사해서 가지고 있었으므로,
-    // 부모인 UContainerWidget의 소멸자가 ClearChildren(true)를 호출할 때 
-    // 실제 객체들이 삭제됩니다. 여기서는 icons만 비워줍니다.
     icons.clear();
 }
 
@@ -58,7 +55,6 @@ void UTurnOrderPanel::RefreshIcons()
 {
     if (!logicSystem) return;
 
-    // Clear old icons using parent's method to avoid double-delete
     ClearChildren(true);
     icons.clear();
     lastKnownOrder.clear();
@@ -92,7 +88,6 @@ void UTurnOrderPanel::Draw(HDC hMemDC, HDC hMemDC1)
 {
     if (!bVisible) return;
 
-    // Draw Semi-transparent background
     HBRUSH hBrush = CreateSolidBrush(RGB(12, 14, 20));
     RECT barRect = { 0, Loc.y - 60, Size.sX, Loc.y + 60 };
     FillRect(hMemDC, &barRect, hBrush);

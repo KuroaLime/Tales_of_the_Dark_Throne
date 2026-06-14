@@ -42,7 +42,6 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 
 	GetClientRect(hWnd, &rects);
 
-	// 월드맵/스테이지 선택 BGM
 	SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Stage_Map_Loop_42s.wav", true);
 	
 	hBitBackground = (HBITMAP)LoadImageW(
@@ -104,7 +103,7 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	URegionMarker* town = new URegionMarker();
 	town->Setup(g_hInst, BackgroundInfo.bmWidth / 2+10, BackgroundInfo.bmHeight / 2-40, L"Source\\SMap\\background\\TOWN_Marker.bmp");
 	town->SetRegionInfo(L"Town", L"Preparation Camp", L"Manage party, equipment, inventory, skills, and shop before entering a stage.", L"Always available");
-	town->SetIsUnlocked(true); // Town is always open
+	town->SetIsUnlocked(true); 
 	Markers.push_back(town);
 	MarkerBattleStageIds.push_back(0);
 

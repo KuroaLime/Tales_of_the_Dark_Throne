@@ -16,7 +16,6 @@ void UContainerWidget::Init() {
 void UContainerWidget::Draw(HDC hMemDC, HDC hMemDC1) {
 	if (!bVisible) return;
 
-	// 배경 그림 그리기
 	if (!bBitmap.empty()) {
 		HBITMAP temp = (HBITMAP)SelectObject(hMemDC1, bBitmap[CurAni]);
 		TransparentBlt(hMemDC, Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Size.sX, Size.sY, hMemDC1, 0, 0, bMapinfo[CurAni].bmWidth, bMapinfo[CurAni].bmHeight, RGB(255, 255, 255));
@@ -89,7 +88,6 @@ void UContainerWidget::ClearChildren(bool bDelete)
 {
 	if (bDelete)
 	{
-		// 복사본을 만들어 순회하며 삭제 (삭제 과정에서 Contents가 변할 가능성 대비)
 		std::vector<UWidget*> temp = Contents;
 		Contents.clear(); 
 		for (auto child : temp)

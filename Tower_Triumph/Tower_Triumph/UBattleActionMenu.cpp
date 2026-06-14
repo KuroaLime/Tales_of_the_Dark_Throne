@@ -17,7 +17,6 @@ UBattleActionMenu::UBattleActionMenu()
 
 UBattleActionMenu::~UBattleActionMenu()
 {
-    // Contents vector in UContainerWidget will handle deletion.
 }
 
 void UBattleActionMenu::Init()

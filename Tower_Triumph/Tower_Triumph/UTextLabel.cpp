@@ -3,7 +3,7 @@
 UTextLabel::UTextLabel()
 {
     hFont = NULL;
-    TextColor = RGB(255, 255, 255); // Default white
+    TextColor = RGB(255, 255, 255);
     TextAlignFlags = DT_LEFT | DT_VCENTER | DT_SINGLELINE;
 }
 
@@ -32,13 +32,11 @@ void UTextLabel::Draw(HDC hMemDC, HDC hMemDC1)
 
     RECT drawRect = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
 
-    // Draw shadow
     SetTextColor(hMemDC, RGB(0, 0, 0));
     RECT shadowRect = drawRect;
     OffsetRect(&shadowRect, 2, 2);
     DrawTextW(hMemDC, Text.c_str(), -1, &shadowRect, TextAlignFlags);
 
-    // Draw main text
     SetTextColor(hMemDC, TextColor);
     DrawTextW(hMemDC, Text.c_str(), -1, &drawRect, TextAlignFlags);
 

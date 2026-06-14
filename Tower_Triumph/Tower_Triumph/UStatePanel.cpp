@@ -42,7 +42,6 @@ void UStatePanel::Setup(int x, int y)
     bgImage->SetLocation(Loc.x, Loc.y);
     AddChild(bgImage);
 
-    // Coordinates are based on the imported CharacterUI_State.bmp skin.
     SetupLabel(weaponLabel, Loc.x, Loc.y - 156, 260, 28, 20, FW_BOLD, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(armorLabel, Loc.x, Loc.y - 109, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     SetupLabel(accessoryLabel, Loc.x, Loc.y - 84, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);

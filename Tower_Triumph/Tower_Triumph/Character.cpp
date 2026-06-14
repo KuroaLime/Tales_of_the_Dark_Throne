@@ -17,17 +17,12 @@ static bool IsCharacterSixByThreeSheet(const BITMAP* info)
 		return false;
 	}
 
-	// 6x3 시트는 보통 한 칸이 거의 정사각형이다.
-	// 이미지 생성본처럼 1~2px 정도 맞지 않아도 받을 수 있도록 25% 오차를 허용한다.
 	int diff = abs(frameW - frameH);
 	int bigger = (frameW > frameH) ? frameW : frameH;
 
 	return diff * 4 <= bigger;
 }
 
-// ============================================================
-// 생성자 / 소멸자
-// ============================================================
 
 Character::Character()
 {
@@ -105,10 +100,6 @@ Character::~Character()
 	Release();
 }
 
-// ============================================================
-// 이동 생성자 / 이동 대입 연산자
-// HBITMAP 중복 삭제 방지용
-// ============================================================
 
 Character::Character(Character&& other) noexcept
 {
@@ -289,9 +280,6 @@ Character& Character::operator=(Character&& other) noexcept
 	return *this;
 }
 
-// ============================================================
-// 초기화 / 해제
-// ============================================================
 
 void Character::Init(ECharacterClass classType, int gridX, int gridY)
 {
@@ -405,9 +393,6 @@ void Character::Release()
 	bSpriteFacesRight = true;
 }
 
-// ============================================================
-// 직업별 기본값
-// ============================================================
 
 void Character::InitClassValue()
 {
@@ -485,9 +470,6 @@ void Character::InitClassValue()
 	RebuildSkillsFromClassElement();
 }
 
-// ============================================================
-// 스프라이트 로드
-// ============================================================
 
 HBITMAP Character::LoadBitmapFromFile(const std::wstring& filePath, BITMAP* outInfo)
 {
@@ -596,9 +578,6 @@ bool Character::LoadMonsterSheet(const std::wstring& folderPath, const std::wstr
 		return false;
 	}
 
-	// 몬스터는 한 BMP 안에 Idle / Attack / Hit / Dead가 모두 들어있다.
-	// 그래서 모든 상태 핸들이 같은 HBITMAP을 공유한다.
-	// Release()는 중복 핸들을 감지해서 DeleteObject를 1번만 수행한다.
 	hSpriteIdle = hSheet;
 	hSpriteWalk = hSheet;
 	hSpriteAttack = hSheet;
@@ -646,9 +625,6 @@ const BITMAP* Character::GetIllustrationInfo() const
 	return &SpriteInfoIllustration;
 }
 
-// ============================================================
-// 현재 상태에 맞는 스프라이트 반환
-// ============================================================
 
 HBITMAP Character::GetCurrentSprite() const
 {
@@ -729,8 +705,6 @@ int Character::GetDirectionRow() const
 
 bool Character::IsNeedFlip() const
 {
-	// 일반 캐릭터 스프라이트는 오른쪽 방향 기준이다.
-	// 몬스터 시트는 파일마다 원본 방향이 다르므로 BattleMapData에서 받은 기준을 사용한다.
 	if (bUseMonsterSheetLayout)
 	{
 		return bSpriteFacesRight ? (Direction == EDirection::Left) : (Direction == EDirection::Right);
@@ -752,12 +726,12 @@ void Character::UpdateMaxFrameByState()
 		case ECharacterState::Attack:
 		case ECharacterState::Skill:
 		case ECharacterState::Defend:
-			MaxFrame = CHARACTER_6X3_SHEET_COL; // 6프레임
+			MaxFrame = CHARACTER_6X3_SHEET_COL; 
 			break;
 
 		case ECharacterState::Hit:
 		case ECharacterState::Dead:
-			MaxFrame = 3; // Hit 3프레임 / Dead 3프레임
+			MaxFrame = 3;
 			break;
 
 		default:
@@ -785,9 +759,6 @@ void Character::UpdateMaxFrameByState()
 	}
 }
 
-// ============================================================
-// Update / Draw
-// ============================================================
 
 void Character::Update()
 {
@@ -823,8 +794,6 @@ void Character::Update()
 
 	if (State == ECharacterState::Idle)
 	{
-		// 몬스터 6x3 시트는 Idle 6프레임을 재생한다.
-		// 기존 4프레임 이하 Idle 시트는 예전처럼 0프레임에 고정한다.
 		if (!bUseMonsterSheetLayout && !IsCharacterSixByThreeSheet(GetCurrentSpriteInfo()))
 		{
 			CurFrame = 0;
@@ -916,13 +885,13 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 
 	if (useSixByThree)
 	{
-		// 6x3 시트는 18프레임 전체를 사용한다.
+		
 		sheetCol = CHARACTER_6X3_SHEET_COL;
 		sheetRow = CHARACTER_6X3_SHEET_ROW;
 	}
 	else
 	{
-		// 기존 4x3 임시 시트 대응.
+		
 		if (curInfo->bmHeight % 3 == 0)
 		{
 			int tempFrameW = curInfo->bmWidth / CHARACTER_SHEET_COL;
@@ -970,8 +939,6 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 
 	if (bUseMonsterSheetLayout)
 	{
-		// 몬스터 단일 6x3 시트 구조:
-		// 0행 Idle, 1행 Attack, 2행 앞 3칸 Hit, 2행 뒤 3칸 Dead.
 		switch (State)
 		{
 		case ECharacterState::Attack:
@@ -1001,13 +968,11 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 	}
 	else if (useSixByThree)
 	{
-		// 일반 6x3 시트는 왼쪽 위부터 오른쪽 아래까지 18프레임을 순서대로 재생한다.
 		srcCol = CurFrame % sheetCol;
 		srcRow = CurFrame / sheetCol;
 	}
 	else
 	{
-		// 기존 4x3 시트는 가운데 줄을 좌우 방향으로 사용한다.
 		srcCol = CurFrame;
 		srcRow = (sheetRow == 3) ? 1 : 0;
 	}
@@ -1095,9 +1060,6 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 	SelectObject(hMemDC1, hOldBitmap);
 }
 
-// ============================================================
-// 상태
-// ============================================================
 
 void Character::SetState(ECharacterState newState)
 {
@@ -1114,7 +1076,6 @@ void Character::SetState(ECharacterState newState)
 
 	UpdateMaxFrameByState();
 
-	// 캐릭터 상태별 효과음
 	switch (newState)
 	{
 	case ECharacterState::Attack:
@@ -1164,9 +1125,6 @@ void Character::SetIsActionEnd(bool value)
 	IsActionEnd = value;
 }
 
-// ============================================================
-// ID / 이름 / 직업 / 속성
-// ============================================================
 
 void Character::SetCharacterID(int id)
 {
@@ -1209,9 +1167,6 @@ std::wstring Character::GetElementName() const
 	return SkillData::GetElementName(Element);
 }
 
-// ============================================================
-// 위치
-// ============================================================
 
 void Character::SetGridPos(int gx, int gy)
 {
@@ -1318,9 +1273,6 @@ bool Character::MoveToGrid(int targetX, int targetY)
 	return true;
 }
 
-// ============================================================
-// 스탯
-// ============================================================
 
 CharacterStat Character::GetStat() const
 {
@@ -1507,9 +1459,6 @@ void Character::SetAP(int newAP)
 	}
 }
 
-// ============================================================
-// 장비
-// ============================================================
 
 CharacterEquipment Character::GetEquipment() const
 {
@@ -1536,9 +1485,6 @@ void Character::SetAccessoryID(int itemID)
 	Equip.AccessoryID = itemID;
 }
 
-// ============================================================
-// 스킬
-// ============================================================
 
 void Character::AddSkillID(int skillID)
 {
@@ -1652,9 +1598,6 @@ void Character::ClearEquippedSkills()
 	}
 }
 
-// ============================================================
-// 전투 판정
-// ============================================================
 
 bool Character::IsAlive() const
 {
@@ -1729,6 +1672,9 @@ int Character::CalcAttackDamage(const Character& target) const
 		damage = Stat.STR * 2 - targetStat.DEF;
 		break;
 	}
+
+	float elementRate = SkillData::GetElementRate(Element, target.GetElement());
+	damage = (int)(damage * elementRate);
 
 	if (damage < 1)
 	{
@@ -1829,9 +1775,6 @@ void Character::SetDefendRate(float rate)
 	}
 }
 
-// ============================================================
-// 방향 보조
-// ============================================================
 
 void Character::LookAtGrid(int targetX, int targetY)
 {

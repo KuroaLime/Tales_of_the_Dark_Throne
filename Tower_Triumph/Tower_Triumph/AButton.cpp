@@ -27,8 +27,6 @@ void AButton::SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr) {
 }
 
 void AButton::Draw(HDC hMemDC, HDC hMemDC1) {
-	//HBITMAP temp = (HBITMAP)SelectObject(hMemDC1, bBitmap[CurAni]);
-	//TransparentBlt(hMemDC, Loc.x - Size.sX/2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2, hMemDC1, 0, 0, bMapinfo[CurAni].bmWidth, bMapinfo[CurAni].bmHeight, RGB(255, 255, 255));
 	HBRUSH bBrush;
 	if(!IsPointed)
 	{
@@ -41,7 +39,6 @@ void AButton::Draw(HDC hMemDC, HDC hMemDC1) {
 		FillRect(hMemDC, &rects, bBrush);
 		DeleteObject(bBrush);
 	
-	//SelectObject(hMemDC1, temp);
 }
 void AButton::SetIsPointed(bool New) {
 	if (New) IsPointed = true;
@@ -71,7 +68,6 @@ void AButton::SetbClick(bool New) {
 	isClicked = New;
 }
 void AButton::Update() {
-	//애니메이션 등등
 }
 
 void AButton::SetLocation(int nX, int nY) {

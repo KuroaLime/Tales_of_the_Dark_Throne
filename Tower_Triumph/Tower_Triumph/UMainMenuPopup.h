@@ -44,7 +44,6 @@ private:
     UButton* btnOpenCharDetail;
     UButton* btnOpenInvDetail;
 
-    // 친구 코드처럼 화면 단위를 레이어로 나눠 SetVisible로 전환한다.
     UContainerWidget* navLayer;
     UContainerWidget* charLayer;
     UContainerWidget* invLayer;

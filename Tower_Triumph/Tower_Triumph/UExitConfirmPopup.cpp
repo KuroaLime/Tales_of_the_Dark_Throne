@@ -19,8 +19,6 @@ void UExitConfirmPopup::Draw(HDC hMemDC, HDC hMemDC1)
 {
     if (!bVisible) return;
 
-    // Draw background overlay (semi-transparent if possible, but here just a box)
-    // Actually, let's draw a centered box
     int boxW = 400;
     int boxH = 200;
     int startX = Loc.x - boxW / 2;
@@ -41,7 +39,6 @@ void UExitConfirmPopup::Draw(HDC hMemDC, HDC hMemDC1)
     SelectObject(hMemDC, hOldPen);
     DeleteObject(hPen);
 
-    // Draw message
     HFONT hFont = CreateFont(24, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
     HFONT hOldFont = (HFONT)SelectObject(hMemDC, hFont);
     SetTextColor(hMemDC, RGB(255, 255, 255));
@@ -53,7 +50,6 @@ void UExitConfirmPopup::Draw(HDC hMemDC, HDC hMemDC1)
     SelectObject(hMemDC, hOldFont);
     DeleteObject(hFont);
 
-    // Draw buttons
     UContainerWidget::Draw(hMemDC, hMemDC1);
 }
 

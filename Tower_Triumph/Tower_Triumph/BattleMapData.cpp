@@ -354,12 +354,9 @@ SBattleMapData BattleMapData::BuildStage01()
     map.cameraStartX = 15;
     map.cameraStartY = 10;
 
-    // 첫 번째 묘지맵은 기존 하드코딩 장애물이 그림과 어긋나던 문제가 있어
-    // 전투 확인용으로 일단 전체를 이동 가능 지형으로 초기화한다.
     FillMapTiles(map, ETileType::Normal);
     map.drawTileDebug = false;
 
-    // 아군은 화면 시작 시 바로 보이도록 중앙-서쪽 개활지에 배치.
     AddPlayerStarts(map, {
         { 8, 11 },
         { 10, 11 },
@@ -368,7 +365,6 @@ SBattleMapData BattleMapData::BuildStage01()
         { 12, 11 }
     });
 
-    // 묘지 기믹: 이동은 가능하지만 피해를 주는 저주지대/마법진만 배치.
     SetMapRect(map, 13, 10, 15, 12, ETileType::CursedGround);
     SetMapRect(map, 20, 12, 22, 14, ETileType::MagicHazard);
     SetMapRect(map, 3, 16, 5, 18, ETileType::CursedGround);
@@ -392,29 +388,22 @@ SBattleMapData BattleMapData::BuildStage02()
     map.cameraStartX = 15;
     map.cameraStartY = 10;
 
-    // 천상맵은 기본을 SkyVoid로 깔고, 실제 발판만 Normal로 복구한다.
-    // 따라서 빛속성 외 캐릭터는 발판 밖으로 이동할 수 없다.
     FillMapTiles(map, ETileType::SkyVoid);
 
-    // 서쪽 시작 발판
     SetMapRect(map, 5, 8, 13, 12, ETileType::Normal);
     SetMapRect(map, 6, 13, 11, 15, ETileType::Normal);
 
-    // 중앙 성전 발판
     SetMapRect(map, 15, 5, 26, 14, ETileType::Normal);
     SetMapRect(map, 18, 15, 24, 18, ETileType::Normal);
 
-    // 동쪽 적 발판
     SetMapRect(map, 30, 8, 39, 14, ETileType::Normal);
     SetMapRect(map, 31, 15, 37, 17, ETileType::Normal);
 
-    // 다리/연결로
     SetMapRect(map, 13, 9, 16, 11, ETileType::Normal);
     SetMapRect(map, 26, 9, 31, 11, ETileType::Normal);
     SetMapRect(map, 9, 16, 17, 18, ETileType::Normal);
     SetMapRect(map, 24, 16, 31, 18, ETileType::Normal);
 
-    // 하단 보조 발판
     SetMapRect(map, 8, 18, 18, 22, ETileType::Normal);
     SetMapRect(map, 21, 18, 28, 22, ETileType::Normal);
     SetMapRect(map, 31, 18, 36, 22, ETileType::Normal);
@@ -446,7 +435,6 @@ SBattleMapData BattleMapData::BuildStage03()
     map.cameraStartX = 15;
     map.cameraStartY = 10;
 
-    // 기본 방: 기믹 없는 전투 확인용.
     FillMapTiles(map, ETileType::Normal);
 
     AddPlayerStarts(map, {
@@ -457,7 +445,6 @@ SBattleMapData BattleMapData::BuildStage03()
         { 11, 10 }
     });
 
-    // Stage3은 전용 몬스터 없이 다른 스테이지 몬스터를 랜덤으로 사용한다.
     map.enemyStarts.push_back(MakeRandomStage03Monster(22, 10, 0));
     map.enemyStarts.push_back(MakeRandomStage03Monster(24, 11, 1));
     map.enemyStarts.push_back(MakeRandomStage03Monster(26, 10, 2));
@@ -479,14 +466,11 @@ SBattleMapData BattleMapData::BuildStage04()
 
     FillMapTiles(map, ETileType::Normal);
 
-    // 바다맵: 실제 이미지의 물길/침수 구역을 좌표로 지정.
-    // 물속성 외 캐릭터는 Water에 진입할 수 없다.
     SetMapRect(map, 0, 0, 6, 8, ETileType::Water);
     SetMapRect(map, 11, 0, 14, 4, ETileType::Water);
     SetMapRect(map, 20, 0, 26, 7, ETileType::Water);
     SetMapRect(map, 35, 0, 43, 7, ETileType::Water);
 
-    // 시작 지점 근처 물길: Move 테스트 시 바로 보이게 배치
     SetMapRect(map, 12, 10, 14, 12, ETileType::Water);
 
     SetMapRect(map, 4, 13, 8, 17, ETileType::Water);
@@ -527,8 +511,6 @@ SBattleMapData BattleMapData::BuildStage05()
 
     FillMapTiles(map, ETileType::Normal);
 
-    // 용암맵: 용암은 이동 가능하지만 불속성 외 유닛에게 피해를 준다.
-    // 시작 지점 바로 동쪽에 용암을 둬서 Move/피해 테스트가 바로 되게 한다.
     SetMapRect(map, 12, 10, 15, 12, ETileType::Lava);
 
     SetMapRect(map, 2, 3, 6, 7, ETileType::Lava);

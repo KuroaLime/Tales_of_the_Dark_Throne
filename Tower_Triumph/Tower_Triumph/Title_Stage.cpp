@@ -32,11 +32,6 @@ Title_Stage::~Title_Stage()
 
     if (hBitBackground)
     {
-        // Note: hBitBackground might be one of the bitmaps in vBackgrounds.
-        // But since we use it as a pointer to current frame, and vBackgrounds 
-        // handles the actual DeleteObject for all frames, we don't need to delete it again
-        // unless it was loaded separately (fallback case).
-        // To be safe, the Init logic should be clear.
     }
 }
 
@@ -44,10 +39,8 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
 
-    // 타이틀/월드맵 분위기 BGM
     SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Stage_Map_Loop_42s.wav", true);
 
-    // Load 96 background frames
     vBackgrounds.reserve(MAX_FRAME);
     for (int i = 1; i <= MAX_FRAME; ++i)
     {
@@ -69,7 +62,6 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         }
     }
 
-    // Set first frame as default if available
     if (!vBackgrounds.empty())
     {
         hBitBackground = vBackgrounds[0];
@@ -77,7 +69,6 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
     }
     else
     {
-        // Fallback for single background or missing resources
         hBitBackground = (HBITMAP)LoadImageW(
             NULL,
             L"Resource\\Title\\Title_Background.bmp",
@@ -160,11 +151,10 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
 void Title_Stage::Update(HWND hWnd)
 {
-    // Update background animation
     if (!vBackgrounds.empty())
     {
         frameDelay++;
-        if (frameDelay >= 2) // Speed adjustment: increase to slow down
+        if (frameDelay >= 2) 
         {
             curFrame = (curFrame + 1) % (int)vBackgrounds.size();
             hBitBackground = vBackgrounds[curFrame];

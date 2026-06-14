@@ -57,28 +57,51 @@ void BattleRewardManager::SetDefaultVictoryReward(int clearedStageId, int nextSt
     case 1:
         gold = 150;
         exp = 80;
-        items.push_back(SBattleRewardItem(201, 1));
-        items.push_back(SBattleRewardItem(101, 2));
-        items.push_back(SBattleRewardItem(301, 1));
+        items.push_back(SBattleRewardItem(201, 1)); 
+        items.push_back(SBattleRewardItem(301, 1)); 
+        items.push_back(SBattleRewardItem(101, 2)); 
         break;
 
     case 2:
         gold = 260;
         exp = 130;
-        items.push_back(SBattleRewardItem(202, 1));
-        items.push_back(SBattleRewardItem(102, 2));
+        items.push_back(SBattleRewardItem(202, 1)); 
         items.push_back(SBattleRewardItem(302, 1));
-        items.push_back(SBattleRewardItem(401, 1));
+        items.push_back(SBattleRewardItem(401, 1)); 
+        items.push_back(SBattleRewardItem(102, 2)); 
         break;
 
     case 3:
-    default:
         gold = 420;
         exp = 220;
         items.push_back(SBattleRewardItem(203, 1));
-        items.push_back(SBattleRewardItem(103, 2));
-        items.push_back(SBattleRewardItem(302, 1));
         items.push_back(SBattleRewardItem(402, 1));
+        items.push_back(SBattleRewardItem(103, 2)); 
+        break;
+
+    case 4:
+        gold = 520;
+        exp = 300;
+        items.push_back(SBattleRewardItem(202, 1)); 
+        items.push_back(SBattleRewardItem(203, 1));
+        items.push_back(SBattleRewardItem(102, 3)); 
+        items.push_back(SBattleRewardItem(103, 2)); 
+        break;
+
+    case 5:
+        gold = 700;
+        exp = 450;
+        items.push_back(SBattleRewardItem(302, 1)); 
+        items.push_back(SBattleRewardItem(401, 1)); 
+        items.push_back(SBattleRewardItem(402, 1)); 
+        items.push_back(SBattleRewardItem(103, 3)); 
+        items.push_back(SBattleRewardItem(102, 3)); 
+        break;
+
+    default:
+        gold = 200;
+        exp = 100;
+        items.push_back(SBattleRewardItem(101, 2));
         break;
     }
 

@@ -15,13 +15,44 @@ static void ApplyItemStatBonusToCharacter(Character* target, int itemID, int sig
     CharacterStat stat = target->GetStat();
 
     stat.MaxHP += bonus.MaxHP * sign;
-    stat.CurHP += bonus.MaxHP * sign;
     stat.MaxMP += bonus.MaxMP * sign;
-    stat.CurMP += bonus.MaxMP * sign;
     stat.STR += bonus.STR * sign;
     stat.INT += bonus.INT * sign;
     stat.DEF += bonus.DEF * sign;
     stat.SPD += bonus.SPD * sign;
+
+    if (stat.MaxHP < 1)
+    {
+        stat.MaxHP = 1;
+    }
+
+    if (stat.MaxMP < 0)
+    {
+        stat.MaxMP = 0;
+    }
+
+    stat.CurHP += bonus.MaxHP * sign;
+    stat.CurMP += bonus.MaxMP * sign;
+
+    if (stat.CurHP > stat.MaxHP)
+    {
+        stat.CurHP = stat.MaxHP;
+    }
+
+    if (stat.CurHP < 1)
+    {
+        stat.CurHP = 1;
+    }
+
+    if (stat.CurMP > stat.MaxMP)
+    {
+        stat.CurMP = stat.MaxMP;
+    }
+
+    if (stat.CurMP < 0)
+    {
+        stat.CurMP = 0;
+    }
 
     target->SetStat(stat);
 }
@@ -29,7 +60,7 @@ static void ApplyItemStatBonusToCharacter(Character* target, int itemID, int sig
 GameManager::GameManager()
     : PartyGold(0),
       CurrentBattleStageId(1),
-      MaxUnlockedBattleStageId(5) //스테이지 언락 어디까지~
+      MaxUnlockedBattleStageId(3) 
 {
 }
 
@@ -57,7 +88,7 @@ void GameManager::Clear()
     CollectedMapItemIDs.clear();
     PartyGold = 0;
     CurrentBattleStageId = 1;
-    MaxUnlockedBattleStageId = 5;
+    MaxUnlockedBattleStageId = 3;
 }
 
 static Character* CreateRosterCharacter(int id, ECharacterClass classType, EElement element, const std::wstring& name)

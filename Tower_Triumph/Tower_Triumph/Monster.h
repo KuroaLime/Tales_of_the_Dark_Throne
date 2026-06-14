@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 #include <string>
@@ -8,7 +8,7 @@
 
 #pragma comment(lib, "Msimg32.lib")
 
-#include "Structure.h"
+#include "Character.h"
 
 class Character;
 
@@ -225,6 +225,7 @@ private:
 	EMonsterAIType AIType;
 	EMonsterAIState AIState;
 	EMonsterDirection Direction;
+	EElement Element;
 
 	bool IsBossMonster;
 
@@ -406,6 +407,10 @@ public:
 	int GetMonsterID() const;
 
 	EMonsterType GetMonsterType() const;
+
+	void SetElement(EElement newElement);
+	EElement GetElement() const;
+	std::wstring GetElementName() const;
 
 	bool GetIsBossMonster() const;
 	void SetIsBossMonster(bool value);

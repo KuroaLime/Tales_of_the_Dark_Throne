@@ -10,7 +10,6 @@ private:
     STurnTimeline* logicSystem;
     std::vector<UTurnCharacterInfo*> icons;
     
-    // To detect changes in logic system
     std::vector<Character*> lastKnownOrder;
 
 public:
