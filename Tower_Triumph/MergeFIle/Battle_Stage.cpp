@@ -1097,6 +1097,7 @@ void Battle_Stage::OnMenuMove()
 
 void Battle_Stage::OnMenuAttack()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
     controlMode = EBattleControlMode::SELECT_ATTACK;
@@ -1104,6 +1105,7 @@ void Battle_Stage::OnMenuAttack()
 
 void Battle_Stage::OnMenuSkill()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
 
     if (turnSystem != nullptr)
@@ -1118,6 +1120,7 @@ void Battle_Stage::OnMenuSkill()
 
 void Battle_Stage::OnMenuDefend()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
 
@@ -1138,6 +1141,7 @@ void Battle_Stage::OnMenuDefend()
 
 void Battle_Stage::OnMenuItem()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
     RefreshBattleConsumableItems();
@@ -1148,6 +1152,7 @@ void Battle_Stage::OnMenuItem()
 
 void Battle_Stage::OnMenuEndTurn()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\Turn_Start.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
 
@@ -1926,6 +1931,8 @@ void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillArea
     {
         return;
     }
+
+    SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
 
     SkillEffectAnim effect = {};
     effect.skillID = skillID;
@@ -3396,6 +3403,8 @@ bool Battle_Stage::UseSelectedBattleItem(Character* user, Character* target)
         RefreshBattleConsumableItems();
         return false;
     }
+
+    SoundManager::PlaySFX(L"Resource\\Sound\\Item_Use.wav");
 
     if (healHP > 0)
     {

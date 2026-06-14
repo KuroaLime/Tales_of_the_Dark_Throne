@@ -24,10 +24,10 @@ void USettingPopup::Setup(HINSTANCE hInst, RECT clientRect)
 	// Sound Toggle Button
 	btnSoundToggle = new UButton();
 	btnSoundToggle->SetLocation(clientRect.right / 2, clientRect.bottom / 2 - 20);
-	btnSoundToggle->SetText(L"SOUND: ON");
+	btnSoundToggle->SetText(L"사운드: 켜짐");
 	btnSoundToggle->SetOnClick([this]() {
 		this->bSoundOn = !this->bSoundOn;
-		this->btnSoundToggle->SetText(this->bSoundOn ? L"SOUND: ON" : L"SOUND: OFF");
+		this->btnSoundToggle->SetText(this->bSoundOn ? L"사운드: 켜짐" : L"사운드: 꺼짐");
 	});
 	AddChild(btnSoundToggle);
 

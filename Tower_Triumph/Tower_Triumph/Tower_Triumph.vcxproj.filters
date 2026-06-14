@@ -224,6 +224,9 @@
     <ClInclude Include="Structure.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="AButton.h">
       <Filter>헤더 파일\Actor\Button</Filter>
     </ClInclude>

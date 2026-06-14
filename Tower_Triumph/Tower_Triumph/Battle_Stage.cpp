@@ -1,5 +1,6 @@
 ﻿#include "Battle_Stage.h"
 #include "resource.h"
+#include "SoundManager.h"
 #include "GameManager.h"
 #include "ItemData.h"
 #include "UButton.h"
@@ -210,6 +211,9 @@ Battle_Stage::~Battle_Stage()
 void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
+
+    // 전투 BGM
+    SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Fantasy_Battle_Loop_64s.wav", true);
 
     BattleEnded = false;
     BattleWon = false;
@@ -1093,6 +1097,7 @@ void Battle_Stage::OnMenuMove()
 
 void Battle_Stage::OnMenuAttack()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
     controlMode = EBattleControlMode::SELECT_ATTACK;
@@ -1100,6 +1105,7 @@ void Battle_Stage::OnMenuAttack()
 
 void Battle_Stage::OnMenuSkill()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
 
     if (turnSystem != nullptr)
@@ -1114,6 +1120,7 @@ void Battle_Stage::OnMenuSkill()
 
 void Battle_Stage::OnMenuDefend()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
 
@@ -1144,6 +1151,7 @@ void Battle_Stage::OnMenuItem()
 
 void Battle_Stage::OnMenuEndTurn()
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
 
@@ -1218,6 +1226,9 @@ void Battle_Stage::CheckBattleEnd()
     {
         BattleEnded = true;
         BattleWon = true;
+
+        SoundManager::StopBGM();
+        SoundManager::PlaySFX(L"Resource\\Sound\\TowerTriumph_Victory_Jingle_7s.wav");
 
         int clearedStageId = GameManager::Get().GetCurrentBattleStageId();
         int nextStageId = clearedStageId + 1;
@@ -1903,6 +1914,7 @@ int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
 
 void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType)
 {
+    SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
     if (!IsInsideGrid(gridX, gridY))
     {
         return;
@@ -3379,6 +3391,8 @@ bool Battle_Stage::UseSelectedBattleItem(Character* user, Character* target)
 
     int healHP = ItemData::GetHealHP(SelectedBattleItemID);
     int healMP = ItemData::GetHealMP(SelectedBattleItemID);
+
+    SoundManager::PlaySFX(L"Resource\\Sound\\Item_Use.wav");
 
     if (!GameManager::Get().UseConsumable(target, SelectedBattleItemID))
     {

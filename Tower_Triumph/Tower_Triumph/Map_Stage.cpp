@@ -1,5 +1,6 @@
 #include "Map_Stage.h"
 #include "resource.h"
+#include "SoundManager.h"
 #include "UMouseMark.h"
 #include "GameManager.h"
 #include "ItemData.h"
@@ -40,6 +41,9 @@ Map_Stage::~Map_Stage() {
 void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 
 	GetClientRect(hWnd, &rects);
+
+	// 월드맵/스테이지 선택 BGM
+	SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Stage_Map_Loop_42s.wav", true);
 	
 	hBitBackground = (HBITMAP)LoadImageW(
 		NULL,

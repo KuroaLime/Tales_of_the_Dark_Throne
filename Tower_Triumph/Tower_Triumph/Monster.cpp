@@ -1,5 +1,6 @@
 #include "Monster.h"
 #include "Character.h"
+#include "SoundManager.h"
 
 
 // ============================================================
@@ -1165,6 +1166,34 @@ void Monster::SetState(EMonsterState newState)
 	IsActionEnd = false;
 
 	UpdateMaxFrameByState();
+
+	// 몬스터 상태별 효과음
+	std::wstring soundFolder = L"Resource\\Sound\\";
+	std::wstring prefix = GetMonsterPrefix();
+
+	switch (newState)
+	{
+	case EMonsterState::Attack:
+		if (!SoundManager::PlaySFX(soundFolder + prefix + L"_Attack.wav"))
+		{
+			SoundManager::PlaySFX(soundFolder + L"Monster_Attack.wav");
+		}
+		break;
+
+	case EMonsterState::Hit:
+		if (!SoundManager::PlaySFX(soundFolder + prefix + L"_Hit.wav"))
+		{
+			SoundManager::PlaySFX(soundFolder + L"Monster_Hit.wav");
+		}
+		break;
+
+	case EMonsterState::Dead:
+		if (!SoundManager::PlaySFX(soundFolder + prefix + L"_Dead.wav"))
+		{
+			SoundManager::PlaySFX(soundFolder + L"Monster_Dead.wav");
+		}
+		break;
+	}
 }
 
 EMonsterState Monster::GetState() const

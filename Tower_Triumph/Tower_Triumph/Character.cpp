@@ -1,4 +1,5 @@
 ﻿#include "Character.h"
+#include "SoundManager.h"
 #include "SkillData.h"
 
 static bool IsCharacterSixByThreeSheet(const BITMAP* info)
@@ -974,6 +975,30 @@ void Character::SetState(ECharacterState newState)
 	IsActionEnd = false;
 
 	UpdateMaxFrameByState();
+
+	// 캐릭터 상태별 효과음
+	switch (newState)
+	{
+	case ECharacterState::Attack:
+		SoundManager::PlaySFX(L"Resource\\Sound\\Character_Attack.wav");
+		break;
+
+	case ECharacterState::Skill:
+		SoundManager::PlaySFX(L"Resource\\Sound\\Character_Skill.wav");
+		break;
+
+	case ECharacterState::Defend:
+		SoundManager::PlaySFX(L"Resource\\Sound\\Guard.wav");
+		break;
+
+	case ECharacterState::Hit:
+		SoundManager::PlaySFX(L"Resource\\Sound\\Character_Hit.wav");
+		break;
+
+	case ECharacterState::Dead:
+		SoundManager::PlaySFX(L"Resource\\Sound\\Character_Dead.wav");
+		break;
+	}
 }
 
 ECharacterState Character::GetState() const

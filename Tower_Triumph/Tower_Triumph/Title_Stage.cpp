@@ -1,5 +1,6 @@
 #include "Title_Stage.h"
 #include "resource.h"
+#include "SoundManager.h"
 
 Title_Stage::Title_Stage()
 {
@@ -42,6 +43,9 @@ Title_Stage::~Title_Stage()
 void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
+
+    // 타이틀/월드맵 분위기 BGM
+    SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Stage_Map_Loop_42s.wav", true);
 
     // Load 96 background frames
     vBackgrounds.reserve(MAX_FRAME);
