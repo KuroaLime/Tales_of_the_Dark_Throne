@@ -19,5 +19,5 @@ public:
     void SetText(const std::wstring& newText) { Text = newText; }
     void SetFont(int nHeight, int nWeight, const std::wstring& fontName);
     void SetColor(COLORREF color) { TextColor = color; }
-    void SetAlign(int flags) { TextAlignFlags = flags; } // e.g., DT_LEFT, DT_CENTER
+    void SetAlign(int flags) { TextAlignFlags = flags; } 
 };

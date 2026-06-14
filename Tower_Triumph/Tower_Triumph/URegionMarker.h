@@ -13,10 +13,10 @@ private:
 	float floatingRange;
 	int baseIconY;
 	
-	bool bIsActivated; // true if clicked (!)
-	bool bIsUnlocked;  // true if stage is unlocked
-	std::wstring parentRegionName; // broad region (e.g. Hyzante)
-	std::wstring regionName;       // specific point (e.g. Bridge)
+	bool bIsActivated; 
+	bool bIsUnlocked;  
+	std::wstring parentRegionName; 
+	std::wstring regionName;       
 	std::wstring regionDesc;
 	std::wstring environment;
 
@@ -45,7 +45,6 @@ public:
 	Location GetIconLocation() const { return iconImage ? iconImage->GetLocation() : Loc; }
 	UImage* GetIconImage() const { return iconImage; }
 
-	// For camera offset
 	void DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int offsetY, float zoom = 1.0f);
 	bool ContainsPointWithOffset(int MouseX, int MouseY, int offsetX, int offsetY, float zoom = 1.0f);
 };

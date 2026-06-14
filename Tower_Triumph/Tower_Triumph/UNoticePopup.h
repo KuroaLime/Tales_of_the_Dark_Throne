@@ -75,7 +75,6 @@ public:
             return;
         }
 
-        // 전체 화면을 어둡게 덮어서 일반 MessageBox 대신 게임 내부 모달처럼 보이게 한다.
         RECT overlay = { 0, 0, ClientWidth, ClientHeight };
         HBRUSH overlayBrush = CreateSolidBrush(RGB(4, 4, 7));
         FillRect(hMemDC, &overlay, overlayBrush);

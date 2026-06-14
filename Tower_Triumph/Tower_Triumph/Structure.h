@@ -26,7 +26,6 @@ struct MapConfig {
 	TCHAR mapName[256];
 };
 
-// Character.h에서 이관
 struct CharacterStat
 {
     int MaxHP;
