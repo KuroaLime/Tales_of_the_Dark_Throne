@@ -1,11 +1,14 @@
 #include "ACamera.h"
 
 ACamera::ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY) {
-    g_CamX = N_CamX * 0.8;
-    g_CamY = N_CamY * 0.8;
+    g_CamX = N_CamX * 0.8f;
+    g_CamY = N_CamY * 0.8f;
 
-    PointGridX = PointIndexX;
-    PointGridY = PointIndexY;
+    PointGridX = (float)PointIndexX;
+    PointGridY = (float)PointIndexY;
+
+    currentZoom = 1.0f;
+    targetZoom = 1.0f;
 }
 void ACamera::Reset() {
     g_CamX = 0;
@@ -13,15 +16,27 @@ void ACamera::Reset() {
 
     PointGridX = 0;
     PointGridY = 0;
+    currentZoom = 1.0f;
+    targetZoom = 1.0f;
 }
 void ACamera::Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT) {
-    float targetX = (float)(PointGridX * TILE_SIZE - WIN_WIDTH / 2 + TILE_SIZE / 2);
-    float targetY = (float)(PointGridY * TILE_SIZE - WIN_HEIGHT / 2 + TILE_SIZE / 2);
+    // Smooth zoom transition
+    currentZoom += (targetZoom - currentZoom) * 0.1f;
+
+    // Center on the target point
+    float targetX = (float)(PointGridX * TILE_SIZE - (WIN_WIDTH / 2) / currentZoom + TILE_SIZE / 2);
+    float targetY = (float)(PointGridY * TILE_SIZE - (WIN_HEIGHT / 2) / currentZoom + TILE_SIZE / 2);
+
+    // Bound check (considering zoom)
+    float maxW = (float)TILE_W * TILE_SIZE;
+    float maxH = (float)TILE_H * TILE_SIZE;
+    float visibleW = (float)WIN_WIDTH / currentZoom;
+    float visibleH = (float)WIN_HEIGHT / currentZoom;
 
     if (targetX < 0) targetX = 0;
     if (targetY < 0) targetY = 0;
-    if (targetX > (TILE_W * TILE_SIZE - WIN_WIDTH)) targetX = (float)(TILE_W * TILE_SIZE - WIN_WIDTH);
-    if (targetY > (TILE_H * TILE_SIZE - WIN_HEIGHT)) targetY = (float)(TILE_H * TILE_SIZE - WIN_HEIGHT);
+    if (targetX > (maxW - visibleW)) targetX = maxW - visibleW;
+    if (targetY > (maxH - visibleH)) targetY = maxH - visibleH;
 
     g_CamX += (targetX - g_CamX) * 0.1f;
     g_CamY += (targetY - g_CamY) * 0.1f;

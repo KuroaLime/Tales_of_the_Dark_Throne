@@ -1,4 +1,4 @@
-﻿#include "Map_Stage.h"
+#include "Map_Stage.h"
 #include "resource.h"
 #include "UMouseMark.h"
 #include "GameManager.h"
@@ -32,8 +32,30 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 
 	GetClientRect(hWnd, &rects);
 	
-	hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP3));
-	GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+	hBitBackground = (HBITMAP)LoadImageW(
+		NULL,
+		L"Source\\SMap\\background\\Map_Background.bmp",
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_LOADFROMFILE | LR_CREATEDIBSECTION
+	);
+
+	if (!hBitBackground)
+	{
+		hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP3));
+	}
+
+	if (hBitBackground)
+	{
+		GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+	}
+	else
+	{
+		// Fallback if background not found
+		BackgroundInfo.bmWidth = 1280;
+		BackgroundInfo.bmHeight = 720;
+	}
 	
 
 	TILE_SIZE = 64;
@@ -57,38 +79,38 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	MarkerBattleStageIds.clear();
 
 	URegionMarker* town = new URegionMarker();
-	town->Setup(g_hInst, 260, 220, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	town->Setup(g_hInst, 260, 220, L"Source\\SMap\\background\\GisaSung_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	town->SetRegionInfo(L"Town", L"Preparation Camp", L"Manage party, equipment, inventory, skills, and shop before entering a stage.", L"Always available");
 	Markers.push_back(town);
 	MarkerBattleStageIds.push_back(0);
 
 	// Clickable battle stage markers. Debug mode: all 5 stages are reachable.
 	URegionMarker* m1 = new URegionMarker();
-	m1->Setup(g_hInst, 400, 300, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m1->Setup(g_hInst, 400, 300, L"Source\\SMap\\background\\MyoG_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	m1->SetRegionInfo(L"Stage 01", L"묘지", L"현재 기준이 되는 묘지 전투 스테이지입니다.", L"Graveyard");
 	Markers.push_back(m1);
 	MarkerBattleStageIds.push_back(1);
 
 	URegionMarker* m2 = new URegionMarker();
-	m2->Setup(g_hInst, 850, 430, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m2->Setup(g_hInst, 850, 430, L"Source\\SMap\\background\\SkySum_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	m2->SetRegionInfo(L"Stage 02", L"천상 성전", L"공중에 떠 있는 발판과 빈 공간이 있는 스테이지입니다.", L"Heaven");
 	Markers.push_back(m2);
 	MarkerBattleStageIds.push_back(2);
 
 	URegionMarker* m3 = new URegionMarker();
-	m3->Setup(g_hInst, 1250, 780, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m3->Setup(g_hInst, 1250, 780, L"Source\\SMap\\background\\GisaSung_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	m3->SetRegionInfo(L"Stage 03", L"기본 방", L"기믹 없는 기본 전투 확인용 스테이지입니다.", L"Default");
 	Markers.push_back(m3);
 	MarkerBattleStageIds.push_back(3);
 
 	URegionMarker* m4 = new URegionMarker();
-	m4->Setup(g_hInst, 1750, 520, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m4->Setup(g_hInst, 1750, 520, L"Source\\SMap\\background\\GisaSung_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	m4->SetRegionInfo(L"Stage 04", L"바다 폐허", L"물 타일이 이동을 제한하는 해안 전투 스테이지입니다.", L"Sea");
 	Markers.push_back(m4);
 	MarkerBattleStageIds.push_back(4);
 
 	URegionMarker* m5 = new URegionMarker();
-	m5->Setup(g_hInst, 2250, 850, IDB_BITMAP3, IDB_BITMAP3, IDB_BITMAP3);
+	m5->Setup(g_hInst, 2250, 850, L"Source\\SMap\\background\\LavaMaul_Marker.bmp", IDB_BITMAP3, IDB_BITMAP3);
 	m5->SetRegionInfo(L"Stage 05", L"용암지대", L"용암 타일이 피해를 주는 화산 전투 스테이지입니다.", L"Lava");
 	Markers.push_back(m5);
 	MarkerBattleStageIds.push_back(5);
@@ -98,6 +120,10 @@ void Map_Stage::Init(HWND hWnd, HINSTANCE const g_hInst) {
 	infoPopup->Setup(g_hInst, rects);
 	infoPopup->SetOnEnterClick([this]() {
 		this->Comp_NextStage(SelectedMarkerNextStageID);
+	});
+	infoPopup->SetOnCloseClick([this]() {
+		for (auto m : Markers) m->Deactivate();
+		Camera->SetZoom(1.0f);
 	});
 
 	//m키 입력시 띄울 UI 설정(캐릭터, 인벤토리)
@@ -197,40 +223,45 @@ void Map_Stage::Update(HWND hWnd) {
 
 void Map_Stage::Draw(HDC hMemDC, HDC hMemDC1) {
 	std::pair<float, float> CameraOffset = Camera->Getg_Cam();
+	float zoom = Camera->GetZoom();
 	int camX = (int)CameraOffset.first;
 	int camY = (int)CameraOffset.second;
 
-	// 배경 그리기 (카메라 오프셋 적용)
+	// 배경 그리기 (카메라 오프셋 및 줌 적용)
 	HBITMAP hOld = (HBITMAP)SelectObject(hMemDC1, hBitBackground);
-	TransparentBlt(hMemDC, -camX, -camY, BackgroundInfo.bmWidth, BackgroundInfo.bmHeight, hMemDC1, 0, 0, BackgroundInfo.bmWidth, BackgroundInfo.bmHeight, RGB(255, 255, 255));
+	
+	int viewW = (int)(1280 / zoom);
+	int viewH = (int)(720 / zoom);
+
+	StretchBlt(hMemDC, 0, 0, 1280, 720, hMemDC1, camX, camY, viewW, viewH, SRCCOPY);
 	SelectObject(hMemDC1, hOld);
 
-	// 마커 그리기 (월드 좌표)
+	// 마커 그리기 (줌이 적용된 좌표계로 변환)
 	for (auto m : Markers) {
-		m->DrawWithOffset(hMemDC, hMemDC1, camX, camY);
+		m->DrawWithOffset(hMemDC, hMemDC1, camX, camY, zoom);
 	}
 
-	// Draw field items. The actual item name comes from ItemData.
+	// Draw field items (zoomed)
 	for (const auto& item : stageItems) {
 		if (!item.Active) {
 			continue;
 		}
 
-		Location pos = item.WorldPos;
-		int drawX = pos.x - camX;
-		int drawY = pos.y - camY;
+		int drawX = (int)((item.WorldPos.x - camX) * zoom);
+		int drawY = (int)((item.WorldPos.y - camY) * zoom);
 
 		if (drawX > -50 && drawX < 1330 && drawY > -50 && drawY < 770) {
+			int circleSize = (int)(15 * zoom);
 			HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
 			HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
-			Ellipse(hMemDC, drawX - 15, drawY - 15, drawX + 15, drawY + 15);
+			Ellipse(hMemDC, drawX - circleSize, drawY - circleSize, drawX + circleSize, drawY + circleSize);
 			SelectObject(hMemDC, oldBrush);
 			DeleteObject(hBrush);
 
 			std::wstring itemName = ItemData::GetName(item.ItemID);
 			SetBkMode(hMemDC, TRANSPARENT);
 			SetTextColor(hMemDC, RGB(255, 255, 255));
-			TextOutW(hMemDC, drawX - 30, drawY + 20, itemName.c_str(), (int)itemName.length());
+			TextOutW(hMemDC, drawX - (int)(30 * zoom), drawY + (int)(20 * zoom), itemName.c_str(), (int)itemName.length());
 		}
 	}
 
@@ -248,6 +279,7 @@ void Map_Stage::BackgroundMove(int x, int y) {
 int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	static int CLK_X, CLK_Y;
 	std::pair<float, float> CameraOffset = Camera->Getg_Cam();
+	float zoom = Camera->GetZoom();
 	int camX = (int)CameraOffset.first;
 	int camY = (int)CameraOffset.second;
 
@@ -308,7 +340,7 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			
 			// 메뉴가 닫혀있을 때만 마커 호버 체크
 			for (auto m : Markers) {
-				bool pointed = !bMenuOpen && m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY);
+				bool pointed = !bMenuOpen && m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY, zoom);
 				m->SetIsPointed(pointed);
 				if (pointed) hovered = m;
 			}
@@ -322,10 +354,10 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			bool bMenuOpen = (mainMenu && mainMenu->GetVisible()) || (infoPopup && infoPopup->GetVisible());
 			if (!bMenuOpen) {
 				for (auto m : Markers) {
-					int dx = (m->GetLocation().x) - (camX + CLK_X);
-					int dy = (m->GetLocation().y) - (camY + CLK_Y);
+					int dx = (int)(m->GetLocation().x - (camX + CLK_X / zoom));
+					int dy = (int)(m->GetLocation().y - (camY + CLK_Y / zoom));
 					float dist = sqrtf(static_cast<float>(dx * dx + dy * dy));
-					if (dist < 275.0f) {
+					if (dist < 275.0f / zoom) {
 						if (dist < minDesc) {
 							minDesc = dist;
 							closestMarker = m;
@@ -369,8 +401,8 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			auto it = stageItems.begin();
 			while (it != stageItems.end()) {
 				Location pos = it->WorldPos;
-				int dx = (camX + CLK_X) - pos.x;
-				int dy = (camY + CLK_Y) - pos.y;
+				int dx = (int)(camX + CLK_X / zoom - pos.x);
+				int dy = (int)(camY + CLK_Y / zoom - pos.y);
 
 				if (it->Active && dx * dx + dy * dy <= 30 * 30) {
 					int mapItemID = it->MapItemID;
@@ -398,7 +430,7 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		for (size_t i = 0; i < Markers.size(); ++i) {
 			URegionMarker* m = Markers[i];
 
-			if (m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY)) {
+			if (m->ContainsPointWithOffset(CLK_X, CLK_Y, camX, camY, zoom)) {
 				int stageId = 0;
 				if (i < MarkerBattleStageIds.size()) {
 					stageId = MarkerBattleStageIds[i];
@@ -422,9 +454,10 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 					GameManager::Get().SetCurrentBattleStageId(stageId);
 				}
 
-				int gridX = (camX + CLK_X) / TILE_SIZE;
-				int gridY = (camY + CLK_Y) / TILE_SIZE;
-				Camera->SetPointGrid(gridX, gridY);
+				int gridX = (int)(camX + CLK_X / zoom) / TILE_SIZE;
+				int gridY = (int)(camY + CLK_Y / zoom) / TILE_SIZE;
+				Camera->SetPointGrid((float)gridX, (float)gridY);
+				Camera->SetZoom(1.5f); // Zoom in on selection
 				for (auto other : Markers) other->Deactivate();
 				m->Activate();
 				infoPopup->SetInfo(m->GetName(), m->GetDesc(), m->GetEnv());
@@ -435,9 +468,9 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 		// 3. 바닥 클릭 시 카메라 이동
 		{
-			int gridX = (camX + CLK_X) / TILE_SIZE;
-			int gridY = (camY + CLK_Y) / TILE_SIZE;
-			Camera->SetPointGrid(gridX, gridY);
+			int gridX = (int)(camX + CLK_X / zoom) / TILE_SIZE;
+			int gridY = (int)(camY + CLK_Y / zoom) / TILE_SIZE;
+			Camera->SetPointGrid((float)gridX, (float)gridY);
 		}
 		break;
 
@@ -479,6 +512,7 @@ int Map_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			if (infoPopup && infoPopup->GetVisible()) {
 				infoPopup->SetVisible(false);
 				for (auto m : Markers) m->Deactivate();
+				Camera->SetZoom(1.0f); // Zoom out when closing
 			}
 			else if (mainMenu) {
 				if (mainMenu->GetVisible()) {

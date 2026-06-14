@@ -12,7 +12,7 @@ URegionMarker::URegionMarker()
 	targetScale = 1.0f;
 }
 
-void URegionMarker::Setup(HINSTANCE hInst, int x, int y, WORD regionResID, WORD iconQResID, WORD iconEResID)
+void URegionMarker::Setup(HINSTANCE hInst, int x, int y, const std::wstring& regionPath, WORD iconQResID, WORD iconEResID)
 {
 	SetLocation(x, y);
 	Size.sX = 120;
@@ -20,16 +20,14 @@ void URegionMarker::Setup(HINSTANCE hInst, int x, int y, WORD regionResID, WORD 
 
 	regionImage = new UImage();
 	regionImage->SetLocation(x, y);
-	regionImage->SetFrame(hInst, { regionResID });
+	regionImage->SetFrameFromFile({ regionPath });
 	regionImage->SetUIID(100);
-	// AddChild(regionImage); // We will draw manually to handle scaling
 
 	iconImage = new UImage();
 	baseIconY = y - 70;
 	iconImage->SetLocation(x, baseIconY);
 	iconImage->SetFrame(hInst, { iconQResID, iconEResID }); // 0: ?, 1: !
 	iconImage->SetUIID(101);
-	// AddChild(iconImage);
 }
 
 void URegionMarker::SetRegionInfo(const std::wstring& parentName, const std::wstring& name, const std::wstring& desc, const std::wstring& env)
@@ -57,19 +55,18 @@ void URegionMarker::Update()
 
 void URegionMarker::Draw(HDC hMemDC, HDC hMemDC1)
 {
-	// Default Draw might not be used if Map_Stage calls DrawWithOffset
 }
 
-void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int offsetY)
+void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int offsetY, float zoom)
 {
 	if (!bVisible) return;
 
-	int drawX = Loc.x - offsetX;
-	int drawY = Loc.y - offsetY;
+	int drawX = (int)((Loc.x - offsetX) * zoom);
+	int drawY = (int)((Loc.y - offsetY) * zoom);
 
 	// Draw Region Image with Scale
-	int scaledSX = (int)(Size.sX * currentScale);
-	int scaledSY = (int)(Size.sY * currentScale);
+	int scaledSX = (int)(Size.sX * currentScale * zoom);
+	int scaledSY = (int)(Size.sY * currentScale * zoom);
 
 	if (regionImage && !regionImage->GetBitmap().empty()) {
 		HBITMAP hBit = regionImage->GetBitmap()[0];
@@ -81,29 +78,32 @@ void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int off
 	}
 
 	// Draw Icon Image
-	int iconDrawY = iconImage->GetLocation().y - offsetY;
+	int iconWorldY = iconImage->GetLocation().y;
+	int iconDrawY = (int)((iconWorldY - offsetY) * zoom);
+	int iconSize = (int)(64 * zoom);
+
 	if (iconImage && !iconImage->GetBitmap().empty()) {
 		int frame = bIsActivated ? 1 : 0;
 		HBITMAP hBit = iconImage->GetBitmap()[frame];
 		BITMAP info = iconImage->GetMapInfo()[frame];
 		HBITMAP old = (HBITMAP)SelectObject(hMemDC1, hBit);
-		TransparentBlt(hMemDC, drawX - 32, iconDrawY - 32, 64, 64, 
+		TransparentBlt(hMemDC, drawX - iconSize / 2, iconDrawY - iconSize / 2, iconSize, iconSize, 
 			hMemDC1, 0, 0, info.bmWidth, info.bmHeight, RGB(255, 255, 255));
 		SelectObject(hMemDC1, old);
 	}
 }
 
-bool URegionMarker::ContainsPointWithOffset(int MouseX, int MouseY, int offsetX, int offsetY)
+bool URegionMarker::ContainsPointWithOffset(int MouseX, int MouseY, int offsetX, int offsetY, float zoom)
 {
-	int worldMX = MouseX + offsetX;
-	int worldMY = MouseY + offsetY;
+	int worldMX = (int)(MouseX / zoom + offsetX);
+	int worldMY = (int)(MouseY / zoom + offsetY);
 	return ContainsPoint(worldMX, worldMY);
 }
 
 void URegionMarker::Activate()
 {
 	bIsActivated = true;
-	targetScale = 1.3f;
+	targetScale = 2.0f;
 }
 
 void URegionMarker::Deactivate()

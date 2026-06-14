@@ -8,6 +8,9 @@ protected:
 
 	float PointGridX;
 	float PointGridY;
+
+	float currentZoom;
+	float targetZoom;
 public:
 	ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY);
 	virtual void Reset();
@@ -16,6 +19,9 @@ public:
 	void SetPointGrid(float x, float y);
 	std::pair<float, float> Getg_Cam();
 	std::pair<float, float> GetPointGrid();
+
+	void SetZoom(float zoom) { targetZoom = zoom; }
+	float GetZoom() const { return currentZoom; }
 
 };
 

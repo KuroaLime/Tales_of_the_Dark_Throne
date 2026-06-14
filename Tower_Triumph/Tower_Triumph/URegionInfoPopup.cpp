@@ -24,7 +24,10 @@ void URegionInfoPopup::Setup(HINSTANCE hInst, RECT clientRect)
 	btnClose->SetLocation(Loc.x, Loc.y + 200);
 	btnClose->SetSize(100, 40);
 	btnClose->SetText(L"CLOSE");
-	btnClose->SetOnClick([this]() { this->SetVisible(false); });
+	btnClose->SetOnClick([this]() { 
+		this->SetVisible(false); 
+		if (OnCloseClickCallback) OnCloseClickCallback();
+	});
 	AddChild(btnClose);
 }
 
