@@ -3,6 +3,9 @@
 
 #include <algorithm>
 #include <utility>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
 
 static void SetMapPoint(SBattleMapData& map, int x, int y, ETileType type)
 {
@@ -264,6 +267,71 @@ static void AddPlayerStarts(SBattleMapData& map, const std::vector<std::pair<int
     map.playerStarts.push_back({ ECharacterClass::Mage,    L"Mage",    starts[4].first, starts[4].second, 18 });
 }
 
+
+static SBattleStartInfo MakeMonsterStart(
+    ECharacterClass classType,
+    const std::wstring& name,
+    int x,
+    int y,
+    int spd,
+    const std::wstring& sheetFile,
+    bool sourceFacesRight,
+    EElement element)
+{
+    SBattleStartInfo info;
+    info.classType = classType;
+    info.name = name;
+    info.x = x;
+    info.y = y;
+    info.spd = spd;
+    info.monsterSheetFile = sheetFile;
+    info.monsterSourceFacesRight = sourceFacesRight;
+    info.element = element;
+    return info;
+}
+
+static SBattleStartInfo MakeRandomStage03Monster(int x, int y, int order)
+{
+    static bool seeded = false;
+    if (!seeded)
+    {
+        std::srand((unsigned int)::time(nullptr));
+        seeded = true;
+    }
+
+    std::vector<SBattleStartInfo> pool;
+
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Skeleton", 0, 0, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Random Lich",     0, 0, 18, L"S1_Leach.bmp",   true, EElement::Dark));
+
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Angel Guard", 0, 0, 16, L"S2_Angel.bmp",  true,  EElement::Light));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Archer,  L"Random Baby Angel",  0, 0, 22, L"S2_BAngel.bmp", true,  EElement::Light));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Falcon",      0, 0, 20, L"S2_Falcon.bmp", false, EElement::Light));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Random Wing Angel",  0, 0, 18, L"S2_WAngel.bmp", true,  EElement::Light));
+
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Sea Slime",  0, 0, 14, L"S4_Slime.bmp", true, EElement::Water));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Random Mermaid",    0, 0, 18, L"S4_Snale.bmp", true, EElement::Water));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Spear Crab", 0, 0, 16, L"S4_Spear.bmp", true, EElement::Water));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Random Jellyfish",  0, 0, 17, L"S4_WFly.bmp",  true, EElement::Water));
+
+    pool.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Random Fire Demon", 0, 0, 18, L"S5_Dragon.bmp", true,  EElement::Fire));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Lava Golem", 0, 0, 10, L"S5_Golem.bmp",  true,  EElement::Fire));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Lava Hound", 0, 0, 20, L"S5_Hound.bmp",  false, EElement::Fire));
+    pool.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Random Lava Larva", 0, 0, 12, L"S5_Larva.bmp",  true,  EElement::Fire));
+
+    int index = 0;
+    if (!pool.empty())
+    {
+        index = (std::rand() + order) % (int)pool.size();
+    }
+
+    SBattleStartInfo picked = pool[index];
+    picked.x = x;
+    picked.y = y;
+    return picked;
+}
+
+
 static void AddDefaultPlayerStarts(SBattleMapData& map)
 {
     AddPlayerStarts(map, {
@@ -305,9 +373,10 @@ SBattleMapData BattleMapData::BuildStage01()
     SetMapRect(map, 20, 12, 22, 14, ETileType::MagicHazard);
     SetMapRect(map, 3, 16, 5, 18, ETileType::CursedGround);
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Enemy Warrior", 22, 10, 10 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Enemy Mage",    24, 11, 20 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Enemy Archer",  26, 10, 18 });
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 21, 10, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     24, 11, 18, L"S1_Leach.bmp",   true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 26, 10, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     23, 13, 18, L"S1_Leach.bmp",   true, EElement::Dark));
 
     return map;
 }
@@ -358,10 +427,10 @@ SBattleMapData BattleMapData::BuildStage02()
         { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Sky Guard", 21, 10, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Sky Archer",23, 11, 20 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Sky Mage",  24, 10, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Angel",     25, 11, 24 });
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Angel Guard", 21, 10, 16, L"S2_Angel.bmp",  true,  EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Archer,  L"Baby Angel",  23, 11, 22, L"S2_BAngel.bmp", true,  EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sky Falcon",  25, 10, 20, L"S2_Falcon.bmp", false, EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Wing Angel",  27, 11, 18, L"S2_WAngel.bmp", true,  EElement::Light));
 
     return map;
 }
@@ -388,9 +457,11 @@ SBattleMapData BattleMapData::BuildStage03()
         { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Training Guard", 22, 10, 10 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Training Mage",  24, 11, 18 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Training Archer",26, 10, 18 });
+    // Stage3은 전용 몬스터 없이 다른 스테이지 몬스터를 랜덤으로 사용한다.
+    map.enemyStarts.push_back(MakeRandomStage03Monster(22, 10, 0));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(24, 11, 1));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(26, 10, 2));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(23, 13, 3));
 
     return map;
 }
@@ -435,10 +506,10 @@ SBattleMapData BattleMapData::BuildStage04()
         { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 22, 10, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Coast Guard", 24, 11, 12 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Tide Mage",   26, 10, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Coast Archer",25, 11, 20 });
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sea Slime",  22, 10, 14, L"S4_Slime.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Mermaid",    24, 11, 18, L"S4_Snale.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Spear Crab", 26, 10, 16, L"S4_Spear.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Jellyfish",  25, 12, 17, L"S4_WFly.bmp",  true, EElement::Water));
 
     return map;
 }
@@ -478,11 +549,10 @@ SBattleMapData BattleMapData::BuildStage05()
         { 11, 10 }
     });
 
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 22, 10, 14 });
-    map.enemyStarts.push_back({ ECharacterClass::Warrior, L"Lava Guard", 24, 11, 14 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Mage",  26, 10, 24 });
-    map.enemyStarts.push_back({ ECharacterClass::Archer,  L"Lava Archer",25, 11, 22 });
-    map.enemyStarts.push_back({ ECharacterClass::Mage,    L"Lava Boss",  23, 12, 26 });
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Fire Demon", 22, 10, 18, L"S5_Dragon.bmp", true,  EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Golem", 24, 11, 10, L"S5_Golem.bmp",  true,  EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Hound", 26, 10, 20, L"S5_Hound.bmp",  false, EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Larva", 25, 12, 12, L"S5_Larva.bmp",  true,  EElement::Fire));
 
     return map;
 }

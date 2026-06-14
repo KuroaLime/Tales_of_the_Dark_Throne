@@ -1,6 +1,96 @@
 ﻿#include "UTurnCharacterInfo.h"
 
 #include <string>
+#include <map>
+#include <vector>
+
+
+static bool ContainsTurnIconText(const std::wstring& value, const std::wstring& keyword)
+{
+    return value.find(keyword) != std::wstring::npos;
+}
+
+static std::wstring GetEnemyTurnIconFileName(const std::wstring& name)
+{
+    if (ContainsTurnIconText(name, L"Skeleton")) return L"S1_Skeleton_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Lich")) return L"S1_Leach_Turn.bmp";
+
+    if (ContainsTurnIconText(name, L"Baby Angel")) return L"S2_BAngel_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Wing Angel")) return L"S2_WAngel_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Falcon")) return L"S2_Falcon_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Angel Guard")) return L"S2_Angel_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Angel")) return L"S2_Angel_Turn.bmp";
+
+    if (ContainsTurnIconText(name, L"Sea Slime")) return L"S4_Slime_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Mermaid")) return L"S4_Snale_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Spear Crab")) return L"S4_Spear_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Jellyfish")) return L"S4_WFly_Turn.bmp";
+
+    if (ContainsTurnIconText(name, L"Fire Demon")) return L"S5_Dragon_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Lava Golem")) return L"S5_Golem_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Lava Hound")) return L"S5_Hound_Turn.bmp";
+    if (ContainsTurnIconText(name, L"Lava Larva")) return L"S5_Larva_Turn.bmp";
+
+    return L"";
+}
+
+static HBITMAP LoadTurnIconBitmap(const std::wstring& fileName, BITMAP* outInfo)
+{
+    static std::map<std::wstring, HBITMAP> cache;
+
+    if (fileName.empty())
+    {
+        return NULL;
+    }
+
+    auto found = cache.find(fileName);
+    if (found != cache.end())
+    {
+        if (found->second != NULL && outInfo != nullptr)
+        {
+            GetObject(found->second, sizeof(BITMAP), outInfo);
+        }
+
+        return found->second;
+    }
+
+    std::vector<std::wstring> pathCandidates;
+    pathCandidates.push_back(L"Resource\\TurnEnemy\\" + fileName);
+    pathCandidates.push_back(L"Tower_Triumph\\Tower_Triumph\\Resource\\TurnEnemy\\" + fileName);
+    pathCandidates.push_back(L"Tower_Triumph\\Resource\\TurnEnemy\\" + fileName);
+    pathCandidates.push_back(L"..\\Tower_Triumph\\Tower_Triumph\\Resource\\TurnEnemy\\" + fileName);
+    pathCandidates.push_back(L"..\\Tower_Triumph\\Resource\\TurnEnemy\\" + fileName);
+
+    HBITMAP loaded = NULL;
+
+    for (const std::wstring& path : pathCandidates)
+    {
+        loaded = (HBITMAP)LoadImageW(
+            NULL,
+            path.c_str(),
+            IMAGE_BITMAP,
+            0,
+            0,
+            LR_LOADFROMFILE | LR_CREATEDIBSECTION
+        );
+
+        if (loaded != NULL)
+        {
+            break;
+        }
+    }
+
+    cache[fileName] = loaded;
+
+    if (loaded != NULL && outInfo != nullptr)
+    {
+        GetObject(loaded, sizeof(BITMAP), outInfo);
+    }
+
+    return loaded;
+}
+
+
 
 UTurnCharacterInfo::UTurnCharacterInfo(Character* character, bool enemy)
     : owner(character), isEnemy(enemy), isCurrentTurn(false)
@@ -148,6 +238,45 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
     if (owner == nullptr)
     {
         return;
+    }
+
+    // 적군은 몬스터 6x3 시트를 직접 잘라 쓰지 않고,
+    // 턴 표시 전용 단일 BMP를 사용한다.
+    if (isEnemy)
+    {
+        std::wstring iconFileName = GetEnemyTurnIconFileName(owner->GetName());
+
+        if (!iconFileName.empty())
+        {
+            BITMAP iconInfo;
+            ZeroMemory(&iconInfo, sizeof(BITMAP));
+
+            HBITMAP hIcon = LoadTurnIconBitmap(iconFileName, &iconInfo);
+
+            if (hIcon != NULL && iconInfo.bmWidth > 0 && iconInfo.bmHeight > 0)
+            {
+                HDC hIconDC = CreateCompatibleDC(hMemDC);
+                HBITMAP hOldIcon = (HBITMAP)SelectObject(hIconDC, hIcon);
+
+                StretchBlt(
+                    hMemDC,
+                    portraitRect.left,
+                    portraitRect.top,
+                    portraitRect.right - portraitRect.left,
+                    portraitRect.bottom - portraitRect.top,
+                    hIconDC,
+                    0,
+                    0,
+                    iconInfo.bmWidth,
+                    iconInfo.bmHeight,
+                    SRCCOPY
+                );
+
+                SelectObject(hIconDC, hOldIcon);
+                DeleteDC(hIconDC);
+                return;
+            }
+        }
     }
 
     HBITMAP hPortrait = owner->GetIllustration();

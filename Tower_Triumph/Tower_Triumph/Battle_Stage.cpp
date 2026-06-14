@@ -345,9 +345,61 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         e->Init(start.classType, start.x, start.y);
         e->SetName(start.name);
 
+        // 몬스터 지형 판정용 속성 적용.
+        // Water/SkyVoid 시작 위치 보정 전에 넣어야 FindNearestValidStartTile이 제대로 동작한다.
+        if (start.element != EElement::None)
+        {
+            e->SetElement(start.element);
+        }
+
+        // BattleMapData에 적어둔 SPD를 실제 턴 순서에 반영한다.
+        if (start.spd > 0)
+        {
+            CharacterStat stat = e->GetStat();
+            stat.SPD = start.spd;
+            e->SetStat(stat);
+        }
+
         Location safeStart = FindNearestValidStartTile(e, start.x, start.y, true);
         e->SetGridPos(safeStart.x, safeStart.y);
-        e->LoadSprites(L"Resource");
+
+        bool loadedMonsterSheet = false;
+
+        if (!start.monsterSheetFile.empty())
+        {
+            std::vector<std::wstring> monsterPathCandidates;
+
+            // Character BMP가 Resource\*.bmp에서 로드된다면,
+            // 몬스터는 그 아래 Monster 폴더에서 로드한다.
+            monsterPathCandidates.push_back(L"Resource\\Monster");
+
+            // 실행 위치가 솔루션 루트/상위 폴더로 잡힌 경우까지 대응.
+            monsterPathCandidates.push_back(L"Tower_Triumph\\Tower_Triumph\\Resource\\Monster");
+            monsterPathCandidates.push_back(L"Tower_Triumph\\Resource\\Monster");
+            monsterPathCandidates.push_back(L"..\\Tower_Triumph\\Tower_Triumph\\Resource\\Monster");
+            monsterPathCandidates.push_back(L"..\\Tower_Triumph\\Resource\\Monster");
+
+            for (const std::wstring& folderPath : monsterPathCandidates)
+            {
+                if (e->LoadMonsterSheet(folderPath, start.monsterSheetFile, start.monsterSourceFacesRight))
+                {
+                    loadedMonsterSheet = true;
+                    break;
+                }
+            }
+
+            if (!loadedMonsterSheet)
+            {
+                std::wstring debugText = L"[MonsterLoadFail] " + start.monsterSheetFile + L"\n";
+                OutputDebugStringW(debugText.c_str());
+            }
+        }
+
+        if (!loadedMonsterSheet)
+        {
+            e->LoadSprites(L"Resource");
+        }
+
         e->SyncWorldPixelToGrid(TILE_SIZE);
 
         enemyTeam.push_back(e);

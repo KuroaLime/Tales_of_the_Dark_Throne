@@ -240,6 +240,11 @@ private:
 	BITMAP SpriteInfoDead;
 	BITMAP SpriteInfoIllustration;
 
+	// 몬스터 단일 6x3 시트용 플래그.
+	// 일반 캐릭터 BMP와 몬스터 통합 BMP는 자르는 방식이 다르다.
+	bool bUseMonsterSheetLayout;
+	bool bSpriteFacesRight;
+
 private:
 	// ------------------------------------------------------------
 	// 내부 보조 함수
@@ -301,6 +306,11 @@ public:
 	// Resource\\Archer_Idle.bmp
 	// Resource\\Mage_Idle.bmp
 	bool LoadSprites(const std::wstring& folderPath);
+
+	// 몬스터 단일 6x3 시트 로드.
+	// folderPath 예: L"Resource\\Monster"
+	// fileName 예: L"S2_Angel.bmp"
+	bool LoadMonsterSheet(const std::wstring& folderPath, const std::wstring& fileName, bool sourceFacesRight);
 
 	// 상태창/턴 UI에서 Idle 스프라이트를 직접 참조할 때 사용
 	HBITMAP GetSpriteIdle() const;

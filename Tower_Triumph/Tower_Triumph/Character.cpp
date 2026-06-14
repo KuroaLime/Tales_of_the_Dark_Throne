@@ -73,6 +73,9 @@ Character::Character()
 
 	IsActionEnd = false;
 
+	bUseMonsterSheetLayout = false;
+	bSpriteFacesRight = true;
+
 	bHasMoved = false;
 	bHasActed = false;
 
@@ -157,6 +160,8 @@ Character::Character(Character&& other) noexcept
 	AniDelay = other.AniDelay;
 
 	IsActionEnd = other.IsActionEnd;
+	bUseMonsterSheetLayout = other.bUseMonsterSheetLayout;
+	bSpriteFacesRight = other.bSpriteFacesRight;
 	bHasMoved = other.bHasMoved;
 	bHasActed = other.bHasActed;
 
@@ -186,6 +191,8 @@ Character::Character(Character&& other) noexcept
 	other.hSpriteHit = NULL;
 	other.hSpriteDead = NULL;
 	other.hIllustration = NULL;
+	other.bUseMonsterSheetLayout = false;
+	other.bSpriteFacesRight = true;
 }
 
 Character& Character::operator=(Character&& other) noexcept
@@ -245,6 +252,8 @@ Character& Character::operator=(Character&& other) noexcept
 	AniDelay = other.AniDelay;
 
 	IsActionEnd = other.IsActionEnd;
+	bUseMonsterSheetLayout = other.bUseMonsterSheetLayout;
+	bSpriteFacesRight = other.bSpriteFacesRight;
 	bHasMoved = other.bHasMoved;
 	bHasActed = other.bHasActed;
 
@@ -275,6 +284,8 @@ Character& Character::operator=(Character&& other) noexcept
 	other.hSpriteDead = NULL;
 
 	other.hIllustration = NULL;
+	other.bUseMonsterSheetLayout = false;
+	other.bSpriteFacesRight = true;
 	return *this;
 }
 
@@ -315,6 +326,9 @@ void Character::Init(ECharacterClass classType, int gridX, int gridY)
 	AniDelay = 8;
 
 	IsActionEnd = false;
+
+	bUseMonsterSheetLayout = false;
+	bSpriteFacesRight = true;
 
 	Level = 1;
 	Exp = 0;
@@ -386,6 +400,9 @@ void Character::Release()
 	ZeroMemory(&SpriteInfoHit, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoDead, sizeof(BITMAP));
 	ZeroMemory(&SpriteInfoIllustration, sizeof(BITMAP));
+
+	bUseMonsterSheetLayout = false;
+	bSpriteFacesRight = true;
 }
 
 // ============================================================
@@ -513,6 +530,9 @@ bool Character::LoadSprites(const std::wstring& folderPath)
 {
 	Release();
 
+	bUseMonsterSheetLayout = false;
+	bSpriteFacesRight = true;
+
 	std::wstring basePath = folderPath;
 
 	if (!basePath.empty())
@@ -543,6 +563,68 @@ bool Character::LoadSprites(const std::wstring& folderPath)
 
 	return true;
 }
+
+
+bool Character::LoadMonsterSheet(const std::wstring& folderPath, const std::wstring& fileName, bool sourceFacesRight)
+{
+	Release();
+
+	bUseMonsterSheetLayout = true;
+	bSpriteFacesRight = sourceFacesRight;
+
+	std::wstring basePath = folderPath;
+
+	if (!basePath.empty())
+	{
+		wchar_t lastChar = basePath[basePath.length() - 1];
+
+		if (lastChar != L'\\' && lastChar != L'/')
+		{
+			basePath += L"\\";
+		}
+	}
+
+	BITMAP sheetInfo;
+	ZeroMemory(&sheetInfo, sizeof(BITMAP));
+
+	HBITMAP hSheet = LoadBitmapFromFile(basePath + fileName, &sheetInfo);
+
+	if (hSheet == NULL)
+	{
+		bUseMonsterSheetLayout = false;
+		bSpriteFacesRight = true;
+		return false;
+	}
+
+	// 몬스터는 한 BMP 안에 Idle / Attack / Hit / Dead가 모두 들어있다.
+	// 그래서 모든 상태 핸들이 같은 HBITMAP을 공유한다.
+	// Release()는 중복 핸들을 감지해서 DeleteObject를 1번만 수행한다.
+	hSpriteIdle = hSheet;
+	hSpriteWalk = hSheet;
+	hSpriteAttack = hSheet;
+	hSpriteDefend = hSheet;
+	hSpriteSkill = hSheet;
+	hSpriteHit = hSheet;
+	hSpriteDead = hSheet;
+	hIllustration = NULL;
+
+	SpriteInfoIdle = sheetInfo;
+	SpriteInfoWalk = sheetInfo;
+	SpriteInfoAttack = sheetInfo;
+	SpriteInfoDefend = sheetInfo;
+	SpriteInfoSkill = sheetInfo;
+	SpriteInfoHit = sheetInfo;
+	SpriteInfoDead = sheetInfo;
+	ZeroMemory(&SpriteInfoIllustration, sizeof(BITMAP));
+
+	CurFrame = 0;
+	AniTick = 0;
+	IsActionEnd = false;
+	UpdateMaxFrameByState();
+
+	return true;
+}
+
 
 HBITMAP Character::GetSpriteIdle() const
 {
@@ -647,8 +729,13 @@ int Character::GetDirectionRow() const
 
 bool Character::IsNeedFlip() const
 {
-	// 현재 걷기 스프라이트 원본은 오른쪽 방향 기준이다.
-	// 따라서 왼쪽으로 이동할 때만 좌우 반전한다.
+	// 일반 캐릭터 스프라이트는 오른쪽 방향 기준이다.
+	// 몬스터 시트는 파일마다 원본 방향이 다르므로 BattleMapData에서 받은 기준을 사용한다.
+	if (bUseMonsterSheetLayout)
+	{
+		return bSpriteFacesRight ? (Direction == EDirection::Left) : (Direction == EDirection::Right);
+	}
+
 	return Direction == EDirection::Left;
 }
 
@@ -656,14 +743,34 @@ void Character::UpdateMaxFrameByState()
 {
 	const BITMAP* info = GetCurrentSpriteInfo();
 
-	if (IsCharacterSixByThreeSheet(info))
+	if (bUseMonsterSheetLayout)
 	{
-		// 현재 상태의 스프라이트가 6x3이면 18프레임 전체를 사용한다.
+		switch (State)
+		{
+		case ECharacterState::Idle:
+		case ECharacterState::Walk:
+		case ECharacterState::Attack:
+		case ECharacterState::Skill:
+		case ECharacterState::Defend:
+			MaxFrame = CHARACTER_6X3_SHEET_COL; // 6프레임
+			break;
+
+		case ECharacterState::Hit:
+		case ECharacterState::Dead:
+			MaxFrame = 3; // Hit 3프레임 / Dead 3프레임
+			break;
+
+		default:
+			MaxFrame = 1;
+			break;
+		}
+	}
+	else if (IsCharacterSixByThreeSheet(info))
+	{
 		MaxFrame = CHARACTER_6X3_FRAME_COUNT;
 	}
 	else
 	{
-		// 기존 4프레임 시트는 그대로 유지한다.
 		MaxFrame = CHARACTER_SHEET_COL;
 	}
 
@@ -716,9 +823,9 @@ void Character::Update()
 
 	if (State == ECharacterState::Idle)
 	{
-		// 6x3 Idle 시트는 숨쉬기/망토 흔들림 같은 대기 애니메이션을 재생한다.
+		// 몬스터 6x3 시트는 Idle 6프레임을 재생한다.
 		// 기존 4프레임 이하 Idle 시트는 예전처럼 0프레임에 고정한다.
-		if (!IsCharacterSixByThreeSheet(GetCurrentSpriteInfo()))
+		if (!bUseMonsterSheetLayout && !IsCharacterSixByThreeSheet(GetCurrentSpriteInfo()))
 		{
 			CurFrame = 0;
 			return;
@@ -802,7 +909,7 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		return;
 	}
 
-	bool useSixByThree = IsCharacterSixByThreeSheet(curInfo);
+	bool useSixByThree = bUseMonsterSheetLayout || IsCharacterSixByThreeSheet(curInfo);
 
 	int sheetCol = CHARACTER_SHEET_COL;
 	int sheetRow = 1;
@@ -836,7 +943,7 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		return;
 	}
 
-	int frameCount = useSixByThree ? CHARACTER_6X3_FRAME_COUNT : CHARACTER_SHEET_COL;
+	int frameCount = bUseMonsterSheetLayout ? MaxFrame : (useSixByThree ? CHARACTER_6X3_FRAME_COUNT : CHARACTER_SHEET_COL);
 
 	if (CurFrame < 0)
 	{
@@ -861,9 +968,40 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 	int srcCol = 0;
 	int srcRow = 0;
 
-	if (useSixByThree)
+	if (bUseMonsterSheetLayout)
 	{
-		// 6x3 시트는 왼쪽 위부터 오른쪽 아래까지 18프레임을 순서대로 재생한다.
+		// 몬스터 단일 6x3 시트 구조:
+		// 0행 Idle, 1행 Attack, 2행 앞 3칸 Hit, 2행 뒤 3칸 Dead.
+		switch (State)
+		{
+		case ECharacterState::Attack:
+		case ECharacterState::Skill:
+			srcRow = 1;
+			srcCol = CurFrame % CHARACTER_6X3_SHEET_COL;
+			break;
+
+		case ECharacterState::Hit:
+			srcRow = 2;
+			srcCol = CurFrame % 3;
+			break;
+
+		case ECharacterState::Dead:
+			srcRow = 2;
+			srcCol = 3 + (CurFrame % 3);
+			break;
+
+		case ECharacterState::Idle:
+		case ECharacterState::Walk:
+		case ECharacterState::Defend:
+		default:
+			srcRow = 0;
+			srcCol = CurFrame % CHARACTER_6X3_SHEET_COL;
+			break;
+		}
+	}
+	else if (useSixByThree)
+	{
+		// 일반 6x3 시트는 왼쪽 위부터 오른쪽 아래까지 18프레임을 순서대로 재생한다.
 		srcCol = CurFrame % sheetCol;
 		srcRow = CurFrame / sheetCol;
 	}
