@@ -1,6 +1,29 @@
 ﻿#include "Character.h"
 #include "SkillData.h"
 
+static bool IsCharacterSixByThreeSheet(const BITMAP* info)
+{
+	if (info == nullptr || info->bmWidth <= 0 || info->bmHeight <= 0)
+	{
+		return false;
+	}
+
+	int frameW = info->bmWidth / CHARACTER_6X3_SHEET_COL;
+	int frameH = info->bmHeight / CHARACTER_6X3_SHEET_ROW;
+
+	if (frameW <= 0 || frameH <= 0)
+	{
+		return false;
+	}
+
+	// 6x3 시트는 보통 한 칸이 거의 정사각형이다.
+	// 이미지 생성본처럼 1~2px 정도 맞지 않아도 받을 수 있도록 25% 오차를 허용한다.
+	int diff = abs(frameW - frameH);
+	int bigger = (frameW > frameH) ? frameW : frameH;
+
+	return diff * 4 <= bigger;
+}
+
 // ============================================================
 // 생성자 / 소멸자
 // ============================================================
@@ -623,15 +646,25 @@ int Character::GetDirectionRow() const
 
 bool Character::IsNeedFlip() const
 {
-	// 기본 가정:
-	// 원본 캐릭터 스프라이트는 왼쪽 방향 기준.
-	// 오른쪽 방향일 때 좌우 반전한다.
-	return Direction == EDirection::Right;
+	// 현재 걷기 스프라이트 원본은 오른쪽 방향 기준이다.
+	// 따라서 왼쪽으로 이동할 때만 좌우 반전한다.
+	return Direction == EDirection::Left;
 }
 
 void Character::UpdateMaxFrameByState()
 {
-	MaxFrame = CHARACTER_SHEET_COL;
+	const BITMAP* info = GetCurrentSpriteInfo();
+
+	if (IsCharacterSixByThreeSheet(info))
+	{
+		// 현재 상태의 스프라이트가 6x3이면 18프레임 전체를 사용한다.
+		MaxFrame = CHARACTER_6X3_FRAME_COUNT;
+	}
+	else
+	{
+		// 기존 4프레임 시트는 그대로 유지한다.
+		MaxFrame = CHARACTER_SHEET_COL;
+	}
 
 	if (MaxFrame <= 0)
 	{
@@ -682,13 +715,41 @@ void Character::Update()
 
 	if (State == ECharacterState::Idle)
 	{
-		CurFrame = 0;
-		return;
+		// 6x3 Idle 시트는 숨쉬기/망토 흔들림 같은 대기 애니메이션을 재생한다.
+		// 기존 4프레임 이하 Idle 시트는 예전처럼 0프레임에 고정한다.
+		if (!IsCharacterSixByThreeSheet(GetCurrentSpriteInfo()))
+		{
+			CurFrame = 0;
+			return;
+		}
 	}
 
 	AniTick++;
 
-	if (AniTick < AniDelay)
+	int currentAniDelay = AniDelay;
+
+	if (IsCharacterSixByThreeSheet(GetCurrentSpriteInfo()))
+	{
+		switch (State)
+		{
+		case ECharacterState::Idle:
+			currentAniDelay = 5;
+			break;
+		case ECharacterState::Walk:
+		case ECharacterState::Attack:
+		case ECharacterState::Skill:
+		case ECharacterState::Hit:
+			currentAniDelay = 2;
+			break;
+		case ECharacterState::Dead:
+			currentAniDelay = 3;
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (AniTick < currentAniDelay)
 	{
 		return;
 	}
@@ -740,48 +801,50 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		return;
 	}
 
-	// 기본은 4열 기준
-	int frameW = curInfo->bmWidth / CHARACTER_SHEET_COL;
+	bool useSixByThree = IsCharacterSixByThreeSheet(curInfo);
 
-	if (frameW <= 0)
+	int sheetCol = CHARACTER_SHEET_COL;
+	int sheetRow = 1;
+
+	if (useSixByThree)
 	{
-		return;
+		// 6x3 시트는 18프레임 전체를 사용한다.
+		sheetCol = CHARACTER_6X3_SHEET_COL;
+		sheetRow = CHARACTER_6X3_SHEET_ROW;
 	}
-
-	// 현재 프로젝트 임시 리소스는 4x3 구조:
-	// 1448 x 1086 => frameW 362, frameH 362
-	//
-	// 나중에 1x4 구조로 바꾸면:
-	// 전체 높이 = frameH, rowCount = 1
-	int rowCount = 1;
-
-	if (curInfo->bmHeight % 3 == 0)
+	else
 	{
-		int candidateFrameH = curInfo->bmHeight / 3;
-
-		// 4x3 임시 스프라이트는 프레임이 정사각형 362x362이므로
-		// frameW와 candidateFrameH가 같으면 3행 시트로 판단
-		if (candidateFrameH == frameW)
+		// 기존 4x3 임시 시트 대응.
+		if (curInfo->bmHeight % 3 == 0)
 		{
-			rowCount = 3;
+			int tempFrameW = curInfo->bmWidth / CHARACTER_SHEET_COL;
+			int candidateFrameH = curInfo->bmHeight / 3;
+
+			if (candidateFrameH == tempFrameW)
+			{
+				sheetRow = 3;
+			}
 		}
 	}
 
-	int frameH = curInfo->bmHeight / rowCount;
+	int frameW = curInfo->bmWidth / sheetCol;
+	int frameH = curInfo->bmHeight / sheetRow;
 
-	if (frameH <= 0)
+	if (frameW <= 0 || frameH <= 0)
 	{
 		return;
 	}
+
+	int frameCount = useSixByThree ? CHARACTER_6X3_FRAME_COUNT : CHARACTER_SHEET_COL;
 
 	if (CurFrame < 0)
 	{
 		CurFrame = 0;
 	}
 
-	if (CurFrame >= CHARACTER_SHEET_COL)
+	if (CurFrame >= frameCount)
 	{
-		CurFrame = CHARACTER_SHEET_COL - 1;
+		CurFrame = frameCount - 1;
 	}
 
 	if (drawW <= 0)
@@ -794,16 +857,23 @@ void Character::Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH)
 		drawH = frameH;
 	}
 
-	// 4x3이면 가운데 행이 좌우 방향이라고 보고 사용
-	// 1x4이면 0행 사용
+	int srcCol = 0;
 	int srcRow = 0;
 
-	if (rowCount == 3)
+	if (useSixByThree)
 	{
-		srcRow = 1;
+		// 6x3 시트는 왼쪽 위부터 오른쪽 아래까지 18프레임을 순서대로 재생한다.
+		srcCol = CurFrame % sheetCol;
+		srcRow = CurFrame / sheetCol;
+	}
+	else
+	{
+		// 기존 4x3 시트는 가운데 줄을 좌우 방향으로 사용한다.
+		srcCol = CurFrame;
+		srcRow = (sheetRow == 3) ? 1 : 0;
 	}
 
-	int srcX = CurFrame * frameW;
+	int srcX = srcCol * frameW;
 	int srcY = srcRow * frameH;
 
 	int dstX = PixelPos.x;

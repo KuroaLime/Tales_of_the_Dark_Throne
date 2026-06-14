@@ -27,6 +27,18 @@
 #define CHARACTER_SHEET_COL 4
 #define CHARACTER_SHEET_ROW 1
 
+// 6x3 시트
+// 가로 6칸 x 세로 3줄 = 총 18프레임
+// Walk / Idle / Attack / Skill / Hit / Dead가 6x3 BMP이면 이 규격으로 재생한다.
+#define CHARACTER_6X3_SHEET_COL 6
+#define CHARACTER_6X3_SHEET_ROW 3
+#define CHARACTER_6X3_FRAME_COUNT (CHARACTER_6X3_SHEET_COL * CHARACTER_6X3_SHEET_ROW)
+
+// 기존 Walk 테스트 코드와의 호환용 별칭
+#define WALK_SHEET_COL CHARACTER_6X3_SHEET_COL
+#define WALK_SHEET_ROW CHARACTER_6X3_SHEET_ROW
+#define WALK_SHEET_FRAME_COUNT CHARACTER_6X3_FRAME_COUNT
+
 // TransparentBlt에서 사용할 투명 컬러키
 // BMP 배경은 반드시 순수 마젠타 RGB(255, 0, 255)여야 한다.
 #define CHARACTER_TRANSPARENT_COLOR RGB(255, 0, 255)
