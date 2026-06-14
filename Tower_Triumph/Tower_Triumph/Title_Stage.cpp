@@ -13,6 +13,9 @@ Title_Stage::Title_Stage()
     hBitBackground = nullptr;
     ZeroMemory(&BackgroundInfo, sizeof(BackgroundInfo));
     CurStageID = TITLE_STAGE;
+
+    curFrame = 0;
+    frameDelay = 0;
 }
 
 Title_Stage::~Title_Stage()
@@ -20,10 +23,19 @@ Title_Stage::~Title_Stage()
     if (menuGroup) delete menuGroup;
     if (settingPopup) delete settingPopup;
 
+    for (auto hBit : vBackgrounds)
+    {
+        if (hBit) DeleteObject(hBit);
+    }
+    vBackgrounds.clear();
+
     if (hBitBackground)
     {
-        DeleteObject(hBitBackground);
-        hBitBackground = nullptr;
+        // Note: hBitBackground might be one of the bitmaps in vBackgrounds.
+        // But since we use it as a pointer to current frame, and vBackgrounds 
+        // handles the actual DeleteObject for all frames, we don't need to delete it again
+        // unless it was loaded separately (fallback case).
+        // To be safe, the Init logic should be clear.
     }
 }
 
@@ -31,41 +43,60 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
     GetClientRect(hWnd, &rects);
 
-    // Friend title resource background restored.
-    hBitBackground = (HBITMAP)LoadImageW(
-        NULL,
-        L"Resource\\Title\\Title_Background.bmp",
-        IMAGE_BITMAP,
-        0,
-        0,
-        LR_LOADFROMFILE | LR_CREATEDIBSECTION
-    );
-
-    if (!hBitBackground)
+    // Load 96 background frames
+    vBackgrounds.reserve(MAX_FRAME);
+    for (int i = 1; i <= MAX_FRAME; ++i)
     {
-        hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
-    }
+        wchar_t szPath[MAX_PATH];
+        swprintf_s(szPath, L"Resource\\Title\\Background\\Title_Background (%d).bmp", i);
 
-    if (!hBitBackground)
-    {
-        hBitBackground = (HBITMAP)LoadImageW(
+        HBITMAP hBit = (HBITMAP)LoadImageW(
             NULL,
-            L"Source\\SMap\\background\\Test00.bmp",
+            szPath,
             IMAGE_BITMAP,
             0,
             0,
             LR_LOADFROMFILE | LR_CREATEDIBSECTION
         );
+
+        if (hBit)
+        {
+            vBackgrounds.push_back(hBit);
+        }
     }
 
-    if (hBitBackground)
+    // Set first frame as default if available
+    if (!vBackgrounds.empty())
     {
+        hBitBackground = vBackgrounds[0];
         GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
     }
     else
     {
-        BackgroundInfo.bmWidth = rects.right;
-        BackgroundInfo.bmHeight = rects.bottom;
+        // Fallback for single background or missing resources
+        hBitBackground = (HBITMAP)LoadImageW(
+            NULL,
+            L"Resource\\Title\\Title_Background.bmp",
+            IMAGE_BITMAP,
+            0,
+            0,
+            LR_LOADFROMFILE | LR_CREATEDIBSECTION
+        );
+
+        if (!hBitBackground)
+        {
+            hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
+        }
+
+        if (hBitBackground)
+        {
+            GetObject(hBitBackground, sizeof(BITMAP), &BackgroundInfo);
+        }
+        else
+        {
+            BackgroundInfo.bmWidth = rects.right;
+            BackgroundInfo.bmHeight = rects.bottom;
+        }
     }
 
     Loc.first.x = rects.right / 2;
@@ -128,6 +159,18 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
 void Title_Stage::Update(HWND hWnd)
 {
+    // Update background animation
+    if (!vBackgrounds.empty())
+    {
+        frameDelay++;
+        if (frameDelay >= 2) // Speed adjustment: increase to slow down
+        {
+            curFrame = (curFrame + 1) % (int)vBackgrounds.size();
+            hBitBackground = vBackgrounds[curFrame];
+            frameDelay = 0;
+        }
+    }
+
     mainHUD.Update();
 }
 

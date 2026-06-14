@@ -18,6 +18,11 @@ private:
     UButton* btnSetting;
     UButton* btnEnd;
 
+    std::vector<HBITMAP> vBackgrounds;
+    int curFrame;
+    int frameDelay;
+    static const int MAX_FRAME = 96;
+
 public:
     Title_Stage();
     virtual ~Title_Stage();
