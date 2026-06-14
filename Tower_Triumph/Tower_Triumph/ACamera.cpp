@@ -1,14 +1,14 @@
 #include "ACamera.h"
 
 ACamera::ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY) {
-    g_CamX = N_CamX * 0.8f;
-    g_CamY = N_CamY * 0.8f;
+    g_CamX = (float)N_CamX;
+    g_CamY = (float)N_CamY;
 
     PointGridX = (float)PointIndexX;
     PointGridY = (float)PointIndexY;
 
-    currentZoom = 1.0f;
-    targetZoom = 1.0f;
+    currentZoom = 1.5f;
+    targetZoom = 1.5f;
 }
 void ACamera::Reset() {
     g_CamX = 0;
@@ -16,27 +16,42 @@ void ACamera::Reset() {
 
     PointGridX = 0;
     PointGridY = 0;
-    currentZoom = 1.0f;
-    targetZoom = 1.0f;
+    currentZoom = 1.5f;
+    targetZoom = 1.5f;
 }
 void ACamera::Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT) {
     // Smooth zoom transition
     currentZoom += (targetZoom - currentZoom) * 0.1f;
 
-    // Center on the target point
-    float targetX = (float)(PointGridX * TILE_SIZE - (WIN_WIDTH / 2) / currentZoom + TILE_SIZE / 2);
-    float targetY = (float)(PointGridY * TILE_SIZE - (WIN_HEIGHT / 2) / currentZoom + TILE_SIZE / 2);
+    // Center on the target point (PointGrid is in tile units, so convert to pixels)
+    float targetX = (float)(PointGridX * TILE_SIZE - (WIN_WIDTH / 2.0f) / currentZoom);
+    float targetY = (float)(PointGridY * TILE_SIZE - (WIN_HEIGHT / 2.0f) / currentZoom);
 
-    // Bound check (considering zoom)
-    float maxW = (float)TILE_W * TILE_SIZE;
-    float maxH = (float)TILE_H * TILE_SIZE;
-    float visibleW = (float)WIN_WIDTH / currentZoom;
-    float visibleH = (float)WIN_HEIGHT / currentZoom;
+    // Map pixel dimensions
+    float mapW = (float)TILE_W * TILE_SIZE;
+    float mapH = (float)TILE_H * TILE_SIZE;
+    
+    // Viewport dimensions in world space
+    float viewW = (float)WIN_WIDTH / currentZoom;
+    float viewH = (float)WIN_HEIGHT / currentZoom;
 
-    if (targetX < 0) targetX = 0;
-    if (targetY < 0) targetY = 0;
-    if (targetX > (maxW - visibleW)) targetX = maxW - visibleW;
-    if (targetY > (maxH - visibleH)) targetY = maxH - visibleH;
+    // Horizontal bounds
+    if (mapW <= viewW) {
+        // Map is smaller than screen; center it
+        targetX = (mapW - viewW) / 2.0f;
+    } else {
+        if (targetX < 0) targetX = 0;
+        if (targetX > (mapW - viewW)) targetX = mapW - viewW;
+    }
+
+    // Vertical bounds
+    if (mapH <= viewH) {
+        // Map is smaller than screen; center it
+        targetY = (mapH - viewH) / 2.0f;
+    } else {
+        if (targetY < 0) targetY = 0;
+        if (targetY > (mapH - viewH)) targetY = mapH - viewH;
+    }
 
     g_CamX += (targetX - g_CamX) * 0.1f;
     g_CamY += (targetY - g_CamY) * 0.1f;

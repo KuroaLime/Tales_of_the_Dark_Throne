@@ -11,6 +11,7 @@ UMouseMark::UMouseMark()
 	currentMousePos = { 0, 0 };
 	cameraX = 0;
 	cameraY = 0;
+	currentZoom = 1.0f;
 	bVisible = true;
 }
 
@@ -22,10 +23,10 @@ void UMouseMark::Update()
 
 	if (targetMarker)
 	{
-		// Track RegionMarker's floating icon location (converted to screen coordinates)
+		// Track RegionMarker's floating icon location (converted to screen coordinates with zoom)
 		Location iconLoc = targetMarker->GetIconLocation();
-		Loc.x = iconLoc.x - cameraX;
-		Loc.y = iconLoc.y - cameraY;
+		Loc.x = (int)((iconLoc.x - cameraX) * currentZoom);
+		Loc.y = (int)((iconLoc.y - cameraY) * currentZoom);
 	}
 	else
 	{

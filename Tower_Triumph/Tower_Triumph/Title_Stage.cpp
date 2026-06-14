@@ -83,10 +83,7 @@ void Title_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
             LR_LOADFROMFILE | LR_CREATEDIBSECTION
         );
 
-        if (!hBitBackground)
-        {
-            hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_SMAP_BACKGROUND));
-        }
+
 
         if (hBitBackground)
         {

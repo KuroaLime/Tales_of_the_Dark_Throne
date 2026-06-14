@@ -103,7 +103,7 @@ bool URegionMarker::ContainsPointWithOffset(int MouseX, int MouseY, int offsetX,
 void URegionMarker::Activate()
 {
 	bIsActivated = true;
-	targetScale = 2.0f;
+	targetScale = 1.5f;
 }
 
 void URegionMarker::Deactivate()
