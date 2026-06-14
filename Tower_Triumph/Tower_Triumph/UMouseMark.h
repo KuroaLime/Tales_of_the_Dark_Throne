@@ -10,6 +10,7 @@ private:
 	float angle;
 	POINT currentMousePos;
 	int cameraX, cameraY;
+	float currentZoom;
 
 public:
 	UMouseMark();
@@ -18,6 +19,6 @@ public:
 
 	void SetTarget(URegionMarker* target) { targetMarker = target; }
 	void SetMousePos(POINT pt) { currentMousePos = pt; }
-	void SetCameraOffset(int x, int y) { cameraX = x; cameraY = y; }
+	void SetCameraInfo(int x, int y, float zoom) { cameraX = x; cameraY = y; currentZoom = zoom; }
 };
 

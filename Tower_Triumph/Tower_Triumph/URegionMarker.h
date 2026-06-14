@@ -14,6 +14,7 @@ private:
 	int baseIconY;
 	
 	bool bIsActivated; // true if clicked (!)
+	bool bIsUnlocked;  // true if stage is unlocked
 	std::wstring parentRegionName; // broad region (e.g. Hyzante)
 	std::wstring regionName;       // specific point (e.g. Bridge)
 	std::wstring regionDesc;
@@ -27,9 +28,12 @@ public:
 	virtual void Update() override;
 	virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
 
-	void Setup(HINSTANCE hInst, int x, int y, const std::wstring& regionPath, WORD iconQResID, WORD iconEResID);
+	void Setup(HINSTANCE hInst, int x, int y, const std::wstring& regionPath);
 	void SetRegionInfo(const std::wstring& parentName, const std::wstring& name, const std::wstring& desc, const std::wstring& env);
 	
+	void SetIsUnlocked(bool bNew) { bIsUnlocked = bNew; }
+	bool IsUnlocked() const { return bIsUnlocked; }
+
 	void Activate();
 	void Deactivate();
 

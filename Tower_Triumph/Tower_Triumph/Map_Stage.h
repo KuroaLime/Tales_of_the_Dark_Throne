@@ -47,6 +47,10 @@ private:
 	int NextStageID;
 	int SelectedBattleStageId;
 	int SelectedMarkerNextStageID;
+
+	HBITMAP hBitWave;
+	BITMAP WaveInfo;
+	float waveOffset;
 public:
 	Map_Stage();
 	virtual ~Map_Stage();

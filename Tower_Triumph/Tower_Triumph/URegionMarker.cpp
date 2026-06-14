@@ -8,11 +8,12 @@ URegionMarker::URegionMarker()
 	animationTime = 0.0f;
 	floatingRange = 15.0f;
 	bIsActivated = false;
+	bIsUnlocked = false;
 	currentScale = 1.0f;
 	targetScale = 1.0f;
 }
 
-void URegionMarker::Setup(HINSTANCE hInst, int x, int y, const std::wstring& regionPath, WORD iconQResID, WORD iconEResID)
+void URegionMarker::Setup(HINSTANCE hInst, int x, int y, const std::wstring& regionPath)
 {
 	SetLocation(x, y);
 	Size.sX = 120;
@@ -26,7 +27,8 @@ void URegionMarker::Setup(HINSTANCE hInst, int x, int y, const std::wstring& reg
 	iconImage = new UImage();
 	baseIconY = y - 70;
 	iconImage->SetLocation(x, baseIconY);
-	iconImage->SetFrame(hInst, { iconQResID, iconEResID }); // 0: ?, 1: !
+	// Frame 0: Closed, Frame 1: Open
+	iconImage->SetFrameFromFile({ L"Source\\SMap\\background\\QuestClosed.bmp", L"Source\\SMap\\background\\QuestOPEN.bmp" });
 	iconImage->SetUIID(101);
 }
 
@@ -83,7 +85,8 @@ void URegionMarker::DrawWithOffset(HDC hMemDC, HDC hMemDC1, int offsetX, int off
 	int iconSize = (int)(64 * zoom);
 
 	if (iconImage && !iconImage->GetBitmap().empty()) {
-		int frame = bIsActivated ? 1 : 0;
+		// Frame 0: Closed, Frame 1: Open
+		int frame = bIsUnlocked ? 1 : 0;
 		HBITMAP hBit = iconImage->GetBitmap()[frame];
 		BITMAP info = iconImage->GetMapInfo()[frame];
 		HBITMAP old = (HBITMAP)SelectObject(hMemDC1, hBit);
@@ -103,7 +106,7 @@ bool URegionMarker::ContainsPointWithOffset(int MouseX, int MouseY, int offsetX,
 void URegionMarker::Activate()
 {
 	bIsActivated = true;
-	targetScale = 2.0f;
+	targetScale = 1.5f;
 }
 
 void URegionMarker::Deactivate()
