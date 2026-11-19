@@ -1,0 +1,54 @@
+{
+  "scale": 0.28125,
+  "registrationNote": "Uniform 81/288 body scale. Repeated column/row contact-sheet offsets registered from matching standing poses; recoil, crouch and recovery are preserved.",
+  "frames": [
+    {
+      "rootX": 216,
+      "groundY": 326
+    },
+    {
+      "rootX": 203,
+      "groundY": 326
+    },
+    {
+      "rootX": 191,
+      "groundY": 326
+    },
+    {
+      "rootX": 185,
+      "groundY": 326
+    },
+    {
+      "rootX": 216,
+      "groundY": 320
+    },
+    {
+      "rootX": 203,
+      "groundY": 320
+    },
+    {
+      "rootX": 191,
+      "groundY": 320
+    },
+    {
+      "rootX": 185,
+      "groundY": 320
+    },
+    {
+      "rootX": 216,
+      "groundY": 322
+    },
+    {
+      "rootX": 203,
+      "groundY": 322
+    },
+    {
+      "rootX": 191,
+      "groundY": 322
+    },
+    {
+      "rootX": 185,
+      "groundY": 322
+    }
+  ]
+}

@@ -1,0 +1,817 @@
+﻿{
+    "schemaVersion":  1,
+    "generationMode":  "mechanical derivative of built-in image_gen",
+    "skillID":  2203,
+    "characterClass":  "Archer",
+    "element":  "Water",
+    "source":  "Skill_Archer_Water_Snipe_Ultimate.source.png",
+    "sourceSha256":  "fb6dfcfb95566dd00d10c67c1f9e441675e9ca5864aaeb784173fccabcb44d76",
+    "sourceMainPreview":  "Skill_Archer_Water_Snipe_Ultimate.png",
+    "sourceMainPreviewSha256":  "db6ec40fd8deae0aaf7f99fd93dfeede1735c7dfd502d233058a59025db0dbea",
+    "bitmap":  "Skill_Archer_Water_Snipe_Ultimate_Flight.bmp",
+    "preview":  "Skill_Archer_Water_Snipe_Ultimate_Flight.png",
+    "bitmapSha256":  "964aaf0bc23df5fd39d27415f79448fac35b54a046462663f7480e41d54f9e77",
+    "previewSha256":  "38ddf97188fc3b8d381aec63deef6bcd9a4154a00e6471ea644fb7c280c91ee9",
+    "columns":  16,
+    "rows":  4,
+    "frameCount":  4,
+    "directions":  16,
+    "cellSize":  128,
+    "sheetSize":  [
+                      2048,
+                      512
+                  ],
+    "rotationCenter":  [
+                           64,
+                           64
+                       ],
+    "clockwiseDegreesPerColumn":  22.5,
+    "columnZero":  "right",
+    "sourceTip":  [
+                      117.5,
+                      63.5
+                  ],
+    "registeredAnchor":  [
+                             117.5,
+                             63.5
+                         ],
+    "directionAnchors":  [
+                             [
+                                 117.5,
+                                 63.5
+                             ],
+                             [
+                                 113.618897,
+                                 84.011624
+                             ],
+                             [
+                                 102.183766,
+                                 101.476659
+                             ],
+                             [
+                                 84.935503,
+                                 113.236213
+                             ],
+                             [
+                                 64.5,
+                                 117.5
+                             ],
+                             [
+                                 43.988376,
+                                 113.618897
+                             ],
+                             [
+                                 26.523341,
+                                 102.183766
+                             ],
+                             [
+                                 14.763787,
+                                 84.935503
+                             ],
+                             [
+                                 10.5,
+                                 64.5
+                             ],
+                             [
+                                 14.381103,
+                                 43.988376
+                             ],
+                             [
+                                 25.816234,
+                                 26.523341
+                             ],
+                             [
+                                 43.064497,
+                                 14.763787
+                             ],
+                             [
+                                 63.5,
+                                 10.5
+                             ],
+                             [
+                                 84.011624,
+                                 14.381103
+                             ],
+                             [
+                                 101.476659,
+                                 25.816234
+                             ],
+                             [
+                                 113.236213,
+                                 43.064497
+                             ]
+                         ],
+    "registrationGroupScale":  1,
+    "rotationCoefficientDecimals":  12,
+    "samplingEpsilon":  1E-09,
+    "recommendedDrawSize":  80,
+    "alphaThreshold":  128,
+    "transparencyKey":  "#ff00ff",
+    "frames":  [
+                   {
+                       "frame":  0,
+                       "direction":  0,
+                       "opaquePixels":  1297,
+                       "bounds":  [
+                                      10,
+                                      43,
+                                      118,
+                                      80
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  0,
+                       "opaquePixels":  1566,
+                       "bounds":  [
+                                      10,
+                                      42,
+                                      118,
+                                      87
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  0,
+                       "opaquePixels":  2164,
+                       "bounds":  [
+                                      9,
+                                      37,
+                                      118,
+                                      88
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  0,
+                       "opaquePixels":  1783,
+                       "bounds":  [
+                                      9,
+                                      38,
+                                      118,
+                                      88
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  1,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      12,
+                                      29,
+                                      114,
+                                      85
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  1,
+                       "opaquePixels":  1570,
+                       "bounds":  [
+                                      13,
+                                      31,
+                                      114,
+                                      86
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  1,
+                       "opaquePixels":  2172,
+                       "bounds":  [
+                                      12,
+                                      28,
+                                      114,
+                                      85
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  1,
+                       "opaquePixels":  1786,
+                       "bounds":  [
+                                      11,
+                                      31,
+                                      114,
+                                      86
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  2,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      22,
+                                      20,
+                                      103,
+                                      102
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  2,
+                       "opaquePixels":  1567,
+                       "bounds":  [
+                                      22,
+                                      21,
+                                      103,
+                                      102
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  2,
+                       "opaquePixels":  2167,
+                       "bounds":  [
+                                      19,
+                                      20,
+                                      103,
+                                      102
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  2,
+                       "opaquePixels":  1788,
+                       "bounds":  [
+                                      17,
+                                      21,
+                                      103,
+                                      102
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  3,
+                       "opaquePixels":  1294,
+                       "bounds":  [
+                                      36,
+                                      13,
+                                      86,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  3,
+                       "opaquePixels":  1562,
+                       "bounds":  [
+                                      29,
+                                      12,
+                                      87,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  3,
+                       "opaquePixels":  2163,
+                       "bounds":  [
+                                      27,
+                                      11,
+                                      94,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  3,
+                       "opaquePixels":  1782,
+                       "bounds":  [
+                                      28,
+                                      11,
+                                      88,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  4,
+                       "opaquePixels":  1297,
+                       "bounds":  [
+                                      48,
+                                      10,
+                                      85,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  4,
+                       "opaquePixels":  1566,
+                       "bounds":  [
+                                      41,
+                                      10,
+                                      86,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  4,
+                       "opaquePixels":  2164,
+                       "bounds":  [
+                                      40,
+                                      9,
+                                      91,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  4,
+                       "opaquePixels":  1783,
+                       "bounds":  [
+                                      40,
+                                      9,
+                                      90,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  5,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      43,
+                                      12,
+                                      99,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  5,
+                       "opaquePixels":  1570,
+                       "bounds":  [
+                                      42,
+                                      13,
+                                      97,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  5,
+                       "opaquePixels":  2172,
+                       "bounds":  [
+                                      43,
+                                      12,
+                                      100,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  5,
+                       "opaquePixels":  1786,
+                       "bounds":  [
+                                      42,
+                                      11,
+                                      97,
+                                      114
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  6,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      26,
+                                      22,
+                                      108,
+                                      103
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  6,
+                       "opaquePixels":  1567,
+                       "bounds":  [
+                                      26,
+                                      22,
+                                      107,
+                                      103
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  6,
+                       "opaquePixels":  2167,
+                       "bounds":  [
+                                      26,
+                                      19,
+                                      108,
+                                      103
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  6,
+                       "opaquePixels":  1788,
+                       "bounds":  [
+                                      26,
+                                      17,
+                                      107,
+                                      103
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  7,
+                       "opaquePixels":  1294,
+                       "bounds":  [
+                                      14,
+                                      36,
+                                      115,
+                                      86
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  7,
+                       "opaquePixels":  1562,
+                       "bounds":  [
+                                      14,
+                                      29,
+                                      116,
+                                      87
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  7,
+                       "opaquePixels":  2163,
+                       "bounds":  [
+                                      14,
+                                      27,
+                                      117,
+                                      94
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  7,
+                       "opaquePixels":  1782,
+                       "bounds":  [
+                                      14,
+                                      28,
+                                      117,
+                                      88
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  8,
+                       "opaquePixels":  1297,
+                       "bounds":  [
+                                      10,
+                                      48,
+                                      118,
+                                      85
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  8,
+                       "opaquePixels":  1566,
+                       "bounds":  [
+                                      10,
+                                      41,
+                                      118,
+                                      86
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  8,
+                       "opaquePixels":  2164,
+                       "bounds":  [
+                                      10,
+                                      40,
+                                      119,
+                                      91
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  8,
+                       "opaquePixels":  1783,
+                       "bounds":  [
+                                      10,
+                                      40,
+                                      119,
+                                      90
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  9,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      14,
+                                      43,
+                                      116,
+                                      99
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  9,
+                       "opaquePixels":  1570,
+                       "bounds":  [
+                                      14,
+                                      42,
+                                      115,
+                                      97
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  9,
+                       "opaquePixels":  2172,
+                       "bounds":  [
+                                      14,
+                                      43,
+                                      116,
+                                      100
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  9,
+                       "opaquePixels":  1786,
+                       "bounds":  [
+                                      14,
+                                      42,
+                                      117,
+                                      97
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  10,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      25,
+                                      26,
+                                      106,
+                                      108
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  10,
+                       "opaquePixels":  1567,
+                       "bounds":  [
+                                      25,
+                                      26,
+                                      106,
+                                      107
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  10,
+                       "opaquePixels":  2167,
+                       "bounds":  [
+                                      25,
+                                      26,
+                                      109,
+                                      108
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  10,
+                       "opaquePixels":  1788,
+                       "bounds":  [
+                                      25,
+                                      26,
+                                      111,
+                                      107
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  11,
+                       "opaquePixels":  1294,
+                       "bounds":  [
+                                      42,
+                                      14,
+                                      92,
+                                      115
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  11,
+                       "opaquePixels":  1562,
+                       "bounds":  [
+                                      41,
+                                      14,
+                                      99,
+                                      116
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  11,
+                       "opaquePixels":  2163,
+                       "bounds":  [
+                                      34,
+                                      14,
+                                      101,
+                                      117
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  11,
+                       "opaquePixels":  1782,
+                       "bounds":  [
+                                      40,
+                                      14,
+                                      100,
+                                      117
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  12,
+                       "opaquePixels":  1297,
+                       "bounds":  [
+                                      43,
+                                      10,
+                                      80,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  12,
+                       "opaquePixels":  1566,
+                       "bounds":  [
+                                      42,
+                                      10,
+                                      87,
+                                      118
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  12,
+                       "opaquePixels":  2164,
+                       "bounds":  [
+                                      37,
+                                      10,
+                                      88,
+                                      119
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  12,
+                       "opaquePixels":  1783,
+                       "bounds":  [
+                                      38,
+                                      10,
+                                      88,
+                                      119
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  13,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      29,
+                                      14,
+                                      85,
+                                      116
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  13,
+                       "opaquePixels":  1570,
+                       "bounds":  [
+                                      31,
+                                      14,
+                                      86,
+                                      115
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  13,
+                       "opaquePixels":  2172,
+                       "bounds":  [
+                                      28,
+                                      14,
+                                      85,
+                                      116
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  13,
+                       "opaquePixels":  1786,
+                       "bounds":  [
+                                      31,
+                                      14,
+                                      86,
+                                      117
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  14,
+                       "opaquePixels":  1299,
+                       "bounds":  [
+                                      20,
+                                      25,
+                                      102,
+                                      106
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  14,
+                       "opaquePixels":  1567,
+                       "bounds":  [
+                                      21,
+                                      25,
+                                      102,
+                                      106
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  14,
+                       "opaquePixels":  2167,
+                       "bounds":  [
+                                      20,
+                                      25,
+                                      102,
+                                      109
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  14,
+                       "opaquePixels":  1788,
+                       "bounds":  [
+                                      21,
+                                      25,
+                                      102,
+                                      111
+                                  ]
+                   },
+                   {
+                       "frame":  0,
+                       "direction":  15,
+                       "opaquePixels":  1294,
+                       "bounds":  [
+                                      13,
+                                      42,
+                                      114,
+                                      92
+                                  ]
+                   },
+                   {
+                       "frame":  1,
+                       "direction":  15,
+                       "opaquePixels":  1562,
+                       "bounds":  [
+                                      12,
+                                      41,
+                                      114,
+                                      99
+                                  ]
+                   },
+                   {
+                       "frame":  2,
+                       "direction":  15,
+                       "opaquePixels":  2163,
+                       "bounds":  [
+                                      11,
+                                      34,
+                                      114,
+                                      101
+                                  ]
+                   },
+                   {
+                       "frame":  3,
+                       "direction":  15,
+                       "opaquePixels":  1782,
+                       "bounds":  [
+                                      11,
+                                      40,
+                                      114,
+                                      100
+                                  ]
+                   }
+               ],
+    "method":  "First four normalized source frames only. One common scale about cell center, composed with 16 nearest-neighbor rotations in one sample. No per-frame fitting, RGB change, or painted edits."
+}

@@ -1,0 +1,449 @@
+{
+  "source": "Warrior_WalkCycle.source.png",
+  "bitmap": "Warrior_WalkCycle.bmp",
+  "sourceSha256": "d9f124961cc909fa49cf1a5d6923ded3d30e35d6c17fc6fc97b1804222af87df",
+  "bitmapSha256": "e10517ed8b2ff081d866b7330b377b5ace917869bc3547162607f3ffac1f37bd",
+  "columns": 4,
+  "rows": 3,
+  "frameCount": 12,
+  "cellSize": 96,
+  "sheetSize": [
+    384,
+    288
+  ],
+  "root": [
+    48,
+    88
+  ],
+  "uniformScale": 0.264,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "frameOrder": "row-major, left to right, top to bottom",
+  "frames": [
+    {
+      "index": 0,
+      "sourceCell": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "sourceBounds": [
+        58,
+        16,
+        288,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        5,
+        7,
+        65,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        4.704000000000001,
+        6.688000000000002,
+        65.424,
+        87.736
+      ]
+    },
+    {
+      "index": 1,
+      "sourceCell": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "sourceBounds": [
+        51,
+        17,
+        288,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        7,
+        65,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.8559999999999945,
+        6.951999999999998,
+        65.424,
+        87.736
+      ]
+    },
+    {
+      "index": 2,
+      "sourceCell": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "sourceBounds": [
+        50,
+        21,
+        289,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.5919999999999987,
+        8.007999999999996,
+        65.688,
+        87.736
+      ]
+    },
+    {
+      "index": 3,
+      "sourceCell": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "sourceBounds": [
+        50,
+        21,
+        289,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.5919999999999987,
+        8.007999999999996,
+        65.688,
+        87.736
+      ]
+    },
+    {
+      "index": 4,
+      "sourceCell": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "sourceBounds": [
+        44,
+        22,
+        289,
+        322
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        1,
+        8,
+        66,
+        87
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        1.0079999999999956,
+        8.271999999999991,
+        65.688,
+        87.472
+      ]
+    },
+    {
+      "index": 5,
+      "sourceCell": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "sourceBounds": [
+        52,
+        22,
+        289,
+        322
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        87
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        3.1199999999999974,
+        8.271999999999991,
+        65.688,
+        87.472
+      ]
+    },
+    {
+      "index": 6,
+      "sourceCell": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "sourceBounds": [
+        49,
+        21,
+        289,
+        322
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        2,
+        8,
+        66,
+        87
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.327999999999996,
+        8.007999999999996,
+        65.688,
+        87.472
+      ]
+    },
+    {
+      "index": 7,
+      "sourceCell": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "sourceBounds": [
+        50,
+        21,
+        289,
+        322
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        87
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.5919999999999987,
+        8.007999999999996,
+        65.688,
+        87.472
+      ]
+    },
+    {
+      "index": 8,
+      "sourceCell": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "sourceBounds": [
+        54,
+        21,
+        289,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        4,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        3.647999999999996,
+        8.007999999999996,
+        65.688,
+        87.736
+      ]
+    },
+    {
+      "index": 9,
+      "sourceCell": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "sourceBounds": [
+        54,
+        20,
+        289,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        4,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        3.647999999999996,
+        7.744,
+        65.688,
+        87.736
+      ]
+    },
+    {
+      "index": 10,
+      "sourceCell": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "sourceBounds": [
+        53,
+        20,
+        290,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        3.3840000000000003,
+        7.744,
+        65.952,
+        87.736
+      ]
+    },
+    {
+      "index": 11,
+      "sourceCell": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "sourceBounds": [
+        51,
+        20,
+        289,
+        323
+      ],
+      "sourceRoot": [
+        222.0,
+        324.0
+      ],
+      "outputBounds": [
+        3,
+        8,
+        66,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        2.8559999999999945,
+        7.744,
+        65.688,
+        87.736
+      ]
+    }
+  ],
+  "method": "Nearest-neighbor uniform scaling and explicit root translation only; no pose warping or foot-median anchors.",
+  "approvedIdleMasterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+  "approvedIdleReference": "../../../Source/Concepts/CharacterIdle/approved/Warrior.png",
+  "measuredCycleLengthPixels": 64,
+  "calibrationNote": "Fixed pelvis root and common ground; scale matched to approved IdlePose head/body height. Cycle length calibrated from ground-contact boot travel across the two stance phases."
+}

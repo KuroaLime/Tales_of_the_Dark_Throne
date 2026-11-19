@@ -1,0 +1,118 @@
+{
+  "element": "Dark",
+  "source": "Projectiles_Dark.source.png",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "sourceRows": 4,
+  "sourceSha256": "a0309377f41ac258c76d402b10664742bd78dd8ef88472937b217f22eda01071",
+  "bitmap": "Element_Impact_Dark.bmp",
+  "preview": "Element_Impact_Dark.png",
+  "columns": 4,
+  "rows": 2,
+  "frameCount": 8,
+  "cellSize": 64,
+  "sheetSize": [
+    256,
+    128
+  ],
+  "center": [
+    32,
+    32
+  ],
+  "recommendedDrawSize": 48,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "uniformScale": 0.20414673046251994,
+  "sourceStartRow": 2,
+  "animationFrameSeconds": 0.025,
+  "sourceSharedTranslation": [
+    0,
+    0
+  ],
+  "method": "Uniform whole-sheet nearest-neighbor scale; source rows 2 and 3 packed with one recorded shared translation for all eight poses. No per-frame fitting or redrawing.",
+  "frames": [
+    {
+      "frame": 0,
+      "bounds": [
+        22,
+        23,
+        44,
+        44
+      ],
+      "opaquePixels": 147
+    },
+    {
+      "frame": 1,
+      "bounds": [
+        18,
+        17,
+        50,
+        47
+      ],
+      "opaquePixels": 406
+    },
+    {
+      "frame": 2,
+      "bounds": [
+        12,
+        12,
+        52,
+        52
+      ],
+      "opaquePixels": 864
+    },
+    {
+      "frame": 3,
+      "bounds": [
+        6,
+        7,
+        58,
+        57
+      ],
+      "opaquePixels": 1324
+    },
+    {
+      "frame": 4,
+      "bounds": [
+        13,
+        12,
+        53,
+        51
+      ],
+      "opaquePixels": 361
+    },
+    {
+      "frame": 5,
+      "bounds": [
+        16,
+        14,
+        52,
+        48
+      ],
+      "opaquePixels": 162
+    },
+    {
+      "frame": 6,
+      "bounds": [
+        17,
+        18,
+        48,
+        45
+      ],
+      "opaquePixels": 57
+    },
+    {
+      "frame": 7,
+      "bounds": [
+        21,
+        24,
+        39,
+        40
+      ],
+      "opaquePixels": 7
+    }
+  ],
+  "bitmapSha256": "01d857b28ffc11c9a21dfd68bee1d8d6e4a8c188ae6de91f65a01362aca06eeb"
+}

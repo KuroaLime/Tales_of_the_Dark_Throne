@@ -1,0 +1,54 @@
+{
+  "scale": 0.2924187725631769,
+  "registrationNote": "Uniform 81/277 body scale. Repeated column layout offsets registered from recovery poses; shared ground and authored recoil/crouch remain.",
+  "frames": [
+    {
+      "rootX": 192,
+      "groundY": 320
+    },
+    {
+      "rootX": 183,
+      "groundY": 320
+    },
+    {
+      "rootX": 179,
+      "groundY": 320
+    },
+    {
+      "rootX": 177,
+      "groundY": 320
+    },
+    {
+      "rootX": 192,
+      "groundY": 320
+    },
+    {
+      "rootX": 183,
+      "groundY": 320
+    },
+    {
+      "rootX": 179,
+      "groundY": 320
+    },
+    {
+      "rootX": 177,
+      "groundY": 320
+    },
+    {
+      "rootX": 192,
+      "groundY": 320
+    },
+    {
+      "rootX": 183,
+      "groundY": 320
+    },
+    {
+      "rootX": 179,
+      "groundY": 320
+    },
+    {
+      "rootX": 177,
+      "groundY": 320
+    }
+  ]
+}

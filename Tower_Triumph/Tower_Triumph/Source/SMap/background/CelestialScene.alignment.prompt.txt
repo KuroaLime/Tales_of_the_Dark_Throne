@@ -1,0 +1,32 @@
+Tool: built-in image_gen
+Input 1: initial CelestialScene painting
+Input 2: all-foot-position overlay from source collision data
+Input 3: revised composition guide with lower-shrine approach opened
+The final collision mask is further aligned to the painted top surfaces and recorded in CelestialScene.layout.json.
+
+Use case: precise-object-edit. Correct the PLAYABLE FLOOR ALIGNMENT of this celestial sanctuary, keeping its beautiful modern white-marble/gold/blue atmosphere.
+INPUT1 is the painting to EDIT.
+INPUT2 is a diagnostic overlay of the SAME painting: GREEN outlined small rectangles are ALL mandatory character foot positions on walkable cells, red X marks blocked cells, blue/red outlined larger rectangles mark starts. These markers MUST NOT appear in the output.
+INPUT3 is the exact corrected terrain guide: IVORY and TAN must be uninterrupted clear playable floor; blue is nontraversable sky; purple/gray/green are nontraversable architecture/gardens.
+
+The first painting is visually good, but it incorrectly stops many top surfaces about ONE GRID ROW too early, leaving the green foot rectangles over cliffs, banners or sky. Fix the painted geometry itself. Every green foot rectangle in input2, with a small safety margin, MUST sit on the horizontal TOP surface of a continuous marble floor, never on a vertical fascia, parapet, column, foliage or air. The entire ivory/tan areas in input3, not just individual marker patches, must be solid clear floor. No tiny pads under markers. Move the outer rims, hanging cliff faces, supports, banners and clouds OUTSIDE the walkable floor footprints, into blue. DO NOT change the guide, invent new routes or redraw markers.
+
+Required floor corrections (coordinates refer to world1584x864; scale proportionally to output):
+1) WEST UPPER bridge: extend its top deck down to y480 and right to x624; its full rectangle is x480..624,y336..480. Current green foot row at y468 must be on floor.
+2) WEST LOWER terrace tail AND bridge: extend their TOP surfaces down to y720. Bridge is x480..624,y576..720; west tail x288..480 also reaches y720. Feet at y708 must not stand on hanging supports.
+3) MAIN CENTRAL COURT: extend its southern top surface to y528 and eastern edge to x1056. Most current feet at y516 are on air. Preserve its connected ivory footprint from the guide.
+4) MAIN EAST bridge: full top deck x1056..1200,y384..528; current feet at y468 and516 must be on the deck, with rims below/outside it.
+5) CENTRAL VERTICAL bridge: full top deck x816..960,y528..672. Widen the current right side so x936 foot positions are safely on floor. Clear continuous joins at both ends.
+6) LOWER terrace, LOWER EAST bridge and EASTERN southern spur: top surface extends down to y816 wherever input3 is ivory/tan. The current entire green foot row at y804 must be on marble rather than cliff. Lower east bridge full rectangle x1056..1200,y672..816. It is fine for hanging foundations to be partly cropped at the image bottom.
+7) EASTERN forecourt outer edge: floor and safe rim placement must keep x1512 foot positions clear, with columns and rails outside the ivory footprint.
+Do not add any railings or small pillars within ivory/tan cells. Rails belong in blue outside the top-surface mask or in existing gray regions.
+
+Also correct these physical obstacles, using compact versions so their COMPLETE stone/foliage silhouette fits the reserved box:
+- The MAIN CRYSTAL ALTAR columns encroach on the left walkway. Reduce the altar ensemble to about75% and place all columns/steps inside x768..912,y96..240. Preserve its elegant cyan-crystal design.
+- The SMALL CENTRAL VOTIVE PEDESTAL currently spills left. Reduce it to about70% and center it at x816,y384, all physical parts within x776..856,y344..424.
+- The LOWER-TERRACE SHRINE is in the old wrong location. Move it UP and RIGHT, reducing it to about70%; center x1008,y672, all stone including the top of its arch within x968..1048,y632..712. Restore its old position below y720 to flat marble, opening the lower bridge entrance. A shorter low devotional shrine is better than an arch too tall to fit.
+- WESTERN FLOWER/CYPRESS BED: reduce/shift it DOWN so all physical vegetation/planter pieces fit x104..232,y536..664. It currently blocks feet at y516; that row must be clear floor.
+- LOWER-CENTRAL FLOWER BED: make it a compact low planting arrangement wholly inside x632..760,y728..808. Its tall tree currently intrudes upward two walkable rows. Restore all ground above it to marble.
+- EASTERN FLOWER BED: keep foliage and planter wholly inside x1448..1528,y584..712; no tree or planter on foot rows above y576.
+
+Retain the cathedral, western guardian statue, north flower bed and all unaffected details where they already comply. Unify the expanded flooring with the same elegant inlays and natural marble material, not rectangular pasted strips. Preserve professional painterly detail and light. Output ONLY the corrected scene, no grid, markers, text, colored guide, labels, characters or watermark.11:6landscape.

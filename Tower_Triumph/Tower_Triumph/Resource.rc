@@ -16,6 +16,12 @@ LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
 
 IDB_UI_MOUSECUSOR       BITMAP                  "Source\\MouseCursor\\MouseCusor.bmp"
 IDB_BITMAP3             BITMAP                  "Source\\SMap\\background\\Map_Background.bmp"
+IDB_GRAVEYARD_ATLAS     BITMAP                  "Source\\SMap\\background\\GraveyardAtlas.bmp"
+IDB_GRAVEYARD_SCENE     BITMAP                  "Source\\SMap\\background\\GraveyardScene.bmp"
+IDB_CELESTIAL_SCENE     BITMAP                  "Source\\SMap\\background\\CelestialScene.bmp"
+IDB_SEA_RUINS_SCENE     BITMAP                  "Source\\SMap\\background\\SeaRuinsScene.bmp"
+IDB_LAVA_SCENE          BITMAP                  "Source\\SMap\\background\\LavaScene.bmp"
+IDB_HALL_SCENE          BITMAP                  "Source\\SMap\\background\\HallScene.bmp"
 
 #endif    // Korean (Korea) resources
 /////////////////////////////////////////////////////////////////////////////

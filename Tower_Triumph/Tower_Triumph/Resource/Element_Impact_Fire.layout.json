@@ -1,0 +1,114 @@
+{
+  "element": "Fire",
+  "source": "Projectiles_Fire.source.png",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "sourceRows": 4,
+  "sourceSha256": "5df080af44202ed6443b4054540b02d2a634027e510bbc144d2dd4a2634ae1d3",
+  "bitmap": "Element_Impact_Fire.bmp",
+  "preview": "Element_Impact_Fire.png",
+  "columns": 4,
+  "rows": 2,
+  "frameCount": 8,
+  "cellSize": 64,
+  "sheetSize": [
+    256,
+    128
+  ],
+  "center": [
+    32,
+    32
+  ],
+  "recommendedDrawSize": 48,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "uniformScale": 0.20414673046251994,
+  "sourceStartRow": 2,
+  "animationFrameSeconds": 0.025,
+  "method": "Uniform whole-sheet nearest-neighbor scale; source rows 2 and 3 packed without per-frame scaling, translation or redrawing.",
+  "frames": [
+    {
+      "frame": 0,
+      "bounds": [
+        22,
+        20,
+        42,
+        42
+      ],
+      "opaquePixels": 159
+    },
+    {
+      "frame": 1,
+      "bounds": [
+        14,
+        13,
+        49,
+        49
+      ],
+      "opaquePixels": 501
+    },
+    {
+      "frame": 2,
+      "bounds": [
+        3,
+        4,
+        59,
+        56
+      ],
+      "opaquePixels": 1502
+    },
+    {
+      "frame": 3,
+      "bounds": [
+        5,
+        6,
+        57,
+        55
+      ],
+      "opaquePixels": 1068
+    },
+    {
+      "frame": 4,
+      "bounds": [
+        11,
+        8,
+        55,
+        50
+      ],
+      "opaquePixels": 390
+    },
+    {
+      "frame": 5,
+      "bounds": [
+        14,
+        12,
+        50,
+        49
+      ],
+      "opaquePixels": 195
+    },
+    {
+      "frame": 6,
+      "bounds": [
+        16,
+        17,
+        46,
+        45
+      ],
+      "opaquePixels": 55
+    },
+    {
+      "frame": 7,
+      "bounds": [
+        21,
+        25,
+        39,
+        37
+      ],
+      "opaquePixels": 9
+    }
+  ],
+  "bitmapSha256": "b96ae3cbbf38a15632b6df4d991cba6788e0e780f5d276ba9a235222c581862a"
+}

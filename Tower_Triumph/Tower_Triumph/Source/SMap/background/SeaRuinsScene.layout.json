@@ -1,0 +1,53 @@
+{
+  "width": 33,
+  "height": 18,
+  "tileSize": 48,
+  "pixelWidth": 1584,
+  "pixelHeight": 864,
+  "rows": [
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~BBBBBB~~",
+    "~~~BBBB..#~~~..BBBB..~~~~BBBBBB~~",
+    "~~~BBBB..#~~~..BBBB..~~~~BBBBBB~~",
+    "~~~BBBB...~~~..BBBB..~~..BBBBBB~~",
+    "~~.........==........~~..BBBBBB~~",
+    "~~.........==........==.......#~~",
+    "~~#.......~~~....#...==.......#~~",
+    "~~#...##..~~~...###..~~...#...#~~",
+    "~~#..###..~~~...#####~~...##..#~~",
+    "~~#.....##~~~...#####~~..###..#~~",
+    "~~#.....##.==........~~.......#~~",
+    "~~TTTT.....==........==.....TTT~~",
+    "~~TTTT.....==#.......==.....TTT~~",
+    "~~TTTT..~~~~~##....TT~~.....TTT~~",
+    "~~~TTT~~~~~~~##~~~~TT~~~~~~~TTT~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  ],
+  "bitmapSha256": "c1d8529d315c531bfbac8db3bf1f5cbe30636240ded8ed0befadbbf306a818d9",
+  "source": "SeaRuinsScene.source.png",
+  "generationMode": "built-in imagegen",
+  "prompts": [
+    "SeaRuinsScene.prompt.txt",
+    "SeaRuinsScene.fit.prompt.txt",
+    "SeaRuinsScene.shore.prompt.txt"
+  ],
+  "footAnchor": [
+    24,
+    36
+  ],
+  "footSize": [
+    16,
+    12
+  ],
+  "notes": [
+    "Three ruined courts linked by two stone and two timber crossings, with six primary architectural groups.",
+    "All water, walls, architecture, vegetation and unsafe cliff margins block every element.",
+    "Collision rows were refined against the final painted top surfaces and continuous cardinal foot sweeps.",
+    "Ruin silhouettes and low walls were fitted to clear the walking lanes; the central eastern bank was widened.",
+    "Remaining coastal rock faces and narrow lips were conservatively retired from the final movement mask.",
+    "All four bridge components have at least two-cell-wide opposing bank contacts and alternate paths.",
+    "Guide images record design provenance; the final movement mask is SeaRuinsMapLayout.h and these rows.",
+    "Hash and geometry checks detect stale pairing, not semantic image recognition or native gameplay execution."
+  ]
+}

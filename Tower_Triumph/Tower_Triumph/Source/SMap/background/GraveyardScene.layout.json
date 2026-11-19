@@ -1,0 +1,78 @@
+{
+  "width": 33,
+  "height": 18,
+  "tileSize": 48,
+  "rows": [
+    "#################################",
+    "#TTTGGG..~~~~TTTGGGG#..TTTBBBBTT#",
+    "#TTTGGG..~~~~TTTGGGG...TTTBBBBTT#",
+    "#TTTGGG..~~~~GGGGGGG...BBBBBBBTT#",
+    "#TTGGGG..~~~~#####GG...BBBBBBBBB#",
+    "#TTGGGG..~~~.........++BBBBBBBBB#",
+    "#GGG.....===++++++++++BBBBBBBBBB#",
+    "###G+++++===+++#GGGG+++BBBBBBBBB#",
+    "#++++++++===+++##GGG++++++++++..#",
+    "#+++++++~~~~.....+++++++++......#",
+    "##G+++++~~~~.....++++##GGG#GTTTT#",
+    "#GGBBB++~~~~..#GG++++#GGGG#GTTTT#",
+    "#GGBBB++~~~~..#GG....#GGG##GTTTT#",
+    "#TTBBB++====++##G++#####GGGGGGGG#",
+    "#TTTGG++====++++++++GGGGGTTTTTTT#",
+    "#TTTGG++====++++++++GGGGGTTTTTTT#",
+    "#TTTGG++~~~~........GGGGGTTTTTTT#",
+    "#################################"
+  ],
+  "bitmapSha256": "45a314d92f9e9e09a848ecde05c92517406ec042eeeba87711c7b6f4820d3eb7",
+  "alignmentNotes": [
+    "Single authored scene imported at exact world resolution.",
+    "Collision edges were visually reviewed at foot anchors; chapel apron, river bends and wall ends reserve conservative blocked cells.",
+    "Northwest wall was edited inside its footprint to retain the two-cell lane.",
+    "This manifest detects stale art/layout pairs; it is not an automated semantic image-clearance proof.",
+    "Three new central burial areas and newly painted low walls were inspected against the updated grid; A reserves an extra eastern column for the final silhouette. Paths and both bridge crossings remain connected with two-cell clearance.",
+    "Western burial pockets continue the northwest grounds and southwest crypt garden. The upper pocket was reduced and moved inward to clear the player approach; all starting cells remain unchanged.",
+    "Texture repair removes smeared and repeated paving patches while preserving the existing layout. The final image was reviewed against continuous foot sweeps; all stage builders, collision data and other stage images remain unchanged."
+  ],
+  "centralBurialBounds": {
+    "A": [
+      15,
+      7,
+      5,
+      2
+    ],
+    "B": [
+      21,
+      10,
+      5,
+      3
+    ],
+    "C": [
+      14,
+      11,
+      3,
+      3
+    ]
+  },
+  "westBurialBounds": {
+    "W1": [
+      1,
+      6,
+      3,
+      2
+    ],
+    "W2": [
+      1,
+      10,
+      2,
+      2
+    ]
+  },
+  "source": "GraveyardScene.source.png",
+  "sourceSha256": "8532ae4aa3ac47abc9ce11acd874ace44d25b761ce33153156b6931eb3cccc64",
+  "generationMode": "built-in imagegen",
+  "prompts": [
+    "GraveyardScene.prompt.txt",
+    "GraveyardScene.central-edit.prompt.txt",
+    "GraveyardScene.west-edit.prompt.txt",
+    "GraveyardScene.texture-repair.prompt.txt"
+  ]
+}

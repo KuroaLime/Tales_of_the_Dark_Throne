@@ -1,0 +1,14 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[58,33.5],[58,33.5],[57,33.5],[57,33.5]],
+    "targetAnchor": [54,33.5],
+    "note": "Measured arrow tip edges are x58 for frames0/1 and x57 for frames2/3, all y33.5. Translate (-4,0),(-4,0),(-3,0),(-3,0) only."
+  },
+  "Mage": {
+    "anchorKind": "bright magic core center",
+    "sourceAnchors": [[49,32],[49,32],[49,32],[49,32]],
+    "targetAnchor": [45,32],
+    "note": "Core-only bright centroid with x>=44: [48.50,32.36],[49.02,32.40],[49.27,32.32],[49.00,32.50]. Shared nearest pixel anchor [49,32] translates every cell by (-4,0). Maximum residual is <0.31 screen pixels, with no pose scaling."
+  }
+}

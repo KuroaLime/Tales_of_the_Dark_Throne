@@ -1,0 +1,58 @@
+{
+  "character": "Archer",
+  "master": "master.png",
+  "masterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+  "reference": "Archer.png",
+  "referenceSha256": "03f8784975446c1860843851619a6a07bf4d3dc5903fb034eb527ecfb337e895",
+  "cropRect": [
+    724,
+    3,
+    1448,
+    718
+  ],
+  "sourceSize": [
+    724,
+    715
+  ],
+  "masterVisibleBounds": [
+    794,
+    65,
+    1330,
+    680
+  ],
+  "sourceVisibleBounds": [
+    70,
+    62,
+    606,
+    677
+  ],
+  "sourceRoot": [
+    396.0,
+    678.0
+  ],
+  "masterRoot": [
+    1120,
+    681
+  ],
+  "uniformScale": 0.13170731707317074,
+  "targetVisibleHeight": 81,
+  "gameVisibleHeight": 54,
+  "sheetSize": [
+    96,
+    96
+  ],
+  "columns": 1,
+  "rows": 1,
+  "frameCount": 1,
+  "cellSize": 96,
+  "root": [
+    48,
+    88
+  ],
+  "source": "Archer_IdlePose.source.png",
+  "bitmap": "Archer_IdlePose.bmp",
+  "bitmapSha256": "11c0baacc24501ee13f7a88c81fc1708d41c359e0fd8a1de8416cf9b61ebf79b",
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "method": "Exact RGBA crop for reference; uniform nearest-neighbor scale and fixed body-root translation for game BMP. No redraw, recolor or pixel deformation."
+}

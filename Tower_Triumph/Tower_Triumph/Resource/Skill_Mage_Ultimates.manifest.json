@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "generationMode": "built-in image_gen",
+  "description": "Two dedicated high-cost Mage presentations. Existing artwork and skill statistics are unchanged.",
+  "pathBase": "this manifest directory",
+  "assets": [
+    {
+      "effect": "Meteor",
+      "skillID": 3103,
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Meteor_Ultimate.source.png",
+          "sha256": "18607809e3992df85ae3c7c8d20cd91d7fbe387a3d47ba97e46de3d1a09308cf",
+          "bytes": 1377522
+        },
+        "prompt": {
+          "path": "Skill_Mage_Meteor_Ultimate.prompt.txt",
+          "sha256": "18f020ca505548efb6f9f1be3b8cd6e24968a257627d9475d0a05f5c5fd6976c",
+          "bytes": 3015
+        },
+        "runtime": {
+          "path": "Skill_Mage_Meteor_Ultimate.bmp",
+          "sha256": "8c2ec2f569b08a7b9d80df8310002ad63013491cfc62de65f275607f2b04e0c3",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Meteor_Ultimate.png",
+          "sha256": "88e10f2856f3d31e9ff5b7553e535db8a22eee49c84aa59799cd5d1c274dbe34",
+          "bytes": 143302
+        },
+        "layout": {
+          "path": "Skill_Mage_Meteor_Ultimate.layout.json",
+          "sha256": "845595e77e9b1b08ed56f2995f46d98c6733827e5472be8cc98cc1e621375f25",
+          "bytes": 24524
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        114
+      ],
+      "flightCoreAnchor": [
+        86,
+        76
+      ],
+      "groundBandStartY": 108,
+      "registration": "Single uniform 128/362 nearest-neighbor scale; no per-frame translation or scale; original RGB preserved.",
+      "alphaThreshold": 128,
+      "runtimeColorKey": "#ff00ff"
+    },
+    {
+      "effect": "Sanctuary",
+      "skillID": 3403,
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.source.png",
+          "sha256": "115682bb0023b41f2374ab0934f2ec8278f35b9541422ee0c480c2e3f93d984a",
+          "bytes": 1670793
+        },
+        "prompt": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.prompt.txt",
+          "sha256": "16597e5aaab0db6404474c9a3648f4a52b9d057723e8aa38ce2258cb0ac22e88",
+          "bytes": 3390
+        },
+        "runtime": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.bmp",
+          "sha256": "f990483f52f5c2764dbb0d1eb63563febf9b998b283ff20a75916a36a3812f1f",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.png",
+          "sha256": "1c0b02e5459b1e7ae55d9085071da0ed80f048916be1636cdf6b34089258204a",
+          "bytes": 112665
+        },
+        "layout": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.layout.json",
+          "sha256": "5f17457f4cf579251de72587a60a0f9e374c8190604176d94aabd30589d70ef9",
+          "bytes": 24250
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        104
+      ],
+      "flightCoreAnchor": null,
+      "groundBandStartY": 96,
+      "registration": "Single uniform 128/362 nearest-neighbor scale; no per-frame translation or scale; original RGB preserved.",
+      "alphaThreshold": 128,
+      "runtimeColorKey": "#ff00ff"
+    }
+  ],
+  "verification": {
+    "pixelAudit": "../../../tests/verify_ultimate_effects.py",
+    "pixelReport": "../../../tests/bin/ultimate-import/asset-verification.json",
+    "groundClipReport": "../../../tests/bin/ultimate-import/ground-band-verification.json",
+    "sourceFrames": 24,
+    "emptyFrames": 0,
+    "sourceBorderOpaquePixels": 0,
+    "runtimeSanctuaryRedPixels": 0
+  }
+}

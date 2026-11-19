@@ -1,0 +1,1270 @@
+{
+  "schemaVersion": 1,
+  "generationMode": "built-in image_gen",
+  "pathBase": "this manifest directory",
+  "sourceSheets": 10,
+  "runtimeBitmaps": 14,
+  "mainFrames": 120,
+  "rotatedFlightCells": 256,
+  "preservation": "Existing Mage effects, characters, maps and gameplay statistics remain unchanged.",
+  "conversion": "Original RGB preserved; uniform nearest-neighbor normalization; alpha>=128 opaque; 24-bit BMP magenta key.",
+  "assets": [
+    {
+      "skillID": 1102,
+      "characterClass": "Warrior",
+      "element": "Fire",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Fire_Ultimate.source.png",
+          "sha256": "772fcd936c3901ee27b1315e566e980ff5437b25f37c8ee900d0d9363871584a",
+          "bytes": 1520627
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Fire_Ultimate.prompt.txt",
+          "sha256": "41f6c154eb91d53cbf93a668ecadeab8ff54c83efb51925c2f66c79620a517eb",
+          "bytes": 2495
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Fire_Ultimate.bmp",
+          "sha256": "087c675c8d16393e5e45d6124e9d1d124e0b3a2531528f7b878f9ab589d2886c",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Fire_Ultimate.png",
+          "sha256": "d159ea3e6d0903e897053653e54eb65c3b97bab971bea23f1779aa5bf1064813",
+          "bytes": 95761
+        },
+        "layout": {
+          "path": "Skill_Warrior_Fire_Ultimate.layout.json",
+          "sha256": "ab192ec649682550cbd8a33067d34bb4dfec319a684e22d6635ff14297cb63ac",
+          "bytes": 24968
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        111
+      ],
+      "groundAnchor": [
+        64,
+        111
+      ],
+      "groundBandStartY": 104,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 180
+      }
+    },
+    {
+      "skillID": 1202,
+      "characterClass": "Warrior",
+      "element": "Water",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Water_Ultimate.source.png",
+          "sha256": "42e5d5436c7fb4a520345b1071465a3b7aa925a01825933b7f700ac90d0caa69",
+          "bytes": 1519266
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Water_Ultimate.prompt.txt",
+          "sha256": "c44e14d933c8a5a96758eb17acaf24d8be6d745f4c3f475f8eb38bb433970352",
+          "bytes": 2515
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Water_Ultimate.bmp",
+          "sha256": "2f9d984aeb13234078b80dd24b29f15c9b067a57543b75feb15dda64c19f77dc",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Water_Ultimate.png",
+          "sha256": "3180e9554b06471b32c695d8a548a1a465fc3596cdb422d5edef1227655f551e",
+          "bytes": 92381
+        },
+        "layout": {
+          "path": "Skill_Warrior_Water_Ultimate.layout.json",
+          "sha256": "00f056fe1dae466394c717cbf6870ddf6b840701b214c174f362b4ae4ec1c83d",
+          "bytes": 24964
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        114
+      ],
+      "groundAnchor": [
+        64,
+        114
+      ],
+      "groundBandStartY": 108,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 180
+      }
+    },
+    {
+      "skillID": 1302,
+      "characterClass": "Warrior",
+      "element": "Grass",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Grass_Ultimate.source.png",
+          "sha256": "9075afc1b11ca361baf3bfbd976aecc28b0f258816dd5630babb0b9fafd14235",
+          "bytes": 683727
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Grass_Ultimate.prompt.txt",
+          "sha256": "b523eda84153d11c5c0325512d55f30bd1effeaa0eef19cec75eb5f03640b02a",
+          "bytes": 3282
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Grass_Ultimate.bmp",
+          "sha256": "361af54124767a8d3e98b0bb333daa5b160e8ac4d01de4985b64040a2e350495",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Grass_Ultimate.png",
+          "sha256": "2d4f289f6d2650ec0a657f0a2f2f268e0cbbfec7ceec8dfa6d2cef9d7d7bc406",
+          "bytes": 56332
+        },
+        "layout": {
+          "path": "Skill_Warrior_Grass_Ultimate.layout.json",
+          "sha256": "b1c2ecfaef0a601a3633ac7d7d85856438043d3e86fd6833a59dcc2eed2a483c",
+          "bytes": 25006
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        70
+      ],
+      "impactAnchor": [
+        76,
+        112
+      ],
+      "groundAnchor": [
+        76,
+        112
+      ],
+      "groundBandStartY": 104,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 180
+      }
+    },
+    {
+      "skillID": 1403,
+      "characterClass": "Warrior",
+      "element": "Light",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Light_Ultimate.source.png",
+          "sha256": "9205c0d5ad6a52bb44ae4102f348199a62627d4dd15a2f5623b3324791bca62b",
+          "bytes": 1414534
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Light_Ultimate.prompt.txt",
+          "sha256": "08b4a4b4787f575669cc98fa93bb76c463118b1bcaa0266f0dc88c20c0312f58",
+          "bytes": 2765
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Light_Ultimate.bmp",
+          "sha256": "005140b976a330093e2b778a999a0357c2b73477ab7db0ac4d2364dd58d2e00b",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Light_Ultimate.png",
+          "sha256": "e6ee5fd168d25005fe71e7d84286705fad0f2051f801013da93ee8f7bc2a8981",
+          "bytes": 70434
+        },
+        "layout": {
+          "path": "Skill_Warrior_Light_Ultimate.layout.json",
+          "sha256": "6855a3d42b247c2a6f2947699ad5620acb1c9899d496cb06b055dfc9fc8de7db",
+          "bytes": 25008
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        111
+      ],
+      "groundAnchor": [
+        64,
+        111
+      ],
+      "groundBandStartY": 104,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 180
+      }
+    },
+    {
+      "skillID": 1503,
+      "characterClass": "Warrior",
+      "element": "Dark",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Dark_Ultimate.source.png",
+          "sha256": "31664d6692e44028d3c59fad23a20dd389d648ca06415917c4c606e971b954dc",
+          "bytes": 962540
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Dark_Ultimate.prompt.txt",
+          "sha256": "3bad45d77cc9807f6eebd8cd4e1a15d974efb5dd51cc7bdd0935995a08017188",
+          "bytes": 2907
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Dark_Ultimate.bmp",
+          "sha256": "b30c2146c8f909458ec9b76157ffdb841bb51f39c28fbda1ac3c8e42e5112e5e",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Dark_Ultimate.png",
+          "sha256": "d00641d08e971999596459bc929bed6438e4d38637bba8435644c745d3d5d948",
+          "bytes": 66123
+        },
+        "layout": {
+          "path": "Skill_Warrior_Dark_Ultimate.layout.json",
+          "sha256": "85c2ac98ee4d4767b3bbf29b6bd11412c1dfdb1494413bab81588e653bf29382",
+          "bytes": 25006
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        67,
+        72
+      ],
+      "impactAnchor": [
+        73,
+        108
+      ],
+      "groundAnchor": [
+        73,
+        108
+      ],
+      "groundBandStartY": 100,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 180
+      }
+    },
+    {
+      "skillID": 2103,
+      "characterClass": "Archer",
+      "element": "Fire",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Archer_Fire_Snipe_Ultimate.source.png",
+          "sha256": "0ba035c0288ffc66fc61bf05c1e43ab378993e727b53b0485b93c4847fbfb56f",
+          "bytes": 1494014
+        },
+        "prompt": {
+          "path": "Skill_Archer_Fire_Snipe_Ultimate.prompt.txt",
+          "sha256": "7a09a0a545f53b7b93dc3e5af10e3f155793a33502cffeda912349ef4a1da57b",
+          "bytes": 2683
+        },
+        "runtime": {
+          "path": "Skill_Archer_Fire_Snipe_Ultimate.bmp",
+          "sha256": "27b5355abf5a80f3564b1b7c4adba77f54d0644a58b67dc49e8dbff3f955131a",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Archer_Fire_Snipe_Ultimate.png",
+          "sha256": "f429d1136ec96d229011bbed32354c7c80330d7cb84f917901ce4ed72c7cbaa5",
+          "bytes": 82967
+        },
+        "layout": {
+          "path": "Skill_Archer_Fire_Snipe_Ultimate.layout.json",
+          "sha256": "ad7ab81f4dd7e4192bad2acaff602cb523496aacc4c7f65d995bb9236dd4af17",
+          "bytes": 25198
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        116.604166666667,
+        65.5625
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundAnchor": null,
+      "groundBandStartY": 128,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 112
+      },
+      "flight": {
+        "generationMode": "mechanical derivative, no new artwork",
+        "files": {
+          "runtime": {
+            "path": "Skill_Archer_Fire_Snipe_Ultimate_Flight.bmp",
+            "sha256": "1375b995444d7d65b61c0b0876cc7d819003223708c893d69aeba66e2b1462d6",
+            "bytes": 3145782
+          },
+          "transparentPreview": {
+            "path": "Skill_Archer_Fire_Snipe_Ultimate_Flight.png",
+            "sha256": "1d80c332632fcfb2cfdcfe04569b47cd7636e31a8c34d5db7c99bd085333d69e",
+            "bytes": 305201
+          },
+          "layout": {
+            "path": "Skill_Archer_Fire_Snipe_Ultimate_Flight.layout.json",
+            "sha256": "f20acd0fa1d6af4fd27c3bcea2616ac8fb1572158713897618699d353b6c37cf",
+            "bytes": 31061
+          }
+        },
+        "sheet": {
+          "columns": 16,
+          "rows": 4,
+          "cellSize": 128,
+          "frames": 4,
+          "size": [
+            2048,
+            512
+          ]
+        },
+        "rotationCenter": [
+          64,
+          64
+        ],
+        "clockwiseDegreesPerColumn": 22.5,
+        "registeredAnchor": [
+          114.50000000000031,
+          65.5
+        ],
+        "directionAnchors": [
+          [
+            114.5,
+            65.5
+          ],
+          [
+            110.081891,
+            84.711333
+          ],
+          [
+            98.648232,
+            100.769553
+          ],
+          [
+            81.939694,
+            111.229942
+          ],
+          [
+            62.5,
+            114.5
+          ],
+          [
+            43.288667,
+            110.081891
+          ],
+          [
+            27.230447,
+            98.648232
+          ],
+          [
+            16.770058,
+            81.939694
+          ],
+          [
+            13.5,
+            62.5
+          ],
+          [
+            17.918109,
+            43.288667
+          ],
+          [
+            29.351768,
+            27.230447
+          ],
+          [
+            46.060306,
+            16.770058
+          ],
+          [
+            65.5,
+            13.5
+          ],
+          [
+            84.711333,
+            17.918109
+          ],
+          [
+            100.769553,
+            29.351768
+          ],
+          [
+            111.229942,
+            46.060306
+          ]
+        ],
+        "groupScale": 0.96
+      }
+    },
+    {
+      "skillID": 2203,
+      "characterClass": "Archer",
+      "element": "Water",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Archer_Water_Snipe_Ultimate.source.png",
+          "sha256": "fb6dfcfb95566dd00d10c67c1f9e441675e9ca5864aaeb784173fccabcb44d76",
+          "bytes": 2085234
+        },
+        "prompt": {
+          "path": "Skill_Archer_Water_Snipe_Ultimate.prompt.txt",
+          "sha256": "bd528b533bbd53045ff1d13490d34d9a2563043a3a9e7b99d25d46124de5af15",
+          "bytes": 2320
+        },
+        "runtime": {
+          "path": "Skill_Archer_Water_Snipe_Ultimate.bmp",
+          "sha256": "4faa4bd343b896b8b7de802fbe46df3f91837d6e1d8a4366e24e3ccabc87da36",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Archer_Water_Snipe_Ultimate.png",
+          "sha256": "db6ec40fd8deae0aaf7f99fd93dfeede1735c7dfd502d233058a59025db0dbea",
+          "bytes": 97286
+        },
+        "layout": {
+          "path": "Skill_Archer_Water_Snipe_Ultimate.layout.json",
+          "sha256": "6261b175e26adc336a0029993807ed4cb3aa8449e9ab2d40e89ff06bcbf4cd68",
+          "bytes": 25183
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        117.5,
+        63.5
+      ],
+      "impactAnchor": [
+        64,
+        62
+      ],
+      "groundAnchor": null,
+      "groundBandStartY": 128,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 112
+      },
+      "flight": {
+        "generationMode": "mechanical derivative, no new artwork",
+        "files": {
+          "runtime": {
+            "path": "Skill_Archer_Water_Snipe_Ultimate_Flight.bmp",
+            "sha256": "964aaf0bc23df5fd39d27415f79448fac35b54a046462663f7480e41d54f9e77",
+            "bytes": 3145782
+          },
+          "transparentPreview": {
+            "path": "Skill_Archer_Water_Snipe_Ultimate_Flight.png",
+            "sha256": "38ddf97188fc3b8d381aec63deef6bcd9a4154a00e6471ea644fb7c280c91ee9",
+            "bytes": 300324
+          },
+          "layout": {
+            "path": "Skill_Archer_Water_Snipe_Ultimate_Flight.layout.json",
+            "sha256": "174a0fadc7b7c6d942b4f6f6ecfcc8628109ad9bdc5b760f19acdfd681e13c54",
+            "bytes": 31050
+          }
+        },
+        "sheet": {
+          "columns": 16,
+          "rows": 4,
+          "cellSize": 128,
+          "frames": 4,
+          "size": [
+            2048,
+            512
+          ]
+        },
+        "rotationCenter": [
+          64,
+          64
+        ],
+        "clockwiseDegreesPerColumn": 22.5,
+        "registeredAnchor": [
+          117.5,
+          63.5
+        ],
+        "directionAnchors": [
+          [
+            117.5,
+            63.5
+          ],
+          [
+            113.618897,
+            84.011624
+          ],
+          [
+            102.183766,
+            101.476659
+          ],
+          [
+            84.935503,
+            113.236213
+          ],
+          [
+            64.5,
+            117.5
+          ],
+          [
+            43.988376,
+            113.618897
+          ],
+          [
+            26.523341,
+            102.183766
+          ],
+          [
+            14.763787,
+            84.935503
+          ],
+          [
+            10.5,
+            64.5
+          ],
+          [
+            14.381103,
+            43.988376
+          ],
+          [
+            25.816234,
+            26.523341
+          ],
+          [
+            43.064497,
+            14.763787
+          ],
+          [
+            63.5,
+            10.5
+          ],
+          [
+            84.011624,
+            14.381103
+          ],
+          [
+            101.476659,
+            25.816234
+          ],
+          [
+            113.236213,
+            43.064497
+          ]
+        ],
+        "groupScale": 1
+      }
+    },
+    {
+      "skillID": 2303,
+      "characterClass": "Archer",
+      "element": "Grass",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Archer_Grass_Snipe_Ultimate.source.png",
+          "sha256": "17b6a4e7d7d5e3762e50d32ed246ebb6c0b4428b145e465a46e5497d11359634",
+          "bytes": 996798
+        },
+        "prompt": {
+          "path": "Skill_Archer_Grass_Snipe_Ultimate.prompt.txt",
+          "sha256": "ca57949260ce48d96c4ab99a2de77189e89a6e204c3ecc12ffead3797388ffc3",
+          "bytes": 2378
+        },
+        "runtime": {
+          "path": "Skill_Archer_Grass_Snipe_Ultimate.bmp",
+          "sha256": "5f8313ec3f2d110033355eed7ccda9fa07e2c0fb5c46d12074411905fed8c179",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Archer_Grass_Snipe_Ultimate.png",
+          "sha256": "306c1bff01d1ef1ac0d0ed956d9d428c2dfb2d3571a8e94417b14fbd12261b38",
+          "bytes": 65344
+        },
+        "layout": {
+          "path": "Skill_Archer_Grass_Snipe_Ultimate.layout.json",
+          "sha256": "b6d67de0f7446fd59e5d4ef3f04cf7bc9596c327316ebfac55f4eb16ebc65bd6",
+          "bytes": 25189
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        116.5,
+        64.5
+      ],
+      "impactAnchor": [
+        64,
+        61
+      ],
+      "groundAnchor": null,
+      "groundBandStartY": 128,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 112
+      },
+      "flight": {
+        "generationMode": "mechanical derivative, no new artwork",
+        "files": {
+          "runtime": {
+            "path": "Skill_Archer_Grass_Snipe_Ultimate_Flight.bmp",
+            "sha256": "41d1ecec839fcbfd3ad53a5c050d6e6cdd6fd160de64d265398494dd17ef39df",
+            "bytes": 3145782
+          },
+          "transparentPreview": {
+            "path": "Skill_Archer_Grass_Snipe_Ultimate_Flight.png",
+            "sha256": "dcda146fb49820a984774ff9fdc1f815b4b3dd0bf30307794b547d78f5865609",
+            "bytes": 240214
+          },
+          "layout": {
+            "path": "Skill_Archer_Grass_Snipe_Ultimate_Flight.layout.json",
+            "sha256": "65ab346b38e3fedf6be5a94961381cb45c15d44fce8a6a4c308b46a0492acf65",
+            "bytes": 31042
+          }
+        },
+        "sheet": {
+          "columns": 16,
+          "rows": 4,
+          "cellSize": 128,
+          "frames": 4,
+          "size": [
+            2048,
+            512
+          ]
+        },
+        "rotationCenter": [
+          64,
+          64
+        ],
+        "clockwiseDegreesPerColumn": 22.5,
+        "registeredAnchor": [
+          116.5,
+          64.5
+        ],
+        "directionAnchors": [
+          [
+            116.5,
+            64.5
+          ],
+          [
+            112.312334,
+            84.55282
+          ],
+          [
+            100.769553,
+            101.476659
+          ],
+          [
+            83.62894,
+            112.695017
+          ],
+          [
+            63.5,
+            116.5
+          ],
+          [
+            43.44718,
+            112.312334
+          ],
+          [
+            26.523341,
+            100.769553
+          ],
+          [
+            15.304983,
+            83.62894
+          ],
+          [
+            11.5,
+            63.5
+          ],
+          [
+            15.687666,
+            43.44718
+          ],
+          [
+            27.230447,
+            26.523341
+          ],
+          [
+            44.37106,
+            15.304983
+          ],
+          [
+            64.5,
+            11.5
+          ],
+          [
+            84.55282,
+            15.687666
+          ],
+          [
+            101.476659,
+            27.230447
+          ],
+          [
+            112.695017,
+            44.37106
+          ]
+        ],
+        "groupScale": 1
+      }
+    },
+    {
+      "skillID": 2503,
+      "characterClass": "Archer",
+      "element": "Dark",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Archer_Dark_Snipe_Ultimate.source.png",
+          "sha256": "7ae5c6424a69c406bebc5a99ccb69b137054b88e5c7298d7e3bd673d807fd647",
+          "bytes": 1228195
+        },
+        "prompt": {
+          "path": "Skill_Archer_Dark_Snipe_Ultimate.prompt.txt",
+          "sha256": "dc80691e226e0382488832d60331afeb4891991efb04e1fb7bedec925502299a",
+          "bytes": 2279
+        },
+        "runtime": {
+          "path": "Skill_Archer_Dark_Snipe_Ultimate.bmp",
+          "sha256": "d2ee69d8af81fadfaf5ff06cfd357cf58ead6617a6b2a58794f5af13c1a36214",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Archer_Dark_Snipe_Ultimate.png",
+          "sha256": "68611c6041895dca6846db7e53c2cdd3b37eca9c92bab8390361bf3c189848d1",
+          "bytes": 65521
+        },
+        "layout": {
+          "path": "Skill_Archer_Dark_Snipe_Ultimate.layout.json",
+          "sha256": "22b15d5b8734fa5bfbdec1c8e22538d17bfdb835220d7552ab5195ae9e40999c",
+          "bytes": 25043
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        115.5,
+        67.5
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundAnchor": null,
+      "groundBandStartY": 128,
+      "displaySize": {
+        "preparation": 80,
+        "impact": 112
+      },
+      "flight": {
+        "generationMode": "mechanical derivative, no new artwork",
+        "files": {
+          "runtime": {
+            "path": "Skill_Archer_Dark_Snipe_Ultimate_Flight.bmp",
+            "sha256": "c753370a47d221aaf11d5230daf3b96fd148a457a5911ae4b9179148da78a7d5",
+            "bytes": 3145782
+          },
+          "transparentPreview": {
+            "path": "Skill_Archer_Dark_Snipe_Ultimate_Flight.png",
+            "sha256": "b12e34891c1289a29061e2b0dd3c68960701fbb88401af2760ed58e4f471385d",
+            "bytes": 262584
+          },
+          "layout": {
+            "path": "Skill_Archer_Dark_Snipe_Ultimate_Flight.layout.json",
+            "sha256": "50da1c8a99f66050aa2698f96919918783a612d35bb2272826764398a16126fe",
+            "bytes": 31037
+          }
+        },
+        "sheet": {
+          "columns": 16,
+          "rows": 4,
+          "cellSize": 128,
+          "frames": 4,
+          "size": [
+            2048,
+            512
+          ]
+        },
+        "rotationCenter": [
+          64,
+          64
+        ],
+        "clockwiseDegreesPerColumn": 22.5,
+        "registeredAnchor": [
+          115.5,
+          67.5
+        ],
+        "directionAnchors": [
+          [
+            115.5,
+            67.5
+          ],
+          [
+            110.240404,
+            86.941775
+          ],
+          [
+            97.941125,
+            102.890873
+          ],
+          [
+            80.474618,
+            112.919188
+          ],
+          [
+            60.5,
+            115.5
+          ],
+          [
+            41.058225,
+            110.240404
+          ],
+          [
+            25.109127,
+            97.941125
+          ],
+          [
+            15.080812,
+            80.474618
+          ],
+          [
+            12.5,
+            60.5
+          ],
+          [
+            17.759596,
+            41.058225
+          ],
+          [
+            30.058875,
+            25.109127
+          ],
+          [
+            47.525382,
+            15.080812
+          ],
+          [
+            67.5,
+            12.5
+          ],
+          [
+            86.941775,
+            17.759596
+          ],
+          [
+            102.890873,
+            30.058875
+          ],
+          [
+            112.919188,
+            47.525382
+          ]
+        ],
+        "groupScale": 1
+      }
+    },
+    {
+      "skillID": 2403,
+      "characterClass": "Archer",
+      "element": "Light",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Archer_Light_Rain_Ultimate.source.png",
+          "sha256": "2bfe3e3cbf4a593a45b617b01136a554d152e0f5cd5d9c43c08c392817820845",
+          "bytes": 2714469
+        },
+        "prompt": {
+          "path": "Skill_Archer_Light_Rain_Ultimate.prompt.txt",
+          "sha256": "c581dbaf9415d9b6913ffa438737ba5fd0605c58d37c0cfbbf546d574388fef9",
+          "bytes": 3008
+        },
+        "runtime": {
+          "path": "Skill_Archer_Light_Rain_Ultimate.bmp",
+          "sha256": "ea49099ae99b2638b2830c89720359483d01894f11a9f4e162851975b32ef07d",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Archer_Light_Rain_Ultimate.png",
+          "sha256": "09da39d2364679374476ec7eca008deb6f27a34df1f95059567e0413673d7581",
+          "bytes": 95223
+        },
+        "layout": {
+          "path": "Skill_Archer_Light_Rain_Ultimate.layout.json",
+          "sha256": "1d330d012d94785529344e10b17e4f9ded4bc1b916ea5d3de3d515d12101a0e9",
+          "bytes": 25063
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "rain"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        122
+      ],
+      "impactAnchor": [
+        64,
+        109
+      ],
+      "groundAnchor": [
+        64,
+        109
+      ],
+      "groundBandStartY": 102,
+      "displaySize": {
+        "preparation": 240,
+        "impact": 240
+      }
+    }
+  ],
+  "verification": {
+    "script": "../../../tests/verify_class_ultimate_assets.py",
+    "report": "../../../tests/bin/class-ultimate-import/asset-verification.json",
+    "mapProof": "../../../tests/bin/class-ultimate-import/all-ten-map-size-proof.png"
+  }
+}

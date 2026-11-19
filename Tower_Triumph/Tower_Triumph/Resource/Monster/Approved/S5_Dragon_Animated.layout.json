@@ -1,0 +1,1924 @@
+{
+  "schemaVersion": 1,
+  "species": "S5_Dragon",
+  "source": "S5_Dragon_Animated.source.png",
+  "png": "S5_Dragon_Animated.png",
+  "bitmap": "S5_Dragon_Animated.bmp",
+  "sourceSha256": "ac87ffa7c21326a2d6352cc6d53a36d8d1eeb91bcb24b19bca4938184837b600",
+  "pngSha256": "797406e81142946a5961220c68b7712d08675dab0eb7539afefb66180a507d1a",
+  "bitmapSha256": "c9b39b99662506bd6f0251e0ebf07a1751a3a5bf048ea469cba2e4420c7cd21b",
+  "sourceSheetSize": [
+    1448,
+    1086
+  ],
+  "columns": 8,
+  "rows": 6,
+  "frameCount": 48,
+  "cellSize": 128,
+  "sheetSize": [
+    1024,
+    768
+  ],
+  "nominalFrameHeight": 96,
+  "root": [
+    64,
+    112
+  ],
+  "sourceFacesRight": true,
+  "uniformScale": 0.6015037593984962,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "impactFrame": 4,
+  "generation": {
+    "tool": "image_gen",
+    "transparentBackground": true,
+    "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-acda870b-be72-425d-be7b-ced67561490b.png",
+    "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+    "prompt": "S5_Dragon_Animated.prompt.txt",
+    "promptSha256": "17dc4a151bec63687215508bb8959ac222aa8d5238ac8ecd524d25ef32dcbaa0"
+  },
+  "frameOrder": "row-major, left to right, top to bottom",
+  "states": [
+    {
+      "name": "Idle",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "loop": true
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": true
+    },
+    {
+      "name": "Attack",
+      "frames": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "loop": false
+    },
+    {
+      "name": "Hit",
+      "frames": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "loop": false
+    },
+    {
+      "name": "Dead",
+      "frames": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "loop": false
+    },
+    {
+      "name": "WalkStop",
+      "frames": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "loop": false
+    },
+    {
+      "name": "IdleReturn",
+      "frames": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "loop": false
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "state": "Idle",
+      "sourceCell": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        28,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.796992481203006,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3480
+    },
+    {
+      "index": 1,
+      "state": "Idle",
+      "sourceCell": [
+        181,
+        0,
+        362,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        28,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.796992481203006,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3453
+    },
+    {
+      "index": 2,
+      "state": "Idle",
+      "sourceCell": [
+        362,
+        0,
+        543,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        27,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.19548872180451,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3463
+    },
+    {
+      "index": 3,
+      "state": "Idle",
+      "sourceCell": [
+        543,
+        0,
+        724,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        28,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.796992481203006,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        29,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3466
+    },
+    {
+      "index": 4,
+      "state": "Idle",
+      "sourceCell": [
+        724,
+        0,
+        905,
+        181
+      ],
+      "sourceBounds": [
+        41,
+        28,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        28.51127819548872,
+        30.796992481203006,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        29,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3444
+    },
+    {
+      "index": 5,
+      "state": "Idle",
+      "sourceCell": [
+        905,
+        0,
+        1086,
+        181
+      ],
+      "sourceBounds": [
+        41,
+        28,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        28.51127819548872,
+        30.796992481203006,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        29,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3444
+    },
+    {
+      "index": 6,
+      "state": "Idle",
+      "sourceCell": [
+        1086,
+        0,
+        1267,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        27,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.19548872180451,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3490
+    },
+    {
+      "index": 7,
+      "state": "Idle",
+      "sourceCell": [
+        1267,
+        0,
+        1448,
+        181
+      ],
+      "sourceBounds": [
+        40,
+        28,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        30.796992481203006,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        31,
+        102,
+        111
+      ],
+      "opaquePixels": 3477
+    },
+    {
+      "index": 8,
+      "state": "Walk",
+      "sourceCell": [
+        0,
+        181,
+        181,
+        362
+      ],
+      "sourceBounds": [
+        32,
+        23,
+        162,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        23.097744360902254,
+        27.789473684210535,
+        101.29323308270676,
+        110.796992481203
+      ],
+      "outputBounds": [
+        23,
+        28,
+        101,
+        111
+      ],
+      "opaquePixels": 3523
+    },
+    {
+      "index": 9,
+      "state": "Walk",
+      "sourceCell": [
+        181,
+        181,
+        362,
+        362
+      ],
+      "sourceBounds": [
+        33,
+        26,
+        163,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        23.69924812030075,
+        29.593984962406026,
+        101.89473684210526,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        24,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3573
+    },
+    {
+      "index": 10,
+      "state": "Walk",
+      "sourceCell": [
+        362,
+        181,
+        543,
+        362
+      ],
+      "sourceBounds": [
+        39,
+        21,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.308270676691734,
+        26.58646616541354,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        27,
+        27,
+        101,
+        111
+      ],
+      "opaquePixels": 3452
+    },
+    {
+      "index": 11,
+      "state": "Walk",
+      "sourceCell": [
+        543,
+        181,
+        724,
+        362
+      ],
+      "sourceBounds": [
+        39,
+        20,
+        163,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.308270676691734,
+        25.984962406015043,
+        101.89473684210526,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        27,
+        26,
+        102,
+        111
+      ],
+      "opaquePixels": 3423
+    },
+    {
+      "index": 12,
+      "state": "Walk",
+      "sourceCell": [
+        724,
+        181,
+        905,
+        362
+      ],
+      "sourceBounds": [
+        33,
+        23,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        23.69924812030075,
+        27.789473684210535,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        24,
+        28,
+        101,
+        111
+      ],
+      "opaquePixels": 3516
+    },
+    {
+      "index": 13,
+      "state": "Walk",
+      "sourceCell": [
+        905,
+        181,
+        1086,
+        362
+      ],
+      "sourceBounds": [
+        34,
+        25,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.30075187969925,
+        28.99248120300753,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        25,
+        29,
+        101,
+        111
+      ],
+      "opaquePixels": 3539
+    },
+    {
+      "index": 14,
+      "state": "Walk",
+      "sourceCell": [
+        1086,
+        181,
+        1267,
+        362
+      ],
+      "sourceBounds": [
+        39,
+        20,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.308270676691734,
+        25.984962406015043,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        27,
+        26,
+        101,
+        111
+      ],
+      "opaquePixels": 3465
+    },
+    {
+      "index": 15,
+      "state": "Walk",
+      "sourceCell": [
+        1267,
+        181,
+        1448,
+        362
+      ],
+      "sourceBounds": [
+        40,
+        20,
+        163,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        25.984962406015043,
+        101.89473684210526,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        28,
+        26,
+        102,
+        111
+      ],
+      "opaquePixels": 3393
+    },
+    {
+      "index": 16,
+      "state": "Attack",
+      "sourceCell": [
+        0,
+        362,
+        181,
+        543
+      ],
+      "sourceBounds": [
+        40,
+        25,
+        164,
+        160
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        28.99248120300753,
+        102.49624060150376,
+        110.19548872180451
+      ],
+      "outputBounds": [
+        28,
+        29,
+        102,
+        110
+      ],
+      "opaquePixels": 3517
+    },
+    {
+      "index": 17,
+      "state": "Attack",
+      "sourceCell": [
+        181,
+        362,
+        362,
+        543
+      ],
+      "sourceBounds": [
+        35,
+        28,
+        166,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.902255639097746,
+        30.796992481203006,
+        103.69924812030075,
+        110.796992481203
+      ],
+      "outputBounds": [
+        25,
+        31,
+        103,
+        111
+      ],
+      "opaquePixels": 3526
+    },
+    {
+      "index": 18,
+      "state": "Attack",
+      "sourceCell": [
+        362,
+        362,
+        543,
+        543
+      ],
+      "sourceBounds": [
+        25,
+        21,
+        162,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.887218045112782,
+        26.58646616541354,
+        101.29323308270676,
+        110.796992481203
+      ],
+      "outputBounds": [
+        19,
+        27,
+        101,
+        111
+      ],
+      "opaquePixels": 3680
+    },
+    {
+      "index": 19,
+      "state": "Attack",
+      "sourceCell": [
+        543,
+        362,
+        724,
+        543
+      ],
+      "sourceBounds": [
+        22,
+        26,
+        167,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        17.082706766917298,
+        29.593984962406026,
+        104.30075187969925,
+        110.796992481203
+      ],
+      "outputBounds": [
+        17,
+        30,
+        104,
+        111
+      ],
+      "opaquePixels": 3712
+    },
+    {
+      "index": 20,
+      "state": "Attack",
+      "sourceCell": [
+        724,
+        362,
+        923,
+        543
+      ],
+      "sourceBounds": [
+        21,
+        25,
+        188,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        16.4812030075188,
+        28.99248120300753,
+        116.93233082706766,
+        110.796992481203
+      ],
+      "outputBounds": [
+        16,
+        29,
+        117,
+        111
+      ],
+      "opaquePixels": 3764
+    },
+    {
+      "index": 21,
+      "state": "Attack",
+      "sourceCell": [
+        923,
+        362,
+        1105,
+        543
+      ],
+      "sourceBounds": [
+        10,
+        26,
+        169,
+        161
+      ],
+      "sourceRoot": [
+        82,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        20.691729323308273,
+        29.593984962406026,
+        116.33082706766916,
+        110.796992481203
+      ],
+      "outputBounds": [
+        21,
+        30,
+        116,
+        111
+      ],
+      "opaquePixels": 3570
+    },
+    {
+      "index": 22,
+      "state": "Attack",
+      "sourceCell": [
+        1105,
+        362,
+        1267,
+        543
+      ],
+      "sourceBounds": [
+        14,
+        23,
+        152,
+        161
+      ],
+      "sourceRoot": [
+        81,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        23.69924812030075,
+        27.789473684210535,
+        106.70676691729324,
+        110.796992481203
+      ],
+      "outputBounds": [
+        24,
+        28,
+        107,
+        111
+      ],
+      "opaquePixels": 3662
+    },
+    {
+      "index": 23,
+      "state": "Attack",
+      "sourceCell": [
+        1267,
+        362,
+        1448,
+        543
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        164,
+        160
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        102.49624060150376,
+        110.19548872180451
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        110
+      ],
+      "opaquePixels": 3520
+    },
+    {
+      "index": 24,
+      "state": "Hit",
+      "sourceCell": [
+        0,
+        543,
+        181,
+        724
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3533
+    },
+    {
+      "index": 25,
+      "state": "Hit",
+      "sourceCell": [
+        181,
+        543,
+        362,
+        724
+      ],
+      "sourceBounds": [
+        36,
+        26,
+        152,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        25.503759398496243,
+        29.593984962406026,
+        95.2781954887218,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        26,
+        30,
+        95,
+        111
+      ],
+      "opaquePixels": 3625
+    },
+    {
+      "index": 26,
+      "state": "Hit",
+      "sourceCell": [
+        362,
+        543,
+        543,
+        724
+      ],
+      "sourceBounds": [
+        34,
+        24,
+        152,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.30075187969925,
+        28.39097744360903,
+        95.2781954887218,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        24,
+        28,
+        95,
+        111
+      ],
+      "opaquePixels": 3706
+    },
+    {
+      "index": 27,
+      "state": "Hit",
+      "sourceCell": [
+        543,
+        543,
+        724,
+        724
+      ],
+      "sourceBounds": [
+        19,
+        20,
+        143,
+        167
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        15.278195488721806,
+        25.984962406015043,
+        89.86466165413533,
+        114.40601503759399
+      ],
+      "outputBounds": [
+        15,
+        26,
+        90,
+        114
+      ],
+      "opaquePixels": 3858
+    },
+    {
+      "index": 28,
+      "state": "Hit",
+      "sourceCell": [
+        724,
+        543,
+        905,
+        724
+      ],
+      "sourceBounds": [
+        22,
+        29,
+        153,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        17.082706766917298,
+        31.398496240601503,
+        95.8796992481203,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        17,
+        31,
+        96,
+        111
+      ],
+      "opaquePixels": 3530
+    },
+    {
+      "index": 29,
+      "state": "Hit",
+      "sourceCell": [
+        905,
+        543,
+        1086,
+        724
+      ],
+      "sourceBounds": [
+        28,
+        29,
+        156,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        20.691729323308273,
+        31.398496240601503,
+        97.68421052631578,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        21,
+        31,
+        98,
+        111
+      ],
+      "opaquePixels": 3518
+    },
+    {
+      "index": 30,
+      "state": "Hit",
+      "sourceCell": [
+        1086,
+        543,
+        1267,
+        724
+      ],
+      "sourceBounds": [
+        33,
+        27,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        23.69924812030075,
+        30.19548872180451,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        24,
+        30,
+        101,
+        111
+      ],
+      "opaquePixels": 3546
+    },
+    {
+      "index": 31,
+      "state": "Hit",
+      "sourceCell": [
+        1267,
+        543,
+        1448,
+        724
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3532
+    },
+    {
+      "index": 32,
+      "state": "Dead",
+      "sourceCell": [
+        0,
+        724,
+        181,
+        905
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3550
+    },
+    {
+      "index": 33,
+      "state": "Dead",
+      "sourceCell": [
+        181,
+        724,
+        362,
+        905
+      ],
+      "sourceBounds": [
+        30,
+        33,
+        162,
+        165
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        21.894736842105267,
+        33.80451127819549,
+        101.29323308270676,
+        113.203007518797
+      ],
+      "outputBounds": [
+        22,
+        34,
+        101,
+        113
+      ],
+      "opaquePixels": 3473
+    },
+    {
+      "index": 34,
+      "state": "Dead",
+      "sourceCell": [
+        362,
+        724,
+        543,
+        905
+      ],
+      "sourceBounds": [
+        27,
+        49,
+        163,
+        165
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        20.090225563909776,
+        43.42857142857143,
+        101.89473684210526,
+        113.203007518797
+      ],
+      "outputBounds": [
+        21,
+        43,
+        102,
+        113
+      ],
+      "opaquePixels": 3197
+    },
+    {
+      "index": 35,
+      "state": "Dead",
+      "sourceCell": [
+        543,
+        724,
+        724,
+        905
+      ],
+      "sourceBounds": [
+        13,
+        62,
+        164,
+        165
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        11.66917293233083,
+        51.248120300751886,
+        102.49624060150376,
+        113.203007518797
+      ],
+      "outputBounds": [
+        12,
+        51,
+        102,
+        113
+      ],
+      "opaquePixels": 3059
+    },
+    {
+      "index": 36,
+      "state": "Dead",
+      "sourceCell": [
+        724,
+        724,
+        905,
+        905
+      ],
+      "sourceBounds": [
+        8,
+        75,
+        166,
+        167
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        8.661654135338352,
+        59.067669172932334,
+        103.69924812030075,
+        114.40601503759399
+      ],
+      "outputBounds": [
+        9,
+        59,
+        104,
+        114
+      ],
+      "opaquePixels": 2980
+    },
+    {
+      "index": 37,
+      "state": "Dead",
+      "sourceCell": [
+        905,
+        724,
+        1086,
+        905
+      ],
+      "sourceBounds": [
+        11,
+        93,
+        170,
+        167
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        10.466165413533837,
+        69.89473684210526,
+        106.10526315789474,
+        114.40601503759399
+      ],
+      "outputBounds": [
+        11,
+        70,
+        106,
+        114
+      ],
+      "opaquePixels": 2490
+    },
+    {
+      "index": 38,
+      "state": "Dead",
+      "sourceCell": [
+        1086,
+        724,
+        1267,
+        905
+      ],
+      "sourceBounds": [
+        12,
+        93,
+        169,
+        167
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        11.067669172932334,
+        69.89473684210526,
+        105.50375939849624,
+        114.40601503759399
+      ],
+      "outputBounds": [
+        11,
+        70,
+        106,
+        114
+      ],
+      "opaquePixels": 2485
+    },
+    {
+      "index": 39,
+      "state": "Dead",
+      "sourceCell": [
+        1267,
+        724,
+        1448,
+        905
+      ],
+      "sourceBounds": [
+        12,
+        93,
+        170,
+        167
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        11.067669172932334,
+        69.89473684210526,
+        106.10526315789474,
+        114.40601503759399
+      ],
+      "outputBounds": [
+        11,
+        70,
+        106,
+        114
+      ],
+      "opaquePixels": 2466
+    },
+    {
+      "index": 40,
+      "state": "WalkStop",
+      "sourceCell": [
+        0,
+        905,
+        181,
+        1086
+      ],
+      "sourceBounds": [
+        36,
+        25,
+        163,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        25.503759398496243,
+        28.99248120300753,
+        101.89473684210526,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        26,
+        29,
+        102,
+        111
+      ],
+      "opaquePixels": 3496
+    },
+    {
+      "index": 41,
+      "state": "WalkStop",
+      "sourceCell": [
+        181,
+        905,
+        362,
+        1086
+      ],
+      "sourceBounds": [
+        37,
+        26,
+        162,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        26.10526315789474,
+        29.593984962406026,
+        101.29323308270676,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        26,
+        30,
+        101,
+        111
+      ],
+      "opaquePixels": 3344
+    },
+    {
+      "index": 42,
+      "state": "WalkStop",
+      "sourceCell": [
+        362,
+        905,
+        543,
+        1086
+      ],
+      "sourceBounds": [
+        38,
+        26,
+        163,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        26.706766917293237,
+        29.593984962406026,
+        101.89473684210526,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        27,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3430
+    },
+    {
+      "index": 43,
+      "state": "WalkStop",
+      "sourceCell": [
+        543,
+        905,
+        724,
+        1086
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3500
+    },
+    {
+      "index": 44,
+      "state": "IdleReturn",
+      "sourceCell": [
+        724,
+        905,
+        905,
+        1086
+      ],
+      "sourceBounds": [
+        40,
+        23,
+        166,
+        162
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        27.789473684210535,
+        103.69924812030075,
+        111.3984962406015
+      ],
+      "outputBounds": [
+        28,
+        28,
+        104,
+        111
+      ],
+      "opaquePixels": 3554
+    },
+    {
+      "index": 45,
+      "state": "IdleReturn",
+      "sourceCell": [
+        905,
+        905,
+        1086,
+        1086
+      ],
+      "sourceBounds": [
+        34,
+        27,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.30075187969925,
+        30.19548872180451,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        25,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3472
+    },
+    {
+      "index": 46,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1086,
+        905,
+        1267,
+        1086
+      ],
+      "sourceBounds": [
+        39,
+        26,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.308270676691734,
+        29.593984962406026,
+        101.89473684210526,
+        110.796992481203
+      ],
+      "outputBounds": [
+        27,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3513
+    },
+    {
+      "index": 47,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1267,
+        905,
+        1448,
+        1086
+      ],
+      "sourceBounds": [
+        40,
+        26,
+        164,
+        161
+      ],
+      "sourceRoot": [
+        100,
+        163
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.90977443609023,
+        29.593984962406026,
+        102.49624060150376,
+        110.796992481203
+      ],
+      "outputBounds": [
+        28,
+        30,
+        102,
+        111
+      ],
+      "opaquePixels": 3500
+    }
+  ],
+  "portrait": {
+    "png": "S5_Dragon_Portrait.png",
+    "bitmap": "S5_Dragon_Portrait.bmp",
+    "pngSha256": "2af68678070ea508ea0a7bc0b27bd86480df2394741982ff5202b2187aba05f3",
+    "bitmapSha256": "e0bce02b6ebcad23e4cade5023c643124c4d73c689985671247345d9955ba29b",
+    "sourceFrame": 0,
+    "sheetSize": [
+      128,
+      128
+    ],
+    "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+  },
+  "method": "One uniform nearest-neighbor scale with explicit source-cell-local root translation. PNG retains sampled source RGBA; BMP retains RGB at alpha >= 128 with exact magenta elsewhere. No pose synthesis, repainting, or per-frame fitting."
+}

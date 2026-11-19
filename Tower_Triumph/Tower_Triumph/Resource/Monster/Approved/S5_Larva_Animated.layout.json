@@ -1,0 +1,1924 @@
+{
+  "schemaVersion": 1,
+  "species": "S5_Larva",
+  "source": "S5_Larva_Animated.source.png",
+  "png": "S5_Larva_Animated.png",
+  "bitmap": "S5_Larva_Animated.bmp",
+  "sourceSha256": "cfff87a62de21e725ddf88a909fd39a8b40eaaccbbb21ad388ff19488d5ea4c4",
+  "pngSha256": "a3b4e82b1daf929f855cc46e8a625c8cc8b5f94293a8b5823a034a0b25a798d9",
+  "bitmapSha256": "029553ca700644978fb347057fa1fc1bde044c4027219c0143c3eeace4ca3f4b",
+  "sourceSheetSize": [
+    1448,
+    1086
+  ],
+  "columns": 8,
+  "rows": 6,
+  "frameCount": 48,
+  "cellSize": 128,
+  "sheetSize": [
+    1024,
+    768
+  ],
+  "nominalFrameHeight": 96,
+  "root": [
+    64,
+    112
+  ],
+  "sourceFacesRight": true,
+  "uniformScale": 0.5729166666666666,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "impactFrame": 4,
+  "generation": {
+    "tool": "image_gen",
+    "transparentBackground": true,
+    "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-a0c99bd2-b3db-421c-8d10-d3cb11bfffb0.png",
+    "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+    "prompt": "S5_Larva_Animated.prompt.txt",
+    "promptSha256": "ecb17e871cbecc29c01bb3e03aad37b3ca84f1738d1e1e83a91cad38c9e73f9a"
+  },
+  "frameOrder": "row-major, left to right, top to bottom",
+  "states": [
+    {
+      "name": "Idle",
+      "frames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "loop": true
+    },
+    {
+      "name": "Walk",
+      "frames": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": true
+    },
+    {
+      "name": "Attack",
+      "frames": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "loop": false
+    },
+    {
+      "name": "Hit",
+      "frames": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "loop": false
+    },
+    {
+      "name": "Dead",
+      "frames": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "loop": false
+    },
+    {
+      "name": "WalkStop",
+      "frames": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "loop": false
+    },
+    {
+      "name": "IdleReturn",
+      "frames": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "loop": false
+    }
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "state": "Idle",
+      "sourceCell": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "sourceBounds": [
+        16,
+        60,
+        161,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        56.427083333333336,
+        101.8125,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        19,
+        56,
+        102,
+        111
+      ],
+      "opaquePixels": 3527
+    },
+    {
+      "index": 1,
+      "state": "Idle",
+      "sourceCell": [
+        181,
+        0,
+        362,
+        181
+      ],
+      "sourceBounds": [
+        16,
+        56,
+        162,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        54.13541666666667,
+        102.38541666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        54,
+        102,
+        111
+      ],
+      "opaquePixels": 3605
+    },
+    {
+      "index": 2,
+      "state": "Idle",
+      "sourceCell": [
+        362,
+        0,
+        543,
+        181
+      ],
+      "sourceBounds": [
+        16,
+        55,
+        163,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        53.56250000000001,
+        102.95833333333333,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        19,
+        54,
+        103,
+        110
+      ],
+      "opaquePixels": 3582
+    },
+    {
+      "index": 3,
+      "state": "Idle",
+      "sourceCell": [
+        543,
+        0,
+        724,
+        181
+      ],
+      "sourceBounds": [
+        17,
+        52,
+        163,
+        152
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        51.84375000000001,
+        102.95833333333333,
+        109.13541666666667
+      ],
+      "outputBounds": [
+        19,
+        52,
+        103,
+        109
+      ],
+      "opaquePixels": 3566
+    },
+    {
+      "index": 4,
+      "state": "Idle",
+      "sourceCell": [
+        724,
+        0,
+        905,
+        181
+      ],
+      "sourceBounds": [
+        17,
+        55,
+        162,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        53.56250000000001,
+        102.38541666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        54,
+        102,
+        111
+      ],
+      "opaquePixels": 3587
+    },
+    {
+      "index": 5,
+      "state": "Idle",
+      "sourceCell": [
+        905,
+        0,
+        1086,
+        181
+      ],
+      "sourceBounds": [
+        16,
+        59,
+        162,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        55.85416666666667,
+        102.38541666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        56,
+        102,
+        111
+      ],
+      "opaquePixels": 3480
+    },
+    {
+      "index": 6,
+      "state": "Idle",
+      "sourceCell": [
+        1086,
+        0,
+        1267,
+        181
+      ],
+      "sourceBounds": [
+        17,
+        60,
+        164,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        56.427083333333336,
+        103.53125,
+        110.28125
+      ],
+      "outputBounds": [
+        19,
+        56,
+        104,
+        110
+      ],
+      "opaquePixels": 3487
+    },
+    {
+      "index": 7,
+      "state": "Idle",
+      "sourceCell": [
+        1267,
+        0,
+        1448,
+        181
+      ],
+      "sourceBounds": [
+        18,
+        60,
+        163,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        56.427083333333336,
+        102.95833333333333,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        20,
+        56,
+        103,
+        111
+      ],
+      "opaquePixels": 3491
+    },
+    {
+      "index": 8,
+      "state": "Walk",
+      "sourceCell": [
+        0,
+        181,
+        181,
+        362
+      ],
+      "sourceBounds": [
+        16,
+        61,
+        161,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        57,
+        101.8125,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        57,
+        102,
+        111
+      ],
+      "opaquePixels": 3425
+    },
+    {
+      "index": 9,
+      "state": "Walk",
+      "sourceCell": [
+        181,
+        181,
+        362,
+        362
+      ],
+      "sourceBounds": [
+        16,
+        61,
+        163,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        57,
+        102.95833333333333,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        57,
+        103,
+        111
+      ],
+      "opaquePixels": 3398
+    },
+    {
+      "index": 10,
+      "state": "Walk",
+      "sourceCell": [
+        362,
+        181,
+        543,
+        362
+      ],
+      "sourceBounds": [
+        16,
+        59,
+        165,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        55.85416666666667,
+        104.10416666666666,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        19,
+        56,
+        104,
+        110
+      ],
+      "opaquePixels": 3425
+    },
+    {
+      "index": 11,
+      "state": "Walk",
+      "sourceCell": [
+        543,
+        181,
+        724,
+        362
+      ],
+      "sourceBounds": [
+        18,
+        59,
+        164,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        55.85416666666667,
+        103.53125,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        20,
+        56,
+        104,
+        110
+      ],
+      "opaquePixels": 3358
+    },
+    {
+      "index": 12,
+      "state": "Walk",
+      "sourceCell": [
+        724,
+        181,
+        905,
+        362
+      ],
+      "sourceBounds": [
+        18,
+        59,
+        165,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        55.85416666666667,
+        104.10416666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        20,
+        56,
+        104,
+        111
+      ],
+      "opaquePixels": 3359
+    },
+    {
+      "index": 13,
+      "state": "Walk",
+      "sourceCell": [
+        905,
+        181,
+        1086,
+        362
+      ],
+      "sourceBounds": [
+        17,
+        61,
+        164,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        57,
+        103.53125,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        19,
+        57,
+        104,
+        110
+      ],
+      "opaquePixels": 3324
+    },
+    {
+      "index": 14,
+      "state": "Walk",
+      "sourceCell": [
+        1086,
+        181,
+        1267,
+        362
+      ],
+      "sourceBounds": [
+        18,
+        61,
+        164,
+        151
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        57,
+        103.53125,
+        108.5625
+      ],
+      "outputBounds": [
+        20,
+        57,
+        104,
+        109
+      ],
+      "opaquePixels": 3300
+    },
+    {
+      "index": 15,
+      "state": "Walk",
+      "sourceCell": [
+        1267,
+        181,
+        1448,
+        362
+      ],
+      "sourceBounds": [
+        18,
+        61,
+        163,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        57,
+        102.95833333333333,
+        110.28125
+      ],
+      "outputBounds": [
+        20,
+        57,
+        103,
+        110
+      ],
+      "opaquePixels": 3407
+    },
+    {
+      "index": 16,
+      "state": "Attack",
+      "sourceCell": [
+        0,
+        362,
+        181,
+        543
+      ],
+      "sourceBounds": [
+        16,
+        61,
+        161,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        57,
+        101.8125,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        57,
+        102,
+        111
+      ],
+      "opaquePixels": 3421
+    },
+    {
+      "index": 17,
+      "state": "Attack",
+      "sourceCell": [
+        181,
+        362,
+        362,
+        543
+      ],
+      "sourceBounds": [
+        16,
+        67,
+        162,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        60.4375,
+        102.38541666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        60,
+        102,
+        111
+      ],
+      "opaquePixels": 3144
+    },
+    {
+      "index": 18,
+      "state": "Attack",
+      "sourceCell": [
+        362,
+        362,
+        543,
+        543
+      ],
+      "sourceBounds": [
+        15,
+        64,
+        165,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.16666666666667,
+        58.71875,
+        104.10416666666666,
+        110.28125
+      ],
+      "outputBounds": [
+        18,
+        59,
+        104,
+        110
+      ],
+      "opaquePixels": 3285
+    },
+    {
+      "index": 19,
+      "state": "Attack",
+      "sourceCell": [
+        543,
+        362,
+        724,
+        543
+      ],
+      "sourceBounds": [
+        12,
+        58,
+        169,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        16.44791666666667,
+        55.28125000000001,
+        106.39583333333333,
+        110.28125
+      ],
+      "outputBounds": [
+        16,
+        55,
+        106,
+        110
+      ],
+      "opaquePixels": 3375
+    },
+    {
+      "index": 20,
+      "state": "Attack",
+      "sourceCell": [
+        724,
+        362,
+        905,
+        543
+      ],
+      "sourceBounds": [
+        10,
+        57,
+        177,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        15.302083333333336,
+        54.708333333333336,
+        110.97916666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        15,
+        55,
+        111,
+        111
+      ],
+      "opaquePixels": 3608
+    },
+    {
+      "index": 21,
+      "state": "Attack",
+      "sourceCell": [
+        905,
+        362,
+        1086,
+        543
+      ],
+      "sourceBounds": [
+        16,
+        61,
+        170,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        57,
+        106.96875,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        57,
+        107,
+        111
+      ],
+      "opaquePixels": 3483
+    },
+    {
+      "index": 22,
+      "state": "Attack",
+      "sourceCell": [
+        1086,
+        362,
+        1267,
+        543
+      ],
+      "sourceBounds": [
+        17,
+        61,
+        164,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        57,
+        103.53125,
+        110.28125
+      ],
+      "outputBounds": [
+        19,
+        57,
+        104,
+        110
+      ],
+      "opaquePixels": 3392
+    },
+    {
+      "index": 23,
+      "state": "Attack",
+      "sourceCell": [
+        1267,
+        362,
+        1448,
+        543
+      ],
+      "sourceBounds": [
+        18,
+        62,
+        163,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        57.57291666666667,
+        102.95833333333333,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        20,
+        58,
+        103,
+        111
+      ],
+      "opaquePixels": 3400
+    },
+    {
+      "index": 24,
+      "state": "Hit",
+      "sourceCell": [
+        0,
+        543,
+        181,
+        724
+      ],
+      "sourceBounds": [
+        16,
+        62,
+        161,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        57.57291666666667,
+        101.8125,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        58,
+        102,
+        111
+      ],
+      "opaquePixels": 3363
+    },
+    {
+      "index": 25,
+      "state": "Hit",
+      "sourceCell": [
+        181,
+        543,
+        362,
+        724
+      ],
+      "sourceBounds": [
+        16,
+        56,
+        158,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        54.13541666666667,
+        100.09375,
+        110.28125
+      ],
+      "outputBounds": [
+        19,
+        54,
+        100,
+        110
+      ],
+      "opaquePixels": 3240
+    },
+    {
+      "index": 26,
+      "state": "Hit",
+      "sourceCell": [
+        362,
+        543,
+        543,
+        724
+      ],
+      "sourceBounds": [
+        15,
+        42,
+        148,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.16666666666667,
+        46.11458333333334,
+        94.36458333333333,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        18,
+        46,
+        94,
+        111
+      ],
+      "opaquePixels": 3317
+    },
+    {
+      "index": 27,
+      "state": "Hit",
+      "sourceCell": [
+        543,
+        543,
+        724,
+        724
+      ],
+      "sourceBounds": [
+        12,
+        33,
+        146,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        16.44791666666667,
+        40.95833333333334,
+        93.21875,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        17,
+        41,
+        93,
+        111
+      ],
+      "opaquePixels": 3465
+    },
+    {
+      "index": 28,
+      "state": "Hit",
+      "sourceCell": [
+        724,
+        543,
+        905,
+        724
+      ],
+      "sourceBounds": [
+        12,
+        51,
+        145,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        16.44791666666667,
+        51.270833333333336,
+        92.64583333333333,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        16,
+        51,
+        93,
+        111
+      ],
+      "opaquePixels": 3392
+    },
+    {
+      "index": 29,
+      "state": "Hit",
+      "sourceCell": [
+        905,
+        543,
+        1086,
+        724
+      ],
+      "sourceBounds": [
+        12,
+        64,
+        156,
+        154
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        16.44791666666667,
+        58.71875,
+        98.94791666666666,
+        110.28125
+      ],
+      "outputBounds": [
+        16,
+        59,
+        99,
+        110
+      ],
+      "opaquePixels": 3192
+    },
+    {
+      "index": 30,
+      "state": "Hit",
+      "sourceCell": [
+        1086,
+        543,
+        1267,
+        724
+      ],
+      "sourceBounds": [
+        17,
+        64,
+        164,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        58.71875,
+        103.53125,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        19,
+        59,
+        104,
+        110
+      ],
+      "opaquePixels": 3253
+    },
+    {
+      "index": 31,
+      "state": "Hit",
+      "sourceCell": [
+        1267,
+        543,
+        1448,
+        724
+      ],
+      "sourceBounds": [
+        18,
+        62,
+        163,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        57.57291666666667,
+        102.95833333333333,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        20,
+        58,
+        103,
+        111
+      ],
+      "opaquePixels": 3366
+    },
+    {
+      "index": 32,
+      "state": "Dead",
+      "sourceCell": [
+        0,
+        724,
+        181,
+        905
+      ],
+      "sourceBounds": [
+        16,
+        58,
+        160,
+        153
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        55.28125000000001,
+        101.23958333333333,
+        109.70833333333333
+      ],
+      "outputBounds": [
+        19,
+        55,
+        101,
+        110
+      ],
+      "opaquePixels": 3406
+    },
+    {
+      "index": 33,
+      "state": "Dead",
+      "sourceCell": [
+        181,
+        724,
+        362,
+        905
+      ],
+      "sourceBounds": [
+        16,
+        64,
+        161,
+        158
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        58.71875,
+        101.8125,
+        112.57291666666667
+      ],
+      "outputBounds": [
+        19,
+        59,
+        102,
+        113
+      ],
+      "opaquePixels": 3415
+    },
+    {
+      "index": 34,
+      "state": "Dead",
+      "sourceCell": [
+        362,
+        724,
+        543,
+        905
+      ],
+      "sourceBounds": [
+        16,
+        73,
+        159,
+        163
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        63.875,
+        100.66666666666666,
+        115.4375
+      ],
+      "outputBounds": [
+        19,
+        64,
+        101,
+        115
+      ],
+      "opaquePixels": 3203
+    },
+    {
+      "index": 35,
+      "state": "Dead",
+      "sourceCell": [
+        543,
+        724,
+        724,
+        905
+      ],
+      "sourceBounds": [
+        14,
+        80,
+        159,
+        163
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        17.59375,
+        67.88541666666667,
+        100.66666666666666,
+        115.4375
+      ],
+      "outputBounds": [
+        18,
+        68,
+        101,
+        115
+      ],
+      "opaquePixels": 3082
+    },
+    {
+      "index": 36,
+      "state": "Dead",
+      "sourceCell": [
+        724,
+        724,
+        905,
+        905
+      ],
+      "sourceBounds": [
+        18,
+        79,
+        164,
+        164
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        67.3125,
+        103.53125,
+        116.01041666666667
+      ],
+      "outputBounds": [
+        20,
+        67,
+        104,
+        116
+      ],
+      "opaquePixels": 2972
+    },
+    {
+      "index": 37,
+      "state": "Dead",
+      "sourceCell": [
+        905,
+        724,
+        1086,
+        905
+      ],
+      "sourceBounds": [
+        17,
+        80,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        67.88541666666667,
+        102.95833333333333,
+        114.29166666666667
+      ],
+      "outputBounds": [
+        19,
+        68,
+        103,
+        114
+      ],
+      "opaquePixels": 3024
+    },
+    {
+      "index": 38,
+      "state": "Dead",
+      "sourceCell": [
+        1086,
+        724,
+        1267,
+        905
+      ],
+      "sourceBounds": [
+        17,
+        80,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        67.88541666666667,
+        102.95833333333333,
+        114.29166666666667
+      ],
+      "outputBounds": [
+        19,
+        68,
+        103,
+        114
+      ],
+      "opaquePixels": 3033
+    },
+    {
+      "index": 39,
+      "state": "Dead",
+      "sourceCell": [
+        1267,
+        724,
+        1448,
+        905
+      ],
+      "sourceBounds": [
+        18,
+        80,
+        163,
+        161
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        67.88541666666667,
+        102.95833333333333,
+        114.29166666666667
+      ],
+      "outputBounds": [
+        20,
+        68,
+        103,
+        114
+      ],
+      "opaquePixels": 2978
+    },
+    {
+      "index": 40,
+      "state": "WalkStop",
+      "sourceCell": [
+        0,
+        905,
+        181,
+        1086
+      ],
+      "sourceBounds": [
+        16,
+        70,
+        161,
+        157
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        62.15625,
+        101.8125,
+        112
+      ],
+      "outputBounds": [
+        19,
+        62,
+        102,
+        112
+      ],
+      "opaquePixels": 3199
+    },
+    {
+      "index": 41,
+      "state": "WalkStop",
+      "sourceCell": [
+        181,
+        905,
+        362,
+        1086
+      ],
+      "sourceBounds": [
+        16,
+        69,
+        161,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        61.583333333333336,
+        101.8125,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        19,
+        62,
+        102,
+        111
+      ],
+      "opaquePixels": 3153
+    },
+    {
+      "index": 42,
+      "state": "WalkStop",
+      "sourceCell": [
+        362,
+        905,
+        543,
+        1086
+      ],
+      "sourceBounds": [
+        16,
+        68,
+        161,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        18.739583333333336,
+        61.01041666666667,
+        101.8125,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        19,
+        61,
+        102,
+        111
+      ],
+      "opaquePixels": 3165
+    },
+    {
+      "index": 43,
+      "state": "WalkStop",
+      "sourceCell": [
+        543,
+        905,
+        724,
+        1086
+      ],
+      "sourceBounds": [
+        18,
+        62,
+        162,
+        155
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        57.57291666666667,
+        102.38541666666666,
+        110.85416666666667
+      ],
+      "outputBounds": [
+        20,
+        58,
+        102,
+        111
+      ],
+      "opaquePixels": 3351
+    },
+    {
+      "index": 44,
+      "state": "IdleReturn",
+      "sourceCell": [
+        724,
+        905,
+        905,
+        1086
+      ],
+      "sourceBounds": [
+        17,
+        63,
+        162,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        58.145833333333336,
+        102.38541666666666,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        19,
+        58,
+        102,
+        111
+      ],
+      "opaquePixels": 3345
+    },
+    {
+      "index": 45,
+      "state": "IdleReturn",
+      "sourceCell": [
+        905,
+        905,
+        1086,
+        1086
+      ],
+      "sourceBounds": [
+        17,
+        64,
+        162,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        58.71875,
+        102.38541666666666,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        19,
+        59,
+        102,
+        111
+      ],
+      "opaquePixels": 3334
+    },
+    {
+      "index": 46,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1086,
+        905,
+        1267,
+        1086
+      ],
+      "sourceBounds": [
+        17,
+        65,
+        163,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.3125,
+        59.29166666666667,
+        102.95833333333333,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        19,
+        59,
+        103,
+        111
+      ],
+      "opaquePixels": 3330
+    },
+    {
+      "index": 47,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1267,
+        905,
+        1448,
+        1086
+      ],
+      "sourceBounds": [
+        18,
+        64,
+        163,
+        156
+      ],
+      "sourceRoot": [
+        95,
+        157
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        19.88541666666667,
+        58.71875,
+        102.95833333333333,
+        111.42708333333333
+      ],
+      "outputBounds": [
+        20,
+        59,
+        103,
+        111
+      ],
+      "opaquePixels": 3337
+    }
+  ],
+  "portrait": {
+    "png": "S5_Larva_Portrait.png",
+    "bitmap": "S5_Larva_Portrait.bmp",
+    "pngSha256": "2b51d20f04e4708c114f62773dae2043fdead79ff8fa9d4459a3a4d539affda6",
+    "bitmapSha256": "0aa562da42bb6034bc3c29abae8f2608f2d455764d8d6453e84ec52c278d34a5",
+    "sourceFrame": 0,
+    "sheetSize": [
+      128,
+      128
+    ],
+    "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+  },
+  "method": "One uniform nearest-neighbor scale with explicit source-cell-local root translation. PNG retains sampled source RGBA; BMP retains RGB at alpha >= 128 with exact magenta elsewhere. No pose synthesis, repainting, or per-frame fitting."
+}

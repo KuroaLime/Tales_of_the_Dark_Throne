@@ -1,0 +1,36 @@
+{
+  "character": "Archer",
+  "approvedReference": "Source/Concepts/CharacterIdle/approved/Archer.png",
+  "source": "Archer_Portrait.source.png",
+  "sourceSha256": "03f8784975446c1860843851619a6a07bf4d3dc5903fb034eb527ecfb337e895",
+  "sourceSize": [
+    724,
+    715
+  ],
+  "sourceVisibleBounds": [
+    70,
+    62,
+    606,
+    677
+  ],
+  "cropRect": [
+    54,
+    46,
+    622,
+    693
+  ],
+  "uniformScale": 0.7913446676970634,
+  "sheetSize": [
+    450,
+    512
+  ],
+  "columns": 1,
+  "rows": 1,
+  "frameCount": 1,
+  "bitmap": "Archer_Portrait.bmp",
+  "bitmapSha256": "870460510b2235ffa2da8935a422075fd3af739d84970fc89363104eb51e0889",
+  "preview": "Archer_Portrait.png",
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "method": "Exact approved reference, cropped with margin and uniformly nearest-neighbor sampled; no redraw or recoloring. Full body matches existing portrait UI composition."
+}

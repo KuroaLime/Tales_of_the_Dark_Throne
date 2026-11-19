@@ -1,0 +1,36 @@
+{
+  "character": "Warrior",
+  "approvedReference": "Source/Concepts/CharacterIdle/approved/Warrior.png",
+  "source": "Warrior_Portrait.source.png",
+  "sourceSha256": "583351e635a9aa1d18ab27e3ceac0718a7cff8319039335cbd0cc8753833e383",
+  "sourceSize": [
+    724,
+    699
+  ],
+  "sourceVisibleBounds": [
+    113,
+    56,
+    580,
+    676
+  ],
+  "cropRect": [
+    97,
+    40,
+    596,
+    692
+  ],
+  "uniformScale": 0.7852760736196319,
+  "sheetSize": [
+    392,
+    512
+  ],
+  "columns": 1,
+  "rows": 1,
+  "frameCount": 1,
+  "bitmap": "Warrior_Portrait.bmp",
+  "bitmapSha256": "e4d9d9e3fb2ca168769f7cf3d802dcb9e74db75f7fb5390f0d015ad4e64d0817",
+  "preview": "Warrior_Portrait.png",
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "method": "Exact approved reference, cropped with margin and uniformly nearest-neighbor sampled; no redraw or recoloring. Full body matches existing portrait UI composition."
+}

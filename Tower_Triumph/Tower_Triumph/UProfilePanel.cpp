@@ -76,7 +76,7 @@ void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
 
             int srcW = bm.bmWidth;
             int srcH = bm.bmHeight;
-            if (isFallback) {
+            if (isFallback && !CharacterSpriteLayout::IdlePose::HasDimensions(bm.bmWidth, bm.bmHeight)) {
                 srcW = bm.bmWidth / CHARACTER_SHEET_COL;
                 srcH = bm.bmHeight / CHARACTER_SHEET_ROW;
             }
@@ -94,7 +94,7 @@ void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
             int drawX = Loc.x - drawW / 2;
             int drawY = Loc.y - 260; 
 
-            COLORREF transColor = isFallback ? CHARACTER_TRANSPARENT_COLOR : RGB(255, 255, 255);
+            COLORREF transColor = isFallback ? CHARACTER_TRANSPARENT_COLOR : currentCharacter->GetIllustrationTransparentColor();
             TransparentBlt(hMemDC, drawX, drawY, drawW, drawH, hSpriteDC, 0, 0, srcW, srcH, transColor);
 
             SelectObject(hSpriteDC, hOld);

@@ -1,0 +1,15 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[58,33.5],[58,33.5],[58,33.5],[58,33.5]],
+    "targetAnchor": [54,33.5],
+    "groupScale": 0.97,
+    "note": "All four tip outer edges are x58; front pixels occupy y33.5/34.5. A common 0.97 scale about the registered tip preserves trailing leaves that would touch x0 under translation alone. No per-pose fitting or deletion."
+  },
+  "Mage": {
+    "anchorKind": "bright magic core center",
+    "sourceAnchors": [[49,33],[49,33],[49,33],[49,33]],
+    "targetAnchor": [45,32],
+    "note": "Bright core centroids alternate [48.57,32.64] and [48.75,32.56]. Register shared nearest integer-grid [49,33] by (-4,-1). The residual is below0.3 screen pixels. No scale or color edits."
+  }
+}

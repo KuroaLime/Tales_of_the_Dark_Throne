@@ -1,0 +1,481 @@
+{
+  "source": "Archer_IdleCycle.source.png",
+  "bitmap": "Archer_IdleCycle.bmp",
+  "sourceSha256": "1a57b58745082d1eb56b7559ef7c9703142d76e3e10600a3dac3fecb9a5ce537",
+  "bitmapSha256": "f6480e9833e3995ee1e246b56dd7876d2570bcf631b911e0422e275c25dcce66",
+  "columns": 4,
+  "rows": 3,
+  "frameCount": 12,
+  "cellSize": 96,
+  "sheetSize": [
+    384,
+    288
+  ],
+  "root": [
+    48,
+    88
+  ],
+  "uniformScale": 0.2507739938080495,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "frameOrder": "row-major, left to right, top to bottom",
+  "frames": [
+    {
+      "index": 0,
+      "sourceCell": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "sourceBounds": [
+        66,
+        17,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        7,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        7.000000000000014,
+        75.08359133126935,
+        88.0
+      ]
+    },
+    {
+      "index": 1,
+      "sourceCell": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "sourceBounds": [
+        66,
+        18,
+        319,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        7,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        7.2507739938080675,
+        74.8328173374613,
+        88.0
+      ]
+    },
+    {
+      "index": 2,
+      "sourceCell": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "sourceBounds": [
+        65,
+        17,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        7,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.136222910216723,
+        7.000000000000014,
+        75.08359133126935,
+        88.0
+      ]
+    },
+    {
+      "index": 3,
+      "sourceCell": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "sourceBounds": [
+        65,
+        17,
+        319,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        7,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.136222910216723,
+        7.000000000000014,
+        74.8328173374613,
+        88.0
+      ]
+    },
+    {
+      "index": 4,
+      "sourceCell": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "sourceBounds": [
+        66,
+        19,
+        320,
+        339
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        7.501547987616121,
+        75.08359133126935,
+        87.74922600619195
+      ]
+    },
+    {
+      "index": 5,
+      "sourceCell": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "sourceBounds": [
+        66,
+        19,
+        319,
+        339
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        7.501547987616121,
+        74.8328173374613,
+        87.74922600619195
+      ]
+    },
+    {
+      "index": 6,
+      "sourceCell": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "sourceBounds": [
+        66,
+        19,
+        319,
+        339
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        7.501547987616121,
+        74.8328173374613,
+        87.74922600619195
+      ]
+    },
+    {
+      "index": 7,
+      "sourceCell": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "sourceBounds": [
+        66,
+        22,
+        320,
+        339
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        8.253869969040267,
+        75.08359133126935,
+        87.74922600619195
+      ]
+    },
+    {
+      "index": 8,
+      "sourceCell": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "sourceBounds": [
+        66,
+        22,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        8.253869969040267,
+        75.08359133126935,
+        88.0
+      ]
+    },
+    {
+      "index": 9,
+      "sourceCell": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "sourceBounds": [
+        66,
+        22,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        8,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        8.253869969040267,
+        75.08359133126935,
+        88.0
+      ]
+    },
+    {
+      "index": 10,
+      "sourceCell": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "sourceBounds": [
+        66,
+        23,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        9,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.386996904024777,
+        8.504643962848306,
+        75.08359133126935,
+        88.0
+      ]
+    },
+    {
+      "index": 11,
+      "sourceCell": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "sourceBounds": [
+        65,
+        23,
+        320,
+        340
+      ],
+      "sourceRoot": [
+        212.0,
+        340.0
+      ],
+      "outputBounds": [
+        11,
+        7,
+        75,
+        88
+      ],
+      "outputRoot": [
+        48,
+        88
+      ],
+      "projectedSourceBounds": [
+        11.136222910216723,
+        8.504643962848306,
+        75.08359133126935,
+        88.0
+      ],
+      "boundarySource": {
+        "destinationFrame": 11,
+        "source": "Archer_IdleCycle.neutral.bmp",
+        "sourceSha256": "3b352a3e2cdb085df3a41af54418ea45562524413dcc2ac7aeb81ea05012af9c",
+        "sourceFrame": 0,
+        "sourceCellSize": 96,
+        "sourceColumns": 1,
+        "offset": [
+          0,
+          0
+        ],
+        "method": "Exact unchanged RGB cell pixels, with magenta padding only."
+      }
+    }
+  ],
+  "method": "Uniform nearest-neighbor import of generated poses, then exact RGB endpoint cell copies. Generated source/root records remain for audit; boundarySource takes precedence for replaced cells.",
+  "nominalFrameHeight": 96,
+  "boundarySources": [
+    {
+      "destinationFrame": 11,
+      "source": "Archer_IdleCycle.neutral.bmp",
+      "sourceSha256": "3b352a3e2cdb085df3a41af54418ea45562524413dcc2ac7aeb81ea05012af9c",
+      "sourceFrame": 0,
+      "sourceCellSize": 96,
+      "sourceColumns": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "method": "Exact unchanged RGB cell pixels, with magenta padding only."
+    }
+  ],
+  "animation": {
+    "loop": true,
+    "seconds": 2.4,
+    "branches": 1,
+    "kind": "IdleCycle",
+    "framesPerBranch": 12
+  }
+}

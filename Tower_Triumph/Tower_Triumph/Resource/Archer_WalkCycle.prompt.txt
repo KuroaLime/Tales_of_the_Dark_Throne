@@ -1,0 +1,23 @@
+Generation: built-in image generation with a transparent background.
+Identity source: Source/Concepts/CharacterIdle/approved/Archer.png (exact original IDLE v1 selected by user on 2026-11-18).
+Output: 12 right-facing walk poses, 4x3 grid; imported into 96px cells with a fixed body root shared by IdlePose.
+
+Use case: identity-preserve animation edit. Asset type: production12-frame walk cycle from an APPROVED IDLE sprite.
+Image1 is the exact approved character design. Every pose must be the SAME character drawn by the SAME pixel artist in the SAME costume. This is not a redesign. Lock head-to-body proportions at the reference's~2.25heads, face shape/eyes/expression, hairshape and color palette, clothingpanels, armor hue, weapon, outline thickness and coarse stepped PIXEL ART. Do not beautify, addornaments, smooth/paint it, lengthenlegs or makeheadsmaller. Treathead/torso/weapon as stable animationcel elements; onlypose and subtlecloth/hair follow-through change.
+Output precisely TWELVE full-body frames in a FOUR-column by THREE-row regular sheet, chronological row-major. Transparent background with clear gutters; no shadows, floor, text, numbers, grid or extra characters. Samecellsize, camera, consistentfaceandbody scale, pelvis atsamehorizontalpointin everycell, samegroundbaselinearound90%ofeachcellheight. Entireweapon/hair/bootsstayinsidethecell. Figureheightroughly80%cellheight. Right-facingthree-quarterviewidenticaltoreference. Clearbentkneesandvisibleboots.
+Animate one balanced full TWO-STEP gait, nearleg andfarleg alternating. Desiredphases:
+0 nearfoot contactsforward/farfootback.
+1 weight loadsonto nearfoot; farheel lifts.
+2 farbentknee andfoot pass veryclose underhips, clearlycrossing nearleg.
+3 farleg movesforwardraised while nearfoot slidesBACK relativebody becauseit is plantedonworldground.
+4 farleg extendsforward, nearleg trailing.
+5 farheel nearsground.
+6 farfoot contactsforward/nearfootback, OPPOSITE of0.
+7 loadfarfoot/nearheel lifts.
+8 nearbentknee passes veryclose underhips, clearlycrossing farleg.
+9 nearleg movesforwardraised, plantedfarfoottravelsbackrelativebody.
+10 nearleg extendsforward.
+11 nearheel nearsground, seamlessreturnto0.
+Actual visual leg exchange is essential: do notrepeatonespread-leggedstanceorjustbobinplace. Bothpassingposesmustbenarrowandcrossed; bothcontactposeswideandopposite. Footspreadatcontactabout55%bodyheight. Smoothconstantpace, modest1–2pixelbodybob, nohighjump. Headremainsstablesameexpression, notblinking. Bothhandsretainweaponcorrectly, noextra limbs.
+
+Character lock: exactgreen-haired femaleelf archer, highgreenponytail withsmallplainband, pointedears, narrowcalmgreeneyes, smallneutralmouth. Mutedmossgreenhoodlesscapeandshortgreentunic, plainbrownleatherchest/belt/gloves/bracers/tallboots, ivoryshortvisiblecloth/cuffs, smallrectangularbrassbeltbuckle. Simpleplainwoodenbow heldloweredinforwardhand, leatherquiverwithivoryarrowfletchingbehindshoulder. Matchreferenceplaincostume: NOleafhairornament, NOjewelclasp, NOfancygoldbow, NOnewstrapsorpatterns. Samecompact2.25headbody, exactmutedgreen/browncolors. Bowheldasidebody, movingonlyslightlywithgait, never drawn, noarrowinhand. Coathemdoesnotconcealkneecrossing. KeepcoarsepixelclusterslikeImage1, notsmoothpainting.

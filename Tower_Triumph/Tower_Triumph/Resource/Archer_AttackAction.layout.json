@@ -1,0 +1,446 @@
+{
+  "source": "Archer_AttackAction.source.png",
+  "bitmap": "Archer_AttackAction.bmp",
+  "sourceSha256": "36dcf6891a3bb1bb9aa955586a34430b9f92c2f1818ddd34bb62d502c963320d",
+  "bitmapSha256": "95dcd72e739cf62863415d652d276b4b2e344af25d8982fd9c3a3d7b2ceb48c8",
+  "columns": 4,
+  "rows": 3,
+  "frameCount": 12,
+  "cellSize": 128,
+  "sheetSize": [
+    512,
+    384
+  ],
+  "nominalFrameHeight": 96,
+  "root": [
+    64,
+    112
+  ],
+  "uniformScale": 0.28125,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "frameOrder": "row-major, left to right, top to bottom",
+  "frames": [
+    {
+      "index": 0,
+      "sourceCell": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "sourceBounds": [
+        82,
+        32,
+        310,
+        320
+      ],
+      "sourceRoot": [
+        214.0,
+        320.0
+      ],
+      "outputBounds": [
+        27,
+        31,
+        91,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        26.875,
+        31.0,
+        91.0,
+        112.0
+      ]
+    },
+    {
+      "index": 1,
+      "sourceCell": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "sourceBounds": [
+        73,
+        32,
+        303,
+        320
+      ],
+      "sourceRoot": [
+        202.0,
+        320.0
+      ],
+      "outputBounds": [
+        28,
+        31,
+        92,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.71875,
+        31.0,
+        92.40625,
+        112.0
+      ]
+    },
+    {
+      "index": 2,
+      "sourceCell": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "sourceBounds": [
+        62,
+        32,
+        288,
+        320
+      ],
+      "sourceRoot": [
+        191.0,
+        320.0
+      ],
+      "outputBounds": [
+        28,
+        31,
+        91,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        27.71875,
+        31.0,
+        91.28125,
+        112.0
+      ]
+    },
+    {
+      "index": 3,
+      "sourceCell": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "sourceBounds": [
+        50,
+        32,
+        290,
+        320
+      ],
+      "sourceRoot": [
+        182.0,
+        320.0
+      ],
+      "outputBounds": [
+        27,
+        31,
+        94,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        26.875,
+        31.0,
+        94.375,
+        112.0
+      ]
+    },
+    {
+      "index": 4,
+      "sourceCell": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "sourceBounds": [
+        75,
+        29,
+        328,
+        317
+      ],
+      "sourceRoot": [
+        214.0,
+        317.0
+      ],
+      "outputBounds": [
+        25,
+        31,
+        95,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.90625,
+        31.0,
+        96.0625,
+        112.0
+      ]
+    },
+    {
+      "index": 5,
+      "sourceCell": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "sourceBounds": [
+        60,
+        29,
+        320,
+        317
+      ],
+      "sourceRoot": [
+        202.0,
+        317.0
+      ],
+      "outputBounds": [
+        24,
+        31,
+        97,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.0625,
+        31.0,
+        97.1875,
+        112.0
+      ]
+    },
+    {
+      "index": 6,
+      "sourceCell": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "sourceBounds": [
+        45,
+        29,
+        289,
+        317
+      ],
+      "sourceRoot": [
+        191.0,
+        317.0
+      ],
+      "outputBounds": [
+        23,
+        31,
+        91,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        22.9375,
+        31.0,
+        91.5625,
+        112.0
+      ]
+    },
+    {
+      "index": 7,
+      "sourceCell": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "sourceBounds": [
+        36,
+        30,
+        278,
+        317
+      ],
+      "sourceRoot": [
+        182.0,
+        317.0
+      ],
+      "outputBounds": [
+        23,
+        31,
+        91,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        22.9375,
+        31.28125,
+        91.0,
+        112.0
+      ]
+    },
+    {
+      "index": 8,
+      "sourceCell": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "sourceBounds": [
+        76,
+        26,
+        305,
+        316
+      ],
+      "sourceRoot": [
+        214.0,
+        316.0
+      ],
+      "outputBounds": [
+        25,
+        30,
+        90,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        25.1875,
+        30.4375,
+        89.59375,
+        112.0
+      ]
+    },
+    {
+      "index": 9,
+      "sourceCell": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "sourceBounds": [
+        64,
+        25,
+        298,
+        316
+      ],
+      "sourceRoot": [
+        202.0,
+        316.0
+      ],
+      "outputBounds": [
+        25,
+        30,
+        91,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        25.1875,
+        30.15625,
+        91.0,
+        112.0
+      ]
+    },
+    {
+      "index": 10,
+      "sourceCell": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "sourceBounds": [
+        51,
+        23,
+        284,
+        316
+      ],
+      "sourceRoot": [
+        191.0,
+        316.0
+      ],
+      "outputBounds": [
+        25,
+        30,
+        90,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.625,
+        29.59375,
+        90.15625,
+        112.0
+      ]
+    },
+    {
+      "index": 11,
+      "sourceCell": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "sourceBounds": [
+        42,
+        24,
+        273,
+        316
+      ],
+      "sourceRoot": [
+        182.0,
+        316.0
+      ],
+      "outputBounds": [
+        25,
+        30,
+        90,
+        112
+      ],
+      "outputRoot": [
+        64,
+        112
+      ],
+      "projectedSourceBounds": [
+        24.625,
+        29.875,
+        89.59375,
+        112.0
+      ]
+    }
+  ],
+  "method": "Nearest-neighbor uniform scaling and explicit root translation only; no pose warping or foot-median anchors."
+}

@@ -111,6 +111,9 @@
     <ClCompile Include="Battle_Stage.cpp">
       <Filter>소스 파일\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="GraveyardRenderer.cpp">
+      <Filter>소스 파일\Stage</Filter>
+    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -236,6 +239,24 @@
     <ClInclude Include="Battle_Stage.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="GraveyardRenderer.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="GraveyardMapLayout.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="CelestialMapLayout.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="SeaRuinsMapLayout.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="LavaMapLayout.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="HallMapLayout.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -243,6 +264,36 @@
       <Filter>헤더 파일\System\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterMotion.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleActionTiming.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleSkillArea.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="AreaSkillEffectRenderer.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="AreaSkillVisuals.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillPresentation.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardSkillPresentation.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardSkillRenderer.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="UltimateSkillRenderer.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterSpriteLayout.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="URegionMarker.h">
@@ -364,6 +415,24 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Source\SMap\background\Test01.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\GraveyardAtlas.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\GraveyardScene.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\CelestialScene.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\SeaRuinsScene.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\LavaScene.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Source\SMap\background\HallScene.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Source\MouseCursor\MouseCusor.bmp">

@@ -1,0 +1,28 @@
+Tool: built-in image_gen
+Input 1: current painted scene; edit-time baseline tests/bin/graveyard-before-west.bmp
+Input 2: GraveyardScene.west-guide.png
+Runtime output: GraveyardScene.bmp, exact 1584 x 864, 24-bit BMP
+Collision areas: W1 x1..3/y6..7; W2 x1..2/y10..11 (lower row already blocked).
+
+Initial localized edit:
+Use case: precise-object-edit. Make a SMALL LOCAL EDIT to this modern dark-fantasy cemetery game background.
+INPUT1 is the actual painting to edit,1584x864. INPUT2 is a placement guide at the SAME pixel dimensions. Its two colored rectangles are the ONLY new object footprints. Preserve absolutely everything else, especially all center and eastern burial plots, the chapel, mausoleum, river, both bridges, narrow northern path, camera, colors, lighting and fine detail. The user likes the current atmosphere. Only the earth LEFT of the bridges needs a few natural headstones and ruined low walls.
+
+Guide colors: darkgray=existing blocked scenery, leave unchanged; beige=REQUIRED CLEAR WALKABLE SPACE, no new objects; olive and mauve=two new small burial pockets.
+IMPORTANT: colored rectangles specify the WHOLE VISUAL SILHOUETTE, including the TOP of upright headstones, all wall stones and rubble, NOT merely the feet of an object. Fit the complete objects within their rectangles with8pixel inset. If the final output resolution differs, scale all coordinates proportionally.
+
+W1, OLIVE rectangle: outerx48..192,y288..384; all new artwork inside x56..184,y296..376 (3.54–11.62% width,34.26–43.52% height).
+Extend the old NORTHWEST burial ground subtly into this pocket, just below its existing wall. Add TWO small, different aged upright headstones with tops around y310 and bases around y354, plus one small fallen marker. Headstones only35–42pixels tall at1584width. A short irregular collapsed wall remnant follows the west/south edge INSIDE this footprint, a few moss-covered coping stones and inward-fallen rubble. Join the old cemetery earth and ruined wall naturally; no complete square enclosure and no rectangular raised plinth. Do not expand the pocket right or down into the central approach.
+
+W2, MAUVE rectangle: outerx48..144,y480..576; all new artwork inside x56..136,y488..568 (3.54–8.59% width,56.48–65.74% height).
+This pocket lies just LEFT of the small SOUTHWEST family mausoleum and partly overlaps existing grave-earth. Add ONE small leaning memorial and ONE broken flat ledger, a tiny collapsed low wall fragment along the west side, sparse moss and a few pale wildflowers. Keep the upright stone modest, around35–42pixels high. Respect the existing mausoleum starting atx144,y528; do not change or cover its roof, facade, steps or surrounding existing graves. Let this pocket read as a weathered extension of its burial garden, not a detached prefab square.
+
+Paint the new walls freshly for these orientations, matching the existing cool slate, stone size, mortar, ivy and soft shadows. Make the two pockets visibly different in shape and decay. Keep all upright objects, rubble and thick vegetation INSIDE the specified boxes, with natural soft earth/moss transitions instead of obvious painted rectangles. Absolutely preserve the broad horizontal CLEAR EARTH passage between y384 and480, all player starting space to the right, and both bridge approaches. No new stones outside the guide colors. Retain the current modern painterly rendering; no tiled sprites, identical repeated tombstones, grid, labels, text, UI, characters, colored mask or watermark. Keep11:6 aspect ratio and do not recompose the rest of the scene.
+
+Foot-clearance correction:
+Precise localized correction to the supplied cemetery painting. Edit ONLY the NEW small two-headstone burial pocket at the far LEFT, immediately BELOW the old northwest cemetery wall and ABOVE the open horizontal bridge-approach lane. Do not change the large existing northwest cemetery, the lower-left mausoleum pocket, or ANY center/right scenery.
+
+The NEW pocket's headstones, short collapsed wall, flat fallen marker, rubble and mossy ground currently occupy roughly x34..204,y315..419 at1584x864 world size. It is too large and low; its southern stones intrude into the player approach.
+SHRINK this COMPLETE new pocket to75% of its current size, then position its VISUAL CENTER at x120,y336 (7.576% image width,38.889% image height). This moves it about31worldpixels UP, keeping its horizontal center unchanged. Complete physical artwork, including every headstone TOP and loose stone, must fit inside x56..184,y296..376 at1584x864 resolution. Scale coordinates proportionally to actual output dimensions. Keep its two modest headstones and collapsed wall design; do not add extra objects.
+Restore the freed earth below it to the same original clear path, with absolutely NO stones, ledgers, moss clumps, wall fragments or debris below y384. The walking lane at y384..480 must be physically clear. Blend the pocket naturally into the old cemetery edge above it; do not move the old wall. Avoid a rectangular patch or frame.
+Everything outside this ONE pocket and its vacated old location must remain unchanged, including the new lower-left memorial, all five other burial areas, river, both bridges, buildings, foliage, light and colors. Preserve fine painterly detail and11:6aspect. No text, grid, colored guide or UI.

@@ -1,0 +1,36 @@
+{
+  "character": "Mage",
+  "approvedReference": "Source/Concepts/CharacterIdle/approved/Mage.png",
+  "source": "Mage_Portrait.source.png",
+  "sourceSha256": "86ed1dc9f87c7fafc16020dd660811512ae38a3da1e852b9a46ea0f921955c57",
+  "sourceSize": [
+    714,
+    720
+  ],
+  "sourceVisibleBounds": [
+    95,
+    95,
+    581,
+    676
+  ],
+  "cropRect": [
+    79,
+    79,
+    597,
+    692
+  ],
+  "uniformScale": 0.835236541598695,
+  "sheetSize": [
+    433,
+    512
+  ],
+  "columns": 1,
+  "rows": 1,
+  "frameCount": 1,
+  "bitmap": "Mage_Portrait.bmp",
+  "bitmapSha256": "c35a301a0171b2f25d8bd22712f7ed1cb6864c2d9ca3334d206b2d24998a26cb",
+  "preview": "Mage_Portrait.png",
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "method": "Exact approved reference, cropped with margin and uniformly nearest-neighbor sampled; no redraw or recoloring. Full body matches existing portrait UI composition."
+}

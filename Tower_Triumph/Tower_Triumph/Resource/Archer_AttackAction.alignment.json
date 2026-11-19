@@ -1,0 +1,54 @@
+{
+  "scale": 0.28125,
+  "registrationNote": "Constant upright body scale (81/288). Row/column offsets correct generated contact-sheet layout drift; authored arm/torso/stance changes are preserved.",
+  "frames": [
+    {
+      "rootX": 214,
+      "groundY": 320
+    },
+    {
+      "rootX": 202,
+      "groundY": 320
+    },
+    {
+      "rootX": 191,
+      "groundY": 320
+    },
+    {
+      "rootX": 182,
+      "groundY": 320
+    },
+    {
+      "rootX": 214,
+      "groundY": 317
+    },
+    {
+      "rootX": 202,
+      "groundY": 317
+    },
+    {
+      "rootX": 191,
+      "groundY": 317
+    },
+    {
+      "rootX": 182,
+      "groundY": 317
+    },
+    {
+      "rootX": 214,
+      "groundY": 316
+    },
+    {
+      "rootX": 202,
+      "groundY": 316
+    },
+    {
+      "rootX": 191,
+      "groundY": 316
+    },
+    {
+      "rootX": 182,
+      "groundY": 316
+    }
+  ]
+}

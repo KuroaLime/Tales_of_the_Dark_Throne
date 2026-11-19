@@ -1,0 +1,18 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[55,34.5],[55,34.5],[55,34.5],[55,34.5]],
+    "targetAnchor": [54,33.5],
+    "note": "All four leading tip spark edges are x55/y34.5. Shared translation (-1,-1)."
+  },
+  "Mage": {
+    "anchorKind": "bright magic core center",
+    "sourceAnchors": [[44,32],[44,32],[44,32],[44,32]],
+    "targetAnchor": [45,32],
+    "note": "The star vertical axis is local x44, spanning y23..42 in every frame. Shared nearest grid registration (+1,0); tail highlights are excluded from core measurement."
+  },
+  "Impact": {
+    "translation": [0,2],
+    "note": "All eight source contact poses share the star center around y30; translate the complete group down2 pixels to the common [32,32] impact point."
+  }
+}

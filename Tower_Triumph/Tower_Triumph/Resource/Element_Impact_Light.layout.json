@@ -1,0 +1,118 @@
+{
+  "element": "Light",
+  "source": "Projectiles_Light.source.png",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "sourceRows": 4,
+  "sourceSha256": "7db1c908d505ab6efb7d175f654f0bf325413e64791500aed2addf0db4d13bbf",
+  "bitmap": "Element_Impact_Light.bmp",
+  "preview": "Element_Impact_Light.png",
+  "columns": 4,
+  "rows": 2,
+  "frameCount": 8,
+  "cellSize": 64,
+  "sheetSize": [
+    256,
+    128
+  ],
+  "center": [
+    32,
+    32
+  ],
+  "recommendedDrawSize": 48,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "uniformScale": 0.20414673046251994,
+  "sourceStartRow": 2,
+  "animationFrameSeconds": 0.025,
+  "sourceSharedTranslation": [
+    0,
+    2
+  ],
+  "method": "Uniform whole-sheet nearest-neighbor scale; source rows 2 and 3 packed with one recorded shared translation for all eight poses. No per-frame fitting or redrawing.",
+  "frames": [
+    {
+      "frame": 0,
+      "bounds": [
+        25,
+        25,
+        39,
+        39
+      ],
+      "opaquePixels": 65
+    },
+    {
+      "frame": 1,
+      "bounds": [
+        15,
+        16,
+        48,
+        48
+      ],
+      "opaquePixels": 284
+    },
+    {
+      "frame": 2,
+      "bounds": [
+        4,
+        6,
+        59,
+        58
+      ],
+      "opaquePixels": 624
+    },
+    {
+      "frame": 3,
+      "bounds": [
+        13,
+        12,
+        53,
+        52
+      ],
+      "opaquePixels": 386
+    },
+    {
+      "frame": 4,
+      "bounds": [
+        18,
+        19,
+        46,
+        46
+      ],
+      "opaquePixels": 197
+    },
+    {
+      "frame": 5,
+      "bounds": [
+        20,
+        22,
+        41,
+        44
+      ],
+      "opaquePixels": 109
+    },
+    {
+      "frame": 6,
+      "bounds": [
+        22,
+        25,
+        42,
+        44
+      ],
+      "opaquePixels": 39
+    },
+    {
+      "frame": 7,
+      "bounds": [
+        23,
+        27,
+        40,
+        38
+      ],
+      "opaquePixels": 12
+    }
+  ],
+  "bitmapSha256": "9716471bfa4c87e9e4e6fb05d53fb82762b1b651f9348d323dddbc0a22bf3ce8"
+}

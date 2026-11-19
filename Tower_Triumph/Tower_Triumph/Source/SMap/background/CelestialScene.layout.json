@@ -1,0 +1,56 @@
+{
+  "width": 33,
+  "height": 18,
+  "tileSize": 48,
+  "pixelWidth": 1584,
+  "pixelHeight": 864,
+  "rows": [
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~BBBBBBB~",
+    "~~~~~~~~~~~~~...###TTT~~~BBBBBBB~",
+    "~~~###..#~~~~...###TTT~~~BBBBBBB~",
+    "~~~###..#~~~~...######~~~BBBBBBB~",
+    "~~####...#~~~......###~~~BBBBBBB~",
+    "~~#.......===......###~~~BBBBBBB~",
+    "~~#.......===...##....===......#~",
+    "~~........===...##....===......#~",
+    "~~.......#~~~...#.....~~~......#~",
+    "~~TTT....#~~~##~~==~~~~~~......#~",
+    "~~TTT.....==~~~~~==~~~~~~.....TT~",
+    "~~TTT.....==....~==~~~~~~.....TT~",
+    "~~TTT#....==.......###===.....TT~",
+    "~~~~~~~~~~~~~TTT......===....#TT~",
+    "~~~~~~~~~~~~~TTT......===....#~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  ],
+  "bitmapSha256": "0809a71817a8b818d77189bec2143d8c38e9bf55b5c87bbf673d1ab8e61cc19b",
+  "source": "CelestialScene.source.png",
+  "generationMode": "built-in imagegen",
+  "prompts": [
+    "CelestialScene.prompt.txt",
+    "CelestialScene.alignment.prompt.txt",
+    "CelestialScene.rim.prompt.txt",
+    "CelestialScene.central-edit.prompt.txt",
+    "CelestialScene.central-fit.prompt.txt"
+  ],
+  "footAnchor": [
+    24,
+    36
+  ],
+  "footSize": [
+    16,
+    12
+  ],
+  "notes": [
+    "Collision mask refined against final painted top surfaces, including cardinal foot sweeps.",
+    "Five bridge components with at least two-cell-wide opposing banks and alternate routes.",
+    "Sky, architectural rims, gardens, statues and cathedral footprints are blocked for every element.",
+    "Lower terrace northern curb shifted away from the two-row west bridge approach.",
+    "The guide is composition provenance; final collision is defined by CelestialMapLayout.h.",
+    "Hash and geometry checks detect stale asset/data pairing; they do not prove semantic image alignment or replace native playtesting.",
+    "Central court guardian and staggered columns occupy new reserved cells; lower shrine additions use its existing reserve.",
+    "The central sculpture was shrunk and moved after visual review of top and left foot-sweep overlaps.",
+    "Central-guide.png records intended ornament pockets and protected movement corridors; final bitmap and collision rows were reviewed together."
+  ]
+}

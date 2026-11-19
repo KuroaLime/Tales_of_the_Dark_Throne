@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "generationMode": "built-in image_gen",
+  "pathBase": "this manifest directory",
+  "sourceSheets": 5,
+  "runtimeBitmaps": 5,
+  "frames": 60,
+  "newSourceSheets": 3,
+  "newFrames": 36,
+  "description": "Complete highest-MP Mage elemental presentations; original gameplay statistics, character art, maps and earlier presentations preserved.",
+  "conversion": "Uniform nearest-neighbor scaling and explicitly recorded anchor registration; original RGB unchanged; alpha>=128; 24-bit BMP magenta transparency key.",
+  "assets": [
+    {
+      "skillID": 3103,
+      "element": "Fire",
+      "characterClass": "Mage",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Meteor_Ultimate.source.png",
+          "sha256": "18607809e3992df85ae3c7c8d20cd91d7fbe387a3d47ba97e46de3d1a09308cf",
+          "bytes": 1377522
+        },
+        "prompt": {
+          "path": "Skill_Mage_Meteor_Ultimate.prompt.txt",
+          "sha256": "18f020ca505548efb6f9f1be3b8cd6e24968a257627d9475d0a05f5c5fd6976c",
+          "bytes": 3015
+        },
+        "runtime": {
+          "path": "Skill_Mage_Meteor_Ultimate.bmp",
+          "sha256": "8c2ec2f569b08a7b9d80df8310002ad63013491cfc62de65f275607f2b04e0c3",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Meteor_Ultimate.png",
+          "sha256": "88e10f2856f3d31e9ff5b7553e535db8a22eee49c84aa59799cd5d1c274dbe34",
+          "bytes": 143302
+        },
+        "layout": {
+          "path": "Skill_Mage_Meteor_Ultimate.layout.json",
+          "sha256": "845595e77e9b1b08ed56f2995f46d98c6733827e5472be8cc98cc1e621375f25",
+          "bytes": 24524
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "flight"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        114
+      ],
+      "groundBandStartY": 108,
+      "preparationAnchor": [
+        86,
+        76
+      ],
+      "impactAnchor": [
+        64,
+        114
+      ],
+      "uniformSourceScale": 0.35359116022099446,
+      "newInThisBatch": false
+    },
+    {
+      "skillID": 3203,
+      "element": "Water",
+      "characterClass": "Mage",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Water_Ultimate.source.png",
+          "sha256": "079f284001180af25b7524fbc43dd161293dd4bde2a4fcc079eb58cd89fd85ca",
+          "bytes": 1249468
+        },
+        "prompt": {
+          "path": "Skill_Mage_Water_Ultimate.prompt.txt",
+          "sha256": "34ea809e78a9552cb38db1a51fee1280dd8f490eafe2acffad3a0b261661eea8",
+          "bytes": 3046
+        },
+        "runtime": {
+          "path": "Skill_Mage_Water_Ultimate.bmp",
+          "sha256": "12004aba33487b5afd6658d99addfe3001020220795908f6170a9f14dbd65020",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Water_Ultimate.png",
+          "sha256": "4d07734e242cca7666f2ec957eb8f36c2122def5d8ef7f14c66f8a56d9ee8163",
+          "bytes": 104167
+        },
+        "layout": {
+          "path": "Skill_Mage_Water_Ultimate.layout.json",
+          "sha256": "6cd4cea15e76008d28f4171ce5d2332cc321a0666cd31a7d4e1a7af14c503bf2",
+          "bytes": 24940
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        114
+      ],
+      "groundBandStartY": 106,
+      "preparationAnchor": [
+        64,
+        114
+      ],
+      "impactAnchor": [
+        64,
+        114
+      ],
+      "uniformSourceScale": 0.35359116022099446,
+      "newInThisBatch": true
+    },
+    {
+      "skillID": 3303,
+      "element": "Grass",
+      "characterClass": "Mage",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Grass_Ultimate.source.png",
+          "sha256": "87a7edded5fbcdb3c3a946223c69eb6df6208fc99780ea0f3c1c6cb79419e36e",
+          "bytes": 1700176
+        },
+        "prompt": {
+          "path": "Skill_Mage_Grass_Ultimate.prompt.txt",
+          "sha256": "ca13daf1940c7365141362b0549fd122184f2322714a068f4587c8a01ff2c4d5",
+          "bytes": 3373
+        },
+        "runtime": {
+          "path": "Skill_Mage_Grass_Ultimate.bmp",
+          "sha256": "0f0d464d9641fe9cf871b9ecb2fbfed6727a5e152ce57ec00902e3ff9f53066d",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Grass_Ultimate.png",
+          "sha256": "84c3490622b2ea6eb8c51eaf5dd74653c380ba10fe0614fd5af609c62f7221c5",
+          "bytes": 102801
+        },
+        "layout": {
+          "path": "Skill_Mage_Grass_Ultimate.layout.json",
+          "sha256": "05884107bb280dc187f75d9cde8500eb0bb7b06a9f347a1ab81dd99af0e64bcd",
+          "bytes": 25038
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        115
+      ],
+      "groundBandStartY": 107,
+      "preparationAnchor": [
+        64,
+        115
+      ],
+      "impactAnchor": [
+        64,
+        115
+      ],
+      "uniformSourceScale": 0.35359116022099446,
+      "newInThisBatch": true
+    },
+    {
+      "skillID": 3403,
+      "element": "Light",
+      "characterClass": "Mage",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.source.png",
+          "sha256": "115682bb0023b41f2374ab0934f2ec8278f35b9541422ee0c480c2e3f93d984a",
+          "bytes": 1670793
+        },
+        "prompt": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.prompt.txt",
+          "sha256": "16597e5aaab0db6404474c9a3648f4a52b9d057723e8aa38ce2258cb0ac22e88",
+          "bytes": 3390
+        },
+        "runtime": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.bmp",
+          "sha256": "f990483f52f5c2764dbb0d1eb63563febf9b998b283ff20a75916a36a3812f1f",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.png",
+          "sha256": "1c0b02e5459b1e7ae55d9085071da0ed80f048916be1636cdf6b34089258204a",
+          "bytes": 112665
+        },
+        "layout": {
+          "path": "Skill_Mage_Sanctuary_Ultimate.layout.json",
+          "sha256": "5f17457f4cf579251de72587a60a0f9e374c8190604176d94aabd30589d70ef9",
+          "bytes": 24250
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        104
+      ],
+      "groundBandStartY": 96,
+      "preparationAnchor": [
+        64,
+        104
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "uniformSourceScale": 0.35359116022099446,
+      "newInThisBatch": false
+    },
+    {
+      "skillID": 3503,
+      "element": "Dark",
+      "characterClass": "Mage",
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Mage_Dark_Ultimate.source.png",
+          "sha256": "555b47721f48619268a35c9c9c7674a9b66d65e4872ac9a2ea6e3d860333ca38",
+          "bytes": 1467312
+        },
+        "prompt": {
+          "path": "Skill_Mage_Dark_Ultimate.prompt.txt",
+          "sha256": "b50dc9dde712936d364efe061aaf00f96e197a8bf186d0981a58f3c8d1c58dce",
+          "bytes": 3491
+        },
+        "runtime": {
+          "path": "Skill_Mage_Dark_Ultimate.bmp",
+          "sha256": "6b12b7b4211008501d87df916bfdd799aba1444f9bafd293fd0670c4cd2f463e",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Mage_Dark_Ultimate.png",
+          "sha256": "0c61762d6577b57b5cbb8b4041cbe663141ea9b87553c2256c1b57df8a24c0f3",
+          "bytes": 97707
+        },
+        "layout": {
+          "path": "Skill_Mage_Dark_Ultimate.layout.json",
+          "sha256": "acd09e5c4dc63bc6a3fe0808d8b8a8d58549f3d2cc23dbd1ff32d0959a5a3140",
+          "bytes": 24941
+        }
+      },
+      "sheet": {
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12,
+        "size": [
+          512,
+          384
+        ]
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "groundAnchor": [
+        64,
+        114
+      ],
+      "groundBandStartY": 106,
+      "preparationAnchor": [
+        64,
+        114
+      ],
+      "impactAnchor": [
+        64,
+        114
+      ],
+      "uniformSourceScale": 0.35359116022099446,
+      "newInThisBatch": true
+    }
+  ],
+  "verification": {
+    "script": "../../../tests/verify_mage_elemental_ultimates.py",
+    "pixelReport": "../../../tests/bin/mage-elements-import/asset-verification.json",
+    "preservationReport": "../../../tests/bin/mage-elements-import/preservation-report.json",
+    "groundBandReport": "../../../tests/bin/mage-elements-import/ground-band-verification.json",
+    "visualAudit": "../../../tests/bin/mage-elements-import/audit-report.json",
+    "newThreeMapProof": "../../../tests/bin/mage-elements-import/all-three-map-size-proof.png",
+    "allFiveMageMapProof": "../../../tests/bin/mage-elements-import/all-five-mage-map-size-proof.png"
+  }
+}

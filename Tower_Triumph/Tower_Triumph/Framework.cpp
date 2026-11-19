@@ -4,6 +4,7 @@
 #include <deque>
 #include <vector>
 #include <ctime>
+#include <string>
 
 #include "CStage.h"
 #include "Title_Stage.h"
@@ -12,6 +13,92 @@
 #include "Maintenance_Stage.h"
 
 #pragma comment(lib, "msimg32.lib")
+
+namespace
+{
+    // Only the portable layout and this solution's known build layouts are checked.
+    const wchar_t* const kExecutableAssetSuffixes[] = {
+        L"", L"\\..\\..\\Tower_Triumph", L"\\..\\Tower_Triumph", L"\\..\\..", L"\\.."
+    };
+    const wchar_t* const kWorkingAssetSuffixes[] = {
+        L"", L"\\Tower_Triumph", L"\\Tower_Triumph\\Tower_Triumph"
+    };
+    const wchar_t* const kAssetRootMarkers[] = {
+        L"\\Resource\\Warrior_IdlePose.bmp", L"\\Resource\\Mage_IdlePose.bmp"
+    };
+
+    bool IsRuntimeAssetRoot(const std::wstring& directory)
+    {
+        for (const wchar_t* marker : kAssetRootMarkers)
+        {
+            const DWORD attributes = GetFileAttributesW((directory + marker).c_str());
+            if (attributes == INVALID_FILE_ATTRIBUTES || (attributes & FILE_ATTRIBUTE_DIRECTORY))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    std::wstring FindRuntimeAssetRoot(const std::wstring& base,
+        const wchar_t* const* suffixes, size_t count)
+    {
+        if (base.empty())
+        {
+            return {};
+        }
+        for (size_t index = 0; index < count; ++index)
+        {
+            wchar_t candidate[32768];
+            const DWORD length = GetFullPathNameW((base + suffixes[index]).c_str(),
+                static_cast<DWORD>(_countof(candidate)), candidate, nullptr);
+            if (length != 0 && length < _countof(candidate) && IsRuntimeAssetRoot(candidate))
+            {
+                return candidate;
+            }
+        }
+        return {};
+    }
+
+    void InitializeRuntimeAssetRoot()
+    {
+        wchar_t path[32768];
+        const DWORD executableLength = GetModuleFileNameW(nullptr, path,
+            static_cast<DWORD>(_countof(path)));
+        std::wstring executableDirectory;
+        if (executableLength != 0 && executableLength < _countof(path))
+        {
+            const std::wstring executablePath(path, executableLength);
+            const size_t separator = executablePath.find_last_of(L"\\/");
+            if (separator != std::wstring::npos)
+            {
+                executableDirectory = executablePath.substr(0, separator + 1);
+            }
+        }
+
+        std::wstring root = FindRuntimeAssetRoot(executableDirectory,
+            kExecutableAssetSuffixes, _countof(kExecutableAssetSuffixes));
+        if (root.empty())
+        {
+            const DWORD workingLength = GetCurrentDirectoryW(static_cast<DWORD>(_countof(path)), path);
+            if (workingLength != 0 && workingLength < _countof(path))
+            {
+                root = FindRuntimeAssetRoot(path, kWorkingAssetSuffixes, _countof(kWorkingAssetSuffixes));
+            }
+        }
+        if (root.empty())
+        {
+            OutputDebugStringW(L"Runtime assets: no verified asset root found; keeping working directory.\n");
+            return;
+        }
+        if (!SetCurrentDirectoryW(root.c_str()))
+        {
+            OutputDebugStringW(L"Runtime assets: could not select asset root; keeping working directory.\n");
+            return;
+        }
+        OutputDebugStringW((L"Runtime assets: " + root + L"\n").c_str());
+    }
+}
 
 HINSTANCE g_hInst;
 
@@ -28,6 +115,8 @@ int g_curStageNum = 1000;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
+    InitializeRuntimeAssetRoot();
+
     HWND hWnd;
     MSG Message;
     WNDCLASSEX WndClass;

@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: ORIGINAL premium pixel-art fantasy RPG combat VFX sprite sheet for a very costly METEOR spell.
+Create ONE transparent PNG sheet, 1024 x 768 pixels, exactly FOUR equal columns and THREE equal rows: TWELVE isolated 256 x 256 cells, no drawn grid, no labels or lettering. Transparent background everywhere outside the effects. Each cell has 12 px clear gutters; never cross cell borders.
+Style: beautifully hand-crafted JRPG pixel art to accompany detailed chibi knights and mages. Crisp deliberate pixel clusters, jewel-like orange and cream highlights, strongly designed silhouettes, limited warm palette, not photorealism or soft airbrush. This must feel like a spectacular ultimate spell, with large distinct meteor rock, dramatic fire, energetic fragments. Not tiny sparks or a simple fireball. No characters, UI, environment, watermark or logos.
+ROW 1, frames 0 1 2 3 left to right: FOUR animation poses of the SAME enormous angular dark volcanic meteor with molten orange cracks, cream-white hot edges and a magnificent fiery tail pointing up-left. Travel direction is down-right. The rock's impact/core anchor stays EXACTLY at local (128,96) in every cell. Rock silhouette approximately 94px wide and 84px tall; tail and sparks fill the upper-left quadrant without touching the cell edges. Animate the flame flow, incandescent cracks and several trailing shards without moving the rock anchor or changing object identity. The tail is long, rich and layered, not a thin line.
+ROWS 2 and 3 together, frames 4 through 11 left to right: EIGHT sequential frames of the meteor's powerful ground impact and explosion. The fixed ground contact anchor is EXACTLY local (128,208), unchanged in all eight frames. All flame/debris grows predominantly ABOVE this anchor.
+Frame 4: compact brilliant white-gold initial impact flash with red-orange sparks at the contact point and a short fiery outward arc.
+Frame 5: explosive upward surge, white-hot core, thick orange flame tongues and angular molten fragments thrown outward.
+Frame 6: spectacular peak eruption, large rich layered golden-orange fire bloom filling most of the cell from about x20..236 y25..224, with curved flame arms and distinct dark-red accents; keep transparent gaps among flames.
+Frame 7: expanding energetic eruption with curling flame tongues, hot fragments and a broad low blast crescent.
+Frame 8: breaking fiery bloom, orange and red lobes separating, fragments flying, no solid smoke cloud.
+Frame 9: smaller dissipating red-orange flame curls and glowing shards.
+Frame 10: sparse fading embers and thin low incandescent arcs.
+Frame 11: a few small fading red-gold embers, clear decay to transparent.
+The impact is one coherent animated object, NEVER miniature repeated fireballs. Maintain the same ground anchor, style and palette across all frames. No permanent crater or painted floor; this is an overlay for an existing game map. Genuine transparent alpha, no checkerboard, no colored matte, no captions.

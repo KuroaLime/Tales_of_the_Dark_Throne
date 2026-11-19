@@ -7,10 +7,15 @@
 #include "UBattleActionMenu.h"
 #include "BattleMapData.h"
 #include "SkillData.h"
+#include "BattleActionTiming.h"
+#include "BattleSkillArea.h"
+#include "SkillPresentation.h"
+#include "StandardSkillPresentation.h"
 
 #include <vector>
 #include <map>
 #include <string>
+#include <chrono>
 
 enum class EBattleControlMode
 {
@@ -41,6 +46,52 @@ private:
     Character* MovingUnit;
     Character* ActingUnit;
 
+    struct PendingHit
+    {
+        Character* target = nullptr;
+        int damage = 0;
+        COLORREF color = RGB(255, 70, 70);
+        bool reacted = false;
+        int areaCellIndex = -1;
+        bool resolved = false;
+    };
+    struct PendingBattleAction
+    {
+        Character* actor = nullptr;
+        ECharacterState state = ECharacterState::Attack;
+        std::uint64_t sequence = 0;
+        BattleActionTiming::ActionTimeline timeline;
+        BattleActionTiming::ProjectileKind projectile = BattleActionTiming::ProjectileKind::None;
+        BattleActionTiming::ElementVisual element = BattleActionTiming::ElementVisual::Neutral;
+        SkillPresentation::Kind presentation = SkillPresentation::Kind::Normal;
+        StandardSkillPresentation::Profile standard;
+        bool standardStarted = false;
+        std::uint64_t presentationID = 0;
+        bool presentationStarted = false;
+        float releaseSeconds = 0.0f;
+        float casterFootX = 0.0f, casterFootY = 0.0f;
+        float facing = 1.0f;
+        float startX = 0.0f;
+        float startY = 0.0f;
+        float targetX = 0.0f;
+        float targetY = 0.0f;
+        BattleSkillArea::LinePath linePath;
+        std::vector<PendingHit> hits;
+        bool enemyTurn = false;
+        bool cancelled = false;
+        bool actorFinished = false;
+        int skillID = -1;
+        Location effectGrid{};
+        ESkillAreaType areaType = ESkillAreaType::Single;
+        std::vector<BattleSkillArea::Cell> areaCells;
+        std::size_t nextAreaCell = 0;
+        float elapsedSeconds = 0.0f;
+        bool fieldStarted = false;
+        Location casterGrid{};
+    };
+    PendingBattleAction PendingAction;
+    std::uint64_t NextPresentationID = 0;
+
     bool BattleEnded;
     bool BattleWon;
 
@@ -53,6 +104,8 @@ private:
     std::vector<Location> ActiveMovePath;
     int ActiveMoveIndex;
 
+    std::chrono::steady_clock::time_point LastCharacterUpdate;
+
     SBattleMapData CurrentMap;
     std::vector<std::vector<ETileType>> TileMap;
 
@@ -64,6 +117,8 @@ private:
         int life;
         int maxLife;
         COLORREF color;
+        float elapsedSeconds = 0.0f;
+        bool areaDamage = false;
     };
 
     std::vector<DamageText> DamageTexts;
@@ -78,9 +133,39 @@ private:
         int frameTick;
         int frameDelay;
         int maxFrame;
+        float elapsedSeconds = 0.0f;
+        bool enhancedContact = false;
     };
 
     std::vector<SkillEffectAnim> ActiveSkillEffects;
+    struct AreaEffectAnim
+    {
+        std::vector<BattleSkillArea::Cell> cells;
+        BattleSkillArea::Kind kind = BattleSkillArea::Kind::Single;
+        BattleActionTiming::ElementVisual element = BattleActionTiming::ElementVisual::Neutral;
+        SkillPresentation::Kind presentation = SkillPresentation::Kind::Normal;
+        bool standard = false;
+        Location origin{};
+        COLORREF color = RGB(255, 255, 255);
+        float elapsedSeconds = 0.0f;
+    };
+    std::vector<AreaEffectAnim> ActiveAreaEffects;
+    struct UltimateEffectAnim
+    {
+        SkillPresentation::Kind presentation = SkillPresentation::Kind::Normal;
+        BattleActionTiming::ElementVisual element = BattleActionTiming::ElementVisual::Neutral;
+        std::vector<BattleSkillArea::Cell> cells;
+        Location center{};
+        float elapsedSeconds = 0.0f;
+        float releaseSeconds = 0.0f;
+        float deliverySeconds = 0.0f;
+        float casterFootX = 0.0f, casterFootY = 0.0f;
+        float startX = 0.0f, startY = 0.0f, targetX = 0.0f, targetY = 0.0f;
+        float facing = 1.0f;
+        std::uint64_t presentationID = 0;
+    };
+    std::vector<UltimateEffectAnim> ActiveUltimateEffects;
+    std::vector<StandardSkillPresentation::Action> ActiveStandardEffects;
     std::map<int, HBITMAP> SkillEffectBitmaps;
     std::map<int, BITMAP> SkillEffectBitmapInfos;
     std::map<int, COLORREF> SkillEffectColorKeys;
@@ -125,17 +210,19 @@ private:
     void DrawTileOverlay(HDC hMemDC);
     void DrawBlockedMoveRange(HDC hMemDC);
 
-    void AddDamageText(Character* target, int damage, COLORREF color);
-    void UpdateDamageTexts();
+    void AddDamageText(Character* target, int damage, COLORREF color, bool areaDamage = false);
+    void UpdateDamageTexts(float elapsedSeconds);
     void DrawDamageTexts(HDC hMemDC);
 
     std::wstring GetSkillEffectRelativePath(int skillID) const;
     HBITMAP LoadSkillEffectBitmap(int skillID, BITMAP* outInfo);
     void ReleaseSkillEffectBitmaps();
     int GetSkillEffectDrawSize(ESkillAreaType areaType) const;
-    void PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType);
-    void UpdateSkillEffects();
+    void PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType, bool enhancedContact = false);
+    void UpdateSkillEffects(float elapsedSeconds);
     void DrawSkillEffects(HDC hMemDC, HDC hMemDC1);
+    void DrawAreaSkillEffects(HDC hMemDC, HDC hMemDC1, bool front = false);
+    void DrawUltimateSkillEffects(HDC hMemDC, HDC hMemDC1, bool front = false);
 
     void RefreshBattleSkillList(Character* current);
     void ClearBattleSkillSelection();
@@ -145,10 +232,11 @@ private:
     void DrawSkillRange(HDC hMemDC);
     void UpdateHoverGridByMouse(int mouseX, int mouseY);
     void UpdateSkillTargetCameraByMouse(HWND hWnd);
-    std::vector<Location> BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const;
+    std::vector<BattleSkillArea::Cell> BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const;
     void DrawSkillAreaPreview(HDC hMemDC);
     bool HandleBattleSkillClick(int mouseX, int mouseY, Character* current);
     bool UseSelectedBattleSkill(Character* user, Character* target);
+    RECT GetBattleSkillPanelRect() const;
     RECT GetBattleSkillRect(int index) const;
 
     void RefreshBattleConsumableItems();
@@ -189,6 +277,22 @@ private:
     void OnMenuEndTurn();
 
     void ResetTurnActions();
+    bool ContainsBattleUnit(const Character* unit) const;
+    void BeginPendingAction(Character* actor, ECharacterState state, std::vector<PendingHit> hits,
+        int skillID = -1, Location effectGrid = {}, ESkillAreaType areaType = ESkillAreaType::Single,
+        std::vector<BattleSkillArea::Cell> areaCells = {});
+    void CommitPendingImpact();
+    void CommitPendingHit(PendingHit& hit);
+    void CommitPendingAreaCells();
+    void StartPendingPresentation();
+    void StartPendingStandardPresentation();
+    void DrawStandardSkillEffects(HDC hMemDC, HDC hMemDC1, bool front = false);
+    void CancelPendingPresentation();
+    void ClearPendingAction(bool preserveAreaEffects = false);
+    float AdvanceBattleVisuals(float elapsedSeconds);
+    bool UpdateActionResolution();
+    float AdvancePendingAction(float elapsedSeconds);
+    void DrawPendingProjectile(HDC hMemDC, HDC hMemDC1);
 
 public:
     Battle_Stage();

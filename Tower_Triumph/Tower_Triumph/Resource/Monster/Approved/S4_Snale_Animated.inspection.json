@@ -1,0 +1,924 @@
+{
+  "source": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-c56bca92-9da1-44dd-9ad2-092b5aaf7981.png",
+  "sourceSheetSize": [
+    1448,
+    1086
+  ],
+  "columns": 8,
+  "rows": 6,
+  "alphaThreshold": 128,
+  "frames": [
+    {
+      "index": 0,
+      "state": "Idle",
+      "sourceCell": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "bounds": [
+        29,
+        19,
+        173,
+        169
+      ],
+      "opaquePixels": 13224,
+      "alphaPixels": 18528,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 1,
+      "state": "Idle",
+      "sourceCell": [
+        181,
+        0,
+        362,
+        181
+      ],
+      "bounds": [
+        32,
+        19,
+        173,
+        170
+      ],
+      "opaquePixels": 13125,
+      "alphaPixels": 18150,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 2,
+      "state": "Idle",
+      "sourceCell": [
+        362,
+        0,
+        543,
+        181
+      ],
+      "bounds": [
+        31,
+        19,
+        172,
+        166
+      ],
+      "opaquePixels": 12849,
+      "alphaPixels": 17926,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 3,
+      "state": "Idle",
+      "sourceCell": [
+        543,
+        0,
+        724,
+        181
+      ],
+      "bounds": [
+        31,
+        19,
+        172,
+        167
+      ],
+      "opaquePixels": 12947,
+      "alphaPixels": 18293,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 4,
+      "state": "Idle",
+      "sourceCell": [
+        724,
+        0,
+        905,
+        181
+      ],
+      "bounds": [
+        31,
+        19,
+        173,
+        166
+      ],
+      "opaquePixels": 12955,
+      "alphaPixels": 17460,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 5,
+      "state": "Idle",
+      "sourceCell": [
+        905,
+        0,
+        1086,
+        181
+      ],
+      "bounds": [
+        33,
+        19,
+        172,
+        168
+      ],
+      "opaquePixels": 12959,
+      "alphaPixels": 17191,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 6,
+      "state": "Idle",
+      "sourceCell": [
+        1086,
+        0,
+        1267,
+        181
+      ],
+      "bounds": [
+        31,
+        19,
+        173,
+        168
+      ],
+      "opaquePixels": 12982,
+      "alphaPixels": 17901,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 7,
+      "state": "Idle",
+      "sourceCell": [
+        1267,
+        0,
+        1448,
+        181
+      ],
+      "bounds": [
+        31,
+        19,
+        172,
+        168
+      ],
+      "opaquePixels": 12843,
+      "alphaPixels": 18445,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 8,
+      "state": "Walk",
+      "sourceCell": [
+        0,
+        181,
+        181,
+        362
+      ],
+      "bounds": [
+        28,
+        20,
+        173,
+        169
+      ],
+      "opaquePixels": 13230,
+      "alphaPixels": 19280,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 9,
+      "state": "Walk",
+      "sourceCell": [
+        181,
+        181,
+        362,
+        362
+      ],
+      "bounds": [
+        25,
+        19,
+        172,
+        164
+      ],
+      "opaquePixels": 12796,
+      "alphaPixels": 17934,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 10,
+      "state": "Walk",
+      "sourceCell": [
+        362,
+        181,
+        543,
+        362
+      ],
+      "bounds": [
+        22,
+        13,
+        172,
+        155
+      ],
+      "opaquePixels": 12031,
+      "alphaPixels": 17192,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 11,
+      "state": "Walk",
+      "sourceCell": [
+        543,
+        181,
+        724,
+        362
+      ],
+      "bounds": [
+        30,
+        15,
+        173,
+        166
+      ],
+      "opaquePixels": 12712,
+      "alphaPixels": 19318,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 12,
+      "state": "Walk",
+      "sourceCell": [
+        724,
+        181,
+        905,
+        362
+      ],
+      "bounds": [
+        19,
+        21,
+        173,
+        168
+      ],
+      "opaquePixels": 12471,
+      "alphaPixels": 18048,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 13,
+      "state": "Walk",
+      "sourceCell": [
+        905,
+        181,
+        1086,
+        362
+      ],
+      "bounds": [
+        21,
+        21,
+        173,
+        169
+      ],
+      "opaquePixels": 12644,
+      "alphaPixels": 18534,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 14,
+      "state": "Walk",
+      "sourceCell": [
+        1086,
+        181,
+        1267,
+        362
+      ],
+      "bounds": [
+        30,
+        20,
+        173,
+        168
+      ],
+      "opaquePixels": 13007,
+      "alphaPixels": 18531,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 15,
+      "state": "Walk",
+      "sourceCell": [
+        1267,
+        181,
+        1448,
+        362
+      ],
+      "bounds": [
+        31,
+        20,
+        173,
+        169
+      ],
+      "opaquePixels": 13053,
+      "alphaPixels": 18949,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 16,
+      "state": "Attack",
+      "sourceCell": [
+        0,
+        362,
+        181,
+        543
+      ],
+      "bounds": [
+        29,
+        20,
+        173,
+        170
+      ],
+      "opaquePixels": 13127,
+      "alphaPixels": 18906,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 17,
+      "state": "Attack",
+      "sourceCell": [
+        181,
+        362,
+        362,
+        543
+      ],
+      "bounds": [
+        25,
+        20,
+        171,
+        165
+      ],
+      "opaquePixels": 12117,
+      "alphaPixels": 17918,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 18,
+      "state": "Attack",
+      "sourceCell": [
+        362,
+        362,
+        543,
+        543
+      ],
+      "bounds": [
+        18,
+        16,
+        169,
+        163
+      ],
+      "opaquePixels": 12342,
+      "alphaPixels": 18819,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 19,
+      "state": "Attack",
+      "sourceCell": [
+        543,
+        362,
+        724,
+        543
+      ],
+      "bounds": [
+        13,
+        21,
+        172,
+        163
+      ],
+      "opaquePixels": 12134,
+      "alphaPixels": 18598,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 20,
+      "state": "Attack",
+      "sourceCell": [
+        724,
+        362,
+        919,
+        543
+      ],
+      "bounds": [
+        10,
+        22,
+        191,
+        163
+      ],
+      "opaquePixels": 11923,
+      "alphaPixels": 19140,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 21,
+      "state": "Attack",
+      "sourceCell": [
+        919,
+        362,
+        1086,
+        543
+      ],
+      "bounds": [
+        4,
+        21,
+        166,
+        163
+      ],
+      "opaquePixels": 11797,
+      "alphaPixels": 18457,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 22,
+      "state": "Attack",
+      "sourceCell": [
+        1086,
+        362,
+        1267,
+        543
+      ],
+      "bounds": [
+        31,
+        20,
+        171,
+        169
+      ],
+      "opaquePixels": 12479,
+      "alphaPixels": 18286,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 23,
+      "state": "Attack",
+      "sourceCell": [
+        1267,
+        362,
+        1448,
+        543
+      ],
+      "bounds": [
+        31,
+        20,
+        172,
+        169
+      ],
+      "opaquePixels": 12988,
+      "alphaPixels": 18435,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 24,
+      "state": "Hit",
+      "sourceCell": [
+        0,
+        543,
+        181,
+        724
+      ],
+      "bounds": [
+        29,
+        19,
+        173,
+        169
+      ],
+      "opaquePixels": 13197,
+      "alphaPixels": 19136,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 25,
+      "state": "Hit",
+      "sourceCell": [
+        181,
+        543,
+        362,
+        724
+      ],
+      "bounds": [
+        29,
+        18,
+        168,
+        165
+      ],
+      "opaquePixels": 12680,
+      "alphaPixels": 18648,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 26,
+      "state": "Hit",
+      "sourceCell": [
+        362,
+        543,
+        543,
+        724
+      ],
+      "bounds": [
+        23,
+        12,
+        162,
+        159
+      ],
+      "opaquePixels": 12955,
+      "alphaPixels": 19716,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 27,
+      "state": "Hit",
+      "sourceCell": [
+        543,
+        543,
+        724,
+        724
+      ],
+      "bounds": [
+        18,
+        16,
+        160,
+        164
+      ],
+      "opaquePixels": 13011,
+      "alphaPixels": 18536,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 28,
+      "state": "Hit",
+      "sourceCell": [
+        724,
+        543,
+        905,
+        724
+      ],
+      "bounds": [
+        26,
+        21,
+        169,
+        169
+      ],
+      "opaquePixels": 12828,
+      "alphaPixels": 18485,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 29,
+      "state": "Hit",
+      "sourceCell": [
+        905,
+        543,
+        1086,
+        724
+      ],
+      "bounds": [
+        29,
+        21,
+        170,
+        169
+      ],
+      "opaquePixels": 12718,
+      "alphaPixels": 18607,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 30,
+      "state": "Hit",
+      "sourceCell": [
+        1086,
+        543,
+        1267,
+        724
+      ],
+      "bounds": [
+        34,
+        19,
+        170,
+        169
+      ],
+      "opaquePixels": 13084,
+      "alphaPixels": 18157,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 31,
+      "state": "Hit",
+      "sourceCell": [
+        1267,
+        543,
+        1448,
+        724
+      ],
+      "bounds": [
+        31,
+        20,
+        172,
+        169
+      ],
+      "opaquePixels": 12933,
+      "alphaPixels": 17833,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 32,
+      "state": "Dead",
+      "sourceCell": [
+        0,
+        724,
+        181,
+        905
+      ],
+      "bounds": [
+        27,
+        17,
+        173,
+        167
+      ],
+      "opaquePixels": 13098,
+      "alphaPixels": 18831,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 33,
+      "state": "Dead",
+      "sourceCell": [
+        181,
+        724,
+        362,
+        905
+      ],
+      "bounds": [
+        20,
+        23,
+        170,
+        166
+      ],
+      "opaquePixels": 12408,
+      "alphaPixels": 17606,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 34,
+      "state": "Dead",
+      "sourceCell": [
+        362,
+        724,
+        543,
+        905
+      ],
+      "bounds": [
+        9,
+        32,
+        162,
+        166
+      ],
+      "opaquePixels": 12308,
+      "alphaPixels": 17816,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 35,
+      "state": "Dead",
+      "sourceCell": [
+        543,
+        724,
+        724,
+        905
+      ],
+      "bounds": [
+        3,
+        44,
+        170,
+        165
+      ],
+      "opaquePixels": 11605,
+      "alphaPixels": 17642,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 36,
+      "state": "Dead",
+      "sourceCell": [
+        724,
+        724,
+        905,
+        905
+      ],
+      "bounds": [
+        4,
+        61,
+        171,
+        163
+      ],
+      "opaquePixels": 11012,
+      "alphaPixels": 15837,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 37,
+      "state": "Dead",
+      "sourceCell": [
+        905,
+        724,
+        1086,
+        905
+      ],
+      "bounds": [
+        4,
+        76,
+        176,
+        163
+      ],
+      "opaquePixels": 9878,
+      "alphaPixels": 14316,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 38,
+      "state": "Dead",
+      "sourceCell": [
+        1086,
+        724,
+        1267,
+        905
+      ],
+      "bounds": [
+        6,
+        81,
+        178,
+        163
+      ],
+      "opaquePixels": 8952,
+      "alphaPixels": 12798,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 39,
+      "state": "Dead",
+      "sourceCell": [
+        1267,
+        724,
+        1448,
+        905
+      ],
+      "bounds": [
+        7,
+        82,
+        178,
+        163
+      ],
+      "opaquePixels": 8892,
+      "alphaPixels": 12385,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 40,
+      "state": "WalkStop",
+      "sourceCell": [
+        0,
+        905,
+        181,
+        1086
+      ],
+      "bounds": [
+        15,
+        13,
+        174,
+        157
+      ],
+      "opaquePixels": 12614,
+      "alphaPixels": 18669,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 41,
+      "state": "WalkStop",
+      "sourceCell": [
+        181,
+        905,
+        362,
+        1086
+      ],
+      "bounds": [
+        37,
+        13,
+        172,
+        164
+      ],
+      "opaquePixels": 12895,
+      "alphaPixels": 17899,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 42,
+      "state": "WalkStop",
+      "sourceCell": [
+        362,
+        905,
+        543,
+        1086
+      ],
+      "bounds": [
+        35,
+        13,
+        171,
+        164
+      ],
+      "opaquePixels": 12831,
+      "alphaPixels": 17935,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 43,
+      "state": "WalkStop",
+      "sourceCell": [
+        543,
+        905,
+        724,
+        1086
+      ],
+      "bounds": [
+        29,
+        13,
+        172,
+        166
+      ],
+      "opaquePixels": 13261,
+      "alphaPixels": 18203,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 44,
+      "state": "IdleReturn",
+      "sourceCell": [
+        724,
+        905,
+        905,
+        1086
+      ],
+      "bounds": [
+        31,
+        16,
+        170,
+        165
+      ],
+      "opaquePixels": 12596,
+      "alphaPixels": 17335,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 45,
+      "state": "IdleReturn",
+      "sourceCell": [
+        905,
+        905,
+        1086,
+        1086
+      ],
+      "bounds": [
+        31,
+        17,
+        172,
+        168
+      ],
+      "opaquePixels": 12738,
+      "alphaPixels": 17807,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 46,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1086,
+        905,
+        1267,
+        1086
+      ],
+      "bounds": [
+        30,
+        16,
+        171,
+        168
+      ],
+      "opaquePixels": 13234,
+      "alphaPixels": 18492,
+      "touchesCellEdge": false
+    },
+    {
+      "index": 47,
+      "state": "IdleReturn",
+      "sourceCell": [
+        1267,
+        905,
+        1448,
+        1086
+      ],
+      "bounds": [
+        30,
+        15,
+        172,
+        168
+      ],
+      "opaquePixels": 13165,
+      "alphaPixels": 18498,
+      "touchesCellEdge": false
+    }
+  ]
+}

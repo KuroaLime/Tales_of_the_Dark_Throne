@@ -1,0 +1,14 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[57,33.5],[57,33.5],[57,33.5],[57,33.5]],
+    "targetAnchor": [54,33.5],
+    "note": "All four arrow tip outer edges are exactly x57/y33.5 after alpha>=128 normalization. Translate all four cells by (-3,0); no scale or art edits."
+  },
+  "Mage": {
+    "anchorKind": "bright magic core center",
+    "sourceAnchors": [[47,32],[47,32],[47,32],[47,32]],
+    "targetAnchor": [45,32],
+    "note": "White-core centroid is [47.5,32.5] in frames0..2 and [47.55,32.42] in frame3. Register the shared nearest integer-grid point [47,32] by (-2,0). The remaining half-source-pixel centroid offset is <=0.36 screen pixels, constant across the loop."
+  }
+}

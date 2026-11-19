@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -135,6 +135,7 @@
     <ClCompile Include="AItemBase.cpp" />
     <ClCompile Include="AUsable.cpp" />
     <ClCompile Include="Battle_Stage.cpp" />
+    <ClCompile Include="GraveyardRenderer.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Map_Stage.cpp" />
@@ -177,7 +178,23 @@
     <ClInclude Include="AItemBase.h" />
     <ClInclude Include="AUsable.h" />
     <ClInclude Include="Battle_Stage.h" />
+    <ClInclude Include="BattleActionTiming.h" />
+    <ClInclude Include="BattleSkillArea.h" />
+    <ClInclude Include="AreaSkillEffectRenderer.h" />
+    <ClInclude Include="AreaSkillVisuals.h" />
+    <ClInclude Include="SkillPresentation.h" />
+    <ClInclude Include="StandardSkillPresentation.h" />
+    <ClInclude Include="StandardSkillRenderer.h" />
+    <ClInclude Include="UltimateSkillRenderer.h" />
+    <ClInclude Include="GraveyardRenderer.h" />
+    <ClInclude Include="GraveyardMapLayout.h" />
+    <ClInclude Include="CelestialMapLayout.h" />
+    <ClInclude Include="SeaRuinsMapLayout.h" />
+    <ClInclude Include="LavaMapLayout.h" />
+    <ClInclude Include="HallMapLayout.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterMotion.h" />
+    <ClInclude Include="CharacterSpriteLayout.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="Map_Stage.h" />
     <ClInclude Include="Monster.h" />
@@ -224,6 +241,12 @@
     <Image Include="Source\SMap\background\panda.bmp" />
     <Image Include="Source\SMap\background\Test00.bmp" />
     <Image Include="Source\SMap\background\Test01.bmp" />
+    <Image Include="Source\SMap\background\GraveyardAtlas.bmp" />
+    <Image Include="Source\SMap\background\GraveyardScene.bmp" />
+    <Image Include="Source\SMap\background\CelestialScene.bmp" />
+    <Image Include="Source\SMap\background\SeaRuinsScene.bmp" />
+    <Image Include="Source\SMap\background\LavaScene.bmp" />
+    <Image Include="Source\SMap\background\HallScene.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

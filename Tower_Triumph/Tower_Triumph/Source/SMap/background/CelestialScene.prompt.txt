@@ -1,0 +1,31 @@
+Tool: built-in image_gen (not API/CLI fallback)
+Input 1: generated collision layout guide from CelestialMapLayout.h
+Input 2: original Test02.bmp reduced preview, atmosphere reference only
+Runtime output: CelestialScene.bmp, exact 1584 x 864, 24-bit BMP
+
+Use case: sketch-to-render.
+Asset: production background for a modern hand-painted tactical RPG, a celestial sanctuary suspended above clouds. Landscape11:6, exactly matching input1 layout proportions (world1584x864).
+
+INPUT1 is a STRICT terrain footprint blockout, NOT a visual style. INPUT2 is the ORIGINAL celestial temple used ONLY for atmosphere, white/gold stone, sapphire roofs, turquoise crystals and winged-statue motifs; DO NOT copy its old pixel-art rendering, many tiny identical towers, or its composition.
+
+Create ONE coherent sophisticated painterly environment, richly detailed but clearly readable at game scale. Bright pearly sunlight from upper left, blue ambient cloud light, restrained golden accents, crystalline cyan glows, airy luminous atmosphere. Steep overhead orthographic three-quarter camera with no horizon and no vanishing point. Every surface shares the same believable perspective and scale. Natural continuous stone weathering, occasional ivy and white flowers, subtle material variation; no repeated tile stamps or square object cards.
+
+EXACT color-key interpretation of input1:
+- IVORY #D9D3BA = COMPLETE WALKABLE MARBLE PLATFORM SURFACE. Cover this footprint continuously with light worn marble, irregular large flagstones and subtle gold/blue floor inlay. Absolutely no statues, columns, railings, walls, trees, planters, stairs with vertical faces, crystal pillars or other physical obstacles anywhere in this ivory area. Entire footprint is flat traversable floor, right up to its edges.
+- TAN #F0D5A2 = FIVE broad flat marble BRIDGE DECKS connecting the platforms. Each spans exactly its rectangle, seamlessly flush with adjoining floor. No gaps, holes, pillars, curbs, raised rails or stair faces inside these rectangles. All five links must remain present and readable: western upper, western lower, central north-south, eastern upper, eastern lower. These are wide processional causeways, not fragile ropes.
+- BLUE #173A55 = deep CLOUD-FILLED OPEN SKY, only here. Show drifting cloud layers and the hanging stone undersides of adjacent platforms extending downward into this blue area. Put no walkable island tops or extra connections here. Soft broken stone edges and thin ornamental rails may occupy the OUTSIDE of the walkable footprints, within this blue area; NEVER cover ivory/tan floor with them. Keep bridge approaches fully open. No ocean or water.
+- PURPLE #655976 = the complete northeastern cathedral footprint, x1200..1536,y48..384 (75.76–96.97% width,5.56–44.44% height). ONE majestic white-stone celestial cathedral, sapphire-blue roof and tasteful gold filigree, tall arched glowing cyan window, facade and entrance facing down into its forecourt. Fit entire building, towers, foundations, steps and upright embellishments INSIDE this reserved block with12pixel inset. Do not put stairs or pillars in the ivory forecourt below it.
+- GRAY #92929A = exclusively reserved architectural obstacles. Specific zones:
+  1) western x144..288,y144..288: one beautiful winged guardian statue on an aged round plinth, whole wings/base inside its block. Adjoining gray corner x96..144,y240..288 is a low broken balustrade fragment.
+  2) north-central x768..912,y96..240: a ceremonial turquoise crystal altar framed by two elegant short columns, a focal sanctuary monument. Entire silhouette within this area.
+  3) central x768..864,y336..432: a small low ancient votive monument/pedestal, with a few broken gilded stones; fit whole silhouette inside with8pixel inset.
+  4) center-west edge x624..720,y480..528: a low interrupted balustrade on the platform edge, not a giant column.
+  5) lower terrace x960..1056,y720..816: an aged paired-column fragment/low devotional shrine, within its box.
+  Use different silhouettes and sizes; do not draw gray regions as solid square masonry blocks.
+- GREEN #788D70 = nontraversable small garden beds, soft white flowers, contained ornamental cypress/low shrubs and weathered marble planters. All physical vegetation/roots stay INSIDE green footprints. Integrate them with nearby platform edges, no detached square cards.
+
+Composition: three main floating terraces joined by the five wide causeways and a lower processional loop. Main cathedral dominates upper right; the western angel statue greets arrivals; north-central altar and a small middle monument break up the open plaza; gardens and broken parapets organize outer edges. Make the walls and gardens purposeful architectural parts of the sanctuary. Keep the broad fighting spaces and both alternate routes clearly open. Center and right must feel authored, not empty test platforms.
+
+Critical safety: all ivory/tan pixels are playable floor; do not cut away these areas, obscure them with clouds, or round them off into void. Irregular cliff lips, hanging foundations, clouds and vertical walls are entirely on the BLUE side of boundaries. All standing objects including their tops, bases and rubble are wholly within purple/gray/green footprints. This collision mask is more important than adding decoration. Visually soften the blockout using material transitions and carved outer stone edges, never visible square grid steps.
+
+Modern hand-painted fantasy environment, not pixel art and not a flat texture atlas. No screen UI, text, numbers, grid, colored guide, people, enemies, graves, dark graveyard palette, watermark, arbitrary extra islands or extra bridges.

@@ -1,0 +1,14 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[54,33.5],[54,33.5],[54,33.5],[54,33.5]],
+    "targetAnchor": [54,33.5],
+    "note": "After uniform normalization and alpha>=128, all four frames have bounds [11,27,54,40] and the rightmost tip pixel at center [53.5,33.5]. Register the outer tip edge. No translation is required."
+  },
+  "Mage": {
+    "anchorKind": "bright magic core center",
+    "sourceAnchors": [[45,32],[45,32],[45,32],[45,32]],
+    "targetAnchor": [45,32],
+    "note": "Bright-core pixel centroid per frame (RGB >= 240/220/220, local x>35): [45.20,31.98], [45.06,31.80], [45.12,31.73], [45.11,31.89]. Shared [45,32] differs by less than 0.3 source pixels. No translation is required."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "width": 33,
+  "height": 18,
+  "tileSize": 48,
+  "pixelWidth": 1584,
+  "pixelHeight": 864,
+  "rows": [
+    "#################################",
+    "###BBBBB#####BBBBBBB#####BBBBB###",
+    "###BBBBB#####BBBBBBB#####BBBBB###",
+    "###BBBBB#####BBBBBBB#####BBBBB###",
+    "###...........................###",
+    "###...........................###",
+    "###.................BBB.......###",
+    "###......####.+++++.BBB....BBB###",
+    "###BBB...####.+++++.BBB....BBB###",
+    "###BBB...####.+++++........BBB###",
+    "###BBB.....................BBB###",
+    "###BBB.........####........BBB###",
+    "###BBB.........####........BBB###",
+    "###BBB.....................BBB###",
+    "###BBB.....................BBB###",
+    "#################################",
+    "#################################",
+    "#################################"
+  ],
+  "bitmapSha256": "e0ddead4354f8c3d653872b70cf7bb351abe53aea6acdf6125b9e7c652be1b8f",
+  "source": "HallScene.source.png",
+  "sourceSha256": "c38914d7213e711ca7fab4d73a34345d174fac25087c7ad935f61c95865b5848",
+  "generationMode": "built-in imagegen",
+  "prompts": [
+    "HallScene.prompt.txt",
+    "HallScene.clearance.prompt.txt"
+  ],
+  "footAnchor": [
+    24,
+    36
+  ],
+  "footSize": [
+    16,
+    12
+  ],
+  "notes": [
+    "A continuous royal stone guard hall preserves cool western window light, warm braziers, blue/gold banners and worn gray masonry.",
+    "Three staggered central ensembles use a broken screen and column, a kneeling knight and bench, and a low fallen capital and brazier.",
+    "Side armory and command-table reservations extend upward to exclude their complete visible rack, banner and ruined pier silhouettes.",
+    "All 223 walkable cells connect; each has a complete 2x2 standing area, and independent northern and southern routes carry a full 2x2 area.",
+    "Central props were reduced and repositioned, then the finished painting was visually reviewed against every continuous cardinal foot sweep.",
+    "Guide and initial prompt describe intended placement; the final header and rows record the reviewed image alignment, not exact compliance with every target art bound.",
+    "Stage03 random enemy roster generation and slot order are preserved.",
+    "Hashes and source-data checks detect stale asset/data pairing, not semantic image recognition or native gameplay execution."
+  ]
+}

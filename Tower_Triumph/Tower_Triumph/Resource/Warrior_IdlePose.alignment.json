@@ -1,0 +1,10 @@
+{
+  "scale": 0.13064516129032258,
+  "rootX": 420.0,
+  "groundY": 678.0,
+  "source": "Warrior_IdlePose.source.png",
+  "root": [
+    48,
+    88
+  ]
+}

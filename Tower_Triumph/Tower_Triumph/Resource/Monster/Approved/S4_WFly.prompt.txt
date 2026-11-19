@@ -1,0 +1,10 @@
+Use case: stylized-concept. Production pixel-art enemy sprite atlas,48poses. Approved reference is ART STYLE ONLY: crisp visible square-pixel clusters, restrained matte four-tone ramps, dark colored contours, charming expressive forms. No glossy3D or smooth digital painting.
+Subject JELLYFISH, a small floating magical sea creature: lavender-violet bell shaped like a rounded mushroom cap with pale lilac rim, dark navy face underneath with two bright aqua eyes, six short curling blue-purple tentacles, one tiny pearl motif on cap. Cute mysterious enemy. No human limbs, no weapons. Tentacles solid colored/readable, not faint ghost lines. Body exactly same shape/palette/anatomy allposes. Three-quarter view facingRIGHT.
+Exact8equal columns by6equal rows=48separatefullbodyposes,prefer2048x1536. Constant scale, bellabout45%cellwidth; complete bell+tentaclesheight60%cell. Fixedrootat50%x87.5%y, tentacle ends close tobaseline, hoveronlysmallvisualchanges. Each entirepose inside itsowncell with generous empty gutters. REAL alpha0 empty background;NO white/grayfilm,paper,checkerboard,glowhaze,shadow,labels,text,grid.
+Row1 eight idlehoverposes: bell gently expands/contracts,tentacles curl and relax,eyeblink,seamless.
+Row2 eight locomotionposes in placeRIGHT: bellcontracts,tentaclestrailback,pushright,bellexpands,tentaclespassunder,relaxbell,countercurl,neutral. Clearly redrawn pulsing movement.
+Row3 eight attackposes:neutral,contractbell,coilfronttentacles,preparelash,FRAME5 fullRIGHTWARDtentaclelash with tinyaquasparkatfronttip,followthrough,retract,neutral. No detachedmissile.
+Row4 eight HIT:neutral,bellindents,tiltback,tentaclescurlintight,rebound,stabilize,relax,neutral.
+Row5 eight DEFEAT:weakpulse,deflate,lower,fallsideways,bellfolds,tentacleslimponfloor,stillcollapsedjellyfish,sameend. Keep visiblevioletbody,no disappearance.
+Row6 eight transitions: first4 movementpulseeases,belllevels,tentacleshang,neutral;last4 recoileases,bellregainsshape,tentaclesrelax,neutral. ALL bottomrowposes remain upright and alive.
+Exactly48authoredpixelposes, consistentmass androot, no clipping oroverlap, strong readablesilhouette matchingreference.

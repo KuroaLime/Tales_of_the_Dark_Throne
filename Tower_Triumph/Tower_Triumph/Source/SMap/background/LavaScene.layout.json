@@ -1,0 +1,55 @@
+{
+  "width": 33,
+  "height": 18,
+  "tileSize": 48,
+  "pixelWidth": 1584,
+  "pixelHeight": 864,
+  "rows": [
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~BBBBB~~~",
+    "~~~BBBB........~~~..##..~BBBBB~~~",
+    "~~~BBBB........===.......BBBBB~~~",
+    "~~~BBBB........===.......BBBBB~~~",
+    "~~~BBBB.....#########....BBBBB~~~",
+    "~~~......###~~~~~~~~~.........~~~",
+    "~~~......###~~~~~~~~~.........~~~",
+    "~~~..##...##~~~~~~~~~...##....~~~",
+    "~~~..##...##~~~~~~~~~...##....~~~",
+    "~~~..##...##~~~~~~~~~...##....~~~",
+    "~~~B.......#~~~~~~~~~.........~~~",
+    "~~~B............===...........~~~",
+    "~~~B............===......#####~~~",
+    "~~~B.....####...===......#####~~~",
+    "~~~~~~~~~####~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  ],
+  "bitmapSha256": "11518b1dc9e50d4d7632bd13ac6377e34d0a00cd1393922878c4fac13e277155",
+  "source": "LavaScene.source.png",
+  "generationMode": "built-in imagegen",
+  "prompts": [
+    "LavaScene.prompt.txt",
+    "LavaScene.cleanup.prompt.txt",
+    "LavaScene.clearance.prompt.txt",
+    "LavaScene.texture-repair.prompt.txt"
+  ],
+  "footAnchor": [
+    24,
+    36
+  ],
+  "footSize": [
+    16,
+    12
+  ],
+  "notes": [
+    "A basalt fortress ring surrounds a molten caldera, with northern and southern causeways and six main ornament groups.",
+    "All lava blocks every unit including Fire-element enemies in Stage05; other maps retain their default lava rules.",
+    "Final collision cells exclude raised caldera coping, protruding cliffs and outer architecture visible in the painting.",
+    "Low rubble and southern altar were fitted to clear lanes; the northern ritual group moved upward to open a two-row passage.",
+    "Both causeways have at least two-cell-wide opposing-bank contacts and an alternate route.",
+    "Guide image records initial composition; final collision data was visually reviewed against continuous cardinal foot sweeps.",
+    "Hash and geometry checks detect stale asset/data pairing, not semantic image recognition or native gameplay execution.",
+    "Texture repair removes smeared and repeated paving patches while preserving the existing layout. The final image was reviewed against continuous foot sweeps; all stage builders, collision data and other stage images remain unchanged."
+  ],
+  "sourceSha256": "6cec6d92a30c754b258fcc3d86e1e580c5f96e0e059290c1bafa983de46e2b3a"
+}

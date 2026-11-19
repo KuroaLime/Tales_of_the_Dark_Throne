@@ -1,5 +1,10 @@
-﻿#include "BattleMapData.h"
+#include "BattleMapData.h"
 #include "resource.h"
+#include "GraveyardMapLayout.h"
+#include "CelestialMapLayout.h"
+#include "SeaRuinsMapLayout.h"
+#include "LavaMapLayout.h"
+#include "HallMapLayout.h"
 
 #include <algorithm>
 #include <utility>
@@ -346,33 +351,58 @@ static void AddDefaultPlayerStarts(SBattleMapData& map)
 SBattleMapData BattleMapData::BuildStage01()
 {
     SBattleMapData map;
-    InitBaseMap(map);
 
     map.mapId = EBattleMapId::Stage01;
     map.mapName = L"Stage 01 - 묘지";
-    map.backgroundFilePath = L"Source\\SMap\\background\\Test01.bmp";
-    map.cameraStartX = 15;
-    map.cameraStartY = 10;
-
-    FillMapTiles(map, ETileType::Normal);
+    map.gridAlignedBackground = true;
+    map.backgroundFilePath = L"Source\\SMap\\background\\GraveyardScene.bmp";
+    map.backgroundResourceId = IDB_GRAVEYARD_SCENE;
+    map.tileAtlasFilePath = L"Source\\SMap\\background\\GraveyardAtlas.bmp";
+    map.width = GraveyardMapLayout::Width;
+    map.height = GraveyardMapLayout::Height;
+    map.tileSize = GraveyardMapLayout::TileSize;
+    map.cameraStartX = 8;
+    map.cameraStartY = 8;
     map.drawTileDebug = false;
+    // This river is a physical boundary: every element must use the bridges.
+    map.allowElementalWaterTraversal = false;
 
+    FillMapTiles(map, ETileType::Wall);
+    for (int y = 0; y < map.height; ++y)
+    {
+        for (int x = 0; x < map.width; ++x)
+        {
+            ETileType type = ETileType::Wall;
+            switch (GraveyardMapLayout::Rows[y][x])
+            {
+            case '.': type = ETileType::Normal; break;
+            case '+': type = ETileType::Road; break;
+            case '=': type = ETileType::Bridge; break;
+            case '~': type = ETileType::Water; break;
+            case 'B': type = ETileType::Building; break;
+            case 'T': type = ETileType::Tree; break;
+            case 'G': type = ETileType::Grave; break;
+            case 'C': type = ETileType::CursedGround; break;
+            case 'M': type = ETileType::MagicHazard; break;
+            }
+            SetMapPoint(map, x, y, type);
+        }
+    }
+
+    // The unified scene follows this terrain mask. Its burial gardens and
+    // architecture share the same blocked footprints; no repeated prop cards.
     AddPlayerStarts(map, {
-        { 8, 11 },
-        { 10, 11 },
-        { 9, 12 },
-        { 11, 12 },
-        { 12, 11 }
+        { 2, 8 },
+        { 4, 7 },
+        { 4, 9 },
+        { 6, 7 },
+        { 6, 9 }
     });
 
-    SetMapRect(map, 13, 10, 15, 12, ETileType::CursedGround);
-    SetMapRect(map, 20, 12, 22, 14, ETileType::MagicHazard);
-    SetMapRect(map, 3, 16, 5, 18, ETileType::CursedGround);
-
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 21, 10, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     24, 11, 18, L"S1_Leach.bmp",   true, EElement::Dark));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 26, 10, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     23, 13, 18, L"S1_Leach.bmp",   true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 24, 8, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     26, 9, 18, L"S1_Leach.bmp",   true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Skeleton", 28, 8, 12, L"S1_Skeleton.bmp", true, EElement::Dark));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Lich",     23, 9, 18, L"S1_Leach.bmp",   true, EElement::Dark));
 
     return map;
 }
@@ -380,46 +410,52 @@ SBattleMapData BattleMapData::BuildStage01()
 SBattleMapData BattleMapData::BuildStage02()
 {
     SBattleMapData map;
-    InitBaseMap(map);
 
     map.mapId = EBattleMapId::Stage02;
     map.mapName = L"Stage 02 - 천상 성전";
-    map.backgroundFilePath = L"Source\\SMap\\background\\Test02.bmp";
-    map.cameraStartX = 15;
-    map.cameraStartY = 10;
+    map.gridAlignedBackground = true;
+    map.backgroundFilePath = L"Source\\SMap\\background\\CelestialScene.bmp";
+    map.backgroundResourceId = IDB_CELESTIAL_SCENE;
+    map.width = CelestialMapLayout::Width;
+    map.height = CelestialMapLayout::Height;
+    map.tileSize = CelestialMapLayout::TileSize;
+    map.cameraStartX = 8;
+    map.cameraStartY = 9;
+    map.drawTileDebug = false;
+    // All combatants use the stone decks, including Light-element angels.
+    map.allowElementalSkyTraversal = false;
 
     FillMapTiles(map, ETileType::SkyVoid);
-
-    SetMapRect(map, 5, 8, 13, 12, ETileType::Normal);
-    SetMapRect(map, 6, 13, 11, 15, ETileType::Normal);
-
-    SetMapRect(map, 15, 5, 26, 14, ETileType::Normal);
-    SetMapRect(map, 18, 15, 24, 18, ETileType::Normal);
-
-    SetMapRect(map, 30, 8, 39, 14, ETileType::Normal);
-    SetMapRect(map, 31, 15, 37, 17, ETileType::Normal);
-
-    SetMapRect(map, 13, 9, 16, 11, ETileType::Normal);
-    SetMapRect(map, 26, 9, 31, 11, ETileType::Normal);
-    SetMapRect(map, 9, 16, 17, 18, ETileType::Normal);
-    SetMapRect(map, 24, 16, 31, 18, ETileType::Normal);
-
-    SetMapRect(map, 8, 18, 18, 22, ETileType::Normal);
-    SetMapRect(map, 21, 18, 28, 22, ETileType::Normal);
-    SetMapRect(map, 31, 18, 36, 22, ETileType::Normal);
+    for (int y = 0; y < map.height; ++y)
+    {
+        for (int x = 0; x < map.width; ++x)
+        {
+            ETileType type = ETileType::SkyVoid;
+            switch (CelestialMapLayout::Rows[y][x])
+            {
+            case '.': type = ETileType::Normal; break;
+            case '+': type = ETileType::Road; break;
+            case '=': type = ETileType::Bridge; break;
+            case '#': type = ETileType::Wall; break;
+            case 'B': type = ETileType::Building; break;
+            case 'T': type = ETileType::Tree; break;
+            }
+            SetMapPoint(map, x, y, type);
+        }
+    }
 
     AddPlayerStarts(map, {
-        { 7, 10 },
-        { 8, 11 },
-        { 9, 10 },
-        { 10, 11 },
-        { 11, 10 }
+        { 5, 8 },
+        { 6, 7 },
+        { 7, 9 },
+        { 8, 7 },
+        { 8, 10 }
     });
 
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Angel Guard", 21, 10, 16, L"S2_Angel.bmp",  true,  EElement::Light));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Archer,  L"Baby Angel",  23, 11, 22, L"S2_BAngel.bmp", true,  EElement::Light));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sky Falcon",  25, 10, 20, L"S2_Falcon.bmp", false, EElement::Light));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Wing Angel",  27, 11, 18, L"S2_WAngel.bmp", true,  EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Angel Guard", 26, 8, 16, L"S2_Angel.bmp",  true,  EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Archer,  L"Baby Angel",  29, 9, 22, L"S2_BAngel.bmp", true,  EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sky Falcon",  27, 11, 20, L"S2_Falcon.bmp", false, EElement::Light));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Wing Angel",  28, 13, 18, L"S2_WAngel.bmp", true,  EElement::Light));
 
     return map;
 }
@@ -427,28 +463,48 @@ SBattleMapData BattleMapData::BuildStage02()
 SBattleMapData BattleMapData::BuildStage03()
 {
     SBattleMapData map;
-    InitBaseMap(map);
 
     map.mapId = EBattleMapId::Stage03;
     map.mapName = L"Stage 03 - 기본 방";
-    map.backgroundFilePath = L"Source\\SMap\\background\\Test05.bmp";
-    map.cameraStartX = 15;
-    map.cameraStartY = 10;
+    map.gridAlignedBackground = true;
+    map.backgroundFilePath = L"Source\\SMap\\background\\HallScene.bmp";
+    map.backgroundResourceId = IDB_HALL_SCENE;
+    map.width = HallMapLayout::Width;
+    map.height = HallMapLayout::Height;
+    map.tileSize = HallMapLayout::TileSize;
+    map.cameraStartX = 7;
+    map.cameraStartY = 9;
+    map.drawTileDebug = false;
 
-    FillMapTiles(map, ETileType::Normal);
+    FillMapTiles(map, ETileType::Wall);
+    for (int y = 0; y < map.height; ++y)
+    {
+        for (int x = 0; x < map.width; ++x)
+        {
+            ETileType type = ETileType::Wall;
+            switch (HallMapLayout::Rows[y][x])
+            {
+            case '.': type = ETileType::Normal; break;
+            case '+': type = ETileType::Road; break;
+            case '#': type = ETileType::Wall; break;
+            case 'B': type = ETileType::Building; break;
+            }
+            SetMapPoint(map, x, y, type);
+        }
+    }
 
     AddPlayerStarts(map, {
-        { 7, 10 },
-        { 8, 11 },
-        { 9, 10 },
-        { 10, 11 },
-        { 11, 10 }
+        { 6, 6 },
+        { 7, 5 },
+        { 6, 8 },
+        { 8, 6 },
+        { 7, 10 }
     });
 
-    map.enemyStarts.push_back(MakeRandomStage03Monster(22, 10, 0));
-    map.enemyStarts.push_back(MakeRandomStage03Monster(24, 11, 1));
-    map.enemyStarts.push_back(MakeRandomStage03Monster(26, 10, 2));
-    map.enemyStarts.push_back(MakeRandomStage03Monster(23, 13, 3));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(25, 6, 0));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(26, 8, 1));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(25, 10, 2));
+    map.enemyStarts.push_back(MakeRandomStage03Monster(23, 12, 3));
 
     return map;
 }
@@ -456,44 +512,52 @@ SBattleMapData BattleMapData::BuildStage03()
 SBattleMapData BattleMapData::BuildStage04()
 {
     SBattleMapData map;
-    InitBaseMap(map);
 
     map.mapId = EBattleMapId::Stage04;
     map.mapName = L"Stage 04 - 바다 폐허";
-    map.backgroundFilePath = L"Source\\SMap\\background\\Test04.bmp";
-    map.cameraStartX = 15;
-    map.cameraStartY = 10;
+    map.gridAlignedBackground = true;
+    map.backgroundFilePath = L"Source\\SMap\\background\\SeaRuinsScene.bmp";
+    map.backgroundResourceId = IDB_SEA_RUINS_SCENE;
+    map.width = SeaRuinsMapLayout::Width;
+    map.height = SeaRuinsMapLayout::Height;
+    map.tileSize = SeaRuinsMapLayout::TileSize;
+    map.cameraStartX = 7;
+    map.cameraStartY = 9;
+    map.drawTileDebug = false;
+    // Water-element enemies also follow the dry ruins and authored crossings.
+    map.allowElementalWaterTraversal = false;
 
-    FillMapTiles(map, ETileType::Normal);
-
-    SetMapRect(map, 0, 0, 6, 8, ETileType::Water);
-    SetMapRect(map, 11, 0, 14, 4, ETileType::Water);
-    SetMapRect(map, 20, 0, 26, 7, ETileType::Water);
-    SetMapRect(map, 35, 0, 43, 7, ETileType::Water);
-
-    SetMapRect(map, 12, 10, 14, 12, ETileType::Water);
-
-    SetMapRect(map, 4, 13, 8, 17, ETileType::Water);
-    SetMapRect(map, 14, 13, 20, 18, ETileType::Water);
-    SetMapRect(map, 24, 13, 31, 18, ETileType::Water);
-    SetMapRect(map, 37, 12, 43, 20, ETileType::Water);
-
-    SetMapRect(map, 0, 20, 7, 23, ETileType::Water);
-    SetMapRect(map, 18, 20, 24, 23, ETileType::Water);
-    SetMapRect(map, 33, 20, 43, 23, ETileType::Water);
+    FillMapTiles(map, ETileType::Water);
+    for (int y = 0; y < map.height; ++y)
+    {
+        for (int x = 0; x < map.width; ++x)
+        {
+            ETileType type = ETileType::Water;
+            switch (SeaRuinsMapLayout::Rows[y][x])
+            {
+            case '.': type = ETileType::Normal; break;
+            case '+': type = ETileType::Road; break;
+            case '=': type = ETileType::Bridge; break;
+            case '#': type = ETileType::Wall; break;
+            case 'B': type = ETileType::Building; break;
+            case 'T': type = ETileType::Tree; break;
+            }
+            SetMapPoint(map, x, y, type);
+        }
+    }
 
     AddPlayerStarts(map, {
-        { 7, 10 },
-        { 8, 11 },
-        { 9, 10 },
-        { 10, 11 },
-        { 11, 10 }
+        { 4, 7 },
+        { 5, 6 },
+        { 4, 9 },
+        { 7, 6 },
+        { 8, 8 }
     });
 
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sea Slime",  22, 10, 14, L"S4_Slime.bmp", true, EElement::Water));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Mermaid",    24, 11, 18, L"S4_Snale.bmp", true, EElement::Water));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Spear Crab", 26, 10, 16, L"S4_Spear.bmp", true, EElement::Water));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Jellyfish",  25, 12, 17, L"S4_WFly.bmp",  true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Sea Slime",  24, 8, 14, L"S4_Slime.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Mermaid",    28, 7, 18, L"S4_Snale.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Spear Crab", 28, 11, 16, L"S4_Spear.bmp", true, EElement::Water));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Jellyfish",  25, 13, 17, L"S4_WFly.bmp",  true, EElement::Water));
 
     return map;
 }
@@ -501,40 +565,51 @@ SBattleMapData BattleMapData::BuildStage04()
 SBattleMapData BattleMapData::BuildStage05()
 {
     SBattleMapData map;
-    InitBaseMap(map);
 
     map.mapId = EBattleMapId::Stage05;
     map.mapName = L"Stage 05 - 용암지대";
-    map.backgroundFilePath = L"Source\\SMap\\background\\Test03.bmp";
-    map.cameraStartX = 15;
-    map.cameraStartY = 10;
+    map.gridAlignedBackground = true;
+    map.backgroundFilePath = L"Source\\SMap\\background\\LavaScene.bmp";
+    map.backgroundResourceId = IDB_LAVA_SCENE;
+    map.width = LavaMapLayout::Width;
+    map.height = LavaMapLayout::Height;
+    map.tileSize = LavaMapLayout::TileSize;
+    map.cameraStartX = 7;
+    map.cameraStartY = 9;
+    map.drawTileDebug = false;
+    // The molten caldera blocks every combatant, including Fire-element foes.
+    map.allowLavaTraversal = false;
 
-    FillMapTiles(map, ETileType::Normal);
-
-    SetMapRect(map, 12, 10, 15, 12, ETileType::Lava);
-
-    SetMapRect(map, 2, 3, 6, 7, ETileType::Lava);
-    SetMapRect(map, 10, 4, 14, 7, ETileType::Lava);
-    SetMapRect(map, 20, 3, 24, 6, ETileType::Lava);
-    SetMapRect(map, 34, 3, 39, 7, ETileType::Lava);
-
-    SetMapRect(map, 5, 14, 10, 17, ETileType::Lava);
-    SetMapRect(map, 17, 14, 22, 17, ETileType::Lava);
-    SetMapRect(map, 27, 13, 31, 18, ETileType::Lava);
-    SetMapRect(map, 37, 14, 42, 19, ETileType::Lava);
+    FillMapTiles(map, ETileType::Lava);
+    for (int y = 0; y < map.height; ++y)
+    {
+        for (int x = 0; x < map.width; ++x)
+        {
+            ETileType type = ETileType::Lava;
+            switch (LavaMapLayout::Rows[y][x])
+            {
+            case '.': type = ETileType::Normal; break;
+            case '+': type = ETileType::Road; break;
+            case '=': type = ETileType::Bridge; break;
+            case '#': type = ETileType::Wall; break;
+            case 'B': type = ETileType::Building; break;
+            }
+            SetMapPoint(map, x, y, type);
+        }
+    }
 
     AddPlayerStarts(map, {
-        { 7, 10 },
-        { 8, 11 },
-        { 9, 10 },
-        { 10, 11 },
-        { 11, 10 }
+        { 4, 7 },
+        { 5, 6 },
+        { 4, 9 },
+        { 7, 6 },
+        { 8, 8 }
     });
 
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Fire Demon", 22, 10, 18, L"S5_Dragon.bmp", true,  EElement::Fire));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Golem", 24, 11, 10, L"S5_Golem.bmp",  true,  EElement::Fire));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Hound", 26, 10, 20, L"S5_Hound.bmp",  false, EElement::Fire));
-    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Larva", 25, 12, 12, L"S5_Larva.bmp",  true,  EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Mage,    L"Fire Demon", 23, 7, 18, L"S5_Dragon.bmp", true,  EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Golem", 27, 7, 10, L"S5_Golem.bmp",  true,  EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Hound", 28, 11, 20, L"S5_Hound.bmp",  false, EElement::Fire));
+    map.enemyStarts.push_back(MakeMonsterStart(ECharacterClass::Warrior, L"Lava Larva", 23, 12, 12, L"S5_Larva.bmp",  true,  EElement::Fire));
 
     return map;
 }

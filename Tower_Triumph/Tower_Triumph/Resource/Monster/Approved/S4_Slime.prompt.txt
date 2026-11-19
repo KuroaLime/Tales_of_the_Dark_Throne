@@ -1,0 +1,10 @@
+Use case: stylized-concept. Produce a fantasy RPG pixel-art enemy atlas matching the approved reference's crisp pixel clusters, limited matte color ramps and dark colored outline. Reference is ART STYLE ONLY.
+Subject: SEA SLIME, a small rounded sapphire-and-turquoise jelly blob with large dark-blue shiny eyes, tiny gentle smile, one small wave-shaped crest on its head and two little side lobes. Cute expressive watery creature, no legs, no equipment. Pixel highlights clean and restrained, no glossy render/no complex bubbles. Same identity in every frame, three-quarter facing RIGHT. Use opacity for the solid body; background completely transparent alpha0 with NO glow, white matte, shadow, numbers, grid, labels, scenery.
+EXACT8 columns×6 rows =48 equal-cell full-body sprites, preferably2048x1536. Fixed root(50%,87.5%) of eachcell, body about45%cellhigh and60%wide. Generous empty borders even stretched poses; nothing crosses between cells. Every state retains same mass/color.
+Row1 eight IDLE poses: slow breathing-like squish, crest jiggles, blink, loop back to neutral.
+Row2 eight MOVE poses in place RIGHT: compress, lean forward, lift front lobe, stretch a little, front touches, rear draws in, rebound, neutral. A complete expressive gel locomotion cycle, no sliding copies.
+Row3 eight ATTACK poses: ready,flatten to gather,tuck back,windup,frame5 FULL rightward elastic body-lobe slam,follow-through,retract,neutral. Entire blob stays inside cell, no external projectile.
+Row4 eight HIT: neutral,indent on front,compress backward,flatten/recoil,wobble,regainshape,settle,neutral.
+Row5 eight DEFEAT poses: slump,compress,crest sinks,eyes close,body melts lower,flat blue puddle,small still puddle,same final puddle. Keep visible subdued blue puddle; no total disappearance.
+Row6 eight TRANSITIONS: first4 travel squish eases,front lobe settles,shape reforms,neutral;last4 recoil wobble eases,crest lifts,shape settles,neutral.
+True hand-authored pixel animation, 48 distinct coherent poses, beautiful simple readable shapes at game scale. No smooth illustration or3D.

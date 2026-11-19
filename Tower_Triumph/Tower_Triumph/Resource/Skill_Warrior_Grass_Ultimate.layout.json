@@ -1,0 +1,514 @@
+﻿{
+    "schemaVersion":  1,
+    "effect":  "Warrior_Grass",
+    "skillID":  1302,
+    "characterClass":  "Warrior",
+    "element":  "Grass",
+    "generationMode":  "built-in image_gen",
+    "source":  "Skill_Warrior_Grass_Ultimate.source.png",
+    "sourceSize":  [
+                       1448,
+                       1086
+                   ],
+    "sourceSha256":  "9075afc1b11ca361baf3bfbd976aecc28b0f258816dd5630babb0b9fafd14235",
+    "bitmap":  "Skill_Warrior_Grass_Ultimate.bmp",
+    "preview":  "Skill_Warrior_Grass_Ultimate.png",
+    "bitmapSha256":  "361af54124767a8d3e98b0bb333daa5b160e8ac4d01de4985b64040a2e350495",
+    "previewSha256":  "2d4f289f6d2650ec0a657f0a2f2f268e0cbbfec7ceec8dfa6d2cef9d7d7bc406",
+    "columns":  4,
+    "rows":  3,
+    "frameCount":  12,
+    "cellSize":  128,
+    "sheetSize":  [
+                      512,
+                      384
+                  ],
+    "alphaThreshold":  128,
+    "transparencyKey":  "#ff00ff",
+    "uniformScale":  0.42430939226519332,
+    "groundAnchor":  [
+                         76,
+                         112
+                     ],
+    "flightCoreAnchor":  null,
+    "preparationAnchor":  [
+                              64,
+                              70
+                          ],
+    "impactAnchor":  [
+                         76,
+                         112
+                     ],
+    "groundBandStartY":  104,
+    "recommendedPreparationDrawSize":  80,
+    "recommendedImpactDrawSize":  180,
+    "phases":  [
+                   {
+                       "frames":  [
+                                      0,
+                                      1,
+                                      2,
+                                      3
+                                  ],
+                       "name":  "charge"
+                   },
+                   {
+                       "frames":  [
+                                      4,
+                                      5,
+                                      6,
+                                      7,
+                                      8,
+                                      9,
+                                      10,
+                                      11
+                                  ],
+                       "name":  "impact"
+                   }
+               ],
+    "registration":  {
+                         "effect":  "Warrior_Grass",
+                         "uniformScale":  0.4243093922651933,
+                         "preparationAnchor":  [
+                                                   64,
+                                                   70
+                                               ],
+                         "impactAnchor":  [
+                                              76,
+                                              112
+                                          ],
+                         "groundAnchor":  [
+                                              76,
+                                              112
+                                          ],
+                         "flightCoreAnchor":  null,
+                         "groundBandStartY":  104,
+                         "registrationGroupScale":  1.2,
+                         "note":  "Root-approved common 1.20 scale around cell center for all twelve poses. No per-frame rescale or re-centering; measured anchors reflect authored phase centers.",
+                         "frames":  [
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  0
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  1
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  2
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  3
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  4
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  5
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  6
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  7
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  8
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  9
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  10
+                                        },
+                                        {
+                                            "sourceAnchor":  [
+                                                                 181,
+                                                                 181
+                                                             ],
+                                            "targetAnchor":  [
+                                                                 64,
+                                                                 64
+                                                             ],
+                                            "frame":  11
+                                        }
+                                    ]
+                     },
+    "frames":  [
+                   {
+                       "Frame":  0,
+                       "SourceOpaquePixels":  927,
+                       "RuntimeOpaquePixels":  166,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          0,
+                                          0,
+                                          362,
+                                          362
+                                      ],
+                       "SourceBounds":  [
+                                            158,
+                                            167,
+                                            218,
+                                            225
+                                        ],
+                       "RuntimeBounds":  [
+                                             54,
+                                             58,
+                                             78,
+                                             83
+                                         ]
+                   },
+                   {
+                       "Frame":  1,
+                       "SourceOpaquePixels":  2606,
+                       "RuntimeOpaquePixels":  468,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          362,
+                                          0,
+                                          724,
+                                          362
+                                      ],
+                       "SourceBounds":  [
+                                            122,
+                                            141,
+                                            240,
+                                            251
+                                        ],
+                       "RuntimeBounds":  [
+                                             39,
+                                             47,
+                                             89,
+                                             92
+                                         ]
+                   },
+                   {
+                       "Frame":  2,
+                       "SourceOpaquePixels":  5903,
+                       "RuntimeOpaquePixels":  1057,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          724,
+                                          0,
+                                          1086,
+                                          362
+                                      ],
+                       "SourceBounds":  [
+                                            99,
+                                            121,
+                                            254,
+                                            264
+                                        ],
+                       "RuntimeBounds":  [
+                                             30,
+                                             39,
+                                             94,
+                                             99
+                                         ]
+                   },
+                   {
+                       "Frame":  3,
+                       "SourceOpaquePixels":  10657,
+                       "RuntimeOpaquePixels":  1906,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          1086,
+                                          0,
+                                          1448,
+                                          362
+                                      ],
+                       "SourceBounds":  [
+                                            78,
+                                            102,
+                                            270,
+                                            282
+                                        ],
+                       "RuntimeBounds":  [
+                                             21,
+                                             30,
+                                             101,
+                                             107
+                                         ]
+                   },
+                   {
+                       "Frame":  4,
+                       "SourceOpaquePixels":  5961,
+                       "RuntimeOpaquePixels":  1085,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          0,
+                                          362,
+                                          362,
+                                          724
+                                      ],
+                       "SourceBounds":  [
+                                            123,
+                                            125,
+                                            273,
+                                            299
+                                        ],
+                       "RuntimeBounds":  [
+                                             39,
+                                             40,
+                                             103,
+                                             114
+                                         ]
+                   },
+                   {
+                       "Frame":  5,
+                       "SourceOpaquePixels":  10042,
+                       "RuntimeOpaquePixels":  1797,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          362,
+                                          362,
+                                          724,
+                                          724
+                                      ],
+                       "SourceBounds":  [
+                                            77,
+                                            105,
+                                            264,
+                                            300
+                                        ],
+                       "RuntimeBounds":  [
+                                             20,
+                                             32,
+                                             99,
+                                             114
+                                         ]
+                   },
+                   {
+                       "Frame":  6,
+                       "SourceOpaquePixels":  23856,
+                       "RuntimeOpaquePixels":  4287,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          724,
+                                          362,
+                                          1086,
+                                          724
+                                      ],
+                       "SourceBounds":  [
+                                            43,
+                                            59,
+                                            295,
+                                            301
+                                        ],
+                       "RuntimeBounds":  [
+                                             5,
+                                             13,
+                                             112,
+                                             115
+                                         ]
+                   },
+                   {
+                       "Frame":  7,
+                       "SourceOpaquePixels":  9427,
+                       "RuntimeOpaquePixels":  1694,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          1086,
+                                          362,
+                                          1448,
+                                          724
+                                      ],
+                       "SourceBounds":  [
+                                            70,
+                                            77,
+                                            277,
+                                            301
+                                        ],
+                       "RuntimeBounds":  [
+                                             17,
+                                             20,
+                                             105,
+                                             115
+                                         ]
+                   },
+                   {
+                       "Frame":  8,
+                       "SourceOpaquePixels":  6096,
+                       "RuntimeOpaquePixels":  1099,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          0,
+                                          724,
+                                          362,
+                                          1086
+                                      ],
+                       "SourceBounds":  [
+                                            80,
+                                            89,
+                                            264,
+                                            296
+                                        ],
+                       "RuntimeBounds":  [
+                                             21,
+                                             25,
+                                             99,
+                                             113
+                                         ]
+                   },
+                   {
+                       "Frame":  9,
+                       "SourceOpaquePixels":  3744,
+                       "RuntimeOpaquePixels":  658,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          362,
+                                          724,
+                                          724,
+                                          1086
+                                      ],
+                       "SourceBounds":  [
+                                            95,
+                                            109,
+                                            254,
+                                            295
+                                        ],
+                       "RuntimeBounds":  [
+                                             28,
+                                             34,
+                                             95,
+                                             112
+                                         ]
+                   },
+                   {
+                       "Frame":  10,
+                       "SourceOpaquePixels":  2167,
+                       "RuntimeOpaquePixels":  394,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          724,
+                                          724,
+                                          1086,
+                                          1086
+                                      ],
+                       "SourceBounds":  [
+                                            95,
+                                            126,
+                                            252,
+                                            293
+                                        ],
+                       "RuntimeBounds":  [
+                                             28,
+                                             41,
+                                             94,
+                                             112
+                                         ]
+                   },
+                   {
+                       "Frame":  11,
+                       "SourceOpaquePixels":  1037,
+                       "RuntimeOpaquePixels":  185,
+                       "SourceEdgePixels":  0,
+                       "SourceRect":  [
+                                          1086,
+                                          724,
+                                          1448,
+                                          1086
+                                      ],
+                       "SourceBounds":  [
+                                            113,
+                                            137,
+                                            241,
+                                            292
+                                        ],
+                       "RuntimeBounds":  [
+                                             35,
+                                             45,
+                                             89,
+                                             111
+                                         ]
+                   }
+               ],
+    "method":  "One common isotropic scale; explicit measured anchor translations; nearest-neighbor pixel-center sampling; alpha\u003e=128 becomes opaque; no pose fitting or painted edits."
+}

@@ -1,0 +1,812 @@
+{
+  "schemaVersion": 1,
+  "title": "Enemy character style and animation pack",
+  "request": "Match the user-approved allied pixel-art style and add distinct enemy animation states.",
+  "generationTool": "image_gen",
+  "styleReference": {
+    "file": "Source/Concepts/CharacterIdle/approved/master.png",
+    "sha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e"
+  },
+  "speciesCount": 14,
+  "frameCount": 672,
+  "portraitCount": 14,
+  "sheet": {
+    "columns": 8,
+    "rows": 6,
+    "cellSize": 128,
+    "width": 1024,
+    "height": 768,
+    "root": [
+      64,
+      112
+    ],
+    "nominalFrameHeight": 96,
+    "sourceFacesRight": true
+  },
+  "states": [
+    {
+      "name": "Idle",
+      "first": 0,
+      "count": 8
+    },
+    {
+      "name": "Walk",
+      "first": 8,
+      "count": 8
+    },
+    {
+      "name": "Attack",
+      "first": 16,
+      "count": 8
+    },
+    {
+      "name": "Hit",
+      "first": 24,
+      "count": 8
+    },
+    {
+      "name": "Dead",
+      "first": 32,
+      "count": 8
+    },
+    {
+      "name": "WalkStop",
+      "first": 40,
+      "count": 4
+    },
+    {
+      "name": "IdleReturn",
+      "first": 44,
+      "count": 4
+    }
+  ],
+  "transparency": {
+    "png": "Original sampled source RGBA preserved.",
+    "bitmap": "Uncompressed 24-bit RGB; source alpha >= 128 is opaque, other pixels are exactly #ff00ff."
+  },
+  "importMethod": "Uniform nearest-neighbor scaling and reviewed source-cell-local root translations only. Reviewed source cell boundaries may shift into empty gutters to preserve extended weapons. No character repainting, pose synthesis, or per-frame resizing.",
+  "portraitMethod": "Exact normalized first idle cell, 128 x 128 pixels. Same design and palette as the animated atlas.",
+  "preserved": "Legacy enemy atlases, allied characters, skill art, map art, AI, skill values, damage, and spawn data are not replaced by this asset pack.",
+  "assets": [
+    {
+      "species": "S1_Skeleton",
+      "name": "Skeleton",
+      "stage": 1,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S1_Skeleton.bmp",
+      "legacySha256": "8fe3a748ee6dcdc572d4f42f6e6712da301bb5dbbbd62d999007173e4f8953c4",
+      "layout": "S1_Skeleton_Animated.layout.json",
+      "layoutSha256": "346d01530722ba8e93b27e9ecb514d18da83fce81022d28cb4b31d7a93dd4589",
+      "source": "S1_Skeleton_Animated.source.png",
+      "sourceSha256": "f028a565bdfead9a8813425026b232ce32c9e5a1665dabc320b9675dbe056b70",
+      "png": "S1_Skeleton_Animated.png",
+      "pngSha256": "3e92ee048fca3e1b0fabad073c6f1d8d82dd3906d3b2d54b64e43c892d479ae0",
+      "bitmap": "S1_Skeleton_Animated.bmp",
+      "bitmapSha256": "17d5c060377892b64bab7b82769b13dd7e1dd91feb99da2b2e9a76fb5c42f5ea",
+      "portrait": {
+        "png": "S1_Skeleton_Portrait.png",
+        "bitmap": "S1_Skeleton_Portrait.bmp",
+        "pngSha256": "8af94ea967f7b4797587801071c1de3b2d3a614db0f223431f9d51909b02e0e7",
+        "bitmapSha256": "afe4cf8ac0d7d1027e5a979bd57ee072b5ab37b1cf15e4289d7b016eafe31491",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-de020e98-56e2-4ba1-82eb-a931102ec217.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S1_Skeleton_Animated.prompt.txt",
+        "promptSha256": "b32ca88bd391f5a708fe83a81006217ced1bf2960960bbd6f7f1d1d5eb6f3b89"
+      },
+      "prompts": [
+        {
+          "file": "S1_Skeleton.prompt.txt",
+          "sha256": "b32ca88bd391f5a708fe83a81006217ced1bf2960960bbd6f7f1d1d5eb6f3b89"
+        }
+      ],
+      "alignment": "S1_Skeleton_Animated.alignment.json",
+      "alignmentSha256": "1ec8c988427bddd6b29cb37ce62bdef1d4dc9771eee1a16ec94ed67dc23a5c0c",
+      "impactFrame": 4,
+      "uniformScale": 0.5328947368421053,
+      "neutralBounds": [
+        27,
+        30,
+        93,
+        111
+      ]
+    },
+    {
+      "species": "S1_Leach",
+      "name": "Lich",
+      "stage": 1,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S1_Leach.bmp",
+      "legacySha256": "d2e6c9c484fe33c20a433d040858349b9b18532ffdc8f84c64856a34496085ca",
+      "layout": "S1_Leach_Animated.layout.json",
+      "layoutSha256": "c3ceb52121e3e59cc0f1341272b0ff08dd1adb5e1e6c2e656474b4187e8ddfc8",
+      "source": "S1_Leach_Animated.source.png",
+      "sourceSha256": "b86466f18a78c98b6397cb16bad4b7c252d3ec85b743512d1df59b235923213d",
+      "png": "S1_Leach_Animated.png",
+      "pngSha256": "d2221efaa29bb5df7442cc9d94dc4bb0dee593b9e624c1de5de656ef864c8e7d",
+      "bitmap": "S1_Leach_Animated.bmp",
+      "bitmapSha256": "384e1023ef1c434b051d8ce183fc2d0b9d56a17c6dabf0c0406c59943246bbb8",
+      "portrait": {
+        "png": "S1_Leach_Portrait.png",
+        "bitmap": "S1_Leach_Portrait.bmp",
+        "pngSha256": "e191cb1016efbcfe4d9efbfa0634bbda8a12237ef02915baba05143c5d6c02d2",
+        "bitmapSha256": "91c808eb46e0341ca4f50507e2f7207de3144256300f776a6e117e2e324facbd",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-d469254a-4eb1-4f42-b72f-755f38c87cdf.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S1_Leach_Animated.prompt.txt",
+        "promptSha256": "a966976e568eaae0b25d58f4fcdb7ed8f577a34ff0ff0ff5de8b395f413188b9"
+      },
+      "prompts": [
+        {
+          "file": "S1_Leach.prompt.txt",
+          "sha256": "a966976e568eaae0b25d58f4fcdb7ed8f577a34ff0ff0ff5de8b395f413188b9"
+        }
+      ],
+      "alignment": "S1_Leach_Animated.alignment.json",
+      "alignmentSha256": "a3fc4add76be90906e60df69166831d2caf10f5775ff0fb8312e34b2c9f486d9",
+      "impactFrame": 4,
+      "uniformScale": 0.5785714285714286,
+      "neutralBounds": [
+        28,
+        31,
+        100,
+        112
+      ]
+    },
+    {
+      "species": "S2_Angel",
+      "name": "Angel Guard",
+      "stage": 2,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S2_Angel.bmp",
+      "legacySha256": "ff6ae49a824095824dee769f2f64b9ddf951cdf3cf51993520f5b2abc9780bdf",
+      "layout": "S2_Angel_Animated.layout.json",
+      "layoutSha256": "37073b62f5333f80ad79281d32d7f0106bdb385a09424e74664d0356caadf973",
+      "source": "S2_Angel_Animated.source.png",
+      "sourceSha256": "7c3d7557d05b55224832a526faf45086aceb4ab7d7bc58e68a662356e22b715f",
+      "png": "S2_Angel_Animated.png",
+      "pngSha256": "ae4fe9b92e83cea1cbc3ee45fb17042a5437f7c2f9d7b68a03270fdee7d6a07d",
+      "bitmap": "S2_Angel_Animated.bmp",
+      "bitmapSha256": "2869fe7d40d16b853781c68a2fcc1462861ee166f80ee5ff2d96c19613f5da08",
+      "portrait": {
+        "png": "S2_Angel_Portrait.png",
+        "bitmap": "S2_Angel_Portrait.bmp",
+        "pngSha256": "ffe68b78ac07837def4235383522a622d69e908c592814d1b022321d217fc5e9",
+        "bitmapSha256": "3af44941bc84bf6f0f6451c3f18a050d0516af275f0a9e487b678f043fbc2b1a",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-493f1649-5f4c-452b-9cb6-b879ad2a1548.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S2_Angel_Animated.prompt.txt",
+        "promptSha256": "db88e6c9c53f85b819d3d5f46b5a542685dd124d69407aebed5e6d85253907e2"
+      },
+      "prompts": [
+        {
+          "file": "S2_Angel.alpha-fix.prompt.txt",
+          "sha256": "0202a27cbd5433a1cbf97e81d8754d4ebbfa2b2692a2e9f321ec41d3e8b0bdb6"
+        },
+        {
+          "file": "S2_Angel.prompt.txt",
+          "sha256": "db88e6c9c53f85b819d3d5f46b5a542685dd124d69407aebed5e6d85253907e2"
+        }
+      ],
+      "alignment": "S2_Angel_Animated.alignment.json",
+      "alignmentSha256": "43b9be419fab61b6ea4bcede808500acc88112ad4919ea480cba75ea489b112c",
+      "impactFrame": 4,
+      "uniformScale": 0.6230769230769231,
+      "neutralBounds": [
+        16,
+        30,
+        100,
+        111
+      ]
+    },
+    {
+      "species": "S2_BAngel",
+      "name": "Baby Angel",
+      "stage": 2,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S2_BAngel.bmp",
+      "legacySha256": "6bd31710bb4dec65585771f1a4207758216ad62b66b474cf2e5f6ea87c97b112",
+      "layout": "S2_BAngel_Animated.layout.json",
+      "layoutSha256": "22a81c82f6e06d2ab7bf81ec868c1c7c5d85bec0b2b11c2a6c5b397af9569907",
+      "source": "S2_BAngel_Animated.source.png",
+      "sourceSha256": "c77bc3800716453adfe9217f1c4e3297335c3d1e4e307dea9d7822c0d0f069b8",
+      "png": "S2_BAngel_Animated.png",
+      "pngSha256": "36723741181a1240bbc9eeaa76320e0e804f8d1dd15d4990098e4c10fdabf318",
+      "bitmap": "S2_BAngel_Animated.bmp",
+      "bitmapSha256": "5e789b0bb9e32fbc01acdcc790a097f11138ea7ded661ce128fa8c0187a915d9",
+      "portrait": {
+        "png": "S2_BAngel_Portrait.png",
+        "bitmap": "S2_BAngel_Portrait.bmp",
+        "pngSha256": "b5ea775b53339d8f9896291c45d4fcb9b6fcb5cab7600e2fec9ced70d8a8aead",
+        "bitmapSha256": "734a972961a867bd823009e772bc2d95698f9d4d689cb902480241c95763c4ba",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-41584a55-8b57-4fda-916f-5778efb3b269.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S2_BAngel_Animated.prompt.txt",
+        "promptSha256": "3cd73efb24b01cc62560479ccbc44a834b671a064444dc1d598b0e1154c88187"
+      },
+      "prompts": [
+        {
+          "file": "S2_BAngel.prompt.txt",
+          "sha256": "3cd73efb24b01cc62560479ccbc44a834b671a064444dc1d598b0e1154c88187"
+        }
+      ],
+      "alignment": "S2_BAngel_Animated.alignment.json",
+      "alignmentSha256": "5c7dd460994d25439c088314f836696fe7ee722c7574280e57656175d57f1ae5",
+      "impactFrame": 5,
+      "uniformScale": 0.5510204081632653,
+      "neutralBounds": [
+        26,
+        30,
+        99,
+        111
+      ]
+    },
+    {
+      "species": "S2_Falcon",
+      "name": "Sky Falcon",
+      "stage": 2,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S2_Falcon.bmp",
+      "legacySha256": "13c1d26d5f2a26741da9fad5ec3b8a5f7fd126f63564f7149fc448609328b799",
+      "layout": "S2_Falcon_Animated.layout.json",
+      "layoutSha256": "8e615c4b206633f01b3772a6912943a4f8dd6ef92bd6ca776b6cc3fefb38c44b",
+      "source": "S2_Falcon_Animated.source.png",
+      "sourceSha256": "6e02b5e2e5f4abf3a3936ecfaae2be18318a415e7d8160000fcb97a85b32a441",
+      "png": "S2_Falcon_Animated.png",
+      "pngSha256": "a3e1327c814df2f83e7f83147e2faa651afe1eaf3456ce1d24c017b701f4e802",
+      "bitmap": "S2_Falcon_Animated.bmp",
+      "bitmapSha256": "09380c3abd92b0438ad53a3ee2c3501ca0bb60665bf8083194102059ee390eed",
+      "portrait": {
+        "png": "S2_Falcon_Portrait.png",
+        "bitmap": "S2_Falcon_Portrait.bmp",
+        "pngSha256": "f6c8812c0a93017811f834316f2e9cbe0f6d17a039e6c26270d3ac402e578105",
+        "bitmapSha256": "67271b656f7623ca57e7c07f327922f6f307f41287a40d29f96d6ad74e8ae19d",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-c13f597e-e730-4337-8f9f-ebaf26d90059.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S2_Falcon_Animated.prompt.txt",
+        "promptSha256": "d1c284545af7bc3d1d3df2922fa2fd245c7139f19ed3c3e43ff9f2bbe5a77ca8"
+      },
+      "prompts": [
+        {
+          "file": "S2_Falcon.prompt.txt",
+          "sha256": "d1c284545af7bc3d1d3df2922fa2fd245c7139f19ed3c3e43ff9f2bbe5a77ca8"
+        }
+      ],
+      "alignment": "S2_Falcon_Animated.alignment.json",
+      "alignmentSha256": "022e4b94f74375911c28804310e1fe1f5f46900e8e09a5b61f4d33bf3a5e409c",
+      "impactFrame": 4,
+      "uniformScale": 0.5633802816901409,
+      "neutralBounds": [
+        16,
+        31,
+        102,
+        111
+      ]
+    },
+    {
+      "species": "S2_WAngel",
+      "name": "Wing Angel",
+      "stage": 2,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S2_WAngel.bmp",
+      "legacySha256": "2e4e5098a373b4d1857b741b79d3081ffbf205d1464c83f3fab92612bd1878ef",
+      "layout": "S2_WAngel_Animated.layout.json",
+      "layoutSha256": "f66d8edb57b6935eb1bc7b1e6aa4389bbba486168ac91fc21562a4040d5f09cf",
+      "source": "S2_WAngel_Animated.source.png",
+      "sourceSha256": "91675960d15718899610f0eba4a1f7cad571617ab7de3e0dde5648f8709fa8df",
+      "png": "S2_WAngel_Animated.png",
+      "pngSha256": "d26b97f93d4e0785cb451ee6cccb216ac1dbd85adf9d1f1b1716e76865b7c2dd",
+      "bitmap": "S2_WAngel_Animated.bmp",
+      "bitmapSha256": "67afe42f1787bbcaf7e957e56e5c3c1a3f01beab73316bb3a95aa122126e73ae",
+      "portrait": {
+        "png": "S2_WAngel_Portrait.png",
+        "bitmap": "S2_WAngel_Portrait.bmp",
+        "pngSha256": "73d6e8e3ce924d0d71adb38bbc15b6c31463905c0637829ed5c462b97313b7f3",
+        "bitmapSha256": "d50f00de5e79b14f266bc53a0129884072a1e774fdbfe007393d74a03b33dd7e",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-00539f8a-2e4d-4ca8-911d-7a0796038225.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S2_WAngel_Animated.prompt.txt",
+        "promptSha256": "9dd834e4250c4fbb9e7a92129a27f84eb1b41e5957551406281e3cd605f02d0d"
+      },
+      "prompts": [
+        {
+          "file": "S2_WAngel.prompt.txt",
+          "sha256": "9dd834e4250c4fbb9e7a92129a27f84eb1b41e5957551406281e3cd605f02d0d"
+        }
+      ],
+      "alignment": "S2_WAngel_Animated.alignment.json",
+      "alignmentSha256": "e407afca6c77183c9e7b2707359c261545fe6fb32ddc01ae1bfcf15eacbc1f3f",
+      "impactFrame": 4,
+      "uniformScale": 0.5328947368421053,
+      "neutralBounds": [
+        25,
+        30,
+        99,
+        111
+      ]
+    },
+    {
+      "species": "S4_Slime",
+      "name": "Sea Slime",
+      "stage": 4,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S4_Slime.bmp",
+      "legacySha256": "50eead64b3651e5136047f703ad75502e0358ee31d035f30a874a131ffce12fc",
+      "layout": "S4_Slime_Animated.layout.json",
+      "layoutSha256": "9a67fa500dd7b1622fb7c24d5e396b2692f7075488855413a46abf3fd7bc90ba",
+      "source": "S4_Slime_Animated.source.png",
+      "sourceSha256": "3661be8685d440828a28a9bd8b038d0f5ab7090488621ba57e743b7f53c19a0a",
+      "png": "S4_Slime_Animated.png",
+      "pngSha256": "9d88d94b2f545fd64044d5b9074b4be328a8fe88b1943da74f2f382fb8ba1666",
+      "bitmap": "S4_Slime_Animated.bmp",
+      "bitmapSha256": "64aa6c9eaf964a3abe2949d66a5ec97ce068adf71bbc725f43f480adcad7517c",
+      "portrait": {
+        "png": "S4_Slime_Portrait.png",
+        "bitmap": "S4_Slime_Portrait.bmp",
+        "pngSha256": "c16e71810e540d34310b07447db595e16581f6e46a7d40d5d488f8970c869131",
+        "bitmapSha256": "5f2a83bf8676eaf3aa755a5f8b16413190be88ed254d016ecfd01704b603fc14",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-9f56a719-ece6-47d3-ba0a-f9277dbd4b94.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S4_Slime_Animated.prompt.txt",
+        "promptSha256": "83f56d214885f535c21ac8c307c2ba9c34e71f4cbf794bf2838e9d7e811e59d2"
+      },
+      "prompts": [
+        {
+          "file": "S4_Slime.prompt.txt",
+          "sha256": "83f56d214885f535c21ac8c307c2ba9c34e71f4cbf794bf2838e9d7e811e59d2"
+        }
+      ],
+      "alignment": "S4_Slime_Animated.alignment.json",
+      "alignmentSha256": "3933a5ab96e19cf946b5739fc25fb54a48d84fb2a2bfb12d5c7353df97272e69",
+      "impactFrame": 4,
+      "uniformScale": 0.5178571428571429,
+      "neutralBounds": [
+        27,
+        53,
+        101,
+        111
+      ]
+    },
+    {
+      "species": "S4_Snale",
+      "name": "Mermaid",
+      "stage": 4,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S4_Snale.bmp",
+      "legacySha256": "d78b38e547d399ceb7daebe2d681103f8e5b7ae0516144b249ac8bc5054ccb3f",
+      "layout": "S4_Snale_Animated.layout.json",
+      "layoutSha256": "9705adb1c0490955395135f670978d12710ab205b0ea11abadfdb3a7d27bc574",
+      "source": "S4_Snale_Animated.source.png",
+      "sourceSha256": "4726dd4ebddfc1fca650fac86b6ccfc5ccde96cc07b8c34ca2fcf5a3bb0a29a0",
+      "png": "S4_Snale_Animated.png",
+      "pngSha256": "58d08fb629cee53f30b0ab032b0ddde3c9ca10847df6ec5c2f57232deb273705",
+      "bitmap": "S4_Snale_Animated.bmp",
+      "bitmapSha256": "852808ab29ea67e06faa570def809cc4ec00fe86ab84af897be559cb3193e0fc",
+      "portrait": {
+        "png": "S4_Snale_Portrait.png",
+        "bitmap": "S4_Snale_Portrait.bmp",
+        "pngSha256": "59acd851df187da5b714c8b3c11ef2f96f72e0b0755df1847a9ade170bde0cf4",
+        "bitmapSha256": "61003e40f8c5f00012bcc09e8aa1829dbfd31ddb1b127eb0c70aa86c5644b463",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-c56bca92-9da1-44dd-9ad2-092b5aaf7981.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S4_Snale_Animated.prompt.txt",
+        "promptSha256": "824db65d5ebe1cd1b50a039bb208debf9f9020c67f2551401871cb0fed53ccc7"
+      },
+      "prompts": [
+        {
+          "file": "S4_Snale.prompt.txt",
+          "sha256": "824db65d5ebe1cd1b50a039bb208debf9f9020c67f2551401871cb0fed53ccc7"
+        },
+        {
+          "file": "S4_Snale.transition-fix.prompt.txt",
+          "sha256": "963c4830a4214a33779f258545d2fe4996376739738e313f04eafec65fcfd58d"
+        }
+      ],
+      "alignment": "S4_Snale_Animated.alignment.json",
+      "alignmentSha256": "34e78c78eb8d91f39e9da3588eb6a93491b59f5c5265859f211d15834e9dddca",
+      "impactFrame": 4,
+      "uniformScale": 0.5333333333333333,
+      "neutralBounds": [
+        26,
+        31,
+        102,
+        111
+      ]
+    },
+    {
+      "species": "S4_Spear",
+      "name": "Spear Crab",
+      "stage": 4,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S4_Spear.bmp",
+      "legacySha256": "652424b0bfafee8eec44077963561073e795f79433d3ca8aa1fd603672bef54d",
+      "layout": "S4_Spear_Animated.layout.json",
+      "layoutSha256": "37e5d40489b10aad557c5f16ca21d27e997fbd976f074ba791d0cbacbc98d557",
+      "source": "S4_Spear_Animated.source.png",
+      "sourceSha256": "766b7a460868e163401f1279cb2a8094210e9a3963e0df14428cc4d5bc2fb0b1",
+      "png": "S4_Spear_Animated.png",
+      "pngSha256": "b82fd179938cd34712c80c8f94ca8a0c2f0e0966c289aa3d00ecf2d5a741918a",
+      "bitmap": "S4_Spear_Animated.bmp",
+      "bitmapSha256": "67e25fffbc1573b50f67130caedd38496512c831d7f175970d7c2a63413baf0b",
+      "portrait": {
+        "png": "S4_Spear_Portrait.png",
+        "bitmap": "S4_Spear_Portrait.bmp",
+        "pngSha256": "8f1b529dd8c09227328c9b602d761428f0c1f8df7e531027917dffca289c12f8",
+        "bitmapSha256": "7bb6ef21cce428fa935ff8d4c623c429000d73edc4ab79034888153147f50c60",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-1bd798c3-422e-4fea-baab-302900c8d8ad.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S4_Spear_Animated.prompt.txt",
+        "promptSha256": "cd4d49eb50962d11669a39f1003b63d01b5415592fcc569d2e2b51c9e3652509"
+      },
+      "prompts": [
+        {
+          "file": "S4_Spear.prompt.txt",
+          "sha256": "cd4d49eb50962d11669a39f1003b63d01b5415592fcc569d2e2b51c9e3652509"
+        }
+      ],
+      "alignment": "S4_Spear_Animated.alignment.json",
+      "alignmentSha256": "69663477e124d79e1d9f6993ef6c86b82465547062d17cfd03e1cc79f0f8477c",
+      "impactFrame": 4,
+      "uniformScale": 0.5416666666666666,
+      "neutralBounds": [
+        19,
+        46,
+        98,
+        111
+      ]
+    },
+    {
+      "species": "S4_WFly",
+      "name": "Jellyfish",
+      "stage": 4,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S4_WFly.bmp",
+      "legacySha256": "c1722130a96ccd54ad3c1bdd170a2a437e24064bc9c494ba509d1f1d24bcf14e",
+      "layout": "S4_WFly_Animated.layout.json",
+      "layoutSha256": "9263ae08f865ad746837ebaec640cfa8e1a8e58a40a466628fb61d99f273ad90",
+      "source": "S4_WFly_Animated.source.png",
+      "sourceSha256": "446f6a97361a3a54bf3b7b48644aee8d63edd4f7446794ceb8c18b08619d4d0b",
+      "png": "S4_WFly_Animated.png",
+      "pngSha256": "9f8306fb17df3c87b394a727874fa70cf59c7eb68a3b19cb929b26e32506c5c2",
+      "bitmap": "S4_WFly_Animated.bmp",
+      "bitmapSha256": "8bc400198b24f8c957ae5f86640b96c14fa7e7634921d8768b9a357761197ea7",
+      "portrait": {
+        "png": "S4_WFly_Portrait.png",
+        "bitmap": "S4_WFly_Portrait.bmp",
+        "pngSha256": "7f9395f99d9e3dc6f37aa2cd86ff3ffe85ed7bb113424af13a8892ee2e417ecb",
+        "bitmapSha256": "02f79fcfd85eec1057e7a7ad09100560fdeea11108540e97785e74b5c4a495f7",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-e243b248-0f69-4575-b2b3-a2170808aa48.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S4_WFly_Animated.prompt.txt",
+        "promptSha256": "ca018377674fe454cc4bd6e0d3bf548e6a714fd180552654a4e4e5bb4ea5950b"
+      },
+      "prompts": [
+        {
+          "file": "S4_WFly.prompt.txt",
+          "sha256": "ca018377674fe454cc4bd6e0d3bf548e6a714fd180552654a4e4e5bb4ea5950b"
+        }
+      ],
+      "alignment": "S4_WFly_Animated.alignment.json",
+      "alignmentSha256": "24523c1d40971ae1d56d22a4ff6f2f4053d42df54b477c6b566ba0881805400b",
+      "impactFrame": 4,
+      "uniformScale": 0.5811965811965812,
+      "neutralBounds": [
+        29,
+        39,
+        96,
+        107
+      ]
+    },
+    {
+      "species": "S5_Dragon",
+      "name": "Fire Demon",
+      "stage": 5,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S5_Dragon.bmp",
+      "legacySha256": "20bfcdac5de460c31228d896c417044e37c9a392899dc627830aa2e0b24a9bc7",
+      "layout": "S5_Dragon_Animated.layout.json",
+      "layoutSha256": "62e7802611383f0d986d98a6add36ef2531927fe25d1e5b9d79854c5168961d9",
+      "source": "S5_Dragon_Animated.source.png",
+      "sourceSha256": "ac87ffa7c21326a2d6352cc6d53a36d8d1eeb91bcb24b19bca4938184837b600",
+      "png": "S5_Dragon_Animated.png",
+      "pngSha256": "797406e81142946a5961220c68b7712d08675dab0eb7539afefb66180a507d1a",
+      "bitmap": "S5_Dragon_Animated.bmp",
+      "bitmapSha256": "c9b39b99662506bd6f0251e0ebf07a1751a3a5bf048ea469cba2e4420c7cd21b",
+      "portrait": {
+        "png": "S5_Dragon_Portrait.png",
+        "bitmap": "S5_Dragon_Portrait.bmp",
+        "pngSha256": "2af68678070ea508ea0a7bc0b27bd86480df2394741982ff5202b2187aba05f3",
+        "bitmapSha256": "e0bce02b6ebcad23e4cade5023c643124c4d73c689985671247345d9955ba29b",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-acda870b-be72-425d-be7b-ced67561490b.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S5_Dragon_Animated.prompt.txt",
+        "promptSha256": "17dc4a151bec63687215508bb8959ac222aa8d5238ac8ecd524d25ef32dcbaa0"
+      },
+      "prompts": [
+        {
+          "file": "S5_Dragon.prompt.txt",
+          "sha256": "17dc4a151bec63687215508bb8959ac222aa8d5238ac8ecd524d25ef32dcbaa0"
+        }
+      ],
+      "alignment": "S5_Dragon_Animated.alignment.json",
+      "alignmentSha256": "ea50d689010faf1fef69a95683791078048ac85c167985bc25dd93f053b5f8cc",
+      "impactFrame": 4,
+      "uniformScale": 0.6015037593984962,
+      "neutralBounds": [
+        28,
+        31,
+        102,
+        111
+      ]
+    },
+    {
+      "species": "S5_Golem",
+      "name": "Lava Golem",
+      "stage": 5,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S5_Golem.bmp",
+      "legacySha256": "7cb44aebe42dbcc5a9b552b9860cf93f2dc44f3fd78bca0863c78ad34d972d8a",
+      "layout": "S5_Golem_Animated.layout.json",
+      "layoutSha256": "40c1309a1a8a213eccc2fcfaf865a3ce97e9362112a9781152f3b4d472d62b9f",
+      "source": "S5_Golem_Animated.source.png",
+      "sourceSha256": "00b1000ad672425b1332ffd73303a1c8d95112363e543a52bfd9536760529917",
+      "png": "S5_Golem_Animated.png",
+      "pngSha256": "0c350b54be37c17f9fd4a2dce6296e452d4dfd40744d09a06ad4f9556b054629",
+      "bitmap": "S5_Golem_Animated.bmp",
+      "bitmapSha256": "f961a45284f84db3522a9ba131bc5de26d6784ab084ff809e2fe65b6a7a6636c",
+      "portrait": {
+        "png": "S5_Golem_Portrait.png",
+        "bitmap": "S5_Golem_Portrait.bmp",
+        "pngSha256": "3ea13f9c5cebc7d272f8078f81d7d41ed29e31b29a4589d99c3ada33ecd2d4c3",
+        "bitmapSha256": "1df0764186c559ad266c6970bca01939a088e4f4d92980021aecd38c765723fa",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-c947702a-fb50-4860-8f49-75778650d969.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S5_Golem_Animated.prompt.txt",
+        "promptSha256": "95c64b092b6fa74c1c602706104e3bbf175a64bfff652bd7f077388422ff9cac"
+      },
+      "prompts": [
+        {
+          "file": "S5_Golem.prompt.txt",
+          "sha256": "95c64b092b6fa74c1c602706104e3bbf175a64bfff652bd7f077388422ff9cac"
+        }
+      ],
+      "alignment": "S5_Golem_Animated.alignment.json",
+      "alignmentSha256": "20d4877529524d2568b303a89350793bf412a66222a7603cb7152b93e634dc8c",
+      "impactFrame": 4,
+      "uniformScale": 0.6212121212121212,
+      "neutralBounds": [
+        18,
+        29,
+        106,
+        111
+      ]
+    },
+    {
+      "species": "S5_Hound",
+      "name": "Lava Hound",
+      "stage": 5,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S5_Hound.bmp",
+      "legacySha256": "a4db76156ce106bfcc71c146a578879f5899491c65e6f3db3acecc73e45e482d",
+      "layout": "S5_Hound_Animated.layout.json",
+      "layoutSha256": "2b302df7895f8f8a18b50d27ced0b6f17219898de45a11d20b422fabd8293a0a",
+      "source": "S5_Hound_Animated.source.png",
+      "sourceSha256": "2247ebde75cf90794d7a6ffea4e7920b73d497fddb7b1297aab6a413be63fc97",
+      "png": "S5_Hound_Animated.png",
+      "pngSha256": "b9a77450d6d420975894d9b17a03f65f2692c9b498743ef7645c9eedefae8199",
+      "bitmap": "S5_Hound_Animated.bmp",
+      "bitmapSha256": "7448439179b0f24f22e2b7e1017a6d9fa7cb430ec4d70dea2a6f001e4c9e2642",
+      "portrait": {
+        "png": "S5_Hound_Portrait.png",
+        "bitmap": "S5_Hound_Portrait.bmp",
+        "pngSha256": "3597703113fd991a1c3c247cde6d6487940fdc2e01c6fed94a8712341ac3b957",
+        "bitmapSha256": "cdb26f03ef2f0d2a52ba5f958faa68c28813e76a600e00a06890774bf4109de4",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-568e50e0-b64f-4913-b298-998b2ce51a92.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S5_Hound_Animated.prompt.txt",
+        "promptSha256": "5f654670368bb554ee73215a66d212b45dc6d51a6ed5aae74e4f10265efbf5ff"
+      },
+      "prompts": [
+        {
+          "file": "S5_Hound.prompt.txt",
+          "sha256": "5f654670368bb554ee73215a66d212b45dc6d51a6ed5aae74e4f10265efbf5ff"
+        }
+      ],
+      "alignment": "S5_Hound_Animated.alignment.json",
+      "alignmentSha256": "af17b0f048585bb989a2d81165d194b7a34c166b8a8cb7179e19fac298fa8134",
+      "impactFrame": 4,
+      "uniformScale": 0.5882352941176471,
+      "neutralBounds": [
+        15,
+        41,
+        103,
+        111
+      ]
+    },
+    {
+      "species": "S5_Larva",
+      "name": "Lava Larva",
+      "stage": 5,
+      "usedInMixedStage3": true,
+      "legacyFile": "../S5_Larva.bmp",
+      "legacySha256": "7cb44aebe42dbcc5a9b552b9860cf93f2dc44f3fd78bca0863c78ad34d972d8a",
+      "layout": "S5_Larva_Animated.layout.json",
+      "layoutSha256": "09cd6f58ecda252dc178817a5be77779b5c317bf7fc0ce9af50bdf5657db4522",
+      "source": "S5_Larva_Animated.source.png",
+      "sourceSha256": "cfff87a62de21e725ddf88a909fd39a8b40eaaccbbb21ad388ff19488d5ea4c4",
+      "png": "S5_Larva_Animated.png",
+      "pngSha256": "a3b4e82b1daf929f855cc46e8a625c8cc8b5f94293a8b5823a034a0b25a798d9",
+      "bitmap": "S5_Larva_Animated.bmp",
+      "bitmapSha256": "029553ca700644978fb347057fa1fc1bde044c4027219c0143c3eeace4ca3f4b",
+      "portrait": {
+        "png": "S5_Larva_Portrait.png",
+        "bitmap": "S5_Larva_Portrait.bmp",
+        "pngSha256": "2b51d20f04e4708c114f62773dae2043fdead79ff8fa9d4459a3a4d539affda6",
+        "bitmapSha256": "0aa562da42bb6034bc3c29abae8f2608f2d455764d8d6453e84ec52c278d34a5",
+        "sourceFrame": 0,
+        "sheetSize": [
+          128,
+          128
+        ],
+        "method": "Exact normalized frame 0 pixels; no redraw or recolor."
+      },
+      "generation": {
+        "tool": "image_gen",
+        "transparentBackground": true,
+        "returnedImagePath": "C:/Users/benev/.codex/generated_images/01a1f213-20f7-7261-9387-caf8e9b6e1c6/exec-a0c99bd2-b3db-421c-8d10-d3cb11bfffb0.png",
+        "styleReference": "Source/Concepts/CharacterIdle/approved/master.png",
+        "prompt": "S5_Larva_Animated.prompt.txt",
+        "promptSha256": "ecb17e871cbecc29c01bb3e03aad37b3ca84f1738d1e1e83a91cad38c9e73f9a"
+      },
+      "prompts": [
+        {
+          "file": "S5_Larva.alpha-repair.prompt.txt",
+          "sha256": "f044e033e29bc69b7626717e5ad870a9c057902df12f5b076673502f9189742b"
+        },
+        {
+          "file": "S5_Larva.prompt.txt",
+          "sha256": "ecb17e871cbecc29c01bb3e03aad37b3ca84f1738d1e1e83a91cad38c9e73f9a"
+        }
+      ],
+      "alignment": "S5_Larva_Animated.alignment.json",
+      "alignmentSha256": "ce3d409b7247efd4b190fcbd54e5b9f5c9e1a3fea704ec39c0199a1079db5138",
+      "impactFrame": 4,
+      "uniformScale": 0.5729166666666666,
+      "neutralBounds": [
+        19,
+        56,
+        102,
+        111
+      ]
+    }
+  ]
+}

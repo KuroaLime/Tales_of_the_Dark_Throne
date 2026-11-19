@@ -1,0 +1,54 @@
+{
+  "scale": 0.258,
+  "frames": [
+    {
+      "rootX": 223,
+      "groundY": 322
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 326
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    },
+    {
+      "rootX": 223,
+      "groundY": 330
+    }
+  ],
+  "registrationNote": "Only double-contact poses 0 and 6 use their authored sole line (322/326). Original common330 line left both feet above the runtime ground; scale, horizontal roots and all intermediate foot travel remain unchanged."
+}

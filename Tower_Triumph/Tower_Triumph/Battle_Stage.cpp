@@ -6,6 +6,11 @@
 #include "UButton.h"
 #include "BattleRewardManager.h"
 #include "SkillData.h"
+#include "GraveyardRenderer.h"
+#include "CharacterMotion.h"
+#include "AreaSkillEffectRenderer.h"
+#include "UltimateSkillRenderer.h"
+#include "StandardSkillRenderer.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -14,6 +19,79 @@
 #include <string>
 #include <queue>
 #include <vector>
+
+static bool UsesGridAlignedBackground(const SBattleMapData& map)
+{
+    return map.gridAlignedBackground || !map.tileAtlasFilePath.empty();
+}
+
+static BattleActionTiming::ElementVisual ToElementVisual(EElement element)
+{
+    switch (element)
+    {
+    case EElement::Fire: return BattleActionTiming::ElementVisual::Fire;
+    case EElement::Water: return BattleActionTiming::ElementVisual::Water;
+    case EElement::Grass: return BattleActionTiming::ElementVisual::Grass;
+    case EElement::Light: return BattleActionTiming::ElementVisual::Light;
+    case EElement::Dark: return BattleActionTiming::ElementVisual::Dark;
+    default: return BattleActionTiming::ElementVisual::Neutral;
+    }
+}
+
+static BattleSkillArea::Kind ToAreaKind(ESkillAreaType area)
+{
+    switch (area)
+    {
+    case ESkillAreaType::Splash1: return BattleSkillArea::Kind::Splash1;
+    case ESkillAreaType::Splash2: return BattleSkillArea::Kind::Splash2;
+    case ESkillAreaType::Line: return BattleSkillArea::Kind::Line;
+    default: return BattleSkillArea::Kind::Single;
+    }
+}
+
+static HBITMAP LoadStageBitmap(const std::wstring& relativePath, HINSTANCE instance,
+    int resourceId, int expectedWidth = 0, int expectedHeight = 0)
+{
+    std::vector<std::wstring> candidates{ relativePath,
+        L"Tower_Triumph\\Tower_Triumph\\" + relativePath,
+        L"Tower_Triumph\\" + relativePath,
+        L"..\\Tower_Triumph\\" + relativePath };
+    wchar_t executable[MAX_PATH]{};
+    if (GetModuleFileNameW(nullptr, executable, MAX_PATH))
+    {
+        std::wstring directory(executable);
+        for (int level = 0; level < 4; ++level)
+        {
+            const size_t slash = directory.find_last_of(L"\\/");
+            if (slash == std::wstring::npos) break;
+            directory.resize(slash);
+            candidates.push_back(directory + L"\\" + relativePath);
+            candidates.push_back(directory + L"\\Tower_Triumph\\" + relativePath);
+        }
+    }
+    auto Accept = [&](HBITMAP bitmap)
+    {
+        if (!bitmap) return false;
+        BITMAP info{};
+        if (GetObject(bitmap, sizeof(info), &info) &&
+            (expectedWidth == 0 || info.bmWidth == expectedWidth) &&
+            (expectedHeight == 0 || info.bmHeight == expectedHeight)) return true;
+        DeleteObject(bitmap);
+        return false;
+    };
+    for (const auto& path : candidates)
+    {
+        if (relativePath.empty()) break;
+        HBITMAP bitmap = static_cast<HBITMAP>(LoadImageW(nullptr, path.c_str(),
+            IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION));
+        if (Accept(bitmap)) return bitmap;
+    }
+    // Both scene and fallback atlas travel with the executable. Reject a scene
+    // with mismatched dimensions instead of stretching it away from its grid.
+    HBITMAP embedded = resourceId != 0 ?
+        LoadBitmapW(instance, MAKEINTRESOURCEW(resourceId)) : nullptr;
+    return Accept(embedded) ? embedded : nullptr;
+}
 
 static void DrawBattleStageText(
     HDC hMemDC,
@@ -180,6 +258,8 @@ Battle_Stage::Battle_Stage()
 
 Battle_Stage::~Battle_Stage()
 {
+    ClearPendingAction();
+    ActiveAreaEffects.clear();
     for (auto c : enemyTeam)
     {
         delete c;
@@ -206,10 +286,14 @@ Battle_Stage::~Battle_Stage()
     }
 
     ReleaseSkillEffectBitmaps();
+    if (hBitBackground) DeleteObject(hBitBackground);
 }
 
 void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 {
+    ClearPendingAction();
+    ActiveAreaEffects.clear();
+    DamageTexts.clear();
     GetClientRect(hWnd, &rects);
 
     SoundManager::PlayBGM(L"Resource\\Sound\\TowerTriumph_Fantasy_Battle_Loop_64s.wav", true);
@@ -225,9 +309,31 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     LoadBattleMap(battleMapId);
 
+    if (hBitBackground) DeleteObject(hBitBackground);
     hBitBackground = nullptr;
 
-    if (!CurrentMap.backgroundFilePath.empty())
+    if (CurrentMap.gridAlignedBackground)
+    {
+        hBitBackground = LoadStageBitmap(CurrentMap.backgroundFilePath, g_hInst,
+            CurrentMap.backgroundResourceId, CurrentMap.width * CurrentMap.tileSize,
+            CurrentMap.height * CurrentMap.tileSize);
+    }
+
+    if (hBitBackground == nullptr && !CurrentMap.tileAtlasFilePath.empty())
+    {
+        HBITMAP atlas = LoadStageBitmap(CurrentMap.tileAtlasFilePath, g_hInst, IDB_GRAVEYARD_ATLAS);
+        hBitBackground = GraveyardRenderer::CreateBackground(CurrentMap, atlas);
+        if (atlas) DeleteObject(atlas);
+    }
+
+    if (hBitBackground == nullptr && CurrentMap.gridAlignedBackground)
+    {
+        // Preserve the collision geometry even if both authored copies fail.
+        // Maps without an atlas use distinct terrain colors at world resolution.
+        hBitBackground = GraveyardRenderer::CreateBackground(CurrentMap, nullptr);
+    }
+
+    if (!UsesGridAlignedBackground(CurrentMap) && !CurrentMap.backgroundFilePath.empty())
     {
         std::vector<std::wstring> backgroundPathCandidates;
         backgroundPathCandidates.push_back(CurrentMap.backgroundFilePath);
@@ -252,12 +358,12 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         }
     }
 
-    if (hBitBackground == nullptr && CurrentMap.backgroundResourceId != 0)
+    if (hBitBackground == nullptr && !UsesGridAlignedBackground(CurrentMap) && CurrentMap.backgroundResourceId != 0)
     {
         hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(CurrentMap.backgroundResourceId));
     }
 
-    if (hBitBackground == nullptr)
+    if (hBitBackground == nullptr && !UsesGridAlignedBackground(CurrentMap))
     {
         hBitBackground = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP3));
     }
@@ -305,8 +411,8 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
     Loc.first.x = rects.right / 2;
     Loc.first.y = rects.bottom / 2;
-    Loc.second.sX = BackgroundInfo.bmWidth / 2;
-    Loc.second.sY = BackgroundInfo.bmHeight / 2;
+    Loc.second.sX = W * TILE_SIZE / 2;
+    Loc.second.sY = H * TILE_SIZE / 2;
 
     GameManager::Get().InitDefaultParty();
     playerTeam = GameManager::Get().GetParty();
@@ -326,6 +432,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         c->SetGridPos(safeStart.x, safeStart.y);
         c->LoadSprites(L"Resource");
         c->SyncWorldPixelToGrid(TILE_SIZE);
+        c->ResetBattleAnimation();
         c->ResetTurnState();
     }
 
@@ -421,8 +528,8 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
 
         int minX = halfW;
         int minY = halfH;
-        int maxX = BackgroundInfo.bmWidth - halfW;
-        int maxY = BackgroundInfo.bmHeight - halfH;
+        int maxX = W * TILE_SIZE - halfW;
+        int maxY = H * TILE_SIZE - halfH;
 
         if (maxX < minX) maxX = minX;
         if (maxY < minY) maxY = minY;
@@ -440,6 +547,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         camPosX = (float)targetX;
         camPosY = (float)targetY;
     }
+    LastCharacterUpdate = std::chrono::steady_clock::now();
 }
 
 Location Battle_Stage::FindNearestValidStartTile(Character* unit, int startX, int startY, bool avoidDamage) const
@@ -528,30 +636,410 @@ Location Battle_Stage::FindNearestValidStartTile(Character* unit, int startX, in
 
 void Battle_Stage::LoadBattleMap(EBattleMapId mapId)
 {
+    ClearPendingAction();
+    ActiveAreaEffects.clear();
     CurrentMap = BattleMapData::Load(mapId);
     TileMap = CurrentMap.tiles;
 }
 
+bool Battle_Stage::ContainsBattleUnit(const Character* unit) const
+{
+    return unit && (std::find(playerTeam.begin(), playerTeam.end(), unit) != playerTeam.end() ||
+        std::find(enemyTeam.begin(), enemyTeam.end(), unit) != enemyTeam.end());
+}
+
+void Battle_Stage::ClearPendingAction(bool preserveAreaEffects)
+{
+    PendingAction = {};
+    ActingUnit = nullptr;
+    if (!preserveAreaEffects)
+    {
+        ActiveAreaEffects.clear();
+        ActiveUltimateEffects.clear();
+        ActiveStandardEffects.clear();
+    }
+}
+
+void Battle_Stage::BeginPendingAction(Character* actor, ECharacterState state, std::vector<PendingHit> hits,
+    int skillID, Location effectGrid, ESkillAreaType areaType, std::vector<BattleSkillArea::Cell> areaCells)
+{
+    if (PendingAction.actor || ActingUnit || !ContainsBattleUnit(actor) || !actor->IsAlive() ||
+        (hits.empty() && areaCells.empty())) return;
+    actor->SetState(state, true);
+    actor->SetHasActed(true);
+    ActingUnit = actor;
+    PendingAction.actor = actor;
+    PendingAction.state = state;
+    PendingAction.sequence = actor->GetActionSequence();
+    PendingAction.timeline.clock.impactSeconds = actor->GetCurrentActionImpactSeconds();
+    PendingAction.releaseSeconds = PendingAction.timeline.clock.impactSeconds;
+    PendingAction.hits = std::move(hits);
+    PendingAction.enemyTurn = std::find(enemyTeam.begin(), enemyTeam.end(), actor) != enemyTeam.end();
+    PendingAction.skillID = skillID;
+    PendingAction.element = state == ECharacterState::Skill ?
+        ToElementVisual(SkillData::GetElement(skillID)) : BattleActionTiming::ElementVisual::Neutral;
+    PendingAction.standard = state == ECharacterState::Skill ? StandardSkillPresentation::ProfileFor(skillID) :
+        StandardSkillPresentation::Profile{};
+    if (StandardSkillPresentation::Valid(PendingAction.standard))
+    {
+        // SkillData's captured element remains authoritative even if actor/UI state changes later.
+        PendingAction.standard.element = PendingAction.element;
+        PendingAction.presentationID = ++NextPresentationID;
+    }
+    PendingAction.effectGrid = effectGrid;
+    PendingAction.areaType = areaType;
+    PendingAction.casterGrid = actor->GetGridPos();
+    const Location casterWorld = actor->GetWorldPixelPos(TILE_SIZE);
+    PendingAction.casterFootX = casterWorld.x + TILE_SIZE * 0.5f;
+    PendingAction.casterFootY = casterWorld.y + (UsesGridAlignedBackground(CurrentMap) ? TILE_SIZE * 0.75f : static_cast<float>(TILE_SIZE));
+    PendingAction.facing = actor->GetDirection() == EDirection::Left ? -1.0f : 1.0f;
+    if (areaType != ESkillAreaType::Single) PendingAction.areaCells = std::move(areaCells);
+    PendingAction.projectile = actor->GetCurrentProjectileKind();
+    const auto requestedPresentation = state == ECharacterState::Skill ?
+        SkillPresentation::Requested(skillID) : SkillPresentation::Kind::Normal;
+    if (requestedPresentation != SkillPresentation::Kind::Normal)
+    {
+        BITMAP info{};
+        const bool available = LoadSkillEffectBitmap(SkillPresentation::BitmapID(requestedPresentation), &info) != nullptr;
+        const bool flightAvailable = !SkillPresentation::IsSnipe(requestedPresentation) ||
+            LoadSkillEffectBitmap(SkillPresentation::FlightBitmapID(requestedPresentation), &info) != nullptr;
+        PendingAction.presentation = SkillPresentation::Resolve(skillID, available, flightAvailable);
+        if (PendingAction.presentation != SkillPresentation::Kind::Normal)
+        {
+            PendingAction.projectile = BattleActionTiming::ProjectileKind::None;
+            PendingAction.presentationID = ++NextPresentationID;
+        }
+    }
+    if (PendingAction.projectile != BattleActionTiming::ProjectileKind::None ||
+        SkillPresentation::IsSnipe(PendingAction.presentation) || SkillPresentation::IsRain(PendingAction.presentation))
+    {
+        const bool arrow = PendingAction.projectile == BattleActionTiming::ProjectileKind::Arrow ||
+            SkillPresentation::IsSnipe(PendingAction.presentation) || SkillPresentation::IsRain(PendingAction.presentation);
+        const float referenceScale = (TILE_SIZE + 16) / 64.0f;
+        const float footHeight = UsesGridAlignedBackground(CurrentMap) ? TILE_SIZE * 0.75f : static_cast<float>(TILE_SIZE);
+        const Location origin = actor->GetWorldPixelPos(TILE_SIZE);
+        Location goal = effectGrid;
+        // A piercing shot travels forward to the clipped range endpoint, never
+        // to the selected enemy followed by a backwards area expansion.
+        if (areaType == ESkillAreaType::Line && !PendingAction.areaCells.empty())
+            goal = { PendingAction.areaCells.back().x, PendingAction.areaCells.back().y };
+        if (skillID < 0 && ContainsBattleUnit(PendingAction.hits.front().target))
+            goal = PendingAction.hits.front().target->GetGridPos();
+        const float facing = actor->GetDirection() == EDirection::Left ? -1.0f : 1.0f;
+        PendingAction.startX = origin.x + TILE_SIZE * 0.5f + facing * referenceScale *
+            (arrow ? BattleActionTiming::ArrowLaunchX : BattleActionTiming::MagicLaunchX);
+        PendingAction.startY = origin.y + footHeight + referenceScale *
+            (arrow ? BattleActionTiming::ArrowLaunchY : BattleActionTiming::MagicLaunchY);
+        PendingAction.targetX = goal.x * TILE_SIZE + TILE_SIZE * 0.5f;
+        PendingAction.targetY = goal.y * TILE_SIZE + footHeight - referenceScale * BattleActionTiming::ProjectileTargetHeight;
+        const float dx = PendingAction.targetX - PendingAction.startX;
+        const float dy = PendingAction.targetY - PendingAction.startY;
+        float pathLength = sqrtf(dx * dx + dy * dy);
+        if (areaType == ESkillAreaType::Line && !PendingAction.areaCells.empty())
+        {
+            const auto& first = PendingAction.areaCells.front();
+            PendingAction.linePath = BattleSkillArea::MakeLinePath(PendingAction.startX, PendingAction.startY,
+                first.x * TILE_SIZE + TILE_SIZE * 0.5f,
+                first.y * TILE_SIZE + footHeight - referenceScale * BattleActionTiming::ProjectileTargetHeight,
+                PendingAction.targetX, PendingAction.targetY);
+            pathLength = BattleSkillArea::TotalLength(PendingAction.linePath);
+        }
+        PendingAction.timeline.hasProjectile = true;
+        PendingAction.timeline.flightSeconds = BattleActionTiming::FlightSeconds(PendingAction.projectile, pathLength);
+    }
+    if (PendingAction.presentation != SkillPresentation::Kind::Normal)
+    {
+        // Unique profiles use blade contact, focused-arrow travel or sky delivery;
+        // each retains the common release-persistence and impact-resolution rules.
+        PendingAction.timeline.hasProjectile = !SkillPresentation::IsKnight(PendingAction.presentation);
+        const float dx = PendingAction.targetX - PendingAction.startX;
+        const float dy = PendingAction.targetY - PendingAction.startY;
+        PendingAction.timeline.flightSeconds = SkillPresentation::IsSnipe(PendingAction.presentation) ?
+            SkillPresentation::SnipeFlightSeconds(sqrtf(dx * dx + dy * dy)) : SkillPresentation::DeliverySeconds(PendingAction.presentation);
+    }
+    const float release = PendingAction.timeline.clock.impactSeconds;
+    const float flight = PendingAction.timeline.flightSeconds;
+    for (std::size_t i = 0; i < PendingAction.areaCells.size(); ++i)
+    {
+        auto& cell = PendingAction.areaCells[i];
+        if (areaType == ESkillAreaType::Line)
+        {
+            cell.arrivalSeconds = PendingAction.timeline.hasProjectile ?
+                BattleSkillArea::LineArrival(release, flight, PendingAction.linePath, static_cast<int>(i),
+                    static_cast<float>(TILE_SIZE)) :
+                BattleSkillArea::MeleeLineArrival(release, static_cast<int>(i));
+        }
+        else
+            cell.arrivalSeconds = BattleSkillArea::SplashArrival(release, flight,
+                BattleSkillArea::Distance({ cell.x, cell.y }, { effectGrid.x, effectGrid.y }));
+    }
+    if (SkillPresentation::StartsOnCommand(PendingAction.presentation)) StartPendingPresentation();
+    StartPendingStandardPresentation();
+}
+
+void Battle_Stage::StartPendingStandardPresentation()
+{
+    if (!StandardSkillPresentation::Valid(PendingAction.standard) || PendingAction.standardStarted) return;
+    PendingAction.standardStarted = true;
+    StandardSkillPresentation::Action effect;
+    effect.profile = PendingAction.standard;
+    effect.area = ToAreaKind(PendingAction.areaType);
+    effect.cells = PendingAction.areaCells;
+    effect.center = { PendingAction.effectGrid.x, PendingAction.effectGrid.y };
+    effect.elapsed = PendingAction.elapsedSeconds;
+    effect.release = PendingAction.releaseSeconds;
+    effect.flight = PendingAction.timeline.flightSeconds;
+    effect.arrival = effect.release + effect.flight;
+    if (effect.cells.empty()) effect.cells.push_back({ effect.center.x, effect.center.y, effect.arrival });
+    effect.startX = PendingAction.startX; effect.startY = PendingAction.startY;
+    effect.targetX = PendingAction.targetX; effect.targetY = PendingAction.targetY;
+    effect.linePath = PendingAction.linePath;
+    effect.facing = PendingAction.facing;
+    effect.id = PendingAction.presentationID;
+    ActiveStandardEffects.push_back(std::move(effect));
+}
+
+void Battle_Stage::StartPendingPresentation()
+{
+    if (PendingAction.presentation == SkillPresentation::Kind::Normal || PendingAction.presentationStarted) return;
+    PendingAction.presentationStarted = true;
+    UltimateEffectAnim effect;
+    effect.presentation = PendingAction.presentation;
+    effect.element = PendingAction.element;
+    effect.cells = PendingAction.areaCells;
+    effect.center = PendingAction.effectGrid;
+    effect.elapsedSeconds = PendingAction.elapsedSeconds;
+    effect.releaseSeconds = PendingAction.releaseSeconds;
+    effect.deliverySeconds = PendingAction.timeline.flightSeconds;
+    effect.casterFootX = PendingAction.casterFootX;
+    effect.casterFootY = PendingAction.casterFootY;
+    effect.startX = PendingAction.startX; effect.startY = PendingAction.startY;
+    effect.targetX = PendingAction.targetX; effect.targetY = PendingAction.targetY;
+    effect.facing = PendingAction.facing;
+    effect.presentationID = PendingAction.presentationID;
+    ActiveUltimateEffects.push_back(std::move(effect));
+}
+
+void Battle_Stage::CancelPendingPresentation()
+{
+    ActiveStandardEffects.erase(std::remove_if(ActiveStandardEffects.begin(), ActiveStandardEffects.end(),
+        [this](const StandardSkillPresentation::Action& effect) { return effect.id == PendingAction.presentationID; }), ActiveStandardEffects.end());
+    ActiveUltimateEffects.erase(std::remove_if(ActiveUltimateEffects.begin(), ActiveUltimateEffects.end(),
+        [this](const UltimateEffectAnim& effect) { return effect.presentationID == PendingAction.presentationID; }), ActiveUltimateEffects.end());
+}
+
+void Battle_Stage::CommitPendingImpact()
+{
+    Character* actor = PendingAction.actor;
+    if (!PendingAction.timeline.launched && (!ContainsBattleUnit(actor) || !actor->IsAlive() ||
+        actor->GetState() != PendingAction.state || actor->GetActionSequence() != PendingAction.sequence))
+    {
+        PendingAction.cancelled = true;
+        CancelPendingPresentation();
+        return;
+    }
+    // Area cells own their individual arrivals. Their floor wave must also
+    // finish through empty cells and cells whose original target has died.
+    if (!PendingAction.areaCells.empty()) return;
+    const bool anyTarget = std::any_of(PendingAction.hits.begin(), PendingAction.hits.end(),
+        [this](const PendingHit& hit) { return ContainsBattleUnit(hit.target) && hit.target->IsAlive(); });
+    if (!anyTarget) return;
+    if (PendingAction.skillID >= 0 && PendingAction.presentation == SkillPresentation::Kind::Normal &&
+        !StandardSkillPresentation::Valid(PendingAction.standard))
+        PlaySkillEffect(PendingAction.skillID, PendingAction.effectGrid.x, PendingAction.effectGrid.y, PendingAction.areaType);
+    else if (PendingAction.skillID >= 0)
+        SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
+    for (auto& hit : PendingAction.hits)
+    {
+        CommitPendingHit(hit);
+    }
+    if (turnSystem) turnSystem->RemoveDeadUnits();
+}
+
+void Battle_Stage::CommitPendingHit(PendingHit& hit)
+{
+    if (hit.resolved) return;
+    hit.resolved = true; // Latch before callbacks, including removed/dead targets.
+    if (!ContainsBattleUnit(hit.target) || !hit.target->IsAlive()) return;
+    const Location pos = hit.target->GetGridPos();
+    if (hit.areaCellIndex >= 0)
+    {
+        const auto& cell = PendingAction.areaCells[static_cast<std::size_t>(hit.areaCellIndex)];
+        if (pos.x != cell.x || pos.y != cell.y) return;
+    }
+    const int hpBefore = hit.target->GetHP();
+    // Skills share one impact sound; per-target reactions must not replace it.
+    hit.target->GetDamage(hit.damage, PendingAction.skillID < 0);
+    hit.reacted = true;
+    PlaySkillEffect(BattleActionTiming::ContactEffectID(PendingAction.element), pos.x, pos.y, ESkillAreaType::Single,
+        !PendingAction.areaCells.empty() || PendingAction.presentation != SkillPresentation::Kind::Normal ||
+        (StandardSkillPresentation::Valid(PendingAction.standard) && StandardSkillPresentation::Middle(PendingAction.standard)));
+    AddDamageText(hit.target, hpBefore - hit.target->GetHP(), hit.color, !PendingAction.areaCells.empty());
+}
+
+void Battle_Stage::CommitPendingAreaCells()
+{
+    if (PendingAction.areaCells.empty() || PendingAction.cancelled ||
+        (!PendingAction.timeline.launched && !PendingAction.timeline.impactCommitted)) return;
+    while (PendingAction.nextAreaCell < PendingAction.areaCells.size() &&
+        BattleSkillArea::IsDue(PendingAction.elapsedSeconds,
+            PendingAction.areaCells[PendingAction.nextAreaCell].arrivalSeconds))
+    {
+        if (!PendingAction.fieldStarted)
+        {
+            PendingAction.fieldStarted = true;
+            AreaEffectAnim effect;
+            effect.cells = PendingAction.areaCells;
+            effect.kind = ToAreaKind(PendingAction.areaType);
+            effect.element = PendingAction.element;
+            effect.presentation = PendingAction.presentation;
+            effect.standard = StandardSkillPresentation::Valid(PendingAction.standard);
+            effect.origin = PendingAction.areaType == ESkillAreaType::Line ? PendingAction.casterGrid : PendingAction.effectGrid;
+            const SSkillData* skill = SkillData::Find(PendingAction.skillID);
+            effect.color = skill ? skill->Color : RGB(255, 255, 255);
+            effect.elapsedSeconds = PendingAction.elapsedSeconds;
+            ActiveAreaEffects.push_back(std::move(effect));
+            SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
+        }
+        const int cellIndex = static_cast<int>(PendingAction.nextAreaCell++);
+        for (auto& hit : PendingAction.hits)
+            if (hit.areaCellIndex == cellIndex) CommitPendingHit(hit);
+    }
+    if (turnSystem) turnSystem->RemoveDeadUnits();
+}
+
+float Battle_Stage::AdvanceBattleVisuals(float elapsedSeconds)
+{
+    if (!(elapsedSeconds > 0.0f)) return 0.0f;
+    float remainingMovementSeconds = 0.0f;
+    for (const auto* team : { &playerTeam, &enemyTeam })
+    {
+        for (auto c : *team)
+        {
+            if (!c) continue;
+            const float remaining = c->Update(elapsedSeconds);
+            if (c == MovingUnit) remainingMovementSeconds = remaining;
+            // Each reaction owns its full duration; the attacker cannot cut it short.
+            if (c->IsAlive() && c->GetState() == ECharacterState::Hit && c->GetIsActionEnd())
+                c->SetState(ECharacterState::Idle);
+        }
+    }
+    UpdateDamageTexts(elapsedSeconds);
+    UpdateSkillEffects(elapsedSeconds);
+    for (auto& effect : ActiveAreaEffects) effect.elapsedSeconds += elapsedSeconds;
+    ActiveAreaEffects.erase(std::remove_if(ActiveAreaEffects.begin(), ActiveAreaEffects.end(),
+        [](const AreaEffectAnim& effect) { return effect.cells.empty() || effect.elapsedSeconds >=
+            effect.cells.back().arrivalSeconds + AreaSkillEffectRenderer::TailSeconds; }), ActiveAreaEffects.end());
+    for (auto& effect : ActiveUltimateEffects) effect.elapsedSeconds += elapsedSeconds;
+    ActiveUltimateEffects.erase(std::remove_if(ActiveUltimateEffects.begin(), ActiveUltimateEffects.end(),
+        [](const UltimateEffectAnim& effect) { return effect.elapsedSeconds - effect.releaseSeconds >=
+            SkillPresentation::Lifetime(effect.presentation, effect.deliverySeconds); }), ActiveUltimateEffects.end());
+    for (auto& effect : ActiveStandardEffects) effect.elapsed += elapsedSeconds;
+    ActiveStandardEffects.erase(std::remove_if(ActiveStandardEffects.begin(), ActiveStandardEffects.end(),
+        [](const StandardSkillPresentation::Action& effect) { return effect.elapsed >= StandardSkillPresentation::EndSeconds(effect); }),
+        ActiveStandardEffects.end());
+    return remainingMovementSeconds;
+}
+
+float Battle_Stage::AdvancePendingAction(float elapsedSeconds)
+{
+    if (!PendingAction.actor) return AdvanceBattleVisuals(elapsedSeconds);
+    if (!PendingAction.timeline.launched && !PendingAction.timeline.impactCommitted && !PendingAction.cancelled)
+    {
+        Character* actor = PendingAction.actor;
+        if (!ContainsBattleUnit(actor) || !actor->IsAlive() || actor->GetState() != PendingAction.state ||
+            actor->GetActionSequence() != PendingAction.sequence)
+        {
+            PendingAction.cancelled = true;
+            CancelPendingPresentation();
+        }
+    }
+    float remaining = elapsedSeconds;
+    float remainingMovementSeconds = 0.0f;
+    // Split at release, projectile end and every cell arrival. Equal-time rings
+    // commit together, before any remaining frame time advances their reactions.
+    while (remaining > 0.0f)
+    {
+        if (PendingAction.cancelled) return AdvanceBattleVisuals(remaining);
+        CommitPendingAreaCells();
+        const float nextArrival = PendingAction.nextAreaCell < PendingAction.areaCells.size() ?
+            PendingAction.areaCells[PendingAction.nextAreaCell].arrivalSeconds : -1.0f;
+        const auto step = BattleSkillArea::AdvanceTimeline(PendingAction.timeline,
+            PendingAction.elapsedSeconds, remaining, nextArrival);
+        remainingMovementSeconds = AdvanceBattleVisuals(step.beforeEvent);
+        if (step.event == BattleActionTiming::ActionEvent::Launch) StartPendingPresentation();
+        if (step.event == BattleActionTiming::ActionEvent::Impact) CommitPendingImpact();
+        CommitPendingAreaCells();
+        remaining = step.afterEvent;
+        if (step.beforeEvent == 0.0f && step.event == BattleActionTiming::ActionEvent::None) break;
+    }
+    return remainingMovementSeconds;
+}
+
+bool Battle_Stage::UpdateActionResolution()
+{
+    Character* actor = PendingAction.actor;
+    if (!actor) return false;
+    const bool actorPresent = ContainsBattleUnit(actor);
+    if (!actorPresent && !PendingAction.timeline.launched && !PendingAction.timeline.impactCommitted)
+    {
+        ClearPendingAction();
+        controlMode = EBattleControlMode::WAIT_COMMAND;
+        return true;
+    }
+    if (!actorPresent) PendingAction.actorFinished = true;
+    if (actorPresent && !PendingAction.timeline.launched && !PendingAction.timeline.impactCommitted &&
+        (actor->GetActionSequence() != PendingAction.sequence ||
+        actor->GetState() != PendingAction.state || !actor->IsAlive()))
+    {
+        PendingAction.cancelled = true;
+        CancelPendingPresentation();
+    }
+
+    if (actorPresent && !PendingAction.actorFinished)
+    {
+        const ECharacterState state = actor->GetState();
+        if (actor->GetActionSequence() != PendingAction.sequence &&
+            state != ECharacterState::Hit && state != ECharacterState::Dead)
+            PendingAction.actorFinished = true;
+        else if (actor->GetIsActionEnd())
+        {
+            PendingAction.actorFinished = true;
+            if (actor->IsAlive()) actor->SetState(ECharacterState::Idle);
+        }
+        else if (state != PendingAction.state && state != ECharacterState::Hit && state != ECharacterState::Dead)
+            PendingAction.actorFinished = true;
+    }
+    if ((!PendingAction.timeline.impactCommitted && !PendingAction.cancelled) || !PendingAction.actorFinished) return false;
+    if (!PendingAction.cancelled && PendingAction.nextAreaCell < PendingAction.areaCells.size()) return false;
+    for (const auto& hit : PendingAction.hits)
+    {
+        if (!hit.reacted || !ContainsBattleUnit(hit.target)) continue;
+        const auto state = hit.target->GetState();
+        if ((state == ECharacterState::Hit || state == ECharacterState::Dead) && !hit.target->GetIsActionEnd()) return false;
+    }
+
+    const bool enemyTurn = PendingAction.enemyTurn;
+    const bool actorStillCurrent = turnSystem && turnSystem->GetCurrentTurnCharacter() == actor;
+    ClearPendingAction(true);
+    CheckBattleEnd();
+    if (!BattleEnded && enemyTurn && turnSystem)
+    {
+        if (actorStillCurrent) turnSystem->NextTurn();
+        ResetTurnActions();
+    }
+    controlMode = EBattleControlMode::WAIT_COMMAND;
+    return true;
+}
+
 void Battle_Stage::Update(HWND hWnd)
 {
-    for (auto c : playerTeam)
-    {
-        if (c)
-        {
-            c->Update();
-        }
-    }
-
-    for (auto c : enemyTeam)
-    {
-        if (c)
-        {
-            c->Update();
-        }
-    }
-
-    UpdateDamageTexts();
-    UpdateSkillEffects();
+    const auto now = std::chrono::steady_clock::now();
+    const float elapsedSeconds = CharacterMotion::ClampDelta(
+        std::chrono::duration<float>(now - LastCharacterUpdate).count());
+    LastCharacterUpdate = now;
+    float remainingMovementSeconds = AdvancePendingAction(elapsedSeconds);
+    UpdateActionResolution();
 
     CheckBattleEnd();
 
@@ -587,7 +1075,7 @@ void Battle_Stage::Update(HWND hWnd)
         {
             focusTarget = MovingUnit;
         }
-        else if (ActingUnit != nullptr)
+        else if (ContainsBattleUnit(ActingUnit))
         {
             focusTarget = ActingUnit;
         }
@@ -596,7 +1084,7 @@ void Battle_Stage::Update(HWND hWnd)
             focusTarget = turnSystem->GetCurrentTurnCharacter();
         }
 
-        if (focusTarget != nullptr)
+        if (ContainsBattleUnit(focusTarget))
         {
             Location p = focusTarget->GetWorldPixelPos(TILE_SIZE);
             FocusCameraOnWorldPos(p.x + TILE_SIZE / 2, p.y + TILE_SIZE / 2);
@@ -614,13 +1102,16 @@ void Battle_Stage::Update(HWND hWnd)
                 isEnemyTurn = turnSystem->IsCurrentTurnEnemy();
             }
 
-            ActiveMoveIndex++;
-
-            if (ActiveMoveIndex < (int)ActiveMovePath.size())
+            // Carry time across cardinal tile boundaries. The index increases
+            // on each pass, so even a delayed update is bounded by path length.
+            while (MovingUnit->IsAlive() && ActiveMoveIndex + 1 < (int)ActiveMovePath.size())
             {
+                ++ActiveMoveIndex;
                 Location next = ActiveMovePath[ActiveMoveIndex];
-
-                if (MovingUnit->StartMoveToGrid(next.x, next.y, TILE_SIZE))
+                const bool hasAnotherStep = ActiveMoveIndex + 1 < (int)ActiveMovePath.size();
+                if (!MovingUnit->StartMoveToGrid(next.x, next.y, TILE_SIZE, hasAnotherStep)) break;
+                remainingMovementSeconds = MovingUnit->AdvanceMovement(remainingMovementSeconds);
+                if (MovingUnit->GetIsMoving())
                 {
                     if (turnUI)
                     {
@@ -631,6 +1122,10 @@ void Battle_Stage::Update(HWND hWnd)
                 }
             }
 
+            // An aborted continuation also stops its walk cycle. Dead/hit
+            // states remain intact, and destination hazards still apply once.
+            if (MovingUnit->IsAlive() && MovingUnit->GetState() == ECharacterState::Walk)
+                MovingUnit->SetState(ECharacterState::Idle);
             ApplyTileEffect(MovingUnit);
 
             bool movingUnitAlive = MovingUnit->IsAlive();
@@ -678,67 +1173,7 @@ void Battle_Stage::Update(HWND hWnd)
 
     if (ActingUnit != nullptr)
     {
-        if (ActingUnit->GetIsActionEnd())
-        {
-            if (ActingUnit->IsAlive())
-            {
-                ActingUnit->SetState(ECharacterState::Idle);
-            }
-
-            ActingUnit->SetIsActionEnd(false);
-
-            bool isEnemyTurn = false;
-
-            if (turnSystem)
-            {
-                isEnemyTurn = turnSystem->IsCurrentTurnEnemy();
-            }
-
-            ActingUnit = nullptr;
-
-            for (auto c : playerTeam)
-            {
-                if (c && c->IsAlive() && c->GetState() == ECharacterState::Hit)
-                {
-                    c->SetState(ECharacterState::Idle);
-                    c->SetIsActionEnd(false);
-                }
-            }
-
-            for (auto c : enemyTeam)
-            {
-                if (c && c->IsAlive() && c->GetState() == ECharacterState::Hit)
-                {
-                    c->SetState(ECharacterState::Idle);
-                    c->SetIsActionEnd(false);
-                }
-            }
-
-            CheckBattleEnd();
-
-            if (BattleEnded)
-            {
-                return;
-            }
-
-            if (isEnemyTurn)
-            {
-                if (turnSystem)
-                {
-                    turnSystem->NextTurn();
-                }
-
-                ResetTurnActions();
-            }
-
-            controlMode = EBattleControlMode::WAIT_COMMAND;
-        }
-
-        if (turnUI)
-        {
-            turnUI->Update();
-        }
-
+        if (turnUI) turnUI->Update();
         return;
     }
 
@@ -832,6 +1267,9 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
     }
 
     DrawMoveArrow(hMemDC);
+    DrawAreaSkillEffects(hMemDC, hMemDC1);
+    DrawUltimateSkillEffects(hMemDC, hMemDC1);
+    DrawStandardSkillEffects(hMemDC, hMemDC1);
 
     for (auto c : playerTeam)
     {
@@ -843,6 +1281,10 @@ void Battle_Stage::Draw(HDC hMemDC, HDC hMemDC1)
         DrawUnit(hMemDC, hMemDC1, c, true);
     }
 
+    DrawPendingProjectile(hMemDC, hMemDC1);
+    DrawUltimateSkillEffects(hMemDC, hMemDC1, true);
+    DrawStandardSkillEffects(hMemDC, hMemDC1, true);
+    DrawAreaSkillEffects(hMemDC, hMemDC1, true);
     DrawSkillEffects(hMemDC, hMemDC1);
     DrawDamageTexts(hMemDC);
 
@@ -920,19 +1362,14 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 return -2;
             }
 
+            ClearPendingAction();
+            ActiveAreaEffects.clear();
             return MAP_STAGE;
         }
 
         if (wParam == VK_SPACE)
         {
-            if (turnSystem && MovingUnit == nullptr && ActingUnit == nullptr)
-            {
-                ClearMovePath();
-                controlMode = EBattleControlMode::WAIT_COMMAND;
-                turnSystem->NextTurn();
-                ResetTurnActions();
-            }
-
+            OnMenuEndTurn();
             return -2;
         }
 
@@ -1099,17 +1536,8 @@ int Battle_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                 int damage = current->CalcAttackDamage(*target);
 
-                current->SetState(ECharacterState::Attack);
-                target->GetDamage(damage);
-                AddDamageText(target, damage, RGB(255, 70, 70));
-
-                if (turnSystem)
-                {
-                    turnSystem->RemoveDeadUnits();
-                }
-
-                current->SetHasActed(true);
-                ActingUnit = current;
+                BeginPendingAction(current, ECharacterState::Attack,
+                    { { target, damage, RGB(255, 70, 70), false } });
                 ClearMovePath();
                 controlMode = EBattleControlMode::WAIT_COMMAND;
 
@@ -1188,6 +1616,12 @@ void Battle_Stage::OnMenuItem()
 
 void Battle_Stage::OnMenuEndTurn()
 {
+    // Keyboard and menu completion share the same busy/enemy guards and hazards.
+    if (BattleEnded || turnSystem == nullptr || MovingUnit != nullptr || ActingUnit != nullptr ||
+        PendingAction.actor != nullptr || turnSystem->IsCurrentTurnEnemy()) return;
+    Character* current = turnSystem->GetCurrentTurnCharacter();
+    if (!ContainsBattleUnit(current) || !current->IsAlive()) return;
+
     SoundManager::PlaySFX(L"Resource\\Sound\\UI_Click.wav");
     ClearMovePath();
     ClearBattleSkillSelection();
@@ -1197,23 +1631,13 @@ void Battle_Stage::OnMenuEndTurn()
         actionMenu->SetVisible(false);
     }
 
-    if (turnSystem)
-    {
-        Character* current = turnSystem->GetCurrentTurnCharacter();
+    ApplyTileEffect(current);
+    CheckBattleEnd();
+    if (BattleEnded) return;
 
-        if (current != nullptr && current->IsAlive())
-        {
-            ApplyTileEffect(current);
-            CheckBattleEnd();
-
-            if (BattleEnded)
-            {
-                return;
-            }
-        }
-
-        turnSystem->NextTurn();
-    }
+    // A lethal hazard already removes this unit from the queue. Rotating again
+    // would skip the next living unit, so only advance the turn we actually ended.
+    if (turnSystem->GetCurrentTurnCharacter() == current) turnSystem->NextTurn();
 
     ResetTurnActions();
     controlMode = EBattleControlMode::WAIT_COMMAND;
@@ -1221,6 +1645,9 @@ void Battle_Stage::OnMenuEndTurn()
 
 void Battle_Stage::ResetTurnActions()
 {
+    // Forced reset cancels unfinished propagation. A normal completed action
+    // has no pending actor and may leave only its independent visual tail.
+    if (PendingAction.actor) ClearPendingAction();
     if (turnSystem == nullptr)
     {
         return;
@@ -1254,6 +1681,8 @@ bool Battle_Stage::IsTeamAllDead(const std::vector<Character*>& team) const
 
 void Battle_Stage::CheckBattleEnd()
 {
+    // A lethal impact must show its reaction before the result covers the map.
+    if (PendingAction.actor != nullptr) return;
     if (BattleEnded)
     {
         return;
@@ -1461,10 +1890,15 @@ bool Battle_Stage::IsBlockedTile(int gx, int gy, Character* unit) const
     switch (type)
     {
     case ETileType::Water:
-        return !(unit != nullptr && unit->GetElement() == EElement::Water);
+        return !CurrentMap.allowElementalWaterTraversal ||
+            !(unit != nullptr && unit->GetElement() == EElement::Water);
 
     case ETileType::SkyVoid:
-        return !(unit != nullptr && unit->GetElement() == EElement::Light);
+        return !CurrentMap.allowElementalSkyTraversal ||
+            !(unit != nullptr && unit->GetElement() == EElement::Light);
+
+    case ETileType::Lava:
+        return !CurrentMap.allowLavaTraversal;
 
     case ETileType::Building:
     case ETileType::Wall:
@@ -1477,7 +1911,6 @@ bool Battle_Stage::IsBlockedTile(int gx, int gy, Character* unit) const
     case ETileType::Road:
     case ETileType::MagicHazard:
     case ETileType::CursedGround:
-    case ETileType::Lava:
     default:
         return false;
     }
@@ -1665,7 +2098,7 @@ void Battle_Stage::DrawTileOverlay(HDC hMemDC)
     }
 }
 
-void Battle_Stage::AddDamageText(Character* target, int damage, COLORREF color)
+void Battle_Stage::AddDamageText(Character* target, int damage, COLORREF color, bool areaDamage)
 {
     if (target == nullptr)
     {
@@ -1678,18 +2111,20 @@ void Battle_Stage::AddDamageText(Character* target, int damage, COLORREF color)
     dt.x = gridPos.x * TILE_SIZE + TILE_SIZE / 2;
     dt.y = gridPos.y * TILE_SIZE - 12;
     dt.value = damage;
-    dt.life = 60;
-    dt.maxLife = 60;
+    dt.life = static_cast<int>(BattleActionTiming::DamageTextSeconds * 60.0f);
+    dt.maxLife = dt.life;
     dt.color = color;
+    dt.areaDamage = areaDamage;
 
     DamageTexts.push_back(dt);
 }
 
-void Battle_Stage::UpdateDamageTexts()
+void Battle_Stage::UpdateDamageTexts(float elapsedSeconds)
 {
     for (auto& dt : DamageTexts)
     {
-        dt.life--;
+        dt.elapsedSeconds += elapsedSeconds;
+        dt.life = (std::max)(0, dt.maxLife - static_cast<int>(dt.elapsedSeconds * 60.0f + 0.000001f));
     }
 
     DamageTexts.erase(
@@ -1718,7 +2153,7 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
     int oldBkMode = SetBkMode(hMemDC, TRANSPARENT);
 
     HFONT hFont = CreateFontW(
-        34,
+        BattleSkillArea::SingleDamageFontSize,
         0,
         0,
         0,
@@ -1735,9 +2170,14 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
     );
 
     HFONT hOldFont = (HFONT)SelectObject(hMemDC, hFont);
+    LOGFONTW areaFontInfo{};
+    GetObjectW(hFont, sizeof(areaFontInfo), &areaFontInfo);
+    areaFontInfo.lfHeight = BattleSkillArea::AreaDamageFontSize;
+    HFONT areaFont = CreateFontIndirectW(&areaFontInfo);
 
     for (const auto& dt : DamageTexts)
     {
+        SelectObject(hMemDC, dt.areaDamage ? areaFont : hFont);
         int elapsed = dt.maxLife - dt.life;
 
         int sx = offsetX + dt.x;
@@ -1756,6 +2196,21 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
 
         SIZE textSize;
         GetTextExtentPoint32W(hMemDC, text.c_str(), (int)text.length(), &textSize);
+        HFONT compactFont = nullptr;
+        if (dt.areaDamage && textSize.cx > TILE_SIZE - 6)
+        {
+            TEXTMETRICW metrics{};
+            GetTextMetricsW(hMemDC, &metrics);
+            LOGFONTW compactInfo = areaFontInfo;
+            compactInfo.lfWidth = (std::max)(1L, metrics.tmAveCharWidth * (TILE_SIZE - 6) / textSize.cx);
+            do
+            {
+                if (compactFont) { SelectObject(hMemDC, areaFont); DeleteObject(compactFont); }
+                compactFont = CreateFontIndirectW(&compactInfo);
+                SelectObject(hMemDC, compactFont);
+                GetTextExtentPoint32W(hMemDC, text.c_str(), (int)text.length(), &textSize);
+            } while (textSize.cx > TILE_SIZE - 6 && --compactInfo.lfWidth > 0);
+        }
 
         int drawX = sx - textSize.cx / 2;
         int drawY = sy - textSize.cy / 2;
@@ -1768,10 +2223,12 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
 
         SetTextColor(hMemDC, dt.color);
         TextOutW(hMemDC, drawX, drawY, text.c_str(), (int)text.length());
+        if (compactFont) { SelectObject(hMemDC, areaFont); DeleteObject(compactFont); }
     }
 
     SelectObject(hMemDC, hOldFont);
     DeleteObject(hFont);
+    DeleteObject(areaFont);
 
     SetBkMode(hMemDC, oldBkMode);
 }
@@ -1781,8 +2238,23 @@ void Battle_Stage::DrawDamageTexts(HDC hMemDC)
 
 std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
 {
+    if (StandardSkillPresentation::IsBitmap(skillID)) return StandardSkillPresentation::Resource(skillID);
+    if (SkillPresentation::IsUltimateBitmap(skillID) || SkillPresentation::IsFlightBitmap(skillID))
+        return SkillPresentation::Resource(SkillPresentation::KindForBitmap(skillID), SkillPresentation::IsFlightBitmap(skillID));
+    const auto element = BattleActionTiming::EffectElement(skillID);
+    if (element != BattleActionTiming::ElementVisual::Neutral)
+    {
+        const wchar_t* prefix = BattleActionTiming::IsElementContact(skillID) ? L"Resource\\Element_Impact_" :
+            BattleActionTiming::IsElementArrow(skillID) ? L"Resource\\Archer_Projectile_" : L"Resource\\Mage_Projectile_";
+        return std::wstring(prefix) + BattleActionTiming::ElementSuffix(element) + L".bmp";
+    }
     switch (skillID)
     {
+    case BattleActionTiming::BasicImpactEffectID: return L"Resource\\Basic_Impact.bmp";
+    case BattleActionTiming::ArrowProjectileEffectID: return L"Resource\\Archer_Projectile.bmp";
+    case BattleActionTiming::MagicProjectileEffectID: return L"Resource\\Mage_Projectile.bmp";
+    case SkillPresentation::MeteorBitmapID: return L"Resource\\Skill_Mage_Meteor_Ultimate.bmp";
+    case SkillPresentation::SanctuaryBitmapID: return L"Resource\\Skill_Mage_Sanctuary_Ultimate.bmp";
     case 1101: return L"Skill\\Warrior\\Fire\\1101_Flame_Slash.bmp";
     case 1102: return L"Skill\\Warrior\\Fire\\1102_Burning_Cleave.bmp";
     case 1103: return L"Skill\\Warrior\\Fire\\1103_Blaze_Break.bmp";
@@ -1793,12 +2265,12 @@ std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
     case 1302: return L"Skill\\Warrior\\Grass\\1302_Thorn_Cleave.bmp";
     case 1303: return L"Skill\\Warrior\\Grass\\1303_Root_Crusher.bmp";
     case 1401: return L"Skill\\Warrior\\Light\\1401_Holy_Slash.bmp";
-    case 1402: return L"Skill\\Warrior\\Light\\1402_Radiant_Break.bmp";
+    case 1402: return L"Skill\\Warrior\\Light\\1401_Holy_Slash.bmp";
     case 1403: return L"Skill\\Warrior\\Light\\1403_Judgment_Cleave.bmp";
-    case 1501: return L"Skill\\Warrior\\Dark\\1501_Dark_Slash.bmp";
+    case 1501: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 1502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 1503: return L"Skill\\Warrior\\Dark\\1503_Abyss_Cleave.bmp";
-    case 2101: return L"Skill\\Warrior\\Fire\\1101_Flame_Slash.bmp";
+    case 2101: return L"Skill\\Warrior\\Fire\\1103_Blaze_Break.bmp";
     case 2102: return L"Skill\\Archer\\Fire\\2102_Explosive_Arrow.bmp";
     case 2103: return L"Skill\\Archer\\Fire\\2103_Blazing_Snipe.bmp";
     case 2201: return L"Skill\\Archer\\Water\\2201_Aqua_Arrow.bmp";
@@ -1811,7 +2283,7 @@ std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
     case 2402: return L"Skill\\Archer\\Light\\2402_Radiant_Shot.bmp";
     case 2403: return L"Skill\\Archer\\Light\\2403_Judgment_Rain.bmp";
     case 2501: return L"Skill\\Archer\\Dark\\2501_Dark_Arrow.bmp";
-    case 2502: return L"Skill\\Archer\\Dark\\2502_Shadow_Pierce.bmp";
+    case 2502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 2503: return L"Skill\\Archer\\Dark\\2503_Abyss_Snipe.bmp";
     case 3101: return L"Skill\\Warrior\\Fire\\1103_Blaze_Break.bmp";
     case 3102: return L"Skill\\Archer\\Fire\\2102_Explosive_Arrow.bmp";
@@ -1819,13 +2291,13 @@ std::wstring Battle_Stage::GetSkillEffectRelativePath(int skillID) const
     case 3201: return L"Skill\\Archer\\Water\\2201_Aqua_Arrow.bmp";
     case 3202: return L"Skill\\Warrior\\Water\\1202_Wave_Cutter.bmp";
     case 3203: return L"Skill\\Warrior\\Water\\1203_Tide_Breaker.bmp";
-    case 3301: return L"Skill\\Warrior\\Grass\\1301_Vine_Slash.bmp";
-    case 3302: return L"Skill\\Warrior\\Grass\\1302_Thorn_Cleave.bmp";
+    case 3301: return L"Skill\\Mage\\Grass\\3301_Vine_Whip.bmp";
+    case 3302: return L"Skill\\Mage\\Grass\\3302_Thorn_Field.bmp";
     case 3303: return L"Skill\\Warrior\\Grass\\1303_Root_Crusher.bmp";
-    case 3401: return L"Skill\\Warrior\\Light\\1402_Radiant_Break.bmp";
+    case 3401: return L"Skill\\Mage\\Light\\3401_Holy_Ray.bmp";
     case 3402: return L"Skill\\Archer\\Light\\2402_Radiant_Shot.bmp";
     case 3403: return L"Skill\\Archer\\Light\\2403_Judgment_Rain.bmp";
-    case 3501: return L"Skill\\Warrior\\Dark\\1501_Dark_Slash.bmp";
+    case 3501: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 3502: return L"Skill\\Warrior\\Dark\\1502_Shadow_Break.bmp";
     case 3503: return L"Skill\\Archer\\Dark\\2503_Abyss_Snipe.bmp";
     default:
@@ -1838,6 +2310,8 @@ HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
 
     if (found != SkillEffectBitmaps.end())
     {
+        if (!found->second && BattleActionTiming::NeutralEffectID(skillID) != skillID)
+            return LoadSkillEffectBitmap(BattleActionTiming::NeutralEffectID(skillID), outInfo);
         auto infoFound = SkillEffectBitmapInfos.find(skillID);
 
         if (outInfo != nullptr && infoFound != SkillEffectBitmapInfos.end())
@@ -1876,6 +2350,39 @@ HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
         {
             BITMAP info = {};
             GetObject(hBitmap, sizeof(BITMAP), &info);
+            if (BattleActionTiming::IsContactEffect(skillID) && (info.bmWidth != 256 || info.bmHeight != 128))
+            {
+                DeleteObject(hBitmap);
+                continue;
+            }
+            const bool projectile = BattleActionTiming::IsProjectileEffect(skillID);
+            const bool ultimate = SkillPresentation::IsUltimateBitmap(skillID);
+            const bool ultimateFlight = SkillPresentation::IsFlightBitmap(skillID);
+            const bool standard = StandardSkillPresentation::IsBitmap(skillID);
+            if (standard && (info.bmWidth != StandardSkillPresentation::Columns * StandardSkillPresentation::CellSize ||
+                info.bmHeight != StandardSkillPresentation::Rows * StandardSkillPresentation::CellSize))
+            {
+                DeleteObject(hBitmap);
+                continue;
+            }
+            if (ultimate && (info.bmWidth != SkillPresentation::Columns * SkillPresentation::CellSize ||
+                info.bmHeight != SkillPresentation::Rows * SkillPresentation::CellSize))
+            {
+                DeleteObject(hBitmap);
+                continue;
+            }
+            if (ultimateFlight && (info.bmWidth != SkillPresentation::FlightDirections * SkillPresentation::CellSize ||
+                info.bmHeight != SkillPresentation::FlightFrames * SkillPresentation::CellSize))
+            {
+                DeleteObject(hBitmap);
+                continue;
+            }
+            if (projectile && (info.bmWidth != BattleActionTiming::ProjectileDirections * BattleActionTiming::ProjectileCellSize ||
+                info.bmHeight != BattleActionTiming::ProjectileFrames * BattleActionTiming::ProjectileCellSize))
+            {
+                DeleteObject(hBitmap);
+                continue;
+            }
 
             COLORREF colorKey = RGB(0, 0, 0);
             HDC hScreenDC = GetDC(nullptr);
@@ -1899,6 +2406,7 @@ HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
             {
                 ReleaseDC(nullptr, hScreenDC);
             }
+            if (BattleActionTiming::IsContactEffect(skillID) || projectile || ultimate || ultimateFlight || standard) colorKey = CHARACTER_TRANSPARENT_COLOR;
 
             SkillEffectBitmaps[skillID] = hBitmap;
             SkillEffectBitmapInfos[skillID] = info;
@@ -1913,6 +2421,14 @@ HBITMAP Battle_Stage::LoadSkillEffectBitmap(int skillID, BITMAP* outInfo)
         }
     }
 
+    if (BattleActionTiming::NeutralEffectID(skillID) != skillID)
+    {
+        // Cache only the failed lookup, not an alias to an owned fallback bitmap.
+        SkillEffectBitmaps[skillID] = nullptr;
+        SkillEffectColorKeys[skillID] = CHARACTER_TRANSPARENT_COLOR;
+        return LoadSkillEffectBitmap(BattleActionTiming::NeutralEffectID(skillID), outInfo);
+    }
+    if (StandardSkillPresentation::IsBitmap(skillID)) SkillEffectBitmaps[skillID] = nullptr;
     return nullptr;
 }
 
@@ -1930,6 +2446,8 @@ void Battle_Stage::ReleaseSkillEffectBitmaps()
     SkillEffectBitmapInfos.clear();
     SkillEffectColorKeys.clear();
     ActiveSkillEffects.clear();
+    ActiveUltimateEffects.clear();
+    ActiveStandardEffects.clear();
 }
 
 int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
@@ -1948,9 +2466,10 @@ int Battle_Stage::GetSkillEffectDrawSize(ESkillAreaType areaType) const
     }
 }
 
-void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType)
+void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillAreaType areaType, bool enhancedContact)
 {
-    SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
+    if (!BattleActionTiming::IsContactEffect(skillID))
+        SoundManager::PlaySFX(L"Resource\\Sound\\Skill_Impact.wav");
     if (!IsInsideGrid(gridX, gridY))
     {
         return;
@@ -1973,21 +2492,25 @@ void Battle_Stage::PlaySkillEffect(int skillID, int gridX, int gridY, ESkillArea
     effect.frameTick = 0;
     effect.frameDelay = 4;
     effect.maxFrame = 8;
+    effect.enhancedContact = enhancedContact && BattleActionTiming::IsContactEffect(skillID);
 
     ActiveSkillEffects.push_back(effect);
 }
 
-void Battle_Stage::UpdateSkillEffects()
+void Battle_Stage::UpdateSkillEffects(float elapsedSeconds)
 {
     for (SkillEffectAnim& effect : ActiveSkillEffects)
     {
-        effect.frameTick++;
-
-        if (effect.frameTick >= effect.frameDelay)
+        effect.elapsedSeconds += elapsedSeconds;
+        if (effect.enhancedContact)
         {
-            effect.frameTick = 0;
-            effect.frameIndex++;
+            effect.frameIndex = AreaSkillVisuals::BodyFrame(effect.elapsedSeconds);
+            continue;
         }
+        const float frameSeconds = BattleActionTiming::IsContactEffect(effect.skillID) ?
+            BattleActionTiming::BasicImpactFrameSeconds : BattleActionTiming::SkillEffectFrameSeconds;
+        effect.frameIndex = static_cast<int>((effect.elapsedSeconds + 0.000001f) /
+            frameSeconds);
     }
 
     ActiveSkillEffects.erase(
@@ -1996,11 +2519,136 @@ void Battle_Stage::UpdateSkillEffects()
             ActiveSkillEffects.end(),
             [](const SkillEffectAnim& effect)
             {
-                return effect.frameIndex >= effect.maxFrame;
+                return effect.enhancedContact ? effect.elapsedSeconds >= AreaSkillVisuals::BodySeconds :
+                    effect.frameIndex >= effect.maxFrame;
             }
         ),
         ActiveSkillEffects.end()
     );
+}
+
+void Battle_Stage::DrawAreaSkillEffects(HDC hMemDC, HDC hMemDC1, bool front)
+{
+    for (const auto& effect : ActiveAreaEffects)
+    {
+        AreaSkillEffectRenderer::Options options;
+        options.kind = effect.kind;
+        options.element = effect.element;
+        options.groundOnly = effect.presentation != SkillPresentation::Kind::Normal || effect.standard;
+        options.originX = effect.origin.x;
+        options.originY = effect.origin.y;
+        options.tileSize = TILE_SIZE;
+        options.offsetX = GetOffsetX();
+        options.offsetY = GetOffsetY();
+        options.footRatio = UsesGridAlignedBackground(CurrentMap) ? 0.75f : 1.0f;
+        options.color = effect.color;
+        BITMAP info{};
+        options.contactBitmap = LoadSkillEffectBitmap(BattleActionTiming::ContactEffectID(effect.element), &info);
+        options.bitmapWidth = info.bmWidth;
+        options.bitmapHeight = info.bmHeight;
+        if (front) AreaSkillEffectRenderer::DrawFront(hMemDC, hMemDC1, effect.cells, effect.elapsedSeconds, options);
+        else AreaSkillEffectRenderer::Draw(hMemDC, hMemDC1, effect.cells, effect.elapsedSeconds, options);
+    }
+}
+
+void Battle_Stage::DrawUltimateSkillEffects(HDC hMemDC, HDC hMemDC1, bool front)
+{
+    for (const auto& effect : ActiveUltimateEffects)
+    {
+        UltimateSkillRenderer::Options options;
+        options.kind = effect.presentation;
+        options.element = effect.element;
+        options.front = front;
+        BITMAP info{};
+        options.bitmap = LoadSkillEffectBitmap(SkillPresentation::BitmapID(effect.presentation), &info);
+        if (SkillPresentation::IsSnipe(effect.presentation))
+            options.flightBitmap = LoadSkillEffectBitmap(SkillPresentation::FlightBitmapID(effect.presentation), &info);
+        if (SkillPresentation::IsRain(effect.presentation))
+            options.rainLaunchBitmap = LoadSkillEffectBitmap(BattleActionTiming::ProjectileEffectID(
+                BattleActionTiming::ProjectileKind::Arrow, BattleActionTiming::ElementVisual::Light), &info);
+        if (SkillPresentation::IsCellSummon(effect.presentation))
+            options.contactBitmap = LoadSkillEffectBitmap(BattleActionTiming::ContactEffectID(effect.element), &info);
+        options.deliverySeconds = effect.deliverySeconds;
+        options.facing = effect.facing;
+        options.casterFootX = GetOffsetX() + effect.casterFootX;
+        options.casterFootY = GetOffsetY() + effect.casterFootY;
+        options.startX = GetOffsetX() + effect.startX; options.startY = GetOffsetY() + effect.startY;
+        options.targetX = GetOffsetX() + effect.targetX; options.targetY = GetOffsetY() + effect.targetY;
+        options.tileSize = TILE_SIZE;
+        options.offsetX = GetOffsetX();
+        options.offsetY = GetOffsetY();
+        options.footRatio = UsesGridAlignedBackground(CurrentMap) ? 0.75f : 1.0f;
+        options.centerX = options.offsetX + effect.center.x * TILE_SIZE + TILE_SIZE / 2;
+        options.centerY = options.offsetY + effect.center.y * TILE_SIZE +
+            (UsesGridAlignedBackground(CurrentMap) ? TILE_SIZE * 3 / 4 : TILE_SIZE);
+        UltimateSkillRenderer::Draw(hMemDC, hMemDC1, effect.cells, effect.elapsedSeconds, effect.releaseSeconds, options);
+    }
+}
+
+void Battle_Stage::DrawStandardSkillEffects(HDC hMemDC, HDC hMemDC1, bool front)
+{
+    for (const auto& effect : ActiveStandardEffects)
+    {
+        StandardSkillRenderer::Options options;
+        options.front = front;
+        options.tileSize = TILE_SIZE;
+        options.offsetX = GetOffsetX(); options.offsetY = GetOffsetY();
+        options.footRatio = UsesGridAlignedBackground(CurrentMap) ? 0.75f : 1.0f;
+        const int bitmapID = StandardSkillPresentation::BitmapID(effect.profile);
+        if (bitmapID != 0) options.bitmap = LoadSkillEffectBitmap(bitmapID, nullptr);
+        options.contact = LoadSkillEffectBitmap(BattleActionTiming::ContactEffectID(effect.profile.element), nullptr);
+        if (!StandardSkillPresentation::Knight(effect.profile))
+            options.projectile = LoadSkillEffectBitmap(BattleActionTiming::ProjectileEffectID(
+                effect.profile.owner == StandardSkillPresentation::Class::Archer ?
+                BattleActionTiming::ProjectileKind::Arrow : BattleActionTiming::ProjectileKind::Magic, effect.profile.element), nullptr);
+        StandardSkillRenderer::Draw(hMemDC, hMemDC1, effect, options);
+    }
+}
+
+void Battle_Stage::DrawPendingProjectile(HDC hMemDC, HDC hMemDC1)
+{
+    if (StandardSkillPresentation::Valid(PendingAction.standard)) return;
+    const auto& flight = PendingAction.timeline;
+    if (!flight.launched || flight.impactCommitted || PendingAction.cancelled ||
+        PendingAction.projectile == BattleActionTiming::ProjectileKind::None || !(flight.flightSeconds > 0.0f)) return;
+    const bool arrow = PendingAction.projectile == BattleActionTiming::ProjectileKind::Arrow;
+    const int bitmapID = BattleActionTiming::ProjectileEffectID(PendingAction.projectile, PendingAction.element);
+    BITMAP info{};
+    HBITMAP bitmap = LoadSkillEffectBitmap(bitmapID, &info);
+    if (!bitmap) return;
+
+    float dx = PendingAction.targetX - PendingAction.startX;
+    float dy = PendingAction.targetY - PendingAction.startY;
+    const float progress = (std::min)(1.0f, flight.clock.elapsed / flight.flightSeconds);
+    float pointX = PendingAction.startX + dx * progress;
+    float pointY = PendingAction.startY + dy * progress;
+    if (PendingAction.areaType == ESkillAreaType::Line && !PendingAction.areaCells.empty())
+    {
+        const auto sample = BattleSkillArea::SampleLinePath(PendingAction.linePath, progress);
+        pointX = sample.x;
+        pointY = sample.y;
+        dx = sample.dx;
+        dy = sample.dy;
+    }
+    const int direction = BattleActionTiming::DirectionFromRadians(atan2f(dy, dx));
+    const float cosine = BattleActionTiming::DirectionCosines[direction];
+    const float sine = BattleActionTiming::DirectionCosines[(direction + 12) % BattleActionTiming::ProjectileDirections];
+    const float anchorX = arrow ? BattleActionTiming::ArrowTipOffsetX : BattleActionTiming::MagicCoreOffsetX;
+    const float anchorY = arrow ? BattleActionTiming::ArrowTipOffsetY : BattleActionTiming::MagicCoreOffsetY;
+    const float scale = static_cast<float>(BattleActionTiming::ProjectileDrawSize) / BattleActionTiming::ProjectileCellSize;
+    // The path follows the arrow tip / bright core, not the bitmap's center.
+    // Quantizing atlas direction never changes the continuous flight vector.
+    const int drawX = GetOffsetX() + static_cast<int>(std::lround(pointX - (anchorX * cosine - anchorY * sine) * scale -
+        BattleActionTiming::ProjectileDrawSize * 0.5f));
+    const int drawY = GetOffsetY() + static_cast<int>(std::lround(pointY - (anchorX * sine + anchorY * cosine) * scale -
+        BattleActionTiming::ProjectileDrawSize * 0.5f));
+    const int frame = static_cast<int>((flight.clock.elapsed + 0.000001f) / BattleActionTiming::ProjectileFrameSeconds) %
+        BattleActionTiming::ProjectileFrames;
+    HBITMAP oldBitmap = static_cast<HBITMAP>(SelectObject(hMemDC1, bitmap));
+    TransparentBlt(hMemDC, drawX, drawY, BattleActionTiming::ProjectileDrawSize, BattleActionTiming::ProjectileDrawSize,
+        hMemDC1, direction * BattleActionTiming::ProjectileCellSize, frame * BattleActionTiming::ProjectileCellSize,
+        BattleActionTiming::ProjectileCellSize, BattleActionTiming::ProjectileCellSize, CHARACTER_TRANSPARENT_COLOR);
+    SelectObject(hMemDC1, oldBitmap);
 }
 
 void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
@@ -2049,11 +2697,13 @@ void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
         int srcX = (frame % frameColumnCount) * frameWidth;
         int srcY = (frame / frameColumnCount) * frameHeight;
 
-        int drawWidth = GetSkillEffectDrawSize(effect.areaType);
+        const bool contactImpact = BattleActionTiming::IsContactEffect(effect.skillID);
+        int drawWidth = contactImpact ? TILE_SIZE : GetSkillEffectDrawSize(effect.areaType);
         int drawHeight = drawWidth * frameHeight / frameWidth;
 
         int centerX = offsetX + effect.gridX * TILE_SIZE + TILE_SIZE / 2;
         int centerY = offsetY + effect.gridY * TILE_SIZE + TILE_SIZE / 2;
+        if (contactImpact) centerY -= TILE_SIZE / 4;
 
         int drawX = centerX - drawWidth / 2;
         int drawY = centerY - drawHeight / 2;
@@ -2064,6 +2714,13 @@ void Battle_Stage::DrawSkillEffects(HDC hMemDC, HDC hMemDC1)
         if (colorKeyFound != SkillEffectColorKeys.end())
         {
             colorKey = colorKeyFound->second;
+        }
+
+        if (effect.enhancedContact)
+        {
+            AreaSkillEffectRenderer::DrawBodyContact(hMemDC, hMemDC1, hBitmap, centerX, centerY,
+                effect.elapsedSeconds, colorKey);
+            continue;
         }
 
         HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC1, hBitmap);
@@ -2130,6 +2787,16 @@ void Battle_Stage::ClearBattleSkillSelection()
     HoverGridY = -1;
 }
 
+RECT Battle_Stage::GetBattleSkillPanelRect() const
+{
+    RECT panel;
+    panel.left = rects.right - 390;
+    panel.top = 80;
+    panel.right = rects.right - 25;
+    panel.bottom = 610;
+    return panel;
+}
+
 RECT Battle_Stage::GetBattleSkillRect(int index) const
 {
     return GetBattleItemRect(index);
@@ -2149,11 +2816,7 @@ void Battle_Stage::DrawBattleSkillUI(HDC hMemDC)
 
 void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
 {
-    RECT panel;
-    panel.left = rects.right - 390;
-    panel.top = 80;
-    panel.right = rects.right - 25;
-    panel.bottom = 610;
+    RECT panel = GetBattleSkillPanelRect();
 
     HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
@@ -2302,11 +2965,7 @@ void Battle_Stage::DrawBattleSkillList(HDC hMemDC)
 
 void Battle_Stage::DrawBattleSkillTargetSelect(HDC hMemDC)
 {
-    RECT panel;
-    panel.left = rects.right - 390;
-    panel.top = 80;
-    panel.right = rects.right - 25;
-    panel.bottom = 610;
+    RECT panel = GetBattleSkillPanelRect();
 
     HBRUSH hBrush = CreateSolidBrush(RGB(19, 23, 31));
     FillRect(hMemDC, &panel, hBrush);
@@ -2446,7 +3105,9 @@ void Battle_Stage::DrawSkillRange(HDC hMemDC)
 
 void Battle_Stage::UpdateHoverGridByMouse(int mouseX, int mouseY)
 {
-    if (controlMode != EBattleControlMode::SELECT_SKILL || !bSelectingBattleSkillTarget)
+    if (controlMode != EBattleControlMode::SELECT_SKILL || !bSelectingBattleSkillTarget ||
+        mouseX < 0 || mouseY < 0 || mouseX >= rects.right || mouseY >= rects.bottom ||
+        IsPointInRect(GetBattleSkillPanelRect(), mouseX, mouseY))
     {
         HoverGridX = -1;
         HoverGridY = -1;
@@ -2487,23 +3148,31 @@ void Battle_Stage::UpdateSkillTargetCameraByMouse(HWND hWnd)
         return;
     }
 
-    POINT mousePos;
-    GetCursorPos(&mousePos);
-    ScreenToClient(hWnd, &mousePos);
-
-    if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x > rects.right || mousePos.y > rects.bottom)
+    POINT mousePos{};
+    if (!GetCursorPos(&mousePos) || !ScreenToClient(hWnd, &mousePos))
     {
+        LastMouseX = -1;
+        LastMouseY = -1;
+        HoverGridX = -1;
+        HoverGridY = -1;
         return;
     }
 
     LastMouseX = mousePos.x;
     LastMouseY = mousePos.y;
 
+    // The opaque skill panel consumes pointer input, including edge scrolling.
+    if (mousePos.x < 0 || mousePos.y < 0 || mousePos.x >= rects.right || mousePos.y >= rects.bottom ||
+        IsPointInRect(GetBattleSkillPanelRect(), mousePos.x, mousePos.y))
+    {
+        UpdateHoverGridByMouse(LastMouseX, LastMouseY);
+        return;
+    }
+
     float moveX = 0.0f;
     float moveY = 0.0f;
 
     const int edgeMargin = 42;
-    const int skillPanelLeft = rects.right - 420;
     const float cameraSpeed = 34.0f;
 
     if (mousePos.x < edgeMargin)
@@ -2511,7 +3180,7 @@ void Battle_Stage::UpdateSkillTargetCameraByMouse(HWND hWnd)
         moveX -= 1.0f;
     }
 
-    if (mousePos.x > rects.right - edgeMargin || mousePos.x >= skillPanelLeft)
+    if (mousePos.x > rects.right - edgeMargin)
     {
         moveX += 1.0f;
     }
@@ -2533,92 +3202,20 @@ void Battle_Stage::UpdateSkillTargetCameraByMouse(HWND hWnd)
             (int)(camPosY + moveY * cameraSpeed)
         );
 
-        UpdateHoverGridByMouse(LastMouseX, LastMouseY);
     }
+
+    // Recompute even without edge movement: keyboard panning and a new
+    // selection can change the cell beneath a stationary pointer.
+    UpdateHoverGridByMouse(LastMouseX, LastMouseY);
 }
 
-std::vector<Location> Battle_Stage::BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const
+std::vector<BattleSkillArea::Cell> Battle_Stage::BuildSkillAreaCells(Character* user, int skillID, int centerX, int centerY) const
 {
-    std::vector<Location> cells;
-
     const SSkillData* info = FindBattleSkillInfo(skillID);
-
-    if (user == nullptr || info == nullptr)
-    {
-        return cells;
-    }
-
-    if (!IsInsideGrid(centerX, centerY))
-    {
-        return cells;
-    }
-
-    Location userPos = user->GetGridPos();
-
-    if (info->AreaType == ESkillAreaType::Single)
-    {
-        cells.push_back({ centerX, centerY });
-        return cells;
-    }
-
-    if (info->AreaType == ESkillAreaType::Splash1 || info->AreaType == ESkillAreaType::Splash2)
-    {
-        int radius = (info->AreaType == ESkillAreaType::Splash2) ? 2 : 1;
-
-        for (int y = centerY - radius; y <= centerY + radius; ++y)
-        {
-            for (int x = centerX - radius; x <= centerX + radius; ++x)
-            {
-                if (!IsInsideGrid(x, y))
-                {
-                    continue;
-                }
-
-                int dist = std::abs(x - centerX) + std::abs(y - centerY);
-
-                if (dist <= radius)
-                {
-                    cells.push_back({ x, y });
-                }
-            }
-        }
-
-        return cells;
-    }
-
-    if (info->AreaType == ESkillAreaType::Line)
-    {
-        int dirX = 0;
-        int dirY = 0;
-
-        if (centerX == userPos.x)
-        {
-            dirY = (centerY > userPos.y) ? 1 : -1;
-        }
-        else if (centerY == userPos.y)
-        {
-            dirX = (centerX > userPos.x) ? 1 : -1;
-        }
-        else
-        {
-            return cells;
-        }
-
-        for (int i = 1; i <= info->Range; ++i)
-        {
-            int x = userPos.x + dirX * i;
-            int y = userPos.y + dirY * i;
-
-            if (!IsInsideGrid(x, y))
-            {
-                break;
-            }
-
-            cells.push_back({ x, y });
-        }
-    }
-
-    return cells;
+    if (!user || !info) return {};
+    const Location caster = user->GetGridPos();
+    return BattleSkillArea::BuildCells(ToAreaKind(info->AreaType), { caster.x, caster.y },
+        { centerX, centerY }, info->Range, W, H);
 }
 
 void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
@@ -2673,7 +3270,7 @@ void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
         return;
     }
 
-    std::vector<Location> cells = BuildSkillAreaCells(current, SelectedBattleSkillID, HoverGridX, HoverGridY);
+    const auto cells = BuildSkillAreaCells(current, SelectedBattleSkillID, HoverGridX, HoverGridY);
 
     if (cells.empty())
     {
@@ -2685,7 +3282,7 @@ void Battle_Stage::DrawSkillAreaPreview(HDC hMemDC)
     HPEN hAreaPen = CreatePen(PS_SOLID, 4, previewColor);
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hAreaPen);
 
-    for (const Location& cell : cells)
+    for (const auto& cell : cells)
     {
         int sx = offsetX + cell.x * TILE_SIZE;
         int sy = offsetY + cell.y * TILE_SIZE;
@@ -2715,6 +3312,8 @@ bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* cur
         return false;
     }
 
+    LastMouseX = mouseX;
+    LastMouseY = mouseY;
     RECT cancelRect = GetBattleCancelRect();
 
     if (IsPointInRect(cancelRect, mouseX, mouseY))
@@ -2723,6 +3322,7 @@ bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* cur
         {
             SelectedBattleSkillID = -1;
             bSelectingBattleSkillTarget = false;
+            UpdateHoverGridByMouse(mouseX, mouseY);
         }
         else
         {
@@ -2771,31 +3371,17 @@ bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* cur
 
             SelectedBattleSkillID = skillID;
             bSelectingBattleSkillTarget = true;
+            UpdateHoverGridByMouse(mouseX, mouseY);
             return true;
         }
 
         return true;
     }
 
-    int offsetX = GetOffsetX();
-    int offsetY = GetOffsetY();
-
-    int worldX = mouseX - offsetX;
-    int worldY = mouseY - offsetY;
-
-    if (worldX < 0 || worldY < 0)
-    {
-        return true;
-    }
-
-    int gridX = worldX / TILE_SIZE;
-    int gridY = worldY / TILE_SIZE;
-
-    if (!IsInsideGrid(gridX, gridY))
-    {
-        return true;
-    }
-
+    UpdateHoverGridByMouse(mouseX, mouseY);
+    if (HoverGridX < 0 || HoverGridY < 0) return true;
+    const int gridX = HoverGridX;
+    const int gridY = HoverGridY;
     Character* target = GetEnemyAt(gridX, gridY);
 
     if (target == nullptr)
@@ -2814,7 +3400,8 @@ bool Battle_Stage::HandleBattleSkillClick(int mouseX, int mouseY, Character* cur
 
 bool Battle_Stage::UseSelectedBattleSkill(Character* user, Character* target)
 {
-    if (user == nullptr || target == nullptr)
+    if (ActingUnit || PendingAction.actor || !ContainsBattleUnit(user) || !ContainsBattleUnit(target) ||
+        !user->IsAlive() || !target->IsAlive())
     {
         return false;
     }
@@ -2826,6 +3413,10 @@ bool Battle_Stage::UseSelectedBattleSkill(Character* user, Character* target)
         return false;
     }
 
+    const Location requested = target->GetGridPos();
+    const auto cells = BuildSkillAreaCells(user, SelectedBattleSkillID, requested.x, requested.y);
+    if (!IsBattleSkillTargetValid(user, SelectedBattleSkillID, requested.x, requested.y) ||
+        cells.empty()) return false;
     CharacterStat userStat = user->GetStat();
 
     if (userStat.CurMP < info->MPCost)
@@ -2837,117 +3428,27 @@ bool Battle_Stage::UseSelectedBattleSkill(Character* user, Character* target)
     userStat.CurMP -= info->MPCost;
     user->SetStat(userStat);
 
-    Location userPos = user->GetGridPos();
-    Location targetPos = target->GetGridPos();
-
-    PlaySkillEffect(SelectedBattleSkillID, targetPos.x, targetPos.y, info->AreaType);
-
+    const Location targetPos = target->GetGridPos();
     user->LookAtGrid(targetPos.x, targetPos.y);
-    user->SetState(ECharacterState::Skill);
-
-    std::vector<Character*> hitTargets;
-
-    ESkillAreaType areaType = info->AreaType;
-
-    if (areaType == ESkillAreaType::Single)
+    std::vector<PendingHit> pendingHits;
+    for (std::size_t i = 0; i < cells.size(); ++i)
     {
-        hitTargets.push_back(target);
-    }
-    else if (areaType == ESkillAreaType::Splash1 || areaType == ESkillAreaType::Splash2)
-    {
-        int radius = (areaType == ESkillAreaType::Splash2) ? 2 : 1;
-
-        for (Character* enemy : enemyTeam)
+        for (Character* hit : enemyTeam)
         {
-            if (enemy == nullptr || !enemy->IsAlive())
-            {
-                continue;
-            }
-
-            Location pos = enemy->GetGridPos();
-            int dist = std::abs(pos.x - targetPos.x) + std::abs(pos.y - targetPos.y);
-
-            if (dist <= radius)
-            {
-                hitTargets.push_back(enemy);
-            }
-        }
-    }
-    else if (areaType == ESkillAreaType::Line)
-    {
-        for (Character* enemy : enemyTeam)
-        {
-            if (enemy == nullptr || !enemy->IsAlive())
-            {
-                continue;
-            }
-
-            Location pos = enemy->GetGridPos();
-
-            if (userPos.x == targetPos.x && pos.x == userPos.x)
-            {
-                int dir = (targetPos.y > userPos.y) ? 1 : -1;
-                int rel = pos.y - userPos.y;
-
-                if (rel * dir > 0 && std::abs(rel) <= info->Range)
-                {
-                    hitTargets.push_back(enemy);
-                }
-            }
-            else if (userPos.y == targetPos.y && pos.y == userPos.y)
-            {
-                int dir = (targetPos.x > userPos.x) ? 1 : -1;
-                int rel = pos.x - userPos.x;
-
-                if (rel * dir > 0 && std::abs(rel) <= info->Range)
-                {
-                    hitTargets.push_back(enemy);
-                }
-            }
+            if (!hit || !hit->IsAlive()) continue;
+            const Location pos = hit->GetGridPos();
+            if (pos.x != cells[i].x || pos.y != cells[i].y) continue;
+            int damage = CalcBattleSkillSingleDamage(user, hit, SelectedBattleSkillID);
+            if (hit != target)
+                damage = ClampBattleDamage(damage * BattleSkillArea::SecondaryDamagePercent(ToAreaKind(info->AreaType)) / 100);
+            PendingHit pendingHit{ hit, damage, info->Color, false };
+            if (info->AreaType != ESkillAreaType::Single) pendingHit.areaCellIndex = static_cast<int>(i);
+            pendingHits.push_back(pendingHit);
         }
     }
 
-    if (hitTargets.empty())
-    {
-        hitTargets.push_back(target);
-    }
-
-    for (Character* hit : hitTargets)
-    {
-        if (hit == nullptr || !hit->IsAlive())
-        {
-            continue;
-        }
-
-        int damage = CalcBattleSkillSingleDamage(user, hit, SelectedBattleSkillID);
-
-        if (hit != target)
-        {
-            if (info->AreaType == ESkillAreaType::Splash1)
-            {
-                damage = ClampBattleDamage(damage * 65 / 100);
-            }
-            else if (info->AreaType == ESkillAreaType::Splash2)
-            {
-                damage = ClampBattleDamage(damage * 75 / 100);
-            }
-            else if (info->AreaType == ESkillAreaType::Line)
-            {
-                damage = ClampBattleDamage(damage * 85 / 100);
-            }
-        }
-
-        hit->GetDamage(damage);
-        AddDamageText(hit, damage, info->Color);
-    }
-
-    if (turnSystem)
-    {
-        turnSystem->RemoveDeadUnits();
-    }
-
-    user->SetHasActed(true);
-    ActingUnit = user;
+    BeginPendingAction(user, ECharacterState::Skill, std::move(pendingHits),
+        SelectedBattleSkillID, targetPos, info->AreaType, cells);
 
     ClearBattleSkillSelection();
     ClearMovePath();
@@ -3608,13 +4109,18 @@ bool Battle_Stage::BuildMovePath(Character* unit, int targetX, int targetY, std:
 
 bool Battle_Stage::StartActiveMovePath(Character* unit, const std::vector<Location>& path)
 {
-    if (unit == nullptr || path.empty())
+    if (unit == nullptr || path.empty() || MovingUnit != nullptr)
     {
         return false;
     }
 
+    Location previous = unit->GetGridPos();
     for (const auto& step : path)
     {
+        if (std::abs(step.x - previous.x) + std::abs(step.y - previous.y) != 1)
+        {
+            return false;
+        }
         if (!IsInsideGrid(step.x, step.y))
         {
             return false;
@@ -3629,6 +4135,7 @@ bool Battle_Stage::StartActiveMovePath(Character* unit, const std::vector<Locati
         {
             return false;
         }
+        previous = step;
     }
 
     ActiveMovePath = path;
@@ -3636,7 +4143,7 @@ bool Battle_Stage::StartActiveMovePath(Character* unit, const std::vector<Locati
 
     Location first = ActiveMovePath[ActiveMoveIndex];
 
-    if (!unit->StartMoveToGrid(first.x, first.y, TILE_SIZE))
+    if (!unit->StartMoveToGrid(first.x, first.y, TILE_SIZE, ActiveMovePath.size() > 1))
     {
         ClearMovePath();
         return false;
@@ -3653,6 +4160,13 @@ bool Battle_Stage::StartActiveMovePath(Character* unit, const std::vector<Locati
 
 void Battle_Stage::ClearMovePath()
 {
+    if (MovingUnit != nullptr)
+    {
+        MovingUnit->SyncWorldPixelToGrid(TILE_SIZE);
+        if (MovingUnit->IsAlive() && MovingUnit->GetState() == ECharacterState::Walk)
+            MovingUnit->SetState(ECharacterState::Idle);
+        MovingUnit = nullptr;
+    }
     PreviewMovePath.clear();
     ActiveMovePath.clear();
     ActiveMoveIndex = 0;
@@ -4084,6 +4598,10 @@ void Battle_Stage::BackgroundMove(int x, int y)
     camPosY += y * CAMERA_SPEED;
 
     FocusCameraOnWorldPos((int)camPosX, (int)camPosY);
+    if (controlMode == EBattleControlMode::SELECT_SKILL && bSelectingBattleSkillTarget)
+    {
+        UpdateHoverGridByMouse(LastMouseX, LastMouseY);
+    }
 }
 
 void Battle_Stage::FocusCameraOnGrid(int gx, int gy)
@@ -4446,17 +4964,8 @@ void Battle_Stage::ProcessEnemyTurn()
     {
         int damage = enemy->CalcAttackDamage(*target);
 
-        enemy->SetState(ECharacterState::Attack);
-        target->GetDamage(damage);
-        AddDamageText(target, damage, RGB(255, 160, 40));
-
-        if (turnSystem)
-        {
-            turnSystem->RemoveDeadUnits();
-        }
-
-        enemy->SetHasActed(true);
-        ActingUnit = enemy;
+        BeginPendingAction(enemy, ECharacterState::Attack,
+            { { target, damage, RGB(255, 160, 40), false } });
 
         CheckBattleEnd();
 
@@ -4496,6 +5005,15 @@ void Battle_Stage::DrawBackground(HDC hMemDC, HDC hMemDC1)
 
     HBITMAP hOld = (HBITMAP)SelectObject(hMemDC1, hBitBackground);
 
+    if (UsesGridAlignedBackground(CurrentMap))
+    {
+        // Authored or composed at world resolution: no independent rescaling.
+        BitBlt(hMemDC, offsetX, offsetY, W * TILE_SIZE, H * TILE_SIZE,
+            hMemDC1, 0, 0, SRCCOPY);
+        SelectObject(hMemDC1, hOld);
+        return;
+    }
+
     StretchBlt(
         hMemDC,
         offsetX,
@@ -4515,10 +5033,17 @@ void Battle_Stage::DrawBackground(HDC hMemDC, HDC hMemDC1)
 
 void Battle_Stage::DrawGrid(HDC hMemDC)
 {
+    if (UsesGridAlignedBackground(CurrentMap) && !CurrentMap.drawTileDebug &&
+        controlMode == EBattleControlMode::WAIT_COMMAND)
+    {
+        return;
+    }
     int offsetX = GetOffsetX();
     int offsetY = GetOffsetY();
 
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(230, 230, 230));
+    const COLORREF gridColor = !UsesGridAlignedBackground(CurrentMap) ?
+        RGB(230, 230, 230) : RGB(63, 78, 91);
+    HPEN hPen = CreatePen(PS_SOLID, 1, gridColor);
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);
 
     for (int x = 0; x <= W; ++x)
@@ -4556,14 +5081,28 @@ void Battle_Stage::DrawUnit(HDC hMemDC, HDC hMemDC1, Character* unit, bool isEne
     int tileScreenX = offsetX + worldPixel.x;
     int tileScreenY = offsetY + worldPixel.y;
 
-    int drawW = TILE_SIZE;
-    int drawH = TILE_SIZE + 16;
+    // Preserve the old vertical scale, but never squeeze the source horizontally.
+    const int referenceFrameHeight = TILE_SIZE + 16;
+    int footX = tileScreenX + TILE_SIZE / 2;
+    int footY = tileScreenY + TILE_SIZE;
 
-    int drawX = tileScreenX + (TILE_SIZE - drawW) / 2;
-    int drawY = tileScreenY + TILE_SIZE - drawH;
+    if (UsesGridAlignedBackground(CurrentMap))
+    {
+        footX = tileScreenX + TILE_SIZE *
+            GraveyardRenderer::FootXNumerator / GraveyardRenderer::FootXDenominator;
+        footY = tileScreenY + TILE_SIZE *
+            GraveyardRenderer::FootYNumerator / GraveyardRenderer::FootYDenominator;
+        HBRUSH shadow = CreateSolidBrush(RGB(21, 27, 31));
+        HGDIOBJ oldBrush = SelectObject(hMemDC, shadow);
+        HGDIOBJ oldPen = SelectObject(hMemDC, GetStockObject(NULL_PEN));
+        Ellipse(hMemDC, footX - TILE_SIZE / 6, footY - TILE_SIZE / 16,
+            footX + TILE_SIZE / 6, footY + TILE_SIZE / 16);
+        SelectObject(hMemDC, oldPen);
+        SelectObject(hMemDC, oldBrush);
+        DeleteObject(shadow);
+    }
 
-    unit->SetPixelPos(drawX, drawY);
-    unit->Draw(hMemDC, hMemDC1, drawW, drawH);
+    unit->DrawAtFoot(hMemDC, hMemDC1, footX, footY, referenceFrameHeight);
 
     HPEN hPen = CreatePen(PS_SOLID, 2, isEnemy ? RGB(255, 80, 80) : RGB(80, 120, 255));
     HPEN hOldPen = (HPEN)SelectObject(hMemDC, hPen);

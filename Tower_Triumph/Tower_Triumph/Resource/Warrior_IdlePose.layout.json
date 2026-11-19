@@ -1,0 +1,58 @@
+{
+  "character": "Warrior",
+  "master": "master.png",
+  "masterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+  "reference": "Warrior.png",
+  "referenceSha256": "583351e635a9aa1d18ab27e3ceac0718a7cff8319039335cbd0cc8753833e383",
+  "cropRect": [
+    0,
+    3,
+    724,
+    702
+  ],
+  "sourceSize": [
+    724,
+    699
+  ],
+  "masterVisibleBounds": [
+    113,
+    59,
+    580,
+    679
+  ],
+  "sourceVisibleBounds": [
+    113,
+    56,
+    580,
+    676
+  ],
+  "sourceRoot": [
+    420.0,
+    678.0
+  ],
+  "masterRoot": [
+    420,
+    681
+  ],
+  "uniformScale": 0.13064516129032258,
+  "targetVisibleHeight": 81,
+  "gameVisibleHeight": 54,
+  "sheetSize": [
+    96,
+    96
+  ],
+  "columns": 1,
+  "rows": 1,
+  "frameCount": 1,
+  "cellSize": 96,
+  "root": [
+    48,
+    88
+  ],
+  "source": "Warrior_IdlePose.source.png",
+  "bitmap": "Warrior_IdlePose.bmp",
+  "bitmapSha256": "a2ca24130f5df0ee9af61b40317cca157b853d89a7a46761185ac8e66f94f1b1",
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "method": "Exact RGBA crop for reference; uniform nearest-neighbor scale and fixed body-root translation for game BMP. No redraw, recolor or pixel deformation."
+}

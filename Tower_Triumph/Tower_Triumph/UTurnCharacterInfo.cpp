@@ -240,7 +240,9 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         return;
     }
 
-    if (isEnemy)
+    // A matching approved portrait belongs to the loaded enemy sprite set.
+    // Keep the old name-based icon only as the legacy-sheet fallback.
+    if (isEnemy && owner->GetIllustration() == NULL)
     {
         std::wstring iconFileName = GetEnemyTurnIconFileName(owner->GetName());
 
@@ -314,12 +316,15 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         ZeroMemory(&spriteInfo, sizeof(BITMAP));
         GetObject(hPortrait, sizeof(BITMAP), &spriteInfo);
 
-        srcW = spriteInfo.bmWidth / CHARACTER_SHEET_COL;
+        srcW = spriteInfo.bmWidth;
         srcH = spriteInfo.bmHeight;
-
-        if (spriteInfo.bmHeight % 3 == 0 && (spriteInfo.bmHeight / 3) == srcW)
+        if (!CharacterSpriteLayout::IdlePose::HasDimensions(spriteInfo.bmWidth, spriteInfo.bmHeight))
         {
-            srcH = spriteInfo.bmHeight / 3;
+            srcW /= CHARACTER_SHEET_COL;
+            if (spriteInfo.bmHeight % 3 == 0 && (spriteInfo.bmHeight / 3) == srcW)
+            {
+                srcH = spriteInfo.bmHeight / 3;
+            }
         }
     }
     else
@@ -370,7 +375,7 @@ void UTurnCharacterInfo::DrawPortrait(HDC hMemDC, const RECT& portraitRect)
         0,
         srcW,
         srcH,
-        CHARACTER_TRANSPARENT_COLOR
+        useSpriteFallback ? CHARACTER_TRANSPARENT_COLOR : owner->GetIllustrationTransparentColor()
     );
 
     SelectObject(hPortraitDC, hOld);

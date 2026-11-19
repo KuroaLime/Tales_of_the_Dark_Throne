@@ -1,0 +1,62 @@
+[
+  {
+    "file": "Archer_WalkCycle.alignment.json",
+    "sha256": "0eda70c347478447f5b7defb88081e96771ad676dd421f156f90b1c0693dd3a7"
+  },
+  {
+    "file": "Archer_WalkCycle.bmp",
+    "sha256": "bbe35147f3c25e2e5f21e3ebcc137a00c68690cf915811a64f04741f8400a9c4"
+  },
+  {
+    "file": "Archer_WalkCycle.layout.json",
+    "sha256": "1dd79685996e3e5c1bb26c320b359721231dd43b898b802881ed2298c4fefd60"
+  },
+  {
+    "file": "Archer_WalkCycle.prompt.txt",
+    "sha256": "c3768cde126bdecbf0af9212d23197d8f5cfc276e8eb7cf71c1a03fae1f7c7f9"
+  },
+  {
+    "file": "Archer_WalkCycle.source.png",
+    "sha256": "2320ae99bc8cd7bd39552cbfb40773ab1621aba11675530c13657b6c5617c6d2"
+  },
+  {
+    "file": "Mage_WalkCycle.alignment.json",
+    "sha256": "b6c39c5f365a0236d2c6d241a4c431a9f2ddb2803169609c385a5670b25b96b7"
+  },
+  {
+    "file": "Mage_WalkCycle.bmp",
+    "sha256": "231a3eb944e1bdca847263ecc23d5fe49972d1641019f012f0d0fa71c2a41f93"
+  },
+  {
+    "file": "Mage_WalkCycle.layout.json",
+    "sha256": "3ed9e0b5b32c795798e469d455d74eb76a731b9ac8e281001d2735a095826247"
+  },
+  {
+    "file": "Mage_WalkCycle.prompt.txt",
+    "sha256": "efbb4a7f57d6a70d3fa21bef416f32e2f6469c549b77ed3cb9693cbd22511e47"
+  },
+  {
+    "file": "Mage_WalkCycle.source.png",
+    "sha256": "054543d73aaf9f4f100cd8ee33035e73b4e2bc9838371d4a405f699d94764a11"
+  },
+  {
+    "file": "Warrior_WalkCycle.alignment.json",
+    "sha256": "1d33ed493e2e2464ced8bf4b2373326f9721d19a458829dbb096902ac1c8eb91"
+  },
+  {
+    "file": "Warrior_WalkCycle.bmp",
+    "sha256": "5950af46771b4856e0e0577b4a6c11201c24380f2dcdbbda695710a7cc48eb90"
+  },
+  {
+    "file": "Warrior_WalkCycle.layout.json",
+    "sha256": "1b5b5db0bee8c38a427ce30a12cffeaba4a96f5a83888fb710b5d69e523dfb93"
+  },
+  {
+    "file": "Warrior_WalkCycle.prompt.txt",
+    "sha256": "9fc3bd96e5a603666be13e456a6f8d12ebd7ad3a934fd78b094b6f479a178fa3"
+  },
+  {
+    "file": "Warrior_WalkCycle.source.png",
+    "sha256": "6fcc4016f59b7c257bd23dc8e71b2a28ecd18929e03e9adf2323ae7fe9daac47"
+  }
+]

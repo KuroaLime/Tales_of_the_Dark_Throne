@@ -6,8 +6,13 @@
 #include <cmath>
 #include <cstdlib>
 #include <utility>
+#include <map>
 
 #include "Structure.h"
+#include "CharacterSpriteLayout.h"
+#include "CharacterMotion.h"
+#include "EnemySpriteLayout.h"
+#include "BattleActionTiming.h"
 #pragma comment(lib, "Msimg32.lib")
 
 
@@ -123,6 +128,7 @@ private:
 	Location PixelPos;
 
 	bool IsMoving;
+	bool KeepWalkingOnArrival;
 
 	float WorldPixelX;
 	float WorldPixelY;
@@ -133,12 +139,15 @@ private:
 	int TargetGridX;
 	int TargetGridY;
 
-	float MoveSpeed;
+	float MoveSpeed; // World pixels per second.
 
 	int CurFrame;
 	int MaxFrame;
-	int AniTick;
-	int AniDelay;
+	float AnimationElapsedSeconds;
+	float WalkCycleDistance = 0.0f;
+	CharacterMotion::IdleRecovery IdleRecovery;
+	std::uint64_t ActionSequence = 0;
+	int MonsterImpactFrame = 1;
 
 	bool IsActionEnd;
 
@@ -150,6 +159,13 @@ private:
 	HBITMAP hSpriteHit;
 	HBITMAP hSpriteDead;
 	HBITMAP hIllustration;
+	HBITMAP hSpriteIdleCycle = nullptr;
+	HBITMAP hSpriteWalkStop = nullptr;
+	HBITMAP hSpriteIdleReturn = nullptr;
+	BITMAP SpriteInfoIdleCycle{};
+	BITMAP SpriteInfoWalkStop{};
+	BITMAP SpriteInfoIdleReturn{};
+	COLORREF IllustrationTransparentColor = RGB(255, 255, 255);
 
 	BITMAP SpriteInfoIdle;
 	BITMAP SpriteInfoWalk;
@@ -161,7 +177,16 @@ private:
 	BITMAP SpriteInfoIllustration;
 
 	bool bUseMonsterSheetLayout;
+	bool bUseAuthoredMonsterLayout = false;
+	bool bUseAuthoredWalkLayout = false;
+	bool bUseAuthoredIdleLayout = false;
 	bool bSpriteFacesRight;
+
+	std::map<HBITMAP, CharacterSpriteLayout::Layout> SpriteLayouts;
+	std::vector<HBITMAP> AuthoredActionSprites;
+	HBITMAP hFlipScratch = nullptr;
+	int FlipScratchWidth = 0;
+	int FlipScratchHeight = 0;
 
 private:
 
@@ -174,10 +199,21 @@ private:
 	bool IsNeedFlip() const;
 
 	void UpdateMaxFrameByState();
+	float GetWalkCycleLength() const;
+	void PrepareSpriteLayouts();
+	bool IsAuthoredActionSprite(HBITMAP sprite) const;
+	bool IsAuthoredPaddedSprite(HBITMAP sprite) const;
+	void BeginIdleRecovery(ECharacterState outgoingState);
+	void UpdateIdleVisual(float elapsedSeconds);
+	float GetAnimationFrameSeconds() const;
+	int GetAuthoredMonsterFrameIndex() const;
 
 	void InitClassValue();
 
 	HBITMAP LoadBitmapFromFile(const std::wstring& filePath, BITMAP* outInfo);
+	HBITMAP LoadActionBitmap(const std::wstring& basePath, const std::wstring& prefix,
+		const wchar_t* actionName, BITMAP* outInfo);
+	HBITMAP LoadIdleVisualBitmap(const std::wstring& path, BITMAP* outInfo, bool padded);
 
 	std::wstring GetCharacterPrefix() const;
 
@@ -202,15 +238,25 @@ public:
 	HBITMAP GetSpriteIdle() const;
 	HBITMAP GetIllustration() const;
 	const BITMAP* GetIllustrationInfo() const;
+	COLORREF GetIllustrationTransparentColor() const;
+	std::uint64_t GetActionSequence() const { return ActionSequence; }
+	float GetCurrentActionImpactSeconds() const;
+	BattleActionTiming::ProjectileKind GetCurrentProjectileKind() const;
 
-	void Update();
+	// Returns time left over after reaching this movement target.
+	float Update(float elapsedSeconds = 1.0f / 60.0f);
+	float AdvanceMovement(float elapsedSeconds);
 
 	void Draw(HDC hMemDC, HDC hMemDC1);
 
 	void Draw(HDC hMemDC, HDC hMemDC1, int drawW, int drawH);
+	// Uniform source-pixel scale; the visible feet stay at the map's ground anchor.
+	void DrawAtFoot(HDC hMemDC, HDC hMemDC1, int footX, int footY, int referenceFrameHeight);
 
-	void SetState(ECharacterState newState);
+	void SetState(ECharacterState newState, bool restartAnimation = false, bool playSound = true);
 	ECharacterState GetState() const;
+	// A shared party member can re-enter battle midway through an old action.
+	void ResetBattleAnimation();
 
 	void SetDirection(EDirection newDirection);
 	EDirection GetDirection() const;
@@ -240,7 +286,7 @@ public:
 
 	Location GetWorldPixelPos(int tileSize) const;
 
-	bool StartMoveToGrid(int targetX, int targetY, int tileSize);
+	bool StartMoveToGrid(int targetX, int targetY, int tileSize, bool keepWalkingOnArrival = false);
 
 	bool GetIsMoving() const;
 
@@ -311,9 +357,9 @@ public:
 
 	int CalcSkillDamage(const Character& target) const;
 
-	void GetDamage(int damage);
+	void GetDamage(int damage, bool playReactionSound = true);
 
-	void Die();
+	void Die(bool playReactionSound = true);
 
 	float GetDefendRate() const;
 	void SetDefendRate(float rate);

@@ -1,0 +1,184 @@
+{
+  "status": "User approved original v1 IDLE design on 2026-11-18 by attaching the exact master image.",
+  "selectedConcept": "../idle-style-v1.png",
+  "master": "master.png",
+  "sha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+  "originalGeneratedFilename": "exec-cce0bd7e-a23b-4e9b-93ff-cf073221e84e.png",
+  "pixelPreservation": "All pixels in each cropped reference were round-trip checked equal to the master RGBA region.",
+  "characters": [
+    {
+      "character": "Warrior",
+      "master": "master.png",
+      "masterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+      "reference": "Warrior.png",
+      "referenceSha256": "583351e635a9aa1d18ab27e3ceac0718a7cff8319039335cbd0cc8753833e383",
+      "cropRect": [
+        0,
+        3,
+        724,
+        702
+      ],
+      "sourceSize": [
+        724,
+        699
+      ],
+      "masterVisibleBounds": [
+        113,
+        59,
+        580,
+        679
+      ],
+      "sourceVisibleBounds": [
+        113,
+        56,
+        580,
+        676
+      ],
+      "sourceRoot": [
+        420.0,
+        678.0
+      ],
+      "masterRoot": [
+        420,
+        681
+      ],
+      "uniformScale": 0.13064516129032258,
+      "targetVisibleHeight": 81,
+      "gameVisibleHeight": 54,
+      "sheetSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameCount": 1,
+      "cellSize": 96,
+      "root": [
+        48,
+        88
+      ],
+      "source": "Warrior_IdlePose.source.png",
+      "bitmap": "Warrior_IdlePose.bmp",
+      "bitmapSha256": "a2ca24130f5df0ee9af61b40317cca157b853d89a7a46761185ac8e66f94f1b1",
+      "alphaThreshold": 128,
+      "transparencyKey": "#ff00ff",
+      "method": "Exact RGBA crop for reference; uniform nearest-neighbor scale and fixed body-root translation for game BMP. No redraw, recolor or pixel deformation."
+    },
+    {
+      "character": "Archer",
+      "master": "master.png",
+      "masterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+      "reference": "Archer.png",
+      "referenceSha256": "03f8784975446c1860843851619a6a07bf4d3dc5903fb034eb527ecfb337e895",
+      "cropRect": [
+        724,
+        3,
+        1448,
+        718
+      ],
+      "sourceSize": [
+        724,
+        715
+      ],
+      "masterVisibleBounds": [
+        794,
+        65,
+        1330,
+        680
+      ],
+      "sourceVisibleBounds": [
+        70,
+        62,
+        606,
+        677
+      ],
+      "sourceRoot": [
+        396.0,
+        678.0
+      ],
+      "masterRoot": [
+        1120,
+        681
+      ],
+      "uniformScale": 0.13170731707317074,
+      "targetVisibleHeight": 81,
+      "gameVisibleHeight": 54,
+      "sheetSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameCount": 1,
+      "cellSize": 96,
+      "root": [
+        48,
+        88
+      ],
+      "source": "Archer_IdlePose.source.png",
+      "bitmap": "Archer_IdlePose.bmp",
+      "bitmapSha256": "11c0baacc24501ee13f7a88c81fc1708d41c359e0fd8a1de8416cf9b61ebf79b",
+      "alphaThreshold": 128,
+      "transparencyKey": "#ff00ff",
+      "method": "Exact RGBA crop for reference; uniform nearest-neighbor scale and fixed body-root translation for game BMP. No redraw, recolor or pixel deformation."
+    },
+    {
+      "character": "Mage",
+      "master": "master.png",
+      "masterSha256": "7f24494a8819e69b73ebab095ae3ca420fef4eb3f29f6994be0b691f2cb1300e",
+      "reference": "Mage.png",
+      "referenceSha256": "86ed1dc9f87c7fafc16020dd660811512ae38a3da1e852b9a46ea0f921955c57",
+      "cropRect": [
+        1448,
+        4,
+        2162,
+        724
+      ],
+      "sourceSize": [
+        714,
+        720
+      ],
+      "masterVisibleBounds": [
+        1543,
+        99,
+        2029,
+        680
+      ],
+      "sourceVisibleBounds": [
+        95,
+        95,
+        581,
+        676
+      ],
+      "sourceRoot": [
+        352.0,
+        676.0
+      ],
+      "masterRoot": [
+        1800,
+        680
+      ],
+      "uniformScale": 0.13941480206540446,
+      "targetVisibleHeight": 81,
+      "gameVisibleHeight": 54,
+      "sheetSize": [
+        96,
+        96
+      ],
+      "columns": 1,
+      "rows": 1,
+      "frameCount": 1,
+      "cellSize": 96,
+      "root": [
+        48,
+        88
+      ],
+      "source": "Mage_IdlePose.source.png",
+      "bitmap": "Mage_IdlePose.bmp",
+      "bitmapSha256": "72fd6393b519f94ad79c2ac24e5c1844e85acbe9c3a69424084c770cd1df84bf",
+      "alphaThreshold": 128,
+      "transparencyKey": "#ff00ff",
+      "method": "Exact RGBA crop for reference; uniform nearest-neighbor scale and fixed body-root translation for game BMP. No redraw, recolor or pixel deformation."
+    }
+  ]
+}

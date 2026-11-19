@@ -1,0 +1,114 @@
+{
+  "element": "Water",
+  "source": "Projectiles_Water.source.png",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "sourceRows": 4,
+  "sourceSha256": "11c7acac69c64a3b8c309f4a82538591813a90543a8e98cb393a071abff5a956",
+  "bitmap": "Element_Impact_Water.bmp",
+  "preview": "Element_Impact_Water.png",
+  "columns": 4,
+  "rows": 2,
+  "frameCount": 8,
+  "cellSize": 64,
+  "sheetSize": [
+    256,
+    128
+  ],
+  "center": [
+    32,
+    32
+  ],
+  "recommendedDrawSize": 48,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "uniformScale": 0.20414673046251994,
+  "sourceStartRow": 2,
+  "animationFrameSeconds": 0.025,
+  "method": "Uniform whole-sheet nearest-neighbor scale; source rows 2 and 3 packed without per-frame scaling, translation or redrawing.",
+  "frames": [
+    {
+      "frame": 0,
+      "bounds": [
+        23,
+        23,
+        42,
+        41
+      ],
+      "opaquePixels": 175
+    },
+    {
+      "frame": 1,
+      "bounds": [
+        15,
+        16,
+        50,
+        43
+      ],
+      "opaquePixels": 442
+    },
+    {
+      "frame": 2,
+      "bounds": [
+        4,
+        8,
+        59,
+        49
+      ],
+      "opaquePixels": 1095
+    },
+    {
+      "frame": 3,
+      "bounds": [
+        7,
+        13,
+        55,
+        48
+      ],
+      "opaquePixels": 761
+    },
+    {
+      "frame": 4,
+      "bounds": [
+        12,
+        17,
+        52,
+        44
+      ],
+      "opaquePixels": 327
+    },
+    {
+      "frame": 5,
+      "bounds": [
+        16,
+        21,
+        49,
+        43
+      ],
+      "opaquePixels": 162
+    },
+    {
+      "frame": 6,
+      "bounds": [
+        18,
+        22,
+        45,
+        40
+      ],
+      "opaquePixels": 69
+    },
+    {
+      "frame": 7,
+      "bounds": [
+        23,
+        26,
+        40,
+        40
+      ],
+      "opaquePixels": 12
+    }
+  ],
+  "bitmapSha256": "7eb9bcdee4de0064e40361e1451fc533af3c41b3f55bf0591b383220e37135df"
+}

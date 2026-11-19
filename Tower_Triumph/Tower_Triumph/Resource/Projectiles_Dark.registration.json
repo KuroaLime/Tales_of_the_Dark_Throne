@@ -1,0 +1,14 @@
+{
+  "Archer": {
+    "anchorKind": "arrow tip outer edge",
+    "sourceAnchors": [[54,35.5],[54,35.5],[54,35.5],[55,35.5]],
+    "targetAnchor": [54,33.5],
+    "note": "Measured the silver arrowhead, not the violet aura extending ahead of it. Front metal edges are x54/54/54/55 at y35.5. Translate (0,-2) for frames0..2 and (-1,-2) for frame3."
+  },
+  "Mage": {
+    "anchorKind": "dark orb center inside luminous crescent",
+    "sourceAnchors": [[47,33],[47,33],[47,33],[47,33]],
+    "targetAnchor": [45,32],
+    "note": "The crescent wraps the same dark orb centered about [46.5,32.5]; bright pixels belong to the rim and are intentionally not used as the core anchor. Shared nearest-grid translation (-2,-1)."
+  }
+}

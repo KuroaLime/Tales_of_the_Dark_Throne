@@ -1,0 +1,834 @@
+{
+  "class": "Archer",
+  "element": "Fire",
+  "source": "Projectiles_Fire.source.png",
+  "sourceSize": [
+    1254,
+    1254
+  ],
+  "sourceRows": 4,
+  "sourceSha256": "5df080af44202ed6443b4054540b02d2a634027e510bbc144d2dd4a2634ae1d3",
+  "bitmap": "Archer_Projectile_Fire.bmp",
+  "preview": "Archer_Projectile_Fire.png",
+  "base": "Archer_Projectile_Fire.base.png",
+  "columns": 16,
+  "rows": 4,
+  "frameCount": 4,
+  "directions": 16,
+  "cellSize": 64,
+  "sheetSize": [
+    1024,
+    256
+  ],
+  "rotationCenter": [
+    32,
+    32
+  ],
+  "clockwiseDegreesPerColumn": 22.5,
+  "columnZero": "right",
+  "recommendedDrawSize": 32,
+  "rotationCoefficientDecimals": 12,
+  "samplingEpsilon": 1E-09,
+  "alphaThreshold": 128,
+  "transparencyKey": "#ff00ff",
+  "uniformScale": 0.20414673046251994,
+  "sourceAnchors": [
+    [
+      57,
+      33.5
+    ],
+    [
+      57,
+      33.5
+    ],
+    [
+      57,
+      33.5
+    ],
+    [
+      57,
+      33.5
+    ]
+  ],
+  "registeredAnchor": [
+    54,
+    33.5
+  ],
+  "directionAnchors": [
+    [
+      54.0,
+      33.5
+    ],
+    [
+      51.751325,
+      41.804855
+    ],
+    [
+      46.495689,
+      48.617009
+    ],
+    [
+      39.033216,
+      52.899375
+    ],
+    [
+      30.5,
+      54.0
+    ],
+    [
+      22.195145,
+      51.751325
+    ],
+    [
+      15.382991,
+      46.495689
+    ],
+    [
+      11.100625,
+      39.033216
+    ],
+    [
+      10.0,
+      30.5
+    ],
+    [
+      12.248675,
+      22.195145
+    ],
+    [
+      17.504311,
+      15.382991
+    ],
+    [
+      24.966784,
+      11.100625
+    ],
+    [
+      33.5,
+      10.0
+    ],
+    [
+      41.804855,
+      12.248675
+    ],
+    [
+      48.617009,
+      17.504311
+    ],
+    [
+      52.899375,
+      24.966784
+    ]
+  ],
+  "anchorKind": "arrow tip outer edge",
+  "registrationNote": "All four arrow tip outer edges are exactly x57/y33.5 after alpha>=128 normalization. Translate all four cells by (-3,0); no scale or art edits.",
+  "animationFrameSeconds": 0.06,
+  "method": "Uniform whole-sheet nearest-neighbor scale; only explicitly recorded cell translations register measured arrow tip/magic core; 16 clockwise nearest-neighbor rotations around (32,32).",
+  "frames": [
+    {
+      "frame": 0,
+      "direction": 0,
+      "bounds": [
+        2,
+        24,
+        54,
+        41
+      ],
+      "opaquePixels": 444
+    },
+    {
+      "frame": 1,
+      "direction": 0,
+      "bounds": [
+        1,
+        24,
+        54,
+        41
+      ],
+      "opaquePixels": 466
+    },
+    {
+      "frame": 2,
+      "direction": 0,
+      "bounds": [
+        1,
+        23,
+        54,
+        42
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 0,
+      "bounds": [
+        1,
+        23,
+        54,
+        42
+      ],
+      "opaquePixels": 463
+    },
+    {
+      "frame": 0,
+      "direction": 1,
+      "bounds": [
+        4,
+        18,
+        52,
+        44
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 1,
+      "direction": 1,
+      "bounds": [
+        2,
+        18,
+        52,
+        44
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 2,
+      "direction": 1,
+      "bounds": [
+        2,
+        16,
+        52,
+        44
+      ],
+      "opaquePixels": 425
+    },
+    {
+      "frame": 3,
+      "direction": 1,
+      "bounds": [
+        2,
+        18,
+        52,
+        44
+      ],
+      "opaquePixels": 462
+    },
+    {
+      "frame": 0,
+      "direction": 2,
+      "bounds": [
+        8,
+        11,
+        47,
+        49
+      ],
+      "opaquePixels": 450
+    },
+    {
+      "frame": 1,
+      "direction": 2,
+      "bounds": [
+        8,
+        9,
+        47,
+        49
+      ],
+      "opaquePixels": 477
+    },
+    {
+      "frame": 2,
+      "direction": 2,
+      "bounds": [
+        8,
+        8,
+        47,
+        49
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 3,
+      "direction": 2,
+      "bounds": [
+        8,
+        9,
+        47,
+        49
+      ],
+      "opaquePixels": 472
+    },
+    {
+      "frame": 0,
+      "direction": 3,
+      "bounds": [
+        14,
+        4,
+        41,
+        53
+      ],
+      "opaquePixels": 445
+    },
+    {
+      "frame": 1,
+      "direction": 3,
+      "bounds": [
+        14,
+        4,
+        41,
+        53
+      ],
+      "opaquePixels": 465
+    },
+    {
+      "frame": 2,
+      "direction": 3,
+      "bounds": [
+        14,
+        3,
+        40,
+        53
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 3,
+      "bounds": [
+        14,
+        4,
+        41,
+        53
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 0,
+      "direction": 4,
+      "bounds": [
+        23,
+        2,
+        40,
+        54
+      ],
+      "opaquePixels": 444
+    },
+    {
+      "frame": 1,
+      "direction": 4,
+      "bounds": [
+        23,
+        1,
+        40,
+        54
+      ],
+      "opaquePixels": 466
+    },
+    {
+      "frame": 2,
+      "direction": 4,
+      "bounds": [
+        22,
+        1,
+        41,
+        54
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 4,
+      "bounds": [
+        22,
+        1,
+        41,
+        54
+      ],
+      "opaquePixels": 463
+    },
+    {
+      "frame": 0,
+      "direction": 5,
+      "bounds": [
+        20,
+        4,
+        46,
+        52
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 1,
+      "direction": 5,
+      "bounds": [
+        20,
+        2,
+        46,
+        52
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 2,
+      "direction": 5,
+      "bounds": [
+        20,
+        2,
+        48,
+        52
+      ],
+      "opaquePixels": 425
+    },
+    {
+      "frame": 3,
+      "direction": 5,
+      "bounds": [
+        20,
+        2,
+        46,
+        52
+      ],
+      "opaquePixels": 462
+    },
+    {
+      "frame": 0,
+      "direction": 6,
+      "bounds": [
+        15,
+        8,
+        53,
+        47
+      ],
+      "opaquePixels": 450
+    },
+    {
+      "frame": 1,
+      "direction": 6,
+      "bounds": [
+        15,
+        8,
+        55,
+        47
+      ],
+      "opaquePixels": 477
+    },
+    {
+      "frame": 2,
+      "direction": 6,
+      "bounds": [
+        15,
+        8,
+        56,
+        47
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 3,
+      "direction": 6,
+      "bounds": [
+        15,
+        8,
+        55,
+        47
+      ],
+      "opaquePixels": 472
+    },
+    {
+      "frame": 0,
+      "direction": 7,
+      "bounds": [
+        11,
+        14,
+        60,
+        41
+      ],
+      "opaquePixels": 445
+    },
+    {
+      "frame": 1,
+      "direction": 7,
+      "bounds": [
+        11,
+        14,
+        60,
+        41
+      ],
+      "opaquePixels": 465
+    },
+    {
+      "frame": 2,
+      "direction": 7,
+      "bounds": [
+        11,
+        14,
+        61,
+        40
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 7,
+      "bounds": [
+        11,
+        14,
+        60,
+        41
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 0,
+      "direction": 8,
+      "bounds": [
+        10,
+        23,
+        62,
+        40
+      ],
+      "opaquePixels": 444
+    },
+    {
+      "frame": 1,
+      "direction": 8,
+      "bounds": [
+        10,
+        23,
+        63,
+        40
+      ],
+      "opaquePixels": 466
+    },
+    {
+      "frame": 2,
+      "direction": 8,
+      "bounds": [
+        10,
+        22,
+        63,
+        41
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 8,
+      "bounds": [
+        10,
+        22,
+        63,
+        41
+      ],
+      "opaquePixels": 463
+    },
+    {
+      "frame": 0,
+      "direction": 9,
+      "bounds": [
+        12,
+        20,
+        60,
+        46
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 1,
+      "direction": 9,
+      "bounds": [
+        12,
+        20,
+        62,
+        46
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 2,
+      "direction": 9,
+      "bounds": [
+        12,
+        20,
+        62,
+        48
+      ],
+      "opaquePixels": 425
+    },
+    {
+      "frame": 3,
+      "direction": 9,
+      "bounds": [
+        12,
+        20,
+        62,
+        46
+      ],
+      "opaquePixels": 462
+    },
+    {
+      "frame": 0,
+      "direction": 10,
+      "bounds": [
+        17,
+        15,
+        56,
+        53
+      ],
+      "opaquePixels": 450
+    },
+    {
+      "frame": 1,
+      "direction": 10,
+      "bounds": [
+        17,
+        15,
+        56,
+        55
+      ],
+      "opaquePixels": 477
+    },
+    {
+      "frame": 2,
+      "direction": 10,
+      "bounds": [
+        17,
+        15,
+        56,
+        56
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 3,
+      "direction": 10,
+      "bounds": [
+        17,
+        15,
+        56,
+        55
+      ],
+      "opaquePixels": 472
+    },
+    {
+      "frame": 0,
+      "direction": 11,
+      "bounds": [
+        23,
+        11,
+        50,
+        60
+      ],
+      "opaquePixels": 445
+    },
+    {
+      "frame": 1,
+      "direction": 11,
+      "bounds": [
+        23,
+        11,
+        50,
+        60
+      ],
+      "opaquePixels": 465
+    },
+    {
+      "frame": 2,
+      "direction": 11,
+      "bounds": [
+        24,
+        11,
+        50,
+        61
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 11,
+      "bounds": [
+        23,
+        11,
+        50,
+        60
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 0,
+      "direction": 12,
+      "bounds": [
+        24,
+        10,
+        41,
+        62
+      ],
+      "opaquePixels": 444
+    },
+    {
+      "frame": 1,
+      "direction": 12,
+      "bounds": [
+        24,
+        10,
+        41,
+        63
+      ],
+      "opaquePixels": 466
+    },
+    {
+      "frame": 2,
+      "direction": 12,
+      "bounds": [
+        23,
+        10,
+        42,
+        63
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 12,
+      "bounds": [
+        23,
+        10,
+        42,
+        63
+      ],
+      "opaquePixels": 463
+    },
+    {
+      "frame": 0,
+      "direction": 13,
+      "bounds": [
+        18,
+        12,
+        44,
+        60
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 1,
+      "direction": 13,
+      "bounds": [
+        18,
+        12,
+        44,
+        62
+      ],
+      "opaquePixels": 464
+    },
+    {
+      "frame": 2,
+      "direction": 13,
+      "bounds": [
+        16,
+        12,
+        44,
+        62
+      ],
+      "opaquePixels": 425
+    },
+    {
+      "frame": 3,
+      "direction": 13,
+      "bounds": [
+        18,
+        12,
+        44,
+        62
+      ],
+      "opaquePixels": 462
+    },
+    {
+      "frame": 0,
+      "direction": 14,
+      "bounds": [
+        11,
+        17,
+        49,
+        56
+      ],
+      "opaquePixels": 450
+    },
+    {
+      "frame": 1,
+      "direction": 14,
+      "bounds": [
+        9,
+        17,
+        49,
+        56
+      ],
+      "opaquePixels": 477
+    },
+    {
+      "frame": 2,
+      "direction": 14,
+      "bounds": [
+        8,
+        17,
+        49,
+        56
+      ],
+      "opaquePixels": 443
+    },
+    {
+      "frame": 3,
+      "direction": 14,
+      "bounds": [
+        9,
+        17,
+        49,
+        56
+      ],
+      "opaquePixels": 472
+    },
+    {
+      "frame": 0,
+      "direction": 15,
+      "bounds": [
+        4,
+        23,
+        53,
+        50
+      ],
+      "opaquePixels": 445
+    },
+    {
+      "frame": 1,
+      "direction": 15,
+      "bounds": [
+        4,
+        23,
+        53,
+        50
+      ],
+      "opaquePixels": 465
+    },
+    {
+      "frame": 2,
+      "direction": 15,
+      "bounds": [
+        3,
+        24,
+        53,
+        50
+      ],
+      "opaquePixels": 427
+    },
+    {
+      "frame": 3,
+      "direction": 15,
+      "bounds": [
+        4,
+        23,
+        53,
+        50
+      ],
+      "opaquePixels": 464
+    }
+  ],
+  "bitmapSha256": "f747ea1692389af9eddd805546218919658c4839d69578d05b0b98419f068906"
+}

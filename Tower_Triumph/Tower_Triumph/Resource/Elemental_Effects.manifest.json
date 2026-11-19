@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "title": "Elemental arrow, magic and contact effect pack",
+  "relativePathBase": "This Resource directory",
+  "generationMode": "built-in image_gen",
+  "elementCount": 5,
+  "runtimeBitmapCount": 15,
+  "originalSourcePngCount": 5,
+  "promptCount": 5,
+  "paletteAndArt": "Generated source artwork preserved byte-for-byte. Runtime atlases use alpha>=128, magenta key and recorded mechanical scaling/registration/rotation only.",
+  "flightContract": {
+    "columns": 16,
+    "rows": 4,
+    "cellSize": 64,
+    "drawSize": 32,
+    "frameSeconds": 0.06,
+    "directionZero": "right",
+    "clockwiseDegreesPerColumn": 22.5,
+    "rotationCenter": [
+      32,
+      32
+    ],
+    "arrowTip": [
+      54,
+      33.5
+    ],
+    "magicCore": [
+      45,
+      32
+    ]
+  },
+  "contactContract": {
+    "columns": 4,
+    "rows": 2,
+    "cellSize": 64,
+    "drawSize": 48,
+    "frameCount": 8,
+    "frameSeconds": 0.025,
+    "center": [
+      32,
+      32
+    ]
+  },
+  "validation": {
+    "command": "python tests/verify_battle_projectile_assets.py",
+    "result": "PASS: 768 projectile cells including neutral pack, 40 elemental contacts; original hashes, exact source sampling/registration, every rotated pixel, common anchors, and clear keyed gutters.",
+    "nativeGameExecuted": false
+  },
+  "sets": [
+    {
+      "element": "Fire",
+      "generation": {
+        "mode": "built-in image_gen",
+        "sourcePng": "Projectiles_Fire.source.png",
+        "sourceSha256": "5df080af44202ed6443b4054540b02d2a634027e510bbc144d2dd4a2634ae1d3",
+        "prompt": "Elemental_Fire.prompt.txt",
+        "promptSha256": "7b8b2b07fd15d57490de8e92fe534a1e721fa66b7f349c0d42c997069dfbca58"
+      },
+      "registration": "Projectiles_Fire.registration.json",
+      "registrationSha256": "29a12b0c89d97d98fb7cd7ed3f9826ef39d6eaac77f90b8fc4acab1188abb3b3",
+      "runtimeAssets": [
+        {
+          "kind": "arrowFlight",
+          "bitmap": "Archer_Projectile_Fire.bmp",
+          "sha256": "f747ea1692389af9eddd805546218919658c4839d69578d05b0b98419f068906",
+          "metadata": "Archer_Projectile_Fire.layout.json",
+          "metadataSha256": "a8bd20096a5661d994b8a4d2daa55d1ca8c63fe19e575ce762c56830e66b671d",
+          "preview": "Archer_Projectile_Fire.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "magicFlight",
+          "bitmap": "Mage_Projectile_Fire.bmp",
+          "sha256": "4173c32c463dc1ac778f87121b2208ad80336ce5e73fe583cd501bd37b5f0ba0",
+          "metadata": "Mage_Projectile_Fire.layout.json",
+          "metadataSha256": "2c086a4ed850fce869a7e217022fa8378f26e26423495bbc37a4587b67269267",
+          "preview": "Mage_Projectile_Fire.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "contact",
+          "bitmap": "Element_Impact_Fire.bmp",
+          "sha256": "b96ae3cbbf38a15632b6df4d991cba6788e0e780f5d276ba9a235222c581862a",
+          "metadata": "Element_Impact_Fire.layout.json",
+          "metadataSha256": "e0dc5045aac132b0541e0fffd8a62f136f37993fe0ac477dc531709fb61433ce",
+          "preview": "Element_Impact_Fire.png",
+          "size": [
+            256,
+            128
+          ],
+          "cellSize": 64,
+          "drawSize": 48,
+          "frameCount": 8,
+          "frameSeconds": 0.025
+        }
+      ]
+    },
+    {
+      "element": "Water",
+      "generation": {
+        "mode": "built-in image_gen",
+        "sourcePng": "Projectiles_Water.source.png",
+        "sourceSha256": "11c7acac69c64a3b8c309f4a82538591813a90543a8e98cb393a071abff5a956",
+        "prompt": "Elemental_Water.prompt.txt",
+        "promptSha256": "3ea1623da6fd06c753548f5ab023939c04e00e1d7fa540c823c0da5cd362513e"
+      },
+      "registration": "Projectiles_Water.registration.json",
+      "registrationSha256": "4fd1b63d839daae4f6714fa73efe96e3cfd54e537f2e9df2ac3631db8a255737",
+      "runtimeAssets": [
+        {
+          "kind": "arrowFlight",
+          "bitmap": "Archer_Projectile_Water.bmp",
+          "sha256": "f0f60c71ed6c8fea1eeb44caa61ea205afcb41c3cde95b7ef6b276bb0e536539",
+          "metadata": "Archer_Projectile_Water.layout.json",
+          "metadataSha256": "fd697d1c60d26a14dd65011527d66cbe8a4be83d1550e9d018347ef996c5ea08",
+          "preview": "Archer_Projectile_Water.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "magicFlight",
+          "bitmap": "Mage_Projectile_Water.bmp",
+          "sha256": "dbc9589eb3e38bfcb322616ebe7d85e974c6f9ee4c3436d319cbf1ab315ceba5",
+          "metadata": "Mage_Projectile_Water.layout.json",
+          "metadataSha256": "16f4b9132cf8cba8426ffbe9d62d776dcb064409a9efa419a87566361e9e6f29",
+          "preview": "Mage_Projectile_Water.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "contact",
+          "bitmap": "Element_Impact_Water.bmp",
+          "sha256": "7eb9bcdee4de0064e40361e1451fc533af3c41b3f55bf0591b383220e37135df",
+          "metadata": "Element_Impact_Water.layout.json",
+          "metadataSha256": "953de338d571798bfbeb3f3e1fdb38f2921aa79a3420c63b3c54a632a4e48b13",
+          "preview": "Element_Impact_Water.png",
+          "size": [
+            256,
+            128
+          ],
+          "cellSize": 64,
+          "drawSize": 48,
+          "frameCount": 8,
+          "frameSeconds": 0.025
+        }
+      ]
+    },
+    {
+      "element": "Grass",
+      "generation": {
+        "mode": "built-in image_gen",
+        "sourcePng": "Projectiles_Grass.source.png",
+        "sourceSha256": "6098770ca3b73108897b632e210e4bb14d4111100fae58b7f54fad54378217c7",
+        "prompt": "Elemental_Grass.prompt.txt",
+        "promptSha256": "555ba2231f911e1d5a7c2edea14ac2195fff8d339d6842bff134b3ba8cef8995"
+      },
+      "registration": "Projectiles_Grass.registration.json",
+      "registrationSha256": "05d928c2bcbf87361a64f29a23afbde9133a2703e04c6908423684166a2f1b9a",
+      "runtimeAssets": [
+        {
+          "kind": "arrowFlight",
+          "bitmap": "Archer_Projectile_Grass.bmp",
+          "sha256": "fd0c787c22e5b6f0f645b979cc67c1fa2cf76a0ff68cc7a03046896d3fe2aa08",
+          "metadata": "Archer_Projectile_Grass.layout.json",
+          "metadataSha256": "9a0634dda17ded24ac0c634d7eee6f340c15dffa55da68406f56263999d2b82b",
+          "preview": "Archer_Projectile_Grass.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "magicFlight",
+          "bitmap": "Mage_Projectile_Grass.bmp",
+          "sha256": "d55725ec661ca99478032783cc50a09b17e7490199fb53ecd6c7b9c12fd45d02",
+          "metadata": "Mage_Projectile_Grass.layout.json",
+          "metadataSha256": "5319e459243f50c1a15512e758d95121dfd9636faa701acbb1e83cdf88f6058f",
+          "preview": "Mage_Projectile_Grass.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "contact",
+          "bitmap": "Element_Impact_Grass.bmp",
+          "sha256": "98d4e01ce221edbe044e5acd6fe1f817e14894f94124abb3880b616baa0f6658",
+          "metadata": "Element_Impact_Grass.layout.json",
+          "metadataSha256": "6ce2b99d079942859d095ec572b0c9be0204b233c689ef56efbe089da91af22f",
+          "preview": "Element_Impact_Grass.png",
+          "size": [
+            256,
+            128
+          ],
+          "cellSize": 64,
+          "drawSize": 48,
+          "frameCount": 8,
+          "frameSeconds": 0.025
+        }
+      ]
+    },
+    {
+      "element": "Light",
+      "generation": {
+        "mode": "built-in image_gen",
+        "sourcePng": "Projectiles_Light.source.png",
+        "sourceSha256": "7db1c908d505ab6efb7d175f654f0bf325413e64791500aed2addf0db4d13bbf",
+        "prompt": "Elemental_Light.prompt.txt",
+        "promptSha256": "e5bffa8598e3e153f1137cd32c5a8403b83ce38ea475f9005fbba2f3b3302614"
+      },
+      "registration": "Projectiles_Light.registration.json",
+      "registrationSha256": "130458f969ae79351e7adbf5f94ccae868b9dd6729cdb1ad9efa9828fb401f80",
+      "runtimeAssets": [
+        {
+          "kind": "arrowFlight",
+          "bitmap": "Archer_Projectile_Light.bmp",
+          "sha256": "4963e624c9396d41743ca3df589a576ac213cc5b957ab3b3cd4d4372075be231",
+          "metadata": "Archer_Projectile_Light.layout.json",
+          "metadataSha256": "1bb3421ce27e84569d3140279c72d1c85299cb87b83d320368a73ad18c6d7b48",
+          "preview": "Archer_Projectile_Light.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "magicFlight",
+          "bitmap": "Mage_Projectile_Light.bmp",
+          "sha256": "7c38224aef47c66b8821d195db6faee4f259084f402bf66d606b0f3d898bcf0c",
+          "metadata": "Mage_Projectile_Light.layout.json",
+          "metadataSha256": "5c5dc6114be21c69c7e69810cbc63cf7240476bcb3e536382514b4d7a31aac05",
+          "preview": "Mage_Projectile_Light.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "contact",
+          "bitmap": "Element_Impact_Light.bmp",
+          "sha256": "9716471bfa4c87e9e4e6fb05d53fb82762b1b651f9348d323dddbc0a22bf3ce8",
+          "metadata": "Element_Impact_Light.layout.json",
+          "metadataSha256": "e8c7558389a434c22fd76981bfcf12682b5097589d4b540d1db161a41dd80824",
+          "preview": "Element_Impact_Light.png",
+          "size": [
+            256,
+            128
+          ],
+          "cellSize": 64,
+          "drawSize": 48,
+          "frameCount": 8,
+          "frameSeconds": 0.025
+        }
+      ]
+    },
+    {
+      "element": "Dark",
+      "generation": {
+        "mode": "built-in image_gen",
+        "sourcePng": "Projectiles_Dark.source.png",
+        "sourceSha256": "a0309377f41ac258c76d402b10664742bd78dd8ef88472937b217f22eda01071",
+        "prompt": "Elemental_Dark.prompt.txt",
+        "promptSha256": "c142ee93a75c06d8ec7753e98a75abd8be2bb0b78db72ca2c7eccec92f30bc1a"
+      },
+      "registration": "Projectiles_Dark.registration.json",
+      "registrationSha256": "c14c16e6fe5a469a0f646a2d0aa161aa83b34d2aafa72e91f57d911c6155ef2a",
+      "runtimeAssets": [
+        {
+          "kind": "arrowFlight",
+          "bitmap": "Archer_Projectile_Dark.bmp",
+          "sha256": "11b982d03db17cb9cc2425b5c6f9201deb8989a5fc2442fbaff00559293ab94d",
+          "metadata": "Archer_Projectile_Dark.layout.json",
+          "metadataSha256": "c857b8fe8d4a691a2f806575522857de62c7e47b818977380de3fbf65daf9cb7",
+          "preview": "Archer_Projectile_Dark.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "magicFlight",
+          "bitmap": "Mage_Projectile_Dark.bmp",
+          "sha256": "fe26f56d2aefa450cb81bf1f2d7d52d388c46c3eaa9b6c89d1aaa7a8a65dbb12",
+          "metadata": "Mage_Projectile_Dark.layout.json",
+          "metadataSha256": "d8563c6595ff82086bda7bf85ecbb9b56e1fb8ef5097cbcb7f83d5228acf4661",
+          "preview": "Mage_Projectile_Dark.png",
+          "size": [
+            1024,
+            256
+          ],
+          "cellSize": 64,
+          "drawSize": 32,
+          "frameCount": 4,
+          "frameSeconds": 0.06
+        },
+        {
+          "kind": "contact",
+          "bitmap": "Element_Impact_Dark.bmp",
+          "sha256": "01d857b28ffc11c9a21dfd68bee1d8d6e4a8c188ae6de91f65a01362aca06eeb",
+          "metadata": "Element_Impact_Dark.layout.json",
+          "metadataSha256": "6387b0f048fdc01bcf09a24c3069ddadeb7ccad795ae3e2951d1cfc7ca65f4a8",
+          "preview": "Element_Impact_Dark.png",
+          "size": [
+            256,
+            128
+          ],
+          "cellSize": 64,
+          "drawSize": 48,
+          "frameCount": 8,
+          "frameSeconds": 0.025
+        }
+      ]
+    }
+  ]
+}

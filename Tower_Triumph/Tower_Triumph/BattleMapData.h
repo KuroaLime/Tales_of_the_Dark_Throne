@@ -28,7 +28,8 @@ enum class ETileType
     MagicHazard,
     CursedGround,
     Lava,
-    SkyVoid
+    SkyVoid,
+    Bridge
 };
 
 struct SBattleStartInfo
@@ -46,6 +47,15 @@ struct SBattleStartInfo
     EElement element = EElement::None;
 };
 
+struct SBattleMapProp
+{
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
+    int atlasIndex = 0;
+};
+
 struct SBattleMapData
 {
     EBattleMapId mapId = EBattleMapId::Test01;
@@ -53,6 +63,10 @@ struct SBattleMapData
 
     int backgroundResourceId = 0;
     std::wstring backgroundFilePath = L"";
+    std::wstring tileAtlasFilePath = L"";
+    // A complete scene authored at width * tileSize by height * tileSize.
+    // Load at that exact resolution; atlas/terrain-color fallbacks stay aligned.
+    bool gridAlignedBackground = false;
 
     int width = 0;
     int height = 0;
@@ -62,11 +76,15 @@ struct SBattleMapData
     int cameraStartY = 0;
 
     bool drawTileDebug = false;
+    bool allowElementalWaterTraversal = true;
+    bool allowElementalSkyTraversal = true;
+    bool allowLavaTraversal = true;
 
     std::vector<SBattleStartInfo> playerStarts;
     std::vector<SBattleStartInfo> enemyStarts;
 
     std::vector<std::vector<ETileType>> tiles;
+    std::vector<SBattleMapProp> props;
 };
 
 class BattleMapData

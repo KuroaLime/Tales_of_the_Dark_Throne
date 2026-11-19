@@ -1,0 +1,12 @@
+Use case: stylized-concept. Make ONE production 48-pose transparent pixel-art sprite atlas for BABY ANGEL, a small youthful cherub archer enemy, fully clothed.
+Reference is the approved hero ART STYLE. Match its crisp pixel clusters and dark colored outlines, charming large-head proportions, matte four-tone shading, little jeweled details. Not glossy digital painting or 3D.
+Subject: tousled honey-blond hair, bright blue eyes, tiny gold hair circlet, white and pale-blue tunic with short cape, gold clasps, brown little boots, compact white feather wings, small warm-gold recurved bow and quiver. Cute confident expression. No diaper, no nudity. Same face/costume and equipment all poses. Fixed three-quarter view facing RIGHT.
+TRUE TRANSPARENT ALPHA background: all empty pixels alpha0. Absolutely NO white/gray paper or checkerboard, NO halo/fog/glowing outline, NO shadows, NO labels/numbers/grid.
+Layout EXACT 8 columns by6 rows,48 equal cells preferably2048x1536. Every pose entire within its own cell with generous blank margins; body height around60% of cell, fixed ground root at50%x87.5%y. Feathers/bow must not cross cell borders.
+Row1 8 idle breathing poses with subtle blink and feather settling, planted feet, seamless.
+Row2 8 WALK poses, alternating left contact/down/passing/up/right contact/down/passing/up, knees cross in passing, arms/bow counterbalance. In-place gait; no translations.
+Row3 8 ATTACK poses: ready,bow rises,arrow nocked,string draws fully,frame5 RELEASE toward RIGHT,string recoils,bow lowers,neutral. One small arrow at release in own cell only, no separate projectile beyond.
+Row4 8 HIT poses: neutral,startle,backwards recoil,peak recoil,regain footing,recover,settle,neutral.
+Row5 8 DEFEAT poses: stagger,wings droop,kneel,fall sideways,curl down,wings folded,still collapsed archer,same settled end. Non-graphic.
+Row6 8 transition poses: first4 slowing step,foot plant,bow settles,neutral; last4 recovery lean,lower arms,settle feathers,neutral.
+Precisely 48 full-body poses, consistent scale/root/art design, no clipping or overlapping sprites. Authentic readable pixel-art sprites matching reference.

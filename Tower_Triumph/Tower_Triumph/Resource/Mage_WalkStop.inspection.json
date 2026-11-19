@@ -1,0 +1,262 @@
+{
+  "input": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-eb4e9e69-68c9-430a-ab11-0f5eff5b9cad.png",
+  "width": 1448,
+  "height": 1086,
+  "columns": 4,
+  "rows": 3,
+  "alphaThreshold": 128,
+  "frames": [
+    {
+      "index": 0,
+      "cell": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "bounds": [
+        53,
+        21,
+        314,
+        335
+      ],
+      "opaquePixels": 55597,
+      "transparentPixels": 75447,
+      "componentSizes": [
+        55597
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 1,
+      "cell": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "bounds": [
+        55,
+        22,
+        313,
+        335
+      ],
+      "opaquePixels": 53759,
+      "transparentPixels": 77285,
+      "componentSizes": [
+        53759
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 2,
+      "cell": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "bounds": [
+        59,
+        23,
+        312,
+        334
+      ],
+      "opaquePixels": 52618,
+      "transparentPixels": 78426,
+      "componentSizes": [
+        52618
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 3,
+      "cell": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "bounds": [
+        59,
+        22,
+        310,
+        333
+      ],
+      "opaquePixels": 51418,
+      "transparentPixels": 79626,
+      "componentSizes": [
+        51418
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 4,
+      "cell": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "bounds": [
+        63,
+        21,
+        311,
+        334
+      ],
+      "opaquePixels": 51904,
+      "transparentPixels": 79140,
+      "componentSizes": [
+        51904
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 5,
+      "cell": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "bounds": [
+        59,
+        21,
+        308,
+        332
+      ],
+      "opaquePixels": 52384,
+      "transparentPixels": 78660,
+      "componentSizes": [
+        52384
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 6,
+      "cell": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "bounds": [
+        52,
+        24,
+        314,
+        332
+      ],
+      "opaquePixels": 54841,
+      "transparentPixels": 76203,
+      "componentSizes": [
+        54841
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 7,
+      "cell": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "bounds": [
+        54,
+        24,
+        313,
+        332
+      ],
+      "opaquePixels": 53252,
+      "transparentPixels": 77792,
+      "componentSizes": [
+        53252
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 8,
+      "cell": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "bounds": [
+        56,
+        24,
+        313,
+        333
+      ],
+      "opaquePixels": 52956,
+      "transparentPixels": 78088,
+      "componentSizes": [
+        52956
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 9,
+      "cell": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "bounds": [
+        59,
+        23,
+        311,
+        330
+      ],
+      "opaquePixels": 51974,
+      "transparentPixels": 79070,
+      "componentSizes": [
+        51974
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 10,
+      "cell": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "bounds": [
+        60,
+        22,
+        312,
+        331
+      ],
+      "opaquePixels": 52020,
+      "transparentPixels": 79024,
+      "componentSizes": [
+        52020
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 11,
+      "cell": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "bounds": [
+        59,
+        21,
+        310,
+        331
+      ],
+      "opaquePixels": 52079,
+      "transparentPixels": 78965,
+      "componentSizes": [
+        52079
+      ],
+      "touchesCellEdge": false
+    }
+  ]
+}

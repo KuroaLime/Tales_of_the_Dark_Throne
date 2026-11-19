@@ -1,0 +1,54 @@
+{
+  "scale": 0.2892857142857143,
+  "registrationNote": "Uniform 81/280 body scale. A three-source-pixel column registration offset corrects contact-sheet spacing only. Common ground and authored bracing/widening of stance remain.",
+  "frames": [
+    {
+      "rootX": 210,
+      "groundY": 323
+    },
+    {
+      "rootX": 207,
+      "groundY": 323
+    },
+    {
+      "rootX": 204,
+      "groundY": 323
+    },
+    {
+      "rootX": 201,
+      "groundY": 323
+    },
+    {
+      "rootX": 210,
+      "groundY": 323
+    },
+    {
+      "rootX": 207,
+      "groundY": 323
+    },
+    {
+      "rootX": 204,
+      "groundY": 323
+    },
+    {
+      "rootX": 201,
+      "groundY": 323
+    },
+    {
+      "rootX": 210,
+      "groundY": 323
+    },
+    {
+      "rootX": 207,
+      "groundY": 323
+    },
+    {
+      "rootX": 204,
+      "groundY": 323
+    },
+    {
+      "rootX": 201,
+      "groundY": 323
+    }
+  ]
+}

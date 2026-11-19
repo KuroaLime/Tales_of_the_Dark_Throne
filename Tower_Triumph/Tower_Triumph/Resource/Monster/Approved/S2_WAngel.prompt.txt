@@ -1,0 +1,10 @@
+Use case: stylized-concept. Production transparent RPG pixel-art enemy atlas. Reference image is the approved art style: crisp square pixel clusters, matte clean color ramps, dark colored contours, large expressive eyes and compact 2.5-head body. Match this quality and rendering, not smooth detailed illustration.
+Subject WING ANGEL: adult chibi celestial priestess, pale honey-blond shoulder-length hair, calm sapphire eyes, small gold circlet, cream and pale-lilac full robe with muted gold trim, blue waist sash, closed modest bodice, short white boots, two neat white feather wings. A slim ivory staff with tiny gold star-and-blue jewel finial. Elegant serene guardian enemy. Same hairstyle, dress, wings, staff, face all48poses. Fixed three-quarter facingRIGHT.
+One atlas EXACTLY 8 equal columns x6 equal rows, 48 full-body poses, preferably2048x1536. Fixed groundroot(50%,87.5%) eachcell; figure about60%cellheight. Whole wings and staff inside owncell even attacks/death, generous clear margins. True transparent alpha0 background, NO white film, no colored background, no checkerboard, no grid, labels, shadows, glow haze, or watermark.
+Row1 eight idle breaths, subtle blink, robe and feathers gently settle, wings mostly folded, loop.
+Row2 eight in-place walking poses to RIGHT: left contact/down/passing/up/right contact/down/passing/up; visible boots alternate under the skirt, robe follows stride, staff balances.
+Row3 eight ATTACK poses: neutral,staff raises,arms gather energy,lean and aim,FRAME5 staff points RIGHT releasing a tiny pale-gold spark at tip,follow-through,lower arms,neutral. Spark contained, no detached missile.
+Row4 eight HIT: neutral,startle,lean back,peak recoil,wings fold to brace,regain stance,settle,neutral.
+Row5 eight DEFEAT: stagger,wings droop,kneel,fall sideways,head rests on sleeve,robe/wings settle,still collapsed angel,identical settled final. Non-graphic.
+Row6 eight transitions: first4 step shortens,boot plants,skirt settles,neutral;last4 recoil subsides,staff lowers,wings relax,neutral.
+48 genuine hand-authored pixel poses, no overlap or clipping, no changes in costume/proportions.

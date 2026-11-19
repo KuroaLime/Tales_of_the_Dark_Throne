@@ -1,0 +1,1762 @@
+{
+  "schemaVersion": 1,
+  "pathBase": "this manifest directory",
+  "scope": "All45 skills:15 existing highest-MP signatures preserved;30 ordinary/intermediate visual presentations completed.",
+  "generationMode": "built-in image_gen for10 new source sheets; existing art reused where listed",
+  "newSourceSheets": 10,
+  "newRuntimeBitmaps": 10,
+  "newAuthoredFrames": 120,
+  "coverageCounts": {
+    "total": 45,
+    "preservedSignature": 15,
+    "newWarriorPhaseVariants": 10,
+    "newSharedIntermediate": 10,
+    "existingArtWithNewMotion": 10
+  },
+  "conversion": "Source RGBA bytes and RGB are preserved. One uniform scale for12poses; registered phase anchors; nearest-neighbor sampling; alpha>=128 to24-bit magenta-key BMP.",
+  "preservation": "Existing maps/characters/effects, SkillData and gameplay geometry/timing are compared against435 saved file hashes.",
+  "assets": [
+    {
+      "asset": "Skill_Warrior_Standard_Fire",
+      "skillIDs": [
+        1101,
+        1103
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Standard_Fire.source.png",
+          "sha256": "34187b84b042cdfcf31422a2043ef35725c83ed2fd2418f3db9ce10b1e5dfaf4",
+          "bytes": 652145
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Standard_Fire.prompt.txt",
+          "sha256": "eb7e8ebda99a419b6903fba9e4eef8deddd5ae8d3706e18d2ca2af5a6356bf6d",
+          "bytes": 2497
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Standard_Fire.bmp",
+          "sha256": "81313d2bad200fab9185dbb442173997e15a52fd8d9e44a92786a24f7447677e",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Standard_Fire.png",
+          "sha256": "ed4e555a8764717c47ddd461a3875256be36734848fc45c8326f54cad4121257",
+          "bytes": 45251
+        },
+        "layout": {
+          "path": "Skill_Warrior_Standard_Fire.layout.json",
+          "sha256": "464f286da94d3ab08e0000cb56f0f1255aac1f0c9c299e5b637d8ee12286f4ed",
+          "bytes": 25190
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "quick"
+        },
+        {
+          "frames": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "break"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundSplit": 128
+    },
+    {
+      "asset": "Skill_Warrior_Standard_Water",
+      "skillIDs": [
+        1201,
+        1203
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Standard_Water.source.png",
+          "sha256": "2e82fbfe3810e1f720edea7717b2970b3628ec4b839540d0b05277fdb4d75055",
+          "bytes": 729067
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Standard_Water.prompt.txt",
+          "sha256": "dedb9a415da3ef4481f3e24a229a2f0d4f39c816ca636e4f64581e60820724e9",
+          "bytes": 2482
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Standard_Water.bmp",
+          "sha256": "160a4e555e652b22fa885c8c5d64a1d29a2217c56cb281d99207df74af83ef4c",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Standard_Water.png",
+          "sha256": "7c7c9d557d1b53edeca5e7d50ea373a4eae0b256201f94791604fa7a5550de5e",
+          "bytes": 45897
+        },
+        "layout": {
+          "path": "Skill_Warrior_Standard_Water.layout.json",
+          "sha256": "8ea04f7f3aa673a5a944e879513ee6c4c6e99c29089d1ab13e966ec8c6145287",
+          "bytes": 25234
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "quick"
+        },
+        {
+          "frames": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "break"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundSplit": 128
+    },
+    {
+      "asset": "Skill_Warrior_Standard_Grass",
+      "skillIDs": [
+        1301,
+        1303
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Standard_Grass.source.png",
+          "sha256": "e64e6fd80c9e767861fb532985ffadefc9706e47c4f3cd12c13670f1a96f9575",
+          "bytes": 831744
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Standard_Grass.prompt.txt",
+          "sha256": "c8a10bdb4fb426e9c83b5614b3d0814366a26f42e80080aec037aae80ea1b89a",
+          "bytes": 2610
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Standard_Grass.bmp",
+          "sha256": "a12411459012682084e3f8919f9d0615198ff34426dafa0052f2584b9daf3af8",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Standard_Grass.png",
+          "sha256": "12a78f4bbba823c0e4087b0c475f124cccbed74ae53b70bd7b0b1b184cded4fe",
+          "bytes": 66711
+        },
+        "layout": {
+          "path": "Skill_Warrior_Standard_Grass.layout.json",
+          "sha256": "6cbc2840638c28c6a3b340a0fe9417a20e37f980ea9cfa1e0a5c3f69c49bf3e7",
+          "bytes": 25246
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "quick"
+        },
+        {
+          "frames": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "break"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundSplit": 128
+    },
+    {
+      "asset": "Skill_Warrior_Standard_Light",
+      "skillIDs": [
+        1401,
+        1402
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Standard_Light.source.png",
+          "sha256": "5e57425066556eb0eb46f72e99c7516f69b29029e372b642c8e178fdfbd1a44a",
+          "bytes": 642216
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Standard_Light.prompt.txt",
+          "sha256": "0616b515d0f4828aba235ef0deb3dc20c102510d5f3b526e46e547da7f254090",
+          "bytes": 2546
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Standard_Light.bmp",
+          "sha256": "4478d7e07314e10db581bbdde12bc079840e9df6c114126c8ff1313e75335c1e",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Standard_Light.png",
+          "sha256": "dd97877a0da94bd5313ace833f7de08b257d9563217096ae39531e0da8a33233",
+          "bytes": 38468
+        },
+        "layout": {
+          "path": "Skill_Warrior_Standard_Light.layout.json",
+          "sha256": "4ad3758fe7904a4a81b594c29b8ae4ce2cfbd9ab7b597b4269b44ea024867b8a",
+          "bytes": 25232
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "quick"
+        },
+        {
+          "frames": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "break"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundSplit": 128
+    },
+    {
+      "asset": "Skill_Warrior_Standard_Dark",
+      "skillIDs": [
+        1501,
+        1502
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Warrior_Standard_Dark.source.png",
+          "sha256": "53bfa357188f4e33a7309c1882d1e43ccacbfba873d9b485009527719c94acfe",
+          "bytes": 548279
+        },
+        "prompt": {
+          "path": "Skill_Warrior_Standard_Dark.prompt.txt",
+          "sha256": "606926c717925a021e19f60449b14c3969e34f5f99125f1774da5f6dea6b1694",
+          "bytes": 2543
+        },
+        "runtime": {
+          "path": "Skill_Warrior_Standard_Dark.bmp",
+          "sha256": "0cf41e1bbe2478f6deb5d8628c2dfdc8df1bd09e78e5ddb5ca88d3d7c7c34215",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Warrior_Standard_Dark.png",
+          "sha256": "2f595d0437a200a34a4bd98774a87bb03ee4132132f7badbc0c5c1fa125da6ed",
+          "bytes": 46076
+        },
+        "layout": {
+          "path": "Skill_Warrior_Standard_Dark.layout.json",
+          "sha256": "067d2a18d45b8de0e77cf7ddd2495b5c5715b7b25f51944e03fd7bbcb74066fe",
+          "bytes": 25233
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "name": "quick"
+        },
+        {
+          "frames": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "break"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        64
+      ],
+      "groundSplit": 128
+    },
+    {
+      "asset": "Skill_Element_Mid_Fire",
+      "skillIDs": [
+        2102,
+        3102
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Element_Mid_Fire.source.png",
+          "sha256": "538d9a6118d74717fd786ef55ff5013f155a27c7c565d76ba4b9cc9149f4b157",
+          "bytes": 579116
+        },
+        "prompt": {
+          "path": "Skill_Element_Mid_Fire.prompt.txt",
+          "sha256": "c16f02ca9a0f7242c193edbd219a0a64aab64694c6e91e4b11084634de9d80fa",
+          "bytes": 2342
+        },
+        "runtime": {
+          "path": "Skill_Element_Mid_Fire.bmp",
+          "sha256": "a81fab1e72493d4b8245008306666632747ce0bc65c082e98f1f5da9cb069624",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Element_Mid_Fire.png",
+          "sha256": "c2a5cdcf5ce6e9c07e47c7a4c856c20c0405d4b3830024b9b9d602a91c15e8ba",
+          "bytes": 51590
+        },
+        "layout": {
+          "path": "Skill_Element_Mid_Fire.layout.json",
+          "sha256": "1878a9a8c0108b00ca0f030b20c637f5214297f1af290117cfbd164a0fe8968f",
+          "bytes": 25233
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "groundSplit": 96
+    },
+    {
+      "asset": "Skill_Element_Mid_Water",
+      "skillIDs": [
+        2202,
+        3202
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Element_Mid_Water.source.png",
+          "sha256": "fb6b7faad6091d533a9c7e44558a96be6411ac9d50558bb54c620e46f182ee99",
+          "bytes": 962997
+        },
+        "prompt": {
+          "path": "Skill_Element_Mid_Water.prompt.txt",
+          "sha256": "953e6fb375f4e5df4d28ff09ebe7c1801a19e55a3bdf8315479a509219c63b48",
+          "bytes": 2364
+        },
+        "runtime": {
+          "path": "Skill_Element_Mid_Water.bmp",
+          "sha256": "9f83545e8a9b58e302829da464d38415054db5128a933a2e00a142ed302c5c13",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Element_Mid_Water.png",
+          "sha256": "7c4a4bccb568e6a85137822a10297cf470c161298ab80a86b5457e3aaf1de180",
+          "bytes": 64404
+        },
+        "layout": {
+          "path": "Skill_Element_Mid_Water.layout.json",
+          "sha256": "9b75c0c55c57126901abde5e05a3b0eee26191a5062ee9e655eac48d38fd6924",
+          "bytes": 25245
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "groundSplit": 96
+    },
+    {
+      "asset": "Skill_Element_Mid_Grass",
+      "skillIDs": [
+        2302,
+        3302
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Element_Mid_Grass.source.png",
+          "sha256": "545152e4f0d28bb6bfc768fe43ee6dca55b76d08d099294153961f297477518a",
+          "bytes": 1102174
+        },
+        "prompt": {
+          "path": "Skill_Element_Mid_Grass.prompt.txt",
+          "sha256": "b5c084d4686385026f527deb492c6652fb0f2b6e9c7f35d53d7c69cd906cc065",
+          "bytes": 2497
+        },
+        "runtime": {
+          "path": "Skill_Element_Mid_Grass.bmp",
+          "sha256": "9744f13d759575c3e84ddb2c2c1940d13facd2914ff7dbce387b5947f4a688c8",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Element_Mid_Grass.png",
+          "sha256": "824b5bba4a362205d620dca4d466267581175f9bf048a52b646e38b0cae2b58d",
+          "bytes": 54208
+        },
+        "layout": {
+          "path": "Skill_Element_Mid_Grass.layout.json",
+          "sha256": "5ff0c68744b4797475b2db2ebf9c1e610ca2480fe827fec95cefe7c9ac6dc76b",
+          "bytes": 25234
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "groundSplit": 96
+    },
+    {
+      "asset": "Skill_Element_Mid_Light",
+      "skillIDs": [
+        2402,
+        3402
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Element_Mid_Light.source.png",
+          "sha256": "a1eccc742da57e176f243acb91ea24a07942bde1d7a7a62be59674ca5df8fa6c",
+          "bytes": 717374
+        },
+        "prompt": {
+          "path": "Skill_Element_Mid_Light.prompt.txt",
+          "sha256": "604b51dda3eb7fea9ae770c6d0480a2fe2a74515d02dfa995f3dab75967688a5",
+          "bytes": 2437
+        },
+        "runtime": {
+          "path": "Skill_Element_Mid_Light.bmp",
+          "sha256": "b8687eb184885757c30cbce559065f779923dd9b89ae37b49abc21f78a7d8ad7",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Element_Mid_Light.png",
+          "sha256": "eff23126be02a9638ff26dd2d15af567840794da7d99891156e6b4f1c509e9a9",
+          "bytes": 38234
+        },
+        "layout": {
+          "path": "Skill_Element_Mid_Light.layout.json",
+          "sha256": "bd75dce20dbec493075b5e1ad3d7cace7db466b1e39b20bfc30399c729cafc7f",
+          "bytes": 25233
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "groundSplit": 96
+    },
+    {
+      "asset": "Skill_Element_Mid_Dark",
+      "skillIDs": [
+        2502,
+        3502
+      ],
+      "generationMode": "built-in image_gen",
+      "files": {
+        "original": {
+          "path": "Skill_Element_Mid_Dark.source.png",
+          "sha256": "a6c3ee8bd03fed87219940d714bc6c9c79f397a2a61560458790f499d3fb0598",
+          "bytes": 520051
+        },
+        "prompt": {
+          "path": "Skill_Element_Mid_Dark.prompt.txt",
+          "sha256": "8bf63afd5344a2dd6a15d8b954172291d9d7022cddae271133f48afb196b0b55",
+          "bytes": 2454
+        },
+        "runtime": {
+          "path": "Skill_Element_Mid_Dark.bmp",
+          "sha256": "a567a6799875db5f17adc22e14aae1c8f18bb6083ad534128c5a6d54b8e49842",
+          "bytes": 589878
+        },
+        "transparentPreview": {
+          "path": "Skill_Element_Mid_Dark.png",
+          "sha256": "52006eb952379ba1ff727cf04d86d3f427d96c9543c506ad8625abcac36eb980",
+          "bytes": 43008
+        },
+        "layout": {
+          "path": "Skill_Element_Mid_Dark.layout.json",
+          "sha256": "86e525eddf016bba0251b4a7d055071001c5aa3853c221fc1f36deddfbc6abbc",
+          "bytes": 25231
+        }
+      },
+      "sheet": {
+        "size": [
+          512,
+          384
+        ],
+        "columns": 4,
+        "rows": 3,
+        "cellSize": 128,
+        "frames": 12
+      },
+      "phases": [
+        {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "name": "charge"
+        },
+        {
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "name": "impact"
+        }
+      ],
+      "preparationAnchor": [
+        64,
+        64
+      ],
+      "impactAnchor": [
+        64,
+        104
+      ],
+      "groundSplit": 96
+    }
+  ],
+  "skills": [
+    {
+      "skillID": 1101,
+      "name": "Flame Slash",
+      "class": "Warrior",
+      "element": "Fire",
+      "mp": 4,
+      "area": "Single",
+      "range": 1,
+      "power": 135,
+      "defenseRate": 100,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Basic",
+        "motion": "Slash",
+        "element": "Fire"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 1102,
+      "name": "Burning Cleave",
+      "class": "Warrior",
+      "element": "Fire",
+      "mp": 7,
+      "area": "Splash1",
+      "range": 1,
+      "power": 105,
+      "defenseRate": 90,
+      "status": "previously completed signature preserved",
+      "motion": "KnightFire",
+      "mainBitmap": "Skill_Warrior_Fire_Ultimate.bmp"
+    },
+    {
+      "skillID": 1103,
+      "name": "Blaze Break",
+      "class": "Warrior",
+      "element": "Fire",
+      "mp": 6,
+      "area": "Single",
+      "range": 1,
+      "power": 115,
+      "defenseRate": 40,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Middle",
+        "motion": "Break",
+        "element": "Fire"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 1201,
+      "name": "Aqua Slash",
+      "class": "Warrior",
+      "element": "Water",
+      "mp": 4,
+      "area": "Single",
+      "range": 1,
+      "power": 125,
+      "defenseRate": 85,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Basic",
+        "motion": "Slash",
+        "element": "Water"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 1202,
+      "name": "Wave Cutter",
+      "class": "Warrior",
+      "element": "Water",
+      "mp": 7,
+      "area": "Line",
+      "range": 3,
+      "power": 95,
+      "defenseRate": 80,
+      "status": "previously completed signature preserved",
+      "motion": "KnightWater",
+      "mainBitmap": "Skill_Warrior_Water_Ultimate.bmp"
+    },
+    {
+      "skillID": 1203,
+      "name": "Tide Breaker",
+      "class": "Warrior",
+      "element": "Water",
+      "mp": 6,
+      "area": "Single",
+      "range": 1,
+      "power": 115,
+      "defenseRate": 35,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Middle",
+        "motion": "Break",
+        "element": "Water"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 1301,
+      "name": "Vine Slash",
+      "class": "Warrior",
+      "element": "Grass",
+      "mp": 4,
+      "area": "Single",
+      "range": 1,
+      "power": 125,
+      "defenseRate": 90,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Basic",
+        "motion": "Slash",
+        "element": "Grass"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 1302,
+      "name": "Thorn Cleave",
+      "class": "Warrior",
+      "element": "Grass",
+      "mp": 7,
+      "area": "Splash1",
+      "range": 1,
+      "power": 100,
+      "defenseRate": 80,
+      "status": "previously completed signature preserved",
+      "motion": "KnightGrass",
+      "mainBitmap": "Skill_Warrior_Grass_Ultimate.bmp"
+    },
+    {
+      "skillID": 1303,
+      "name": "Root Crusher",
+      "class": "Warrior",
+      "element": "Grass",
+      "mp": 6,
+      "area": "Single",
+      "range": 1,
+      "power": 140,
+      "defenseRate": 100,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Middle",
+        "motion": "Smash",
+        "element": "Grass"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 1401,
+      "name": "Holy Slash",
+      "class": "Warrior",
+      "element": "Light",
+      "mp": 4,
+      "area": "Single",
+      "range": 1,
+      "power": 125,
+      "defenseRate": 90,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Basic",
+        "motion": "Slash",
+        "element": "Light"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 1402,
+      "name": "Radiant Break",
+      "class": "Warrior",
+      "element": "Light",
+      "mp": 7,
+      "area": "Single",
+      "range": 1,
+      "power": 120,
+      "defenseRate": 30,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Middle",
+        "motion": "Break",
+        "element": "Light"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 1403,
+      "name": "Judgment Cleave",
+      "class": "Warrior",
+      "element": "Light",
+      "mp": 8,
+      "area": "Splash1",
+      "range": 1,
+      "power": 105,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "KnightLight",
+      "mainBitmap": "Skill_Warrior_Light_Ultimate.bmp"
+    },
+    {
+      "skillID": 1501,
+      "name": "Dark Slash",
+      "class": "Warrior",
+      "element": "Dark",
+      "mp": 4,
+      "area": "Single",
+      "range": 1,
+      "power": 130,
+      "defenseRate": 100,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Basic",
+        "motion": "Slash",
+        "element": "Dark"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 1502,
+      "name": "Shadow Break",
+      "class": "Warrior",
+      "element": "Dark",
+      "mp": 7,
+      "area": "Single",
+      "range": 1,
+      "power": 115,
+      "defenseRate": 25,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Knight",
+        "tier": "Middle",
+        "motion": "Break",
+        "element": "Dark"
+      },
+      "artMode": "new shared element art, distinct quick/break phase and motion",
+      "runtimeBitmaps": [
+        "Skill_Warrior_Standard_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 1503,
+      "name": "Abyss Cleave",
+      "class": "Warrior",
+      "element": "Dark",
+      "mp": 8,
+      "area": "Splash1",
+      "range": 1,
+      "power": 105,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "KnightDark",
+      "mainBitmap": "Skill_Warrior_Dark_Ultimate.bmp"
+    },
+    {
+      "skillID": 2101,
+      "name": "Flame Arrow",
+      "class": "Archer",
+      "element": "Fire",
+      "mp": 5,
+      "area": "Single",
+      "range": 4,
+      "power": 120,
+      "defenseRate": 90,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Basic",
+        "motion": "Arrow",
+        "element": "Fire"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Archer_Projectile_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 2102,
+      "name": "Explosive Arrow",
+      "class": "Archer",
+      "element": "Fire",
+      "mp": 8,
+      "area": "Splash1",
+      "range": 3,
+      "power": 95,
+      "defenseRate": 80,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Middle",
+        "motion": "BurstArrow",
+        "element": "Fire"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Fire.bmp",
+        "Archer_Projectile_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 2103,
+      "name": "Blazing Snipe",
+      "class": "Archer",
+      "element": "Fire",
+      "mp": 9,
+      "area": "Single",
+      "range": 5,
+      "power": 150,
+      "defenseRate": 100,
+      "status": "previously completed signature preserved",
+      "motion": "SnipeFire",
+      "mainBitmap": "Skill_Archer_Fire_Snipe_Ultimate.bmp"
+    },
+    {
+      "skillID": 2201,
+      "name": "Aqua Arrow",
+      "class": "Archer",
+      "element": "Water",
+      "mp": 5,
+      "area": "Single",
+      "range": 4,
+      "power": 115,
+      "defenseRate": 85,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Basic",
+        "motion": "Arrow",
+        "element": "Water"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Archer_Projectile_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 2202,
+      "name": "Piercing Wave",
+      "class": "Archer",
+      "element": "Water",
+      "mp": 8,
+      "area": "Line",
+      "range": 5,
+      "power": 90,
+      "defenseRate": 75,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Middle",
+        "motion": "PiercingArrow",
+        "element": "Water"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Water.bmp",
+        "Archer_Projectile_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 2203,
+      "name": "Tidal Snipe",
+      "class": "Archer",
+      "element": "Water",
+      "mp": 9,
+      "area": "Single",
+      "range": 5,
+      "power": 130,
+      "defenseRate": 35,
+      "status": "previously completed signature preserved",
+      "motion": "SnipeWater",
+      "mainBitmap": "Skill_Archer_Water_Snipe_Ultimate.bmp"
+    },
+    {
+      "skillID": 2301,
+      "name": "Thorn Arrow",
+      "class": "Archer",
+      "element": "Grass",
+      "mp": 5,
+      "area": "Single",
+      "range": 4,
+      "power": 115,
+      "defenseRate": 90,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Basic",
+        "motion": "Arrow",
+        "element": "Grass"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Archer_Projectile_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 2302,
+      "name": "Vine Volley",
+      "class": "Archer",
+      "element": "Grass",
+      "mp": 8,
+      "area": "Splash1",
+      "range": 3,
+      "power": 95,
+      "defenseRate": 80,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Middle",
+        "motion": "FanVolley",
+        "element": "Grass"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Grass.bmp",
+        "Archer_Projectile_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 2303,
+      "name": "Root Snipe",
+      "class": "Archer",
+      "element": "Grass",
+      "mp": 9,
+      "area": "Single",
+      "range": 5,
+      "power": 145,
+      "defenseRate": 100,
+      "status": "previously completed signature preserved",
+      "motion": "SnipeGrass",
+      "mainBitmap": "Skill_Archer_Grass_Snipe_Ultimate.bmp"
+    },
+    {
+      "skillID": 2401,
+      "name": "Holy Arrow",
+      "class": "Archer",
+      "element": "Light",
+      "mp": 5,
+      "area": "Single",
+      "range": 4,
+      "power": 115,
+      "defenseRate": 90,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Basic",
+        "motion": "Arrow",
+        "element": "Light"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Archer_Projectile_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 2402,
+      "name": "Radiant Shot",
+      "class": "Archer",
+      "element": "Light",
+      "mp": 8,
+      "area": "Single",
+      "range": 5,
+      "power": 125,
+      "defenseRate": 35,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Middle",
+        "motion": "RadiantArrow",
+        "element": "Light"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Light.bmp",
+        "Archer_Projectile_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 2403,
+      "name": "Judgment Rain",
+      "class": "Archer",
+      "element": "Light",
+      "mp": 12,
+      "area": "Splash2",
+      "range": 4,
+      "power": 85,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "LightRain",
+      "mainBitmap": "Skill_Archer_Light_Rain_Ultimate.bmp"
+    },
+    {
+      "skillID": 2501,
+      "name": "Dark Arrow",
+      "class": "Archer",
+      "element": "Dark",
+      "mp": 5,
+      "area": "Single",
+      "range": 4,
+      "power": 120,
+      "defenseRate": 100,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Basic",
+        "motion": "Arrow",
+        "element": "Dark"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Archer_Projectile_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 2502,
+      "name": "Shadow Pierce",
+      "class": "Archer",
+      "element": "Dark",
+      "mp": 8,
+      "area": "Line",
+      "range": 5,
+      "power": 95,
+      "defenseRate": 50,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Archer",
+        "tier": "Middle",
+        "motion": "PiercingArrow",
+        "element": "Dark"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Dark.bmp",
+        "Archer_Projectile_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 2503,
+      "name": "Abyss Snipe",
+      "class": "Archer",
+      "element": "Dark",
+      "mp": 10,
+      "area": "Single",
+      "range": 5,
+      "power": 150,
+      "defenseRate": 90,
+      "status": "previously completed signature preserved",
+      "motion": "SnipeDark",
+      "mainBitmap": "Skill_Archer_Dark_Snipe_Ultimate.bmp"
+    },
+    {
+      "skillID": 3101,
+      "name": "Fire Bolt",
+      "class": "Mage",
+      "element": "Fire",
+      "mp": 6,
+      "area": "Single",
+      "range": 3,
+      "power": 120,
+      "defenseRate": 80,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Basic",
+        "motion": "Bolt",
+        "element": "Fire"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Mage_Projectile_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 3102,
+      "name": "Flame Burst",
+      "class": "Mage",
+      "element": "Fire",
+      "mp": 10,
+      "area": "Splash1",
+      "range": 3,
+      "power": 100,
+      "defenseRate": 70,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Middle",
+        "motion": "FlameBurst",
+        "element": "Fire"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Fire.bmp",
+        "Mage_Projectile_Fire.bmp",
+        "Element_Impact_Fire.bmp"
+      ]
+    },
+    {
+      "skillID": 3103,
+      "name": "Meteor Burst",
+      "class": "Mage",
+      "element": "Fire",
+      "mp": 16,
+      "area": "Splash2",
+      "range": 4,
+      "power": 90,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "Meteor",
+      "mainBitmap": "Skill_Mage_Meteor_Ultimate.bmp"
+    },
+    {
+      "skillID": 3201,
+      "name": "Water Shot",
+      "class": "Mage",
+      "element": "Water",
+      "mp": 6,
+      "area": "Single",
+      "range": 3,
+      "power": 115,
+      "defenseRate": 75,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Basic",
+        "motion": "Bolt",
+        "element": "Water"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Mage_Projectile_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 3202,
+      "name": "Aqua Wave",
+      "class": "Mage",
+      "element": "Water",
+      "mp": 10,
+      "area": "Line",
+      "range": 4,
+      "power": 90,
+      "defenseRate": 70,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Middle",
+        "motion": "ForwardWave",
+        "element": "Water"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Water.bmp",
+        "Mage_Projectile_Water.bmp",
+        "Element_Impact_Water.bmp"
+      ]
+    },
+    {
+      "skillID": 3203,
+      "name": "Tidal Blast",
+      "class": "Mage",
+      "element": "Water",
+      "mp": 13,
+      "area": "Splash1",
+      "range": 3,
+      "power": 105,
+      "defenseRate": 35,
+      "status": "previously completed signature preserved",
+      "motion": "TidalBlast",
+      "mainBitmap": "Skill_Mage_Water_Ultimate.bmp"
+    },
+    {
+      "skillID": 3301,
+      "name": "Vine Whip",
+      "class": "Mage",
+      "element": "Grass",
+      "mp": 6,
+      "area": "Single",
+      "range": 3,
+      "power": 115,
+      "defenseRate": 80,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Basic",
+        "motion": "VineWhip",
+        "element": "Grass"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Mage_Projectile_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 3302,
+      "name": "Thorn Field",
+      "class": "Mage",
+      "element": "Grass",
+      "mp": 10,
+      "area": "Splash1",
+      "range": 3,
+      "power": 100,
+      "defenseRate": 70,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Middle",
+        "motion": "ThornField",
+        "element": "Grass"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Grass.bmp",
+        "Mage_Projectile_Grass.bmp",
+        "Element_Impact_Grass.bmp"
+      ]
+    },
+    {
+      "skillID": 3303,
+      "name": "Root Storm",
+      "class": "Mage",
+      "element": "Grass",
+      "mp": 16,
+      "area": "Splash2",
+      "range": 4,
+      "power": 90,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "RootStorm",
+      "mainBitmap": "Skill_Mage_Grass_Ultimate.bmp"
+    },
+    {
+      "skillID": 3401,
+      "name": "Holy Ray",
+      "class": "Mage",
+      "element": "Light",
+      "mp": 7,
+      "area": "Single",
+      "range": 4,
+      "power": 120,
+      "defenseRate": 70,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Basic",
+        "motion": "GrowingRay",
+        "element": "Light"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Mage_Projectile_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 3402,
+      "name": "Smite Undead",
+      "class": "Mage",
+      "element": "Light",
+      "mp": 11,
+      "area": "Single",
+      "range": 4,
+      "power": 145,
+      "defenseRate": 25,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Middle",
+        "motion": "Smite",
+        "element": "Light"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Light.bmp",
+        "Mage_Projectile_Light.bmp",
+        "Element_Impact_Light.bmp"
+      ]
+    },
+    {
+      "skillID": 3403,
+      "name": "Sanctuary Burst",
+      "class": "Mage",
+      "element": "Light",
+      "mp": 16,
+      "area": "Splash2",
+      "range": 4,
+      "power": 90,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "Sanctuary",
+      "mainBitmap": "Skill_Mage_Sanctuary_Ultimate.bmp"
+    },
+    {
+      "skillID": 3501,
+      "name": "Dark Ball",
+      "class": "Mage",
+      "element": "Dark",
+      "mp": 7,
+      "area": "Single",
+      "range": 4,
+      "power": 120,
+      "defenseRate": 80,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Basic",
+        "motion": "Bolt",
+        "element": "Dark"
+      },
+      "artMode": "existing pixel-art projectile/contact with skill-specific motion",
+      "runtimeBitmaps": [
+        "Mage_Projectile_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 3502,
+      "name": "Shadow Spike",
+      "class": "Mage",
+      "element": "Dark",
+      "mp": 11,
+      "area": "Single",
+      "range": 4,
+      "power": 135,
+      "defenseRate": 20,
+      "status": "updated ordinary/intermediate",
+      "profile": {
+        "class": "Mage",
+        "tier": "Middle",
+        "motion": "ShadowSpike",
+        "element": "Dark"
+      },
+      "artMode": "new intermediate art plus existing projectile/contact and skill-specific motion",
+      "runtimeBitmaps": [
+        "Skill_Element_Mid_Dark.bmp",
+        "Mage_Projectile_Dark.bmp",
+        "Element_Impact_Dark.bmp"
+      ]
+    },
+    {
+      "skillID": 3503,
+      "name": "Abyss Blast",
+      "class": "Mage",
+      "element": "Dark",
+      "mp": 16,
+      "area": "Splash2",
+      "range": 4,
+      "power": 90,
+      "defenseRate": 70,
+      "status": "previously completed signature preserved",
+      "motion": "AbyssBlast",
+      "mainBitmap": "Skill_Mage_Dark_Ultimate.bmp"
+    }
+  ],
+  "previousAssetManifests": [
+    {
+      "path": "Class_Ultimates.manifest.json",
+      "sha256": "2353d7302c236d811ffedc47fbe221985e44e74919a1ba573af4e094b18b8864",
+      "bytes": 31578
+    },
+    {
+      "path": "Mage_Ultimates.manifest.json",
+      "sha256": "8e774c78c8aa9be63c5dc7f9d5f7e3423b28562b25d643722d262184de9c2fad",
+      "bytes": 11693
+    },
+    {
+      "path": "Elemental_Effects.manifest.json",
+      "sha256": "b36f9ee0ce622a61b40e163781ae561150a4016ba90f276dccb5d11f40fe686f",
+      "bytes": 13152
+    }
+  ],
+  "rejectedCandidate": {
+    "reason": "First Warrior Fire retained an opaque beige halo after alpha thresholding; replaced by a newly generated source. No manual repainting or recoloring.",
+    "preservedFiles": [
+      {
+        "path": "../../../tests/bin/all-skills-audit/rejected/Skill_Warrior_Standard_Fire-halo.prompt.txt",
+        "sha256": "5255e9b2dcfb49790bb612b66cfb66d82d72e7edd4b31f3db858e83a86a1df54"
+      },
+      {
+        "path": "../../../tests/bin/all-skills-audit/rejected/Skill_Warrior_Standard_Fire-halo.source.png",
+        "sha256": "2caee3af8d7f2bc62842a1aa6caf2ddfd4c596f8261a5bce3b6372fab12f549e"
+      },
+      {
+        "path": "../../../tests/bin/all-skills-audit/rejected/Warrior-Fire-halo/Skill_Warrior_Standard_Fire.bmp",
+        "sha256": "8c0c461c2c8b6f722a053387a037c796dd4a990f5770039e3dcd4e551c19f5e6"
+      },
+      {
+        "path": "../../../tests/bin/all-skills-audit/rejected/Warrior-Fire-halo/Skill_Warrior_Standard_Fire.layout.json",
+        "sha256": "6f32d235b7aed9254af91684f262ff564a29f61aab6bab4c7d5e088c246d3b0c"
+      },
+      {
+        "path": "../../../tests/bin/all-skills-audit/rejected/Warrior-Fire-halo/Skill_Warrior_Standard_Fire.png",
+        "sha256": "3d9ca717bca6a6bc59290e552eea472c76ea48df38816a71c66fa0cda58f5708"
+      }
+    ]
+  },
+  "verification": {
+    "assets": "../../../tests/verify_standard_skill_assets.py",
+    "report": "../../../tests/bin/all-skills-audit/asset-verification.json",
+    "originalAudit": "../../../tests/bin/all-skills-audit/audit-summary.md",
+    "coverage": "../../../tests/bin/all-skills-audit/coverage-after.json",
+    "finalAudit": "../../../tests/bin/all-skills-audit/final-art-audit.json",
+    "mapSizeProof": "../../../tests/bin/all-skills-audit/all-ten-map-size-proof.png"
+  }
+}

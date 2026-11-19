@@ -1,0 +1,264 @@
+{
+  "input": "C:\\Users\\benev\\Documents\\GitHub\\Tales_of_the_Dark_Throne\\Tower_Triumph\\Tower_Triumph\\Resource\\Archer_IdleCycle.source.png",
+  "width": 1448,
+  "height": 1086,
+  "columns": 4,
+  "rows": 3,
+  "alphaThreshold": 128,
+  "frames": [
+    {
+      "index": 0,
+      "cell": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "bounds": [
+        66,
+        17,
+        320,
+        340
+      ],
+      "opaquePixels": 47660,
+      "transparentPixels": 83384,
+      "componentSizes": [
+        47660
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 1,
+      "cell": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "bounds": [
+        66,
+        18,
+        319,
+        340
+      ],
+      "opaquePixels": 47153,
+      "transparentPixels": 83891,
+      "componentSizes": [
+        47153
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 2,
+      "cell": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "bounds": [
+        65,
+        17,
+        320,
+        340
+      ],
+      "opaquePixels": 46797,
+      "transparentPixels": 84247,
+      "componentSizes": [
+        46797
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 3,
+      "cell": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "bounds": [
+        65,
+        17,
+        319,
+        340
+      ],
+      "opaquePixels": 46913,
+      "transparentPixels": 84131,
+      "componentSizes": [
+        46913
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 4,
+      "cell": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "bounds": [
+        66,
+        19,
+        320,
+        339
+      ],
+      "opaquePixels": 46548,
+      "transparentPixels": 84496,
+      "componentSizes": [
+        46548
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 5,
+      "cell": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "bounds": [
+        66,
+        19,
+        319,
+        339
+      ],
+      "opaquePixels": 46241,
+      "transparentPixels": 84803,
+      "componentSizes": [
+        46241
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 6,
+      "cell": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "bounds": [
+        66,
+        19,
+        319,
+        339
+      ],
+      "opaquePixels": 46717,
+      "transparentPixels": 84327,
+      "componentSizes": [
+        46717
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 7,
+      "cell": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "bounds": [
+        66,
+        22,
+        320,
+        339
+      ],
+      "opaquePixels": 46785,
+      "transparentPixels": 84259,
+      "componentSizes": [
+        46768,
+        17
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 8,
+      "cell": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "bounds": [
+        66,
+        22,
+        320,
+        340
+      ],
+      "opaquePixels": 46986,
+      "transparentPixels": 84058,
+      "componentSizes": [
+        46986
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 9,
+      "cell": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "bounds": [
+        66,
+        22,
+        320,
+        340
+      ],
+      "opaquePixels": 46981,
+      "transparentPixels": 84063,
+      "componentSizes": [
+        46981
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 10,
+      "cell": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "bounds": [
+        66,
+        23,
+        320,
+        340
+      ],
+      "opaquePixels": 46792,
+      "transparentPixels": 84252,
+      "componentSizes": [
+        46776,
+        16
+      ],
+      "touchesCellEdge": false
+    },
+    {
+      "index": 11,
+      "cell": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "bounds": [
+        65,
+        23,
+        320,
+        340
+      ],
+      "opaquePixels": 46851,
+      "transparentPixels": 84193,
+      "componentSizes": [
+        46851
+      ],
+      "touchesCellEdge": false
+    }
+  ]
+}
