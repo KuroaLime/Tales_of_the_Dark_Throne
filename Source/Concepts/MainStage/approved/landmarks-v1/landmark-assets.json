@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "approval": "User approved the final layered building map preview for actual game integration on 2026-11-20.",
+  "mapSize": [
+    1672,
+    941
+  ],
+  "generator": "built-in imagegen",
+  "sources": [
+    {
+      "file": "open.source.png",
+      "sha256": "ef2495a2669611c7a7121c46f4226361fb25cb2f1b9fd5032ce3a4f9ab9f7bd3",
+      "bytes": 671761,
+      "generatedSource": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-668a9963-7dde-4cd3-9c84-a7e09af51741.png"
+    },
+    {
+      "file": "closed.source.png",
+      "sha256": "e72ad8b1b5ee7b9be5f0b9b5a27a1ac1f96835bcd8089e0dcae726e3f9d09058",
+      "bytes": 760553,
+      "generatedSource": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-421609c9-26dc-4652-84b4-4aecf69cc88f.png"
+    },
+    {
+      "file": "buildings.source.png",
+      "sha256": "5a2c6a189437a658b2ad178d96a7aa122cd16da453c8e0a04f4654874833f793",
+      "bytes": 617663,
+      "generatedSource": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-05180700-0718-499c-8411-79f3972e7b74.png"
+    },
+    {
+      "file": "cleanMap.source.png",
+      "sha256": "ead372295564d57204723b1c19612c4b2dfb019fd7088ec049fcfe64f5dca8c0",
+      "bytes": 2875439,
+      "generatedSource": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-7b6bc2c2-d687-4e56-9e46-dfce9eec521b.png"
+    },
+    {
+      "file": "marker-open.preview.png",
+      "sha256": "5c58306a7271bd9f1b82ff6e4562a76ae0cfb0f9f2c8583f7542c20c8c468b17",
+      "bytes": 17349
+    },
+    {
+      "file": "marker-closed.preview.png",
+      "sha256": "23d9c179b9d16ebf4cad1cfee67a12c739bbd070f3528dc45d0e96b2f649c045",
+      "bytes": 18898
+    },
+    {
+      "file": "generation-prompts.json",
+      "sha256": "8cc7c02d3fbd44faf5d915b5251949a0ce4d27f994432d2ea190aac3993eeffb",
+      "bytes": 5043
+    },
+    {
+      "file": "preview-asset-manifest.json",
+      "sha256": "29ec82bcd47eb26e0eb22a099cca9cd2d78967bf654f8ee4fd3e204b7dab4fef",
+      "bytes": 1875
+    }
+  ],
+  "outputs": [
+    {
+      "id": "camp",
+      "resourceId": 113,
+      "png": "camp.png",
+      "pngSha256": "c17a2fb52651bdc545d6b7f7d6742b80ff61a3f263be718d2e11eae736962e7c",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Camp.bmp",
+      "sha256": "0a2bacd40f5644d976baa4a2088de76ea0844e88c56683d068e693819bdb648a",
+      "bytes": 276502,
+      "width": 326,
+      "height": 212,
+      "bitsPerPixel": 32,
+      "bounds": [
+        687,
+        282,
+        1013,
+        494
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 69112,
+        "transparentPixels": 22880,
+        "partialAlphaPixels": 46200,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "graveyard",
+      "resourceId": 114,
+      "png": "graveyard.png",
+      "pngSha256": "bf4abe2773ea77d0ed6abebb2c4b6abc3b529a3119feba30610f0e60526e4aee",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Graveyard.bmp",
+      "sha256": "8859c2ce8d1069636ee3320097c22e3e0046c561cf50c97c197300120eb4886a",
+      "bytes": 278442,
+      "width": 333,
+      "height": 209,
+      "bitsPerPixel": 32,
+      "bounds": [
+        1141,
+        412,
+        1474,
+        621
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 69597,
+        "transparentPixels": 25611,
+        "partialAlphaPixels": 43974,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "heaven",
+      "resourceId": 115,
+      "png": "heaven.png",
+      "pngSha256": "25d0313cdfc873a6df6a2a0f41186766ec34717c904677ecd5b029f579b076ca",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Heaven.bmp",
+      "sha256": "b49f41d20903c406f61b44abdc81dd40859b06996726db083ca3deb00eec5377",
+      "bytes": 108890,
+      "width": 161,
+      "height": 169,
+      "bitsPerPixel": 32,
+      "bounds": [
+        352,
+        148,
+        513,
+        317
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 27209,
+        "transparentPixels": 5989,
+        "partialAlphaPixels": 21217,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "default",
+      "resourceId": 116,
+      "png": "default.png",
+      "pngSha256": "54a3e3fb0d9829cf8402d58bcdabc4216d3d9621027b3be2eb209e71e3aba0d5",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Hall.bmp",
+      "sha256": "b2aa6794569c8a2f91a13c4b5820118217e09743d690b8fd387fd11b4a2c1094",
+      "bytes": 217634,
+      "width": 253,
+      "height": 215,
+      "bitsPerPixel": 32,
+      "bounds": [
+        241,
+        385,
+        494,
+        600
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 54395,
+        "transparentPixels": 17014,
+        "partialAlphaPixels": 37373,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "sea",
+      "resourceId": 117,
+      "png": "sea.png",
+      "pngSha256": "114544dea63cbe7ad980d5ea15eb1fa4224c82fd523b6047c50e54ba45a2b6ea",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Sea.bmp",
+      "sha256": "3234b3c568f8f87f7592b4ce052946cde37660f977abbd51b1b38eb456372f29",
+      "bytes": 298038,
+      "width": 388,
+      "height": 192,
+      "bitsPerPixel": 32,
+      "bounds": [
+        432,
+        623,
+        820,
+        815
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 74496,
+        "transparentPixels": 36386,
+        "partialAlphaPixels": 38069,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "lava",
+      "resourceId": 118,
+      "png": "lava.png",
+      "pngSha256": "0172c9f821ffc1dde7563bc79d6be872fb2c8468b0243013824a715683ae1fa7",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/Lava.bmp",
+      "sha256": "b0563299fc72d6117ba418b9dedb7f313fce3fbfaa1564c1c24ad84f404c85e8",
+      "bytes": 70350,
+      "width": 174,
+      "height": 101,
+      "bitsPerPixel": 32,
+      "bounds": [
+        1226,
+        201,
+        1400,
+        302
+      ],
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 17574,
+        "transparentPixels": 5159,
+        "partialAlphaPixels": 12414,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "marker-open",
+      "resourceId": 119,
+      "png": "marker-open.png",
+      "pngSha256": "da9b8c7529352c220546793c2d2db9ebc31218d3299a381c0f60ad3091d3dbc7",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/MarkerOpen.bmp",
+      "sha256": "638e4f4bd54c5927313f1bb3366f331b8ab17bcc5d66f202cf8368a0ed4ddc5d",
+      "bytes": 36918,
+      "width": 96,
+      "height": 96,
+      "bitsPerPixel": 32,
+      "bounds": null,
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 9216,
+        "transparentPixels": 3348,
+        "partialAlphaPixels": 5630,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "marker-closed",
+      "resourceId": 120,
+      "png": "marker-closed.png",
+      "pngSha256": "a2b7879db662b199029e4467d9ee1dfd66934ef17fdaac7d1ac233f029abda13",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/MarkerClosed.bmp",
+      "sha256": "db28db66dc74f62008f6cf00e2d68d1d63ce6f0d6990a1fa97f4e22f7d110773",
+      "bytes": 36918,
+      "width": 96,
+      "height": 96,
+      "bitsPerPixel": 32,
+      "bounds": null,
+      "alphaMode": "Premultiplied BGRA; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 9216,
+        "transparentPixels": 3266,
+        "partialAlphaPixels": 5698,
+        "exactSourceRGB": false,
+        "exactPremultipliedRGBA": true
+      }
+    },
+    {
+      "id": "clean-map",
+      "resourceId": 121,
+      "png": "clean-map.png",
+      "pngSha256": "56846fd638ad65dcd12833350639e390710d26c08e1996a26c51c1e3e228a332",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/landmarks/CleanMap.bmp",
+      "sha256": "b800a63822d304f9d1d8331df5a737b481ab10f1bdf90e59db7be937aa1949d0",
+      "bytes": 4720110,
+      "width": 1672,
+      "height": 941,
+      "bitsPerPixel": 24,
+      "bounds": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "alphaMode": "Opaque BGR; BITMAPINFOHEADER40/BI_RGB, bottom-up",
+      "verification": {
+        "checkedPixels": 1573352,
+        "transparentPixels": 0,
+        "partialAlphaPixels": 0,
+        "exactSourceRGB": true,
+        "exactPremultipliedRGBA": false
+      }
+    }
+  ],
+  "render": {
+    "buildingPivot": "bounds bottom center",
+    "hoverScale": 1.05,
+    "transitionSeconds": 0.18,
+    "floatingMarkerScreenSize": 44,
+    "floatingMarkerRisePixels": 4,
+    "floatingMarkerPeriodSeconds": 3.2,
+    "markerInput": false,
+    "hitBounds": "fixed registered building rectangle; not expanded or floating marker"
+  },
+  "originalOverview": {
+    "png": "../world-map.png",
+    "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/background/Map_Background.bmp",
+    "resourceId": 105,
+    "purpose": "Preserved approved full-map overview for region popup and maintenance background; separate from clean-map background."
+  },
+  "conversion": "Building sources cropped at the exact preview bounds without resampling, alpha thresholding, palette edits or repainting. Approved 96px marker PNGs reused exactly. Original source PNGs and prompts archived.",
+  "reproduce": {
+    "script": "tests/import_main_stage_landmarks.mjs",
+    "checkCommand": "node tests/import_main_stage_landmarks.mjs --check"
+  }
+}

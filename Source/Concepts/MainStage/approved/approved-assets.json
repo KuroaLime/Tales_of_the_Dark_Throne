@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "approval": "User selected the world-map concept and 40px starlight quill in the right-handed writing orientation for game integration.",
+  "assets": {
+    "worldMap": {
+      "png": "world-map.png",
+      "size": [
+        1672,
+        941
+      ],
+      "prompt": "world-map.prompt.txt",
+      "generator": "image_gen",
+      "generatedSource": "C:/Users/benev/.codex/generated_images/01a1ea4c-6c43-7d01-9bda-4552cd4ebb54/exec-d994afb1-5d55-4b41-aab4-f9964f36a10d.png",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/SMap/background/Map_Background.bmp",
+      "conversion": "Exact approved PNG RGB to uncompressed bottom-up 24bit BGR BMP; no resize or color conversion."
+    },
+    "cursor": {
+      "png": "quill-40.png",
+      "size": [
+        40,
+        40
+      ],
+      "hotspot": [
+        2,
+        37
+      ],
+      "prompt": "quill-writing.prompt.txt",
+      "generator": "image_gen",
+      "generatedSource": "C:/Users/benev/.codex/generated_images/01a1ea4c-6c43-7d01-9bda-4552cd4ebb54/exec-b38521f2-d32a-4519-b59e-c32471968f8d.png",
+      "archivedGeneratedSource": "quill-writing.source.png",
+      "runtime": "Tower_Triumph/Tower_Triumph/Source/MouseCursor/MouseCusor.bmp",
+      "direction": "Writing grip: nib lower-left, feather upper-right.",
+      "approvedRaster": {
+        "sourceHotspot": [
+          80,
+          1167
+        ],
+        "cropLTRB": [
+          76,
+          97,
+          1162,
+          1173
+        ],
+        "drawRect": [
+          2,
+          2,
+          36,
+          36
+        ],
+        "method": "Source RGBA is unchanged. Alpha>=128 is used only to measure crop bounds. Uniform nearest resize with integer dimension rounding and 2px minimum native padding; no rotation, repaint, color change or alpha threshold is applied. Enlargement is exactly native pixels x4."
+      },
+      "conversion": "Exact approved 40px PNG alpha retained. RGB premultiplied with round(channel * alpha / 255), encoded as bottom-up BGRA 32bit BI_RGB BMP for GDI AlphaBlend(AC_SRC_ALPHA)."
+    }
+  },
+  "archived": [
+    {
+      "file": "world-map.png",
+      "approvedSource": "C:\\Users\\benev\\.codex\\visualizations\\2026\\11\\17\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\main-stage-review\\world-map-concept.png",
+      "bytes": 3120928,
+      "sha256": "78b5c7db091ebf952aa70edf1c84a913e150efd411f848687fc5ebb8ca92903d"
+    },
+    {
+      "file": "quill-40.png",
+      "approvedSource": "C:\\Users\\benev\\.codex\\visualizations\\2026\\11\\17\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\quill-writing-review\\quill-40.native.png",
+      "bytes": 1528,
+      "sha256": "4dda00a8ec5fe6c86da746b7395bb9c208df32458029a32937e84713cb5fc20f"
+    },
+    {
+      "file": "quill-writing.source.png",
+      "approvedSource": "C:\\Users\\benev\\.codex\\visualizations\\2026\\11\\17\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\quill-writing-review\\quill-writing.source.png",
+      "bytes": 472532,
+      "sha256": "420b34b760457d1ee1f41e0df0cc82fbbcc90e8a908c28d17b5fb6a297934d80"
+    },
+    {
+      "file": "world-map.prompt.txt",
+      "approvedSource": "C:\\Users\\benev\\.codex\\visualizations\\2026\\11\\17\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\main-stage-review\\world-map-concept.prompt.txt",
+      "bytes": 2896,
+      "sha256": "03a97afa17f0b1813335d1209dab648ff523b7dfa9e11a5ac94e337ebdddf5c3"
+    },
+    {
+      "file": "quill-writing.prompt.txt",
+      "approvedSource": "C:\\Users\\benev\\.codex\\visualizations\\2026\\11\\17\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\quill-writing-review\\quill-writing.prompt.txt",
+      "bytes": 1357,
+      "sha256": "9224677358581479d1d9e1b33ea873269d095b2e0d1c2e2e8121d61175063c2d"
+    }
+  ],
+  "originalRuntimeAssets": [
+    {
+      "file": "Tower_Triumph/Tower_Triumph/Source/SMap/background/Map_Background.bmp",
+      "gitCommit": "fde66e8518c9a4e7b6d28eb6d36017377d12c436",
+      "gitBlob": "a003584912046b16c0445460412048365e9d0de3",
+      "sha256": "4f0a44bd2787b709a6a6a7dfedc269184f2eb6cbf98bf64fc2439ceff875ccf6",
+      "bytes": 6293462
+    },
+    {
+      "file": "Tower_Triumph/Tower_Triumph/Source/MouseCursor/MouseCusor.bmp",
+      "gitCommit": "fde66e8518c9a4e7b6d28eb6d36017377d12c436",
+      "gitBlob": "6b92a9d605bb0c944f1a7d1e485a5fff20989fb4",
+      "sha256": "274bc9ac56ef748529d341d152535236f54b0e35dc5afef8c7a051acedacc361",
+      "bytes": 9437238
+    }
+  ],
+  "runtimeExports": {
+    "worldMap": {
+      "file": "Tower_Triumph/Tower_Triumph/Source/SMap/background/Map_Background.bmp",
+      "sha256": "37430fbe88a04d5fed34a0c600147b9888742a7f5521343dbba41797bf0f1bac",
+      "bytes": 4720110,
+      "width": 1672,
+      "height": 941,
+      "bitsPerPixel": 24,
+      "bitmapHeader": "BITMAPINFOHEADER (40 bytes), BI_RGB, bottom-up rows",
+      "alphaMode": "Opaque BGR",
+      "verification": {
+        "checkedPixels": 1573352,
+        "transparentPixels": 0,
+        "partialAlphaPixels": 0,
+        "opaquePixels": 1573352,
+        "approvedRGBExact": true,
+        "premultipliedRGBExact": false,
+        "alphaExact": true
+      }
+    },
+    "cursor": {
+      "file": "Tower_Triumph/Tower_Triumph/Source/MouseCursor/MouseCusor.bmp",
+      "sha256": "d5c44d5daa7e0060f9c5cf208cfbaef88b827201059c060e776999664da8168e",
+      "bytes": 6454,
+      "width": 40,
+      "height": 40,
+      "bitsPerPixel": 32,
+      "bitmapHeader": "BITMAPINFOHEADER (40 bytes), BI_RGB, bottom-up rows",
+      "alphaMode": "Premultiplied BGRA for AlphaBlend(AC_SRC_ALPHA)",
+      "hotspot": [
+        2,
+        37
+      ],
+      "sourceConstantAlpha": 255,
+      "loadRequirement": "Preserve DIB alpha bytes: direct RT_BITMAP/CreateDIBSection or LR_CREATEDIBSECTION; avoid opaque LoadBitmap conversion.",
+      "verification": {
+        "checkedPixels": 1600,
+        "transparentPixels": 1225,
+        "partialAlphaPixels": 374,
+        "opaquePixels": 1,
+        "approvedRGBExact": false,
+        "premultipliedRGBExact": true,
+        "alphaExact": true
+      }
+    }
+  },
+  "reproduce": {
+    "script": "tests/import_main_stage_approved.mjs",
+    "scriptSha256": "95d0828a58e92f5b8de23a1afb9097b05fb7b5d90aab9db36bc0577624f37d75",
+    "importCommand": "node tests/import_main_stage_approved.mjs",
+    "checkCommand": "node tests/import_main_stage_approved.mjs --check"
+  }
+}

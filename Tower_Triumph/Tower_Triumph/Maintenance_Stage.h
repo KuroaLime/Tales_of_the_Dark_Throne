@@ -1,13 +1,15 @@
-﻿#pragma once
+#pragma once
 
 #include "CStage.h"
 #include "BattleRewardManager.h"
 #include "Character.h"
 #include "GameManager.h"
 #include "SkillData.h"
+#include "MaintenanceFeedback.h"
 
 #include <string>
 #include <vector>
+#include <chrono>
 
 enum class EMaintenanceTab
 {
@@ -52,16 +54,48 @@ private:
     int SelectedPartyIndex;
     int SelectedSkillSlot;
 
-    std::wstring ShopMessage;
-    int ShopMessageLife;
-    std::wstring SkillMessage;
-    int SkillMessageLife;
 
     std::vector<SMaintenanceLevelResult> LevelResults;
+    class UMouseMark* MouseMark = nullptr;
+    POINT PointerPosition{ -1, -1 };
+
+    UIFrameSnapshot PresentedTabFrame;
+    using BodyTransitionKind = MaintenanceFeedback::BodyTransition::Kind;
+    MaintenanceFeedback::BodyTransition BodyPresentation;
+    MaintenanceFeedback::Equipment EquipmentFeedback;
+    MaintenanceFeedback::Skill SkillFeedback;
+    MaintenanceFeedback::Shop ShopFeedback;
+    MaintenanceFeedback::Inventory InventoryFeedback;
+    MaintenanceFeedback::Party PartyFeedback;
+    std::chrono::steady_clock::time_point LastTabPresentationUpdate = std::chrono::steady_clock::now();
 
 private:
     void ApplyRewardOnce();
+    void RefreshPointer(HWND hWnd);
+    void DrawPortrait(HDC dc, Character* character, const RECT& bounds);
+    RECT GetBodyRect() const;
+    RECT GetTabPresentationRect() const;
+    void SelectTab(EMaintenanceTab tab);
+    void SelectCharacter(int index);
+    void BeginTabPresentation(BodyTransitionKind kind);
+    void ResetTabPresentation();
+    void CompositeTabPresentation(HDC destination);
+    void ResetActionFeedback();
+    void BeginEquipmentFeedback(Character* target, const CharacterStat& before, int part, bool equipmentChanged);
+    void BeginSkillFeedback(double duration);
+    void CompositeSkillFeedback(HDC destination);
+    void BeginShopFeedback(int itemID, bool purchased, int oldGold, int oldCount);
+    void CompositeShopNotice(HDC destination);
+    double GetShopPulseStrength() const;
+    void UseInventoryConsumable(Character* target, int itemID);
+    void CompositeInventoryNotice(HDC destination);
+    double GetInventoryPulseStrength() const;
+    void BeginPartyFeedback(Character* character, int oldCount, bool wasActive, bool changed);
+    void CompositePartyPresentation(HDC destination);
+    double GetPartyPulseStrength() const;
 
+public:
+    // Shared, read-only layout queries used by rendering and input routing.
     RECT GetMainPanelRect() const;
     RECT GetTabRect(EMaintenanceTab tab) const;
     RECT GetContinueRect() const;
@@ -74,7 +108,54 @@ private:
     RECT GetRosterSlotRect(int index) const;
     RECT GetSkillSlotRect(int index) const;
     RECT GetLearnedSkillRect(int index) const;
+    std::vector<int> GetShopItemIDs() const;
 
+    EMaintenanceTab GetActiveTab() const { return ActiveTab; }
+    int GetSelectedPartyIndex() const { return SelectedPartyIndex; }
+    int GetSelectedSkillSlot() const { return SelectedSkillSlot; }
+    double GetInventoryDisplayedHPFraction() const { return InventoryFeedback.DisplayedHPFraction(); }
+    double GetInventoryDisplayedMPFraction() const { return InventoryFeedback.DisplayedMPFraction(); }
+    double GetSkillPulseStrengthForSlot(int slot) const { return SkillFeedback.PulseForSlot(slot); }
+    double GetLearnedSkillPulseStrength(int skillID) const { return SkillFeedback.PulseForSkill(skillID); }
+
+    // Runtime and offscreen replay advance the same presentation clock.
+    void AdvanceTabPresentation(double seconds);
+    bool IsTabTransitioning() const;
+    double GetTabTransitionProgress() const;
+    bool IsCharacterTransitioning() const;
+    double GetCharacterTransitionProgress() const;
+    bool IsEquipmentFeedbackActive() const;
+    double GetEquipmentFeedbackProgress() const;
+    // HP/MP deltas refer to maximum values; current values remain live.
+    int GetEquipmentStatDelta(int index) const;
+    bool IsSkillFeedbackTransitioning() const;
+    double GetSkillFeedbackProgress() const;
+    bool IsShopFeedbackActive() const;
+    double GetShopFeedbackProgress() const;
+    double GetShopNoticeOpacity() const;
+    int GetShopGoldDelta() const;
+    int GetShopQuantityDelta() const;
+    int GetShopShortfall() const;
+    int GetShopFeedbackItemID() const;
+    bool IsInventoryFeedbackActive() const;
+    double GetInventoryFeedbackProgress() const;
+    double GetInventoryNoticeOpacity() const;
+    int GetInventoryHPDelta() const;
+    int GetInventoryMPDelta() const;
+    int GetInventoryQuantityDelta() const;
+    int GetInventoryRemainingCount() const;
+    int GetInventoryFeedbackItemID() const;
+    bool WasInventoryUseSuccessful() const;
+    bool IsPartyFeedbackActive() const;
+    double GetPartyFeedbackProgress() const;
+    double GetPartyNoticeOpacity() const;
+    int GetPartyCountDelta() const;
+    int GetPartyFeedbackCharacterID() const;
+    bool WasPartyChangeSuccessful() const;
+    bool IsPartyPresentationTransitioning() const;
+    double GetPartyPresentationProgress() const;
+
+private:
     bool IsPointInRect(int x, int y, const RECT& rc) const;
 
     void DrawPanel(HDC hMemDC, const RECT& panel);
@@ -136,17 +217,18 @@ private:
     std::wstring GetEquipPartName(EEquipPart part) const;
     std::wstring GetEquippedName(int itemID) const;
     std::wstring MakeStatLine(const CharacterStat& stat) const;
-    std::vector<int> GetShopItemIDs() const;
 
 public:
     Maintenance_Stage();
-    virtual ~Maintenance_Stage();
+    virtual ~Maintenance_Stage() override;
 
-    virtual void Init(HWND hWnd, HINSTANCE const g_hInst);
-    virtual void Update(HWND hWnd);
-    virtual void Draw(HDC hMemDC, HDC hMemDC1);
-    virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void Init(HWND hWnd, HINSTANCE const g_hInst) override;
+    virtual void Update(HWND hWnd) override;
+    virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
+    virtual void DrawCursor(HDC hMemDC, HDC hMemDC1) override;
+    virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) override;
+    virtual bool HandleSetCursor(HWND hWnd, WPARAM wParam, LPARAM lParam) override;
 
-    virtual void Comp_NextStage(int ID);
+    virtual void Comp_NextStage(int ID) override;
     virtual void BackgroundMove(int x, int y) override;
 };

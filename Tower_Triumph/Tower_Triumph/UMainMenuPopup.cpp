@@ -1,508 +1,212 @@
-﻿#include "UMainMenuPopup.h"
-#include "resource.h"
+#include "UMainMenuPopup.h"
+#include "StarlightUI.h"
+#include <algorithm>
 
-UMainMenuPopup::UMainMenuPopup()
-    : currentTab(EMenuTab::CharacterInfo),
-      invState(EInventoryState::Normal),
-      selectedCharacter(nullptr),
-      selectedItemID(-1),
-      btnOpenChar(nullptr),
-      btnOpenInv(nullptr),
-      btnExit(nullptr),
-      btnClose(nullptr),
-      btnOpenCharDetail(nullptr),
-      btnOpenInvDetail(nullptr),
-      navLayer(nullptr),
-      charLayer(nullptr),
-      invLayer(nullptr),
-      guideLabel(nullptr),
-      invTitleLabel(nullptr),
-      invGuideLabel(nullptr),
-      invEmptyLabel(nullptr),
-      itemActionPanel(nullptr),
-      btnItemAction1(nullptr),
-      btnItemAction2(nullptr),
-      targetSelectPanel(nullptr),
-      profilePanel(nullptr),
-      statePanel(nullptr),
-      hBgBitmap(NULL),
-      exitPopup(nullptr),
-      charPopup(nullptr),
-      invPopup(nullptr),
-      bShowTooltip(false)
+namespace {
+UButton* MenuButton(UContainerWidget* parent, const std::wstring& text,
+    int x, int y, int width, const std::function<void()>& action, bool primary = false)
 {
-    bVisible = false;
-    ZeroMemory(&bgInfo, sizeof(BITMAP));
+    auto button = new UButton();
+    button->SetText(text);
+    button->SetLocation(x, y);
+    button->SetSize(width, 40);
+    StarlightUI::StyleButton(button, primary, 17);
+    button->SetOnClick(action);
+    parent->AddChild(button);
+    return button;
+}
+UTextLabel* MenuLabel(UContainerWidget* parent, const std::wstring& text, const RECT& bounds,
+    int height = 18, COLORREF color = RGB(187, 179, 201))
+{
+    auto label = new UTextLabel();
+    label->SetText(text);
+    label->SetLocation((bounds.left + bounds.right) / 2, (bounds.top + bounds.bottom) / 2);
+    label->SetSize(bounds.right - bounds.left, bounds.bottom - bounds.top);
+    label->SetFont(height, FW_NORMAL, L"Malgun Gothic");
+    label->SetColor(color);
+    label->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    parent->AddChild(label);
+    return label;
+}
+std::wstring SignedBonus(int value)
+{
+    return (value >= 0 ? L"+" : L"") + std::to_wstring(value);
+}
 }
 
-UMainMenuPopup::~UMainMenuPopup()
-{
-}
+UMainMenuPopup::UMainMenuPopup() { bVisible = false; }
 
-void UMainMenuPopup::Init()
+void UMainMenuPopup::Setup(HINSTANCE instance, RECT clientRect)
 {
-}
-
-void UMainMenuPopup::Setup(HINSTANCE hInst, RECT clientRect)
-{
-    Size.sX = clientRect.right;
-    Size.sY = clientRect.bottom;
-    Loc.x = clientRect.right / 2;
-    Loc.y = clientRect.bottom / 2;
-
+    Size.sX = clientRect.right - clientRect.left;
+    Size.sY = clientRect.bottom - clientRect.top;
+    Loc.x = (clientRect.left + clientRect.right) / 2;
+    Loc.y = (clientRect.top + clientRect.bottom) / 2;
+    panelBounds = StarlightUI::Centered(clientRect, 1000, 620);
+    const int left = panelBounds.left, top = panelBounds.top, right = panelBounds.right;
     navLayer = new UContainerWidget();
-    navLayer->SetSize(0, 0);
-    navLayer->SetLocation(Loc.x, Loc.y);
-    AddChild(navLayer);
-
     charLayer = new UContainerWidget();
-    charLayer->SetSize(0, 0);
-    charLayer->SetLocation(Loc.x, Loc.y);
-    AddChild(charLayer);
-
     invLayer = new UContainerWidget();
-    invLayer->SetSize(0, 0);
-    invLayer->SetLocation(Loc.x, Loc.y);
-    invLayer->SetVisible(false);
-    AddChild(invLayer);
-
-    int topY = 88;
-    int btnW = 145;
-    int btnH = 38;
-    int spacing = 16;
-
-    int groupWidth = (btnW * 3) + (spacing * 2);
-    int groupStartX = Loc.x - (groupWidth / 2);
-
-    btnOpenChar = new UButton();
-    btnOpenChar->SetText(L"상태");
-    btnOpenChar->SetLocation(groupStartX + (btnW / 2), topY);
-    btnOpenChar->SetSize(btnW, btnH);
-    btnOpenChar->SetOnClick([this]() { this->SelectTab(EMenuTab::CharacterInfo); });
-    btnOpenChar->SetSelected(true);
-    navLayer->AddChild(btnOpenChar);
-
-    btnOpenInv = new UButton();
-    btnOpenInv->SetText(L"인벤토리");
-    btnOpenInv->SetLocation(groupStartX + btnW + spacing + (btnW / 2), topY);
-    btnOpenInv->SetSize(btnW, btnH);
-    btnOpenInv->SetOnClick([this]() { this->SelectTab(EMenuTab::Inventory); });
-    navLayer->AddChild(btnOpenInv);
-
-    btnExit = new UButton();
-    btnExit->SetText(L"종료");
-    btnExit->SetLocation(groupStartX + (btnW * 2) + (spacing * 2) + (btnW / 2), topY);
-    btnExit->SetSize(btnW, btnH);
-    btnExit->SetOnClick([this]() {
-        if (exitPopup) {
-            exitPopup->SetVisible(true);
-        }
-    });
-    navLayer->AddChild(btnExit);
-
-    btnClose = new UButton();
-    btnClose->SetText(L"X");
-    btnClose->SetLocation(clientRect.right - 46, topY);
-    btnClose->SetSize(42, 42);
-    btnClose->SetOnClick([this]() { this->CloseSubPopups(); this->SetVisible(false); });
-    navLayer->AddChild(btnClose);
-
-    btnOpenCharDetail = new UButton();
-    btnOpenCharDetail->SetText(L"상세 보기");
-    btnOpenCharDetail->SetLocation(Loc.x - 120, topY + 62);
-    btnOpenCharDetail->SetSize(150, 34);
-    btnOpenCharDetail->SetFont(18, FW_BOLD, L"Arial");
-    btnOpenCharDetail->SetAnimationType(1);
-    btnOpenCharDetail->SetOnClick([this]() { this->OpenCharacterPopup(); });
-    navLayer->AddChild(btnOpenCharDetail);
-
-    btnOpenInvDetail = new UButton();
-    btnOpenInvDetail->SetText(L"가방 보기");
-    btnOpenInvDetail->SetLocation(Loc.x + 120, topY + 62);
-    btnOpenInvDetail->SetSize(150, 34);
-    btnOpenInvDetail->SetFont(18, FW_BOLD, L"Arial");
-    btnOpenInvDetail->SetAnimationType(1);
-    btnOpenInvDetail->SetOnClick([this]() { this->OpenInventoryPopup(); });
-    navLayer->AddChild(btnOpenInvDetail);
-
-    guideLabel = new UTextLabel();
-    guideLabel->SetText(L"캐릭터를 선택하면 능력치와 장비 정보를 확인할 수 있습니다.");
-    guideLabel->SetLocation(Loc.x, Loc.y - Size.sY / 2 + 181);
-    guideLabel->SetSize(Size.sX - 160, 34);
-    guideLabel->SetFont(20, FW_BOLD, L"Arial");
-    guideLabel->SetColor(RGB(230, 230, 240));
-    guideLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    charLayer->AddChild(guideLabel);
-
-    int invTextLeft = Loc.x - Size.sX / 2 + 105;
-
-    invTitleLabel = new UTextLabel();
-    invTitleLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 184);
-    invTitleLabel->SetSize(860, 34);
-    invTitleLabel->SetFont(25, FW_BOLD, L"Arial");
-    invTitleLabel->SetColor(RGB(238, 232, 214));
-    invTitleLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    invLayer->AddChild(invTitleLabel);
-
-    invGuideLabel = new UTextLabel();
-    invGuideLabel->SetText(L"장비 또는 소비 아이템을 선택한 뒤 대상 캐릭터를 고르세요.");
-    invGuideLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 222);
-    invGuideLabel->SetSize(860, 30);
-    invGuideLabel->SetFont(18, FW_NORMAL, L"Arial");
-    invGuideLabel->SetColor(RGB(215, 215, 225));
-    invGuideLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    invLayer->AddChild(invGuideLabel);
-
-    invEmptyLabel = new UTextLabel();
-    invEmptyLabel->SetText(L"아이템이 없습니다.");
-    invEmptyLabel->SetLocation(invTextLeft + 430, Loc.y - Size.sY / 2 + 277);
-    invEmptyLabel->SetSize(860, 30);
-    invEmptyLabel->SetFont(18, FW_NORMAL, L"Arial");
-    invEmptyLabel->SetColor(RGB(215, 215, 225));
-    invEmptyLabel->SetAlign(DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    invEmptyLabel->SetVisible(false);
-    invLayer->AddChild(invEmptyLabel);
-
-    itemActionPanel = new UContainerWidget();
-    itemActionPanel->SetSize(180, 100);
-    itemActionPanel->SetVisible(false);
-    AddChild(itemActionPanel);
-
-    btnItemAction1 = new UButton();
-    btnItemAction1->SetSize(150, 40);
-    btnItemAction1->SetLocation(90, 25);
-    itemActionPanel->AddChild(btnItemAction1);
-
-    btnItemAction2 = new UButton();
-    btnItemAction2->SetText(L"취소");
-    btnItemAction2->SetSize(150, 40);
-    btnItemAction2->SetLocation(90, 75);
-    btnItemAction2->SetOnClick([this]() { this->HideSubMenus(); });
-    itemActionPanel->AddChild(btnItemAction2);
-
+    for (auto layer : { navLayer, charLayer, invLayer }) {
+        layer->SetLocation(Loc.x, Loc.y);
+        layer->SetSize(0, 0);
+        AddChild(layer);
+    }
+    btnOpenChar = MenuButton(navLayer, L"상태", left + 88, top + 113, 120,
+        [this]() { SelectTab(EMenuTab::CharacterInfo); });
+    btnOpenInv = MenuButton(navLayer, L"인벤토리", left + 222, top + 113, 128,
+        [this]() { SelectTab(EMenuTab::Inventory); });
+    btnExit = MenuButton(navLayer, L"종료", left + 356, top + 113, 120,
+        [this]() { HideSubMenus(); exitPopup->SetVisible(true); });
+    btnOpenCharDetail = MenuButton(navLayer, L"상세 보기", right - 260, top + 113, 142,
+        [this]() { OpenCharacterPopup(); });
+    btnOpenInvDetail = MenuButton(navLayer, L"가방 보기", right - 100, top + 113, 142,
+        [this]() { OpenInventoryPopup(); });
+    btnClose = MenuButton(navLayer, L"X", right - 42, top + 43, 36,
+        [this]() { CloseSubPopups(); SetVisible(false); });
+    guideLabel = MenuLabel(charLayer, L"캐릭터를 선택하면 능력치와 장비 정보를 확인할 수 있습니다.",
+        RECT{ left + 28, top + 150, right - 28, top + 182 });
+    invTitleLabel = MenuLabel(invLayer, L"", RECT{ left + 28, top + 147, right - 28, top + 177 }, 19, StarlightUI::Gold);
+    invGuideLabel = MenuLabel(invLayer, L"장비 또는 소비 아이템을 선택한 뒤 대상 캐릭터를 고르세요.",
+        RECT{ left + 28, top + 180, right - 28, top + 210 });
+    invEmptyLabel = MenuLabel(invLayer, L"아이템이 없습니다.",
+        RECT{ left + 28, top + 254, left + 466, top + 290 });
+    profilePanel = new UProfilePanel();
+    profilePanel->Setup(left + 353, top + 390);
+    profilePanel->SetPanelBounds(RECT{ left + 228, top + 194, left + 478, panelBounds.bottom - 28 });
+    charLayer->AddChild(profilePanel);
+    statePanel = new UStatePanel();
+    statePanel->Setup(left + 736, top + 390);
+    statePanel->SetPanelBounds(RECT{ left + 500, top + 194, right - 28, panelBounds.bottom - 28 });
+    charLayer->AddChild(statePanel);
+    detailBounds = RECT{ left + 500, top + 226, right - 28, panelBounds.bottom - 28 };
+    btnInspectAction = MenuButton(invLayer, L"대상 선택", (detailBounds.left + detailBounds.right) / 2,
+        detailBounds.bottom - 38, 150, [this]() {
+            if (inspectedItemID >= 0) ShowActionMenu(inspectedItemID, 0, 0);
+        }, true);
     targetSelectPanel = new UContainerWidget();
-    targetSelectPanel->SetSize(640, 220);
     targetSelectPanel->SetLocation(Loc.x, Loc.y);
+    targetSelectPanel->SetSize(700, 300);
     targetSelectPanel->SetVisible(false);
     AddChild(targetSelectPanel);
-
-    profilePanel = new UProfilePanel();
-    profilePanel->Setup(Loc.x - 400, Loc.y + 10);
-    profilePanel->SetVisible(false);
-    charLayer->AddChild(profilePanel);
-
-    statePanel = new UStatePanel();
-    statePanel->Setup(Loc.x + 80, Loc.y + 85);
-    statePanel->SetVisible(false);
-    charLayer->AddChild(statePanel);
-
     exitPopup = new UExitConfirmPopup();
-    exitPopup->Setup(hInst, clientRect);
+    exitPopup->Setup(instance, clientRect);
     exitPopup->SetOnYes([]() { PostQuitMessage(0); });
     exitPopup->SetOnNo([this]() { exitPopup->SetVisible(false); });
     AddChild(exitPopup);
-
     charPopup = new UCharacterInfoPopup();
     charPopup->Setup(clientRect);
     charPopup->OnBackCallback = [this]() {
-        if (charPopup) {
-            charPopup->SetVisible(false);
-        }
-        if (navLayer) {
-            navLayer->SetVisible(true);
-        }
+        charPopup->SetVisible(false);
+        navLayer->SetVisible(true);
         SelectTab(currentTab);
     };
     charPopup->SetVisible(false);
     AddChild(charPopup);
-
     invPopup = new UInventoryPopup();
     invPopup->Setup(clientRect);
     invPopup->OnBackCallback = [this]() {
-        if (invPopup) {
-            invPopup->SetVisible(false);
-        }
-        if (navLayer) {
-            navLayer->SetVisible(true);
-        }
+        invPopup->SetVisible(false);
+        navLayer->SetVisible(true);
         SelectTab(currentTab);
     };
     invPopup->SetVisible(false);
     AddChild(invPopup);
-
-    for (int i = 0; i < 3; ++i) {
-        UButton* btn = new UButton();
-        btn->SetSize(240, 54);
-        btn->SetVisible(false);
-        charLayer->AddChild(btn);
-        equipSlotButtons.push_back(btn);
-    }
-}
-
-void UMainMenuPopup::SetBackgroundImage(HBITMAP hBitmap)
-{
-    hBgBitmap = hBitmap;
-    if (hBgBitmap) {
-        GetObject(hBgBitmap, sizeof(BITMAP), &bgInfo);
-    }
+    SelectTab(currentTab);
 }
 
 void UMainMenuPopup::SetTeamData(const std::vector<Character*>& team)
 {
     teamMembers = team;
-    if (!teamMembers.empty() && selectedCharacter == nullptr) {
-        selectedCharacter = teamMembers[0];
-    }
-
+    if (std::find(teamMembers.begin(), teamMembers.end(), selectedCharacter) == teamMembers.end())
+        selectedCharacter = teamMembers.empty() ? nullptr : teamMembers.front();
     UpdateCharList();
-    UpdateInventoryGrid();
-    UpdateEquipmentSlots();
     RefreshFriendStylePanels();
-
-    if (charPopup) {
-        charPopup->SetTeamData(teamMembers);
-    }
-    if (invPopup) {
-        invPopup->SetTeamData(teamMembers);
-        invPopup->Refresh();
-    }
+    if (charPopup) charPopup->SetTeamData(teamMembers);
+    if (invPopup) { invPopup->SetTeamData(teamMembers); invPopup->Refresh(); }
+    if (currentTab == EMenuTab::Inventory) UpdateInventoryGrid();
 }
 
 void UMainMenuPopup::UpdateCharList()
 {
-    for (auto b : charSelectButtons) {
-        if (charLayer) charLayer->RemoveChild(b, true);
-        else RemoveChild(b, true);
-    }
+    for (auto button : charSelectButtons) charLayer->RemoveChild(button, true);
     charSelectButtons.clear();
-
-    int panelRight = Loc.x + Size.sX / 2 - 70;
-    int listStartX = panelRight - 85;
-    int listStartY = Loc.y - Size.sY / 2 + 185;
-
-    int btnW = 130;
-    int btnH = 34;
-
     for (size_t i = 0; i < teamMembers.size(); ++i) {
-        UButton* btn = new UButton();
-        btn->SetText(teamMembers[i]->GetName());
-        btn->SetLocation(listStartX, listStartY + (int)i * 44);
-        btn->SetSize(btnW, btnH);
-
-        Character* charPtr = teamMembers[i];
-        btn->SetOnClick([this, charPtr, btn]() {
-            this->SelectCharacter(charPtr);
-            for (auto b : charSelectButtons) {
-                b->SetSelected(false);
-            }
-            btn->SetSelected(true);
-        });
-
-        if (charPtr == selectedCharacter) {
-            btn->SetSelected(true);
-        }
-
-        if (charLayer) charLayer->AddChild(btn);
-        else AddChild(btn);
-        charSelectButtons.push_back(btn);
+        Character* character = teamMembers[i];
+        auto button = MenuButton(charLayer, character ? character->GetName() : L"None",
+            panelBounds.left + 118, panelBounds.top + 222 + (int)i * 56, 180,
+            [this, character]() { SelectCharacter(character); });
+        button->SetSelected(character == selectedCharacter);
+        charSelectButtons.push_back(button);
     }
-
-    SelectTab(currentTab);
 }
 
 void UMainMenuPopup::UpdateInventoryGrid()
 {
-    for (auto b : itemIconButtons) {
-        if (invLayer) invLayer->RemoveChild(b, true);
-        else RemoveChild(b, true);
-    }
+    for (auto button : itemIconButtons) invLayer->RemoveChild(button, true);
     itemIconButtons.clear();
-
-    if (currentTab != EMenuTab::Inventory) {
-        return;
-    }
-
-    int boxLeft = Loc.x - Size.sX / 2 + 105;
-    int boxTop = Loc.y - Size.sY / 2 + 245;
-
+    itemButtonIDs.clear();
     const auto& inventory = GameManager::Get().GetInventory();
-
-    if (invTitleLabel) {
-        invTitleLabel->SetText(L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold()));
-    }
-    if (invEmptyLabel) {
-        invEmptyLabel->SetVisible(inventory.empty());
-    }
-
-    int colCount = 5;
-    int slotW = 160;
-    int slotH = 66;
-    int spacingX = 22;
-    int spacingY = 22;
-
+    invTitleLabel->SetText(L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold()));
+    invEmptyLabel->SetVisible(inventory.empty());
+    bool found = false;
+    for (const auto& item : inventory) if (item.ItemID == inspectedItemID) found = true;
+    if (!found) inspectedItemID = inventory.empty() ? -1 : inventory.front().ItemID;
     for (size_t i = 0; i < inventory.size(); ++i) {
-        int itemID = inventory[i].ItemID;
-        int count = inventory[i].Count;
-
-        int col = (int)i % colCount;
-        int row = (int)i / colCount;
-
-        UButton* btn = new UButton();
-        btn->SetText(MakeItemButtonText(itemID, count));
-        btn->SetLocation(
-            boxLeft + col * (slotW + spacingX) + slotW / 2,
-            boxTop + row * (slotH + spacingY) + slotH / 2
-        );
-        btn->SetSize(slotW, slotH);
-
-        btn->SetOnHover([this, itemID, btn]() {
-            this->ShowTooltip(ItemData::GetName(itemID), this->MakeItemTooltip(itemID), btn->GetLocation());
-        });
-        btn->SetOnUnhover([this]() { this->HideTooltip(); });
-
-        btn->SetOnClick([this, itemID, btn]() {
-            Location loc = btn->GetLocation();
-            this->ShowActionMenu(itemID, loc.x, loc.y);
-        });
-
-        if (invLayer) invLayer->AddChild(btn);
-        else AddChild(btn);
-        itemIconButtons.push_back(btn);
+        const int itemID = inventory[i].ItemID;
+        const int x = panelBounds.left + 134 + ((int)i % 2) * 230;
+        const int y = panelBounds.top + 250 + ((int)i / 2) * 65;
+        auto button = MenuButton(invLayer, MakeItemButtonText(itemID, inventory[i].Count), x, y, 212,
+            [this, itemID]() { InspectItem(itemID); ShowActionMenu(itemID, 0, 0); });
+        button->SetSize(212, 52);
+        StarlightUI::StyleButton(button, false, 16);
+        button->SetOnHover([this, itemID]() { if (invState == EInventoryState::Normal) InspectItem(itemID); });
+        button->SetSelected(itemID == inspectedItemID);
+        itemIconButtons.push_back(button);
+        itemButtonIDs.push_back(itemID);
     }
+    btnInspectAction->SetVisible(inspectedItemID >= 0);
 }
 
-void UMainMenuPopup::UpdateEquipmentSlots()
+void UMainMenuPopup::InspectItem(int itemID)
 {
-    for (auto b : equipSlotButtons)
-    {
-        if (b)
-        {
-            b->SetVisible(false);
-        }
-    }
+    inspectedItemID = itemID;
+    for (size_t i = 0; i < itemIconButtons.size(); ++i)
+        itemIconButtons[i]->SetSelected(itemButtonIDs[i] == inspectedItemID);
 }
 
-void UMainMenuPopup::ShowActionMenu(int itemID, int x, int y)
+void UMainMenuPopup::ShowActionMenu(int itemID, int, int)
 {
     selectedItemID = itemID;
-    invState = EInventoryState::TargetSelect;
-
-    if (itemActionPanel) {
-        itemActionPanel->SetVisible(false);
-    }
-
-    if (ItemData::IsEquipment(itemID) || ItemData::IsConsumable(itemID)) {
-        ShowTargetSelection();
-        return;
-    }
-
-    HideSubMenus();
+    if (ItemData::IsEquipment(itemID) || ItemData::IsConsumable(itemID)) ShowTargetSelection();
+    else HideSubMenus();
 }
 
 void UMainMenuPopup::ShowTargetSelection()
 {
     invState = EInventoryState::TargetSelect;
-
-    if (itemActionPanel) {
-        itemActionPanel->SetVisible(false);
-    }
-
     targetSelectPanel->ClearChildren(true);
-    targetButtons.clear();
-
-    int panelCenterX = Loc.x;
-    int panelCenterY = Loc.y;
-
-    const int panelW = 820;
-    const int panelH = 300;
-    const int colCount = 3;
-    const int btnW = 160;
-    const int btnH = 58;
-    const int gapX = 42;
-    const int gapY = 24;
-
-    targetSelectPanel->SetSize(panelW, panelH);
-    targetSelectPanel->SetLocation(panelCenterX, panelCenterY + 25);
-
-    UTextLabel* targetTitleLabel = new UTextLabel();
-    targetTitleLabel->SetText(L"대상 선택: " + ItemData::GetName(selectedItemID));
-    targetTitleLabel->SetLocation(panelCenterX, panelCenterY - 85);
-    targetTitleLabel->SetSize(panelW, 36);
-    targetTitleLabel->SetFont(24, FW_BOLD, L"Arial");
-    targetTitleLabel->SetColor(RGB(238, 232, 214));
-    targetTitleLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    targetSelectPanel->AddChild(targetTitleLabel);
-
-    int totalW = colCount * btnW + (colCount - 1) * gapX;
-    int startX = panelCenterX - totalW / 2 + btnW / 2;
-    int startY = panelCenterY + 15;
-
+    const int x = Loc.x - 212, y = Loc.y - 30;
     for (size_t i = 0; i < teamMembers.size(); ++i) {
         Character* target = teamMembers[i];
-        UButton* btn = new UButton();
-        btn->SetText(target ? target->GetName() : L"None");
-
-        int col = (int)i % colCount;
-        int row = (int)i / colCount;
-
-        btn->SetLocation(startX + col * (btnW + gapX), startY + row * (btnH + gapY));
-        btn->SetSize(btnW, btnH);
-        btn->SetFont(15, FW_BOLD, L"Malgun Gothic");
-        btn->SetAnimationType(0);
-
-        btn->SetOnClick([this, target]() {
-            if (target == nullptr || selectedItemID < 0) {
-                this->HideSubMenus();
-                return;
-            }
-
-            if (ItemData::IsEquipment(selectedItemID)) {
-                GameManager::Get().EquipItem(target, selectedItemID);
-            }
-            else if (ItemData::IsConsumable(selectedItemID)) {
-                GameManager::Get().UseConsumable(target, selectedItemID);
-            }
-
-            this->HideSubMenus();
-            this->UpdateInventoryGrid();
-            this->UpdateEquipmentSlots();
-            this->RefreshFriendStylePanels();
-            if (invPopup) {
-                invPopup->Refresh();
-            }
-        });
-
-        targetSelectPanel->AddChild(btn);
-        targetButtons.push_back(btn);
+        MenuButton(targetSelectPanel, target ? target->GetName() : L"None",
+            x + ((int)i % 3) * 212, y + ((int)i / 3) * 66, 196, [this, target]() {
+                if (!target || selectedItemID < 0) { HideSubMenus(); return; }
+                if (ItemData::IsEquipment(selectedItemID)) GameManager::Get().EquipItem(target, selectedItemID);
+                else if (ItemData::IsConsumable(selectedItemID)) GameManager::Get().UseConsumable(target, selectedItemID);
+                HideSubMenus();
+                UpdateInventoryGrid();
+                RefreshFriendStylePanels();
+                if (invPopup) invPopup->Refresh();
+            });
     }
-
-    int cancelIndex = (int)teamMembers.size();
-    int cancelCol = cancelIndex % colCount;
-    int cancelRow = cancelIndex / colCount;
-
-    UButton* cancel = new UButton();
-    cancel->SetText(L"취소");
-    cancel->SetLocation(startX + cancelCol * (btnW + gapX), startY + cancelRow * (btnH + gapY));
-    cancel->SetSize(btnW, btnH);
-    cancel->SetFont(15, FW_BOLD, L"Malgun Gothic");
-    cancel->SetAnimationType(0);
-    cancel->SetOnClick([this]() { this->HideSubMenus(); });
-    targetSelectPanel->AddChild(cancel);
-    targetButtons.push_back(cancel);
-
+    MenuButton(targetSelectPanel, L"취소", Loc.x, Loc.y + 111, 140, [this]() { HideSubMenus(); });
     targetSelectPanel->SetVisible(true);
 }
 
 void UMainMenuPopup::HideSubMenus()
 {
-    if (itemActionPanel) {
-        itemActionPanel->SetVisible(false);
-    }
-    if (targetSelectPanel) {
-        targetSelectPanel->SetVisible(false);
-    }
-
-    targetButtons.clear();
+    if (targetSelectPanel) targetSelectPanel->SetVisible(false);
     selectedItemID = -1;
     invState = EInventoryState::Normal;
 }
@@ -511,359 +215,165 @@ void UMainMenuPopup::SelectTab(EMenuTab tab)
 {
     currentTab = tab;
     HideSubMenus();
-
-    btnOpenChar->SetSelected(currentTab == EMenuTab::CharacterInfo);
-    btnOpenInv->SetSelected(currentTab == EMenuTab::Inventory);
-
-    bool showCharLists = (currentTab == EMenuTab::CharacterInfo);
-    if (charLayer) {
-        charLayer->SetVisible(showCharLists);
-    }
-    if (invLayer) {
-        invLayer->SetVisible(!showCharLists);
-    }
-
-    for (auto btn : charSelectButtons) {
-        btn->SetVisible(showCharLists);
-    }
-
-    if (profilePanel) {
-        profilePanel->SetVisible(showCharLists);
-    }
-
-    if (statePanel) {
-        statePanel->SetVisible(showCharLists);
-    }
-
+    const bool character = currentTab == EMenuTab::CharacterInfo;
+    btnOpenChar->SetSelected(character);
+    btnOpenInv->SetSelected(!character);
+    charLayer->SetVisible(character);
+    invLayer->SetVisible(!character);
     RefreshFriendStylePanels();
-
-    if (currentTab == EMenuTab::Inventory) {
-        UpdateInventoryGrid();
-        for (auto b : equipSlotButtons) {
-            b->SetVisible(false);
-        }
-    }
-    else {
-        for (auto b : itemIconButtons) {
-            b->SetVisible(false);
-        }
-        UpdateEquipmentSlots();
-    }
+    if (!character) UpdateInventoryGrid();
 }
 
 void UMainMenuPopup::SelectCharacter(Character* character)
 {
     selectedCharacter = character;
-    UpdateEquipmentSlots();
+    for (size_t i = 0; i < charSelectButtons.size(); ++i)
+        charSelectButtons[i]->SetSelected(teamMembers[i] == character);
     RefreshFriendStylePanels();
 }
-
 void UMainMenuPopup::RefreshFriendStylePanels()
 {
-    if (profilePanel) {
-        profilePanel->SetCharacter(selectedCharacter);
-    }
-
-    if (statePanel) {
-        statePanel->SetCharacter(selectedCharacter);
-    }
+    if (profilePanel) profilePanel->SetCharacter(selectedCharacter);
+    if (statePanel) statePanel->SetCharacter(selectedCharacter);
 }
-
-void UMainMenuPopup::ShowNavigation()
-{
-    CloseSubPopups();
-    HideTooltip();
-    if (navLayer) { navLayer->SetVisible(true); }
-    SelectTab(currentTab);
-    SetVisible(true);
-}
+void UMainMenuPopup::ShowNavigation() { CloseSubPopups(); SetVisible(true); }
 
 void UMainMenuPopup::OpenCharacterPopup()
 {
-    if (charPopup == nullptr) {
-        return;
-    }
-
+    if (!charPopup) return;
     HideSubMenus();
-    HideTooltip();
-    if (invPopup) {
-        invPopup->SetVisible(false);
-    }
-
-    if (navLayer) { navLayer->SetVisible(false); }
-    if (charLayer) { charLayer->SetVisible(false); }
-    if (invLayer) { invLayer->SetVisible(false); }
-
+    invPopup->SetVisible(false);
+    exitPopup->SetVisible(false);
+    navLayer->SetVisible(false);
+    charLayer->SetVisible(false);
+    invLayer->SetVisible(false);
     charPopup->SetTeamData(teamMembers);
-    RemoveChild(charPopup, false);
-    AddChild(charPopup);
     charPopup->SetVisible(true);
 }
-
 void UMainMenuPopup::OpenInventoryPopup()
 {
-    if (invPopup == nullptr) {
-        return;
-    }
-
+    if (!invPopup) return;
     HideSubMenus();
-    HideTooltip();
-    if (charPopup) {
-        charPopup->SetVisible(false);
-    }
-
-    if (navLayer) { navLayer->SetVisible(false); }
-    if (charLayer) { charLayer->SetVisible(false); }
-    if (invLayer) { invLayer->SetVisible(false); }
-
+    charPopup->SetVisible(false);
+    exitPopup->SetVisible(false);
+    navLayer->SetVisible(false);
+    charLayer->SetVisible(false);
+    invLayer->SetVisible(false);
     invPopup->SetTeamData(teamMembers);
     invPopup->Refresh();
-    RemoveChild(invPopup, false);
-    AddChild(invPopup);
     invPopup->SetVisible(true);
 }
-
 void UMainMenuPopup::CloseSubPopups()
 {
     HideSubMenus();
-
-    if (charPopup) {
-        charPopup->SetVisible(false);
-    }
-    if (invPopup) {
-        invPopup->SetVisible(false);
-    }
-    if (exitPopup) {
-        exitPopup->SetVisible(false);
-    }
-
-    if (navLayer) {
-        navLayer->SetVisible(true);
-    }
+    if (charPopup) charPopup->SetVisible(false);
+    if (invPopup) invPopup->SetVisible(false);
+    if (exitPopup) exitPopup->SetVisible(false);
+    if (navLayer) navLayer->SetVisible(true);
     SelectTab(currentTab);
 }
 
-
 bool UMainMenuPopup::HandleBack()
 {
-    if (exitPopup && exitPopup->GetVisible()) {
-        exitPopup->SetVisible(false);
-        return true;
-    }
-
+    if (exitPopup && exitPopup->GetVisible()) { exitPopup->SetVisible(false); return true; }
     if (charPopup && charPopup->GetVisible()) {
         charPopup->SetVisible(false);
-        if (navLayer) { navLayer->SetVisible(true); }
+        navLayer->SetVisible(true);
         SelectTab(currentTab);
         return true;
     }
-
     if (invPopup && invPopup->GetVisible()) {
+        if (invPopup->HandleBack()) return true;
         invPopup->SetVisible(false);
-        if (navLayer) { navLayer->SetVisible(true); }
+        navLayer->SetVisible(true);
         SelectTab(currentTab);
         return true;
     }
-
-    if ((targetSelectPanel && targetSelectPanel->GetVisible()) ||
-        (itemActionPanel && itemActionPanel->GetVisible())) {
-        HideSubMenus();
-        return true;
-    }
-
+    if (targetSelectPanel && targetSelectPanel->GetVisible()) { HideSubMenus(); return true; }
     return false;
 }
-
-void UMainMenuPopup::ShowTooltip(const std::wstring& title, const std::wstring& desc, Location loc)
+UContainerWidget* UMainMenuPopup::ActiveModal() const
 {
-    bShowTooltip = true;
-    tooltipTitle = title;
-    tooltipDesc = desc;
-    tooltipLoc = loc;
+    if (exitPopup && exitPopup->GetVisible()) return exitPopup;
+    if (charPopup && charPopup->GetVisible()) return charPopup;
+    if (invPopup && invPopup->GetVisible()) return invPopup;
+    if (targetSelectPanel && targetSelectPanel->GetVisible()) return targetSelectPanel;
+    return nullptr;
 }
-
-void UMainMenuPopup::HideTooltip()
+UWidget* UMainMenuPopup::FindWidgetUnderMouse(int x, int y)
 {
-    bShowTooltip = false;
+    if (!bVisible) return nullptr;
+    if (auto modal = ActiveModal()) {
+        if (auto hit = modal->FindWidgetUnderMouse(x, y)) return hit;
+        return this;
+    }
+    if (auto hit = UContainerWidget::FindWidgetUnderMouse(x, y)) return hit;
+    return this;
 }
-
+void UMainMenuPopup::UpdateMouseHover(int x, int y)
+{
+    UContainerWidget* modal = bVisible ? ActiveModal() : nullptr;
+    for (auto layer : { navLayer, charLayer, invLayer, targetSelectPanel })
+        if (layer) layer->UpdateMouseHover(!bVisible || modal ? -10000 : x, !bVisible || modal ? -10000 : y);
+    for (UContainerWidget* child : { static_cast<UContainerWidget*>(exitPopup), static_cast<UContainerWidget*>(charPopup), static_cast<UContainerWidget*>(invPopup) })
+        if (child) child->UpdateMouseHover(-10000, -10000);
+    if (modal) modal->UpdateMouseHover(x, y);
+}
 void UMainMenuPopup::Update()
 {
-    UContainerWidget::Update();
+    if (!bVisible) return;
+    if (auto modal = ActiveModal()) { modal->Update(); return; }
+    navLayer->Update();
+    (currentTab == EMenuTab::CharacterInfo ? charLayer : invLayer)->Update();
 }
-
-void UMainMenuPopup::Draw(HDC hMemDC, HDC hMemDC1)
+void UMainMenuPopup::Draw(HDC hdc, HDC scratch)
 {
-    if (!bVisible) {
-        return;
+    if (!bVisible) return;
+    if (charPopup && charPopup->GetVisible()) { charPopup->Draw(hdc, scratch); return; }
+    if (invPopup && invPopup->GetVisible()) { invPopup->Draw(hdc, scratch); return; }
+    const RECT client = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2,
+        Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
+    StarlightUI::Dim(hdc, client, 100);
+    StarlightUI::Panel(hdc, panelBounds, L"메뉴", L"JOURNEY");
+    if (currentTab == EMenuTab::Inventory) DrawInventory(hdc);
+    navLayer->Draw(hdc, scratch);
+    (currentTab == EMenuTab::CharacterInfo ? charLayer : invLayer)->Draw(hdc, scratch);
+    if (targetSelectPanel->GetVisible()) {
+        StarlightUI::Dim(hdc, panelBounds, 150);
+        RECT target = { Loc.x - 350, Loc.y - 150, Loc.x + 350, Loc.y + 150 };
+        StarlightUI::Panel(hdc, target, L"대상 선택: " + ItemData::GetName(selectedItemID));
+        targetSelectPanel->Draw(hdc, scratch);
     }
-
-    RECT overlay = {
-        Loc.x - Size.sX / 2,
-        Loc.y - Size.sY / 2,
-        Loc.x + Size.sX / 2,
-        Loc.y + Size.sY / 2
-    };
-
-    HBRUSH overlayBrush = CreateSolidBrush(RGB(8, 8, 12));
-    FillRect(hMemDC, &overlay, overlayBrush);
-    DeleteObject(overlayBrush);
-
-    RECT mainPanel = {
-        Loc.x - Size.sX / 2 + 45,
-        Loc.y - Size.sY / 2 + 45,
-        Loc.x + Size.sX / 2 - 45,
-        Loc.y + Size.sY / 2 - 45
-    };
-
-    HBRUSH panelBrush = CreateSolidBrush(RGB(19, 23, 31));
-    HPEN panelPen = CreatePen(PS_SOLID, 3, RGB(176, 146, 78));
-    HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, panelBrush);
-    HPEN oldPen = (HPEN)SelectObject(hMemDC, panelPen);
-    RoundRect(hMemDC, mainPanel.left, mainPanel.top, mainPanel.right, mainPanel.bottom, 14, 14);
-    SelectObject(hMemDC, oldBrush);
-    SelectObject(hMemDC, oldPen);
-    DeleteObject(panelBrush);
-    DeleteObject(panelPen);
-
-    DrawSubMenuBackgrounds(hMemDC);
-    UContainerWidget::Draw(hMemDC, hMemDC1);
-
-    if (bShowTooltip) {
-        DrawTooltip(hMemDC);
-    }
+    if (exitPopup->GetVisible()) exitPopup->Draw(hdc, scratch);
 }
-
-void UMainMenuPopup::DrawCharacterInfo(HDC hMemDC)
+void UMainMenuPopup::DrawInventory(HDC hdc)
 {
+    invTitleLabel->SetText(L"공용 인벤토리    골드: " + std::to_wstring(GameManager::Get().GetGold()));
+    if (inspectedItemID < 0) return;
+    StarlightUI::Surface(hdc, detailBounds);
+    RECT title = { detailBounds.left + 22, detailBounds.top + 18, detailBounds.right - 22, detailBounds.top + 52 };
+    StarlightUI::Text(hdc, ItemData::GetName(inspectedItemID), title, 22, StarlightUI::Gold);
+    RECT description = { detailBounds.left + 22, detailBounds.top + 68, detailBounds.right - 22, detailBounds.bottom - 78 };
+    StarlightUI::Text(hdc, MakeItemTooltip(inspectedItemID), description, 18, StarlightUI::Ink);
 }
-
-void UMainMenuPopup::DrawInventory(HDC hMemDC)
-{
-}
-
-void UMainMenuPopup::DrawSubMenuBackgrounds(HDC hMemDC)
-{
-    if (targetSelectPanel && targetSelectPanel->GetVisible()) {
-        Location pLoc = targetSelectPanel->GetLocation();
-        BuSIZE pSize = targetSelectPanel->GetSize();
-
-        RECT pr = {
-            pLoc.x - pSize.sX / 2,
-            pLoc.y - pSize.sY / 2,
-            pLoc.x + pSize.sX / 2,
-            pLoc.y + pSize.sY / 2
-        };
-
-        HBRUSH hB = CreateSolidBrush(RGB(28, 30, 44));
-        FillRect(hMemDC, &pr, hB);
-        DeleteObject(hB);
-        {
-            HPEN hPen = CreatePen(PS_SOLID, 2, RGB(176, 146, 78));
-            HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
-            HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
-            Rectangle(hMemDC, pr.left, pr.top, pr.right, pr.bottom);
-            SelectObject(hMemDC, oldBrush);
-            SelectObject(hMemDC, oldPen);
-            DeleteObject(hPen);
-        }
-
-    }
-}
-
-void UMainMenuPopup::DrawTooltip(HDC hMemDC)
-{
-    int tw = 280;
-    int th = 150;
-    int tx = tooltipLoc.x + 40;
-    int ty = tooltipLoc.y - 60;
-
-    if (tx + tw > Loc.x + Size.sX / 2 - 20) {
-        tx = tooltipLoc.x - tw - 40;
-    }
-    if (ty < 20) {
-        ty = 20;
-    }
-
-    RECT tr = { tx, ty, tx + tw, ty + th };
-    HBRUSH hB = CreateSolidBrush(RGB(19, 23, 31));
-    FillRect(hMemDC, &tr, hB);
-    DeleteObject(hB);
-    {
-        HPEN hPen = CreatePen(PS_SOLID, 2, RGB(176, 146, 78));
-        HPEN oldPen = (HPEN)SelectObject(hMemDC, hPen);
-        HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, GetStockObject(NULL_BRUSH));
-        Rectangle(hMemDC, tr.left, tr.top, tr.right, tr.bottom);
-        SelectObject(hMemDC, oldBrush);
-        SelectObject(hMemDC, oldPen);
-        DeleteObject(hPen);
-    }
-
-    SetTextColor(hMemDC, RGB(238, 232, 214));
-    SetBkMode(hMemDC, TRANSPARENT);
-
-    HFONT hFont = CreateFontW(18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT oldF = (HFONT)SelectObject(hMemDC, hFont);
-    TextOutW(hMemDC, tx + 10, ty + 10, tooltipTitle.c_str(), (int)tooltipTitle.length());
-    DeleteObject(hFont);
-
-    hFont = CreateFontW(16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    SelectObject(hMemDC, hFont);
-    RECT textR = { tx + 10, ty + 40, tx + tw - 10, ty + th - 10 };
-    DrawTextW(hMemDC, tooltipDesc.c_str(), -1, &textR, DT_LEFT | DT_WORDBREAK);
-
-    SelectObject(hMemDC, oldF);
-    DeleteObject(hFont);
-}
-
-std::wstring UMainMenuPopup::GetEquipName(int itemID) const
-{
-    if (itemID < 0) {
-        return L"Empty";
-    }
-
-    return ItemData::GetName(itemID);
-}
-
 std::wstring UMainMenuPopup::MakeItemTooltip(int itemID) const
 {
     std::wstring text = ItemData::GetDescription(itemID);
-    SItemStatBonus bonus = ItemData::GetBonus(itemID);
-
+    const SItemStatBonus bonus = ItemData::GetBonus(itemID);
     if (ItemData::IsEquipment(itemID)) {
-        text += L"\n";
-        text += L"HP+" + std::to_wstring(bonus.MaxHP) + L" MP+" + std::to_wstring(bonus.MaxMP);
-        text += L"\nSTR+" + std::to_wstring(bonus.STR) + L" INT+" + std::to_wstring(bonus.INT);
-        text += L"\nDEF+" + std::to_wstring(bonus.DEF) + L" SPD+" + std::to_wstring(bonus.SPD);
+        text += L"\n\nHP" + SignedBonus(bonus.MaxHP) + L"   MP" + SignedBonus(bonus.MaxMP);
+        text += L"\nSTR" + SignedBonus(bonus.STR) + L"   INT" + SignedBonus(bonus.INT);
+        text += L"\nDEF" + SignedBonus(bonus.DEF) + L"   SPD" + SignedBonus(bonus.SPD);
     }
     else if (ItemData::IsConsumable(itemID)) {
-        text += L"\nHeal HP: " + std::to_wstring(ItemData::GetHealHP(itemID));
+        text += L"\n\nHeal HP: " + std::to_wstring(ItemData::GetHealHP(itemID));
         text += L"\nHeal MP: " + std::to_wstring(ItemData::GetHealMP(itemID));
     }
-
     return text;
 }
-
 std::wstring UMainMenuPopup::MakeItemButtonText(int itemID, int count) const
 {
-    std::wstring name = ItemData::GetName(itemID);
-
-    if (name == L"Small Potion") {
-        name = L"Potion";
-    }
-    else if (name == L"Leather Armor") {
-        name = L"Leather Armor";
-    }
-
-    std::wstring text = name;
-
-    if (count > 1) {
-        text += L" x" + std::to_wstring(count);
-    }
-
-    if (text.length() > 17) {
-        text = text.substr(0, 16) + L"...";
-    }
-
+    std::wstring text = ItemData::GetName(itemID);
+    if (count > 1) text += L" x" + std::to_wstring(count);
     return text;
 }

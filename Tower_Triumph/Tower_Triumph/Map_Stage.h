@@ -49,15 +49,26 @@ private:
 	int SelectedMarkerNextStageID;
 
 	HBITMAP hBitWave;
+	HBITMAP hBitMapOverview;
+	bool hasLayeredBackground;
 	BITMAP WaveInfo;
 	float waveOffset;
+	bool IsMapModalOpen() const;
+	void RefreshPointer(HWND hWnd);
 public:
+	// Shared map camera policy for startup, region focus and popup dismissal.
+	static constexpr float OverviewZoom = 1.3f;
+	static constexpr float RegionFocusZoom = 1.6f;
+
 	Map_Stage();
 	virtual ~Map_Stage();
 	virtual void Init(HWND hWnd, HINSTANCE const g_hInst);
+	void SetupLandmarks(HINSTANCE instance);
 	virtual void Update(HWND hWnd);
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
+	virtual void DrawCursor(HDC hMemDC, HDC hMemDC1) override;
 	virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual bool HandleSetCursor(HWND hWnd, WPARAM wParam, LPARAM lParam) override;
 
 	virtual void Comp_NextStage(int ID);
 	virtual void BackgroundMove(int x, int y) override;

@@ -1,5 +1,7 @@
 ﻿#include "UButton.h"
 
+#include <algorithm>
+
 UButton::UButton()
 {
     isPressed = false;
@@ -12,6 +14,7 @@ UButton::UButton()
     currentScale = 1.0f;
     bDrawTextFallbackBackground = false;
     bDrawOnlyText = false;
+    bWrapText = false;
 
     NormalColor = RGB(38, 44, 58);
     HoverColor = RGB(60, 72, 98);
@@ -128,10 +131,11 @@ void UButton::Animation2()
 
 void UButton::Update()
 {
-    if (!bEnabled)
+    if (!bEnabled || !bVisible)
     {
         IsPointed = false;
         isPressed = false;
+        bWasPointed = false;
         currentVisualOffsetY = 0.0f;
         currentScale = 1.0f;
         return;
@@ -290,15 +294,25 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
 
         RECT textRect = visualRect;
         OffsetRect(&textRect, 0, textYOffset);
+        UINT textFlags = DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
+        if (bWrapText)
+        {
+            InflateRect(&textRect, -6, -3);
+            RECT measured = textRect;
+            DrawTextW(hMemDC, ButtonText.c_str(), -1, &measured, DT_CENTER | DT_WORDBREAK | DT_CALCRECT | DT_NOPREFIX);
+            const int height = measured.bottom - measured.top;
+            textRect.top += (std::max)(0, static_cast<int>(textRect.bottom - textRect.top - height) / 2);
+            textFlags = DT_CENTER | DT_WORDBREAK | DT_NOPREFIX;
+        }
 
-        RECT shadowRect = visualRect;
-        OffsetRect(&shadowRect, 2, 2 + textYOffset);
+        RECT shadowRect = textRect;
+        OffsetRect(&shadowRect, 1, 1);
 
         SetTextColor(hMemDC, RGB(0, 0, 0));
-        DrawTextW(hMemDC, ButtonText.c_str(), -1, &shadowRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        DrawTextW(hMemDC, ButtonText.c_str(), -1, &shadowRect, textFlags);
 
         SetTextColor(hMemDC, textColor);
-        DrawTextW(hMemDC, ButtonText.c_str(), -1, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        DrawTextW(hMemDC, ButtonText.c_str(), -1, &textRect, textFlags);
 
         if (oldFont != NULL)
         {
@@ -314,16 +328,33 @@ void UButton::Draw(HDC hMemDC, HDC hMemDC1)
 void UButton::Click()
 {
     isPressed = false;
-    if (OnClickCallback)
-    {
-        OnClickCallback();
-    }
+    if (!bVisible || !bEnabled) return;
+    // Inventory callbacks can rebuild/delete this button. Keep the callable
+    // alive until it returns and do not touch this widget afterwards.
+    const auto callback = OnClickCallback;
+    if (callback) callback();
 }
 
 void UButton::RightClick()
 {
-    if (OnRightClickCallback)
+    if (!bVisible || !bEnabled) return;
+    const auto callback = OnRightClickCallback;
+    if (callback) callback();
+}
+
+UWidget* UButton::FindWidgetUnderMouse(int MouseX, int MouseY)
+{
+    return bEnabled ? UWidget::FindWidgetUnderMouse(MouseX, MouseY) : nullptr;
+}
+
+void UButton::UpdateMouseHover(int MouseX, int MouseY)
+{
+    UWidget::UpdateMouseHover(MouseX, MouseY);
+    if (!bEnabled) IsPointed = false;
+    if (!IsPointed && bWasPointed)
     {
-        OnRightClickCallback();
+        bWasPointed = false;
+        const auto callback = OnUnhoverCallback;
+        if (callback) callback();
     }
 }

@@ -9,6 +9,8 @@ private:
 	UButton* btnClose;
 	UButton* btnSoundToggle;
 	bool bSoundOn;
+	RECT panelRect;
+	RECT clientBounds;
 
 public:
 	USettingPopup();

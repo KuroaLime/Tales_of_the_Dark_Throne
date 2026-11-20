@@ -392,6 +392,12 @@
     <ClInclude Include="Maintenance_Stage.h">
       <Filter>헤더 파일\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="MaintenanceFeedback.h">
+      <Filter>헤더 파일\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFrameTransition.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="SkillData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

@@ -1,17 +1,17 @@
 #include "ULocationIndicator.h"
+#include "StarlightUI.h"
+#include <algorithm>
 
 ULocationIndicator::ULocationIndicator()
-    : hThumbnail(NULL)
+    : hThumbnail(nullptr), thumbInfo{}
 {
     bVisible = false;
 }
 
 void ULocationIndicator::Setup(RECT clientRect)
 {
-    Size.sX = 400;
-    Size.sY = 100;
-    Loc.x = 50 + Size.sX / 2;
-    Loc.y = clientRect.bottom - 50 - Size.sY / 2;
+    SetSize(420, 96);
+    SetLocation(clientRect.left + 32 + Size.sX / 2, clientRect.bottom - 32 - Size.sY / 2);
 }
 
 void ULocationIndicator::SetInfo(const std::wstring& parent, const std::wstring& point, HBITMAP hThumb)
@@ -19,70 +19,33 @@ void ULocationIndicator::SetInfo(const std::wstring& parent, const std::wstring&
     parentRegion = parent;
     pointName = point;
     hThumbnail = hThumb;
-    if (hThumbnail) {
-        GetObject(hThumbnail, sizeof(BITMAP), &thumbInfo);
-    }
+    thumbInfo = {};
+    if (hThumbnail && !GetObject(hThumbnail, sizeof(thumbInfo), &thumbInfo)) hThumbnail = nullptr;
     bVisible = true;
 }
 
 void ULocationIndicator::Draw(HDC hMemDC, HDC hMemDC1)
 {
     if (!bVisible) return;
+    RECT panel = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2,
+        Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
+    StarlightUI::Surface(hMemDC, panel);
+    int textLeft = panel.left + 22;
 
-    HDC hTempDC = CreateCompatibleDC(hMemDC);
-    HBITMAP hTempBit = CreateCompatibleBitmap(hMemDC, Size.sX, Size.sY);
-    HBITMAP hOldBit = (HBITMAP)SelectObject(hTempDC, hTempBit);
-
-    HBRUSH bgBrush = CreateSolidBrush(RGB(15, 15, 30));
-    RECT r = { 0, 0, Size.sX, Size.sY };
-    FillRect(hTempDC, &r, bgBrush);
-    DeleteObject(bgBrush);
-
-    BLENDFUNCTION bf;
-    bf.BlendOp = AC_SRC_OVER;
-    bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = 160; 
-    bf.AlphaFormat = 0;
-
-    AlphaBlend(hMemDC, Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Size.sX, Size.sY,
-               hTempDC, 0, 0, Size.sX, Size.sY, bf);
-
-    SelectObject(hTempDC, hOldBit);
-    DeleteObject(hTempBit);
-    DeleteDC(hTempDC);
-
-    int drawX = Loc.x - Size.sX / 2 + 10;
-    int drawY = Loc.y - Size.sY / 2 + 10;
-    int thumbSize = 80;
-
-    if (hThumbnail) {
-        HBITMAP old = (HBITMAP)SelectObject(hMemDC1, hThumbnail);
-        TransparentBlt(hMemDC, drawX, drawY, thumbSize, thumbSize,
-                       hMemDC1, 0, 0, thumbInfo.bmWidth, thumbInfo.bmHeight, RGB(255, 255, 255));
-        SelectObject(hMemDC1, old);
-    } else {
-        HBRUSH hB = CreateSolidBrush(RGB(50, 50, 70));
-        RECT tr = { drawX, drawY, drawX + thumbSize, drawY + thumbSize };
-        FillRect(hMemDC, &tr, hB);
-        DeleteObject(hB);
+    if (hThumbnail && thumbInfo.bmWidth > 0 && thumbInfo.bmHeight > 0) {
+        const double scale = (std::min)(64.0 / thumbInfo.bmWidth, 64.0 / thumbInfo.bmHeight);
+        const int width = (std::max)(1, static_cast<int>(thumbInfo.bmWidth * scale));
+        const int height = (std::max)(1, static_cast<int>(thumbInfo.bmHeight * scale));
+        HBITMAP previous = static_cast<HBITMAP>(SelectObject(hMemDC1, hThumbnail));
+        TransparentBlt(hMemDC, panel.left + 16 + (64 - width) / 2, panel.top + (Size.sY - height) / 2,
+            width, height, hMemDC1, 0, 0, thumbInfo.bmWidth, thumbInfo.bmHeight, RGB(255, 255, 255));
+        SelectObject(hMemDC1, previous);
+        textLeft = panel.left + 98;
     }
 
-    int textX = drawX + thumbSize + 20;
-    SetBkMode(hMemDC, TRANSPARENT);
-    
-    HFONT hTitleF = CreateFont(28, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    HFONT hOldF = (HFONT)SelectObject(hMemDC, hTitleF);
-    SetTextColor(hMemDC, RGB(255, 255, 255));
-    TextOutW(hMemDC, textX, drawY + 10, parentRegion.c_str(), (int)parentRegion.length());
-    DeleteObject(hTitleF);
-
-    HFONT hPointF = CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, L"Arial");
-    SelectObject(hMemDC, hPointF);
-    SetTextColor(hMemDC, RGB(200, 200, 200));
-    TextOutW(hMemDC, textX, drawY + 45, pointName.c_str(), (int)pointName.length());
-    DeleteObject(hPointF);
-
-    SelectObject(hMemDC, hOldF);
-
+    RECT parentRect = { textLeft, panel.top + 16, panel.right - 20, panel.top + 40 };
+    StarlightUI::Text(hMemDC, parentRegion, parentRect, 15, StarlightUI::Gold);
+    RECT nameRect = { textLeft, panel.top + 44, panel.right - 20, panel.bottom - 14 };
+    StarlightUI::Text(hMemDC, pointName, nameRect, 22);
     UContainerWidget::Draw(hMemDC, hMemDC1);
 }

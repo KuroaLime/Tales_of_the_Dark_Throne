@@ -1,0 +1,82 @@
+{
+  "previewOnly": true,
+  "tool": "built-in imagegen",
+  "mapSize": [
+    1672,
+    941
+  ],
+  "sources": {
+    "open": {
+      "file": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-668a9963-7dde-4cd3-9c84-a7e09af51741.png",
+      "sha256": "ef2495a2669611c7a7121c46f4226361fb25cb2f1b9fd5032ce3a4f9ab9f7bd3"
+    },
+    "closed": {
+      "file": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-421609c9-26dc-4652-84b4-4aecf69cc88f.png",
+      "sha256": "e72ad8b1b5ee7b9be5f0b9b5a27a1ac1f96835bcd8089e0dcae726e3f9d09058"
+    },
+    "buildings": {
+      "file": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-05180700-0718-499c-8411-79f3972e7b74.png",
+      "sha256": "5a2c6a189437a658b2ad178d96a7aa122cd16da453c8e0a04f4654874833f793"
+    },
+    "cleanMap": {
+      "file": "C:\\Users\\benev\\.codex\\generated_images\\01a1ea4c-6c43-7d01-9bda-4552cd4ebb54\\exec-7b6bc2c2-d687-4e56-9e46-dfce9eec521b.png",
+      "sha256": "ead372295564d57204723b1c19612c4b2dfb019fd7088ec049fcfe64f5dca8c0"
+    }
+  },
+  "buildings": {
+    "camp": {
+      "bounds": [
+        687,
+        282,
+        1013,
+        494
+      ],
+      "bytes": 33726
+    },
+    "graveyard": {
+      "bounds": [
+        1141,
+        412,
+        1474,
+        621
+      ],
+      "bytes": 30102
+    },
+    "heaven": {
+      "bounds": [
+        352,
+        148,
+        513,
+        317
+      ],
+      "bytes": 19110
+    },
+    "default": {
+      "bounds": [
+        241,
+        385,
+        494,
+        600
+      ],
+      "bytes": 27730
+    },
+    "sea": {
+      "bounds": [
+        432,
+        623,
+        820,
+        815
+      ],
+      "bytes": 34714
+    },
+    "lava": {
+      "bounds": [
+        1226,
+        201,
+        1400,
+        302
+      ],
+      "bytes": 11704
+    }
+  }
+}

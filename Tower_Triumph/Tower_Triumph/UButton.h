@@ -22,6 +22,7 @@ protected:
     float currentScale;
     bool bDrawTextFallbackBackground;
     bool bDrawOnlyText;
+    bool bWrapText;
 
     COLORREF NormalColor;
     COLORREF HoverColor;
@@ -45,6 +46,9 @@ public:
     virtual ~UButton();
     virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
     virtual void Update() override;
+    virtual UWidget* FindWidgetUnderMouse(int MouseX, int MouseY) override;
+    virtual void UpdateMouseHover(int MouseX, int MouseY) override;
+    virtual void CancelPress() override { isPressed = false; }
     
     void SetFont(int nHeight, int nWeight, const std::wstring& fontName);
     void SetAnimationType(int type) { AnimationType = type; }
@@ -52,6 +56,7 @@ public:
     bool GetDrawTextFallbackBackground() const { return bDrawTextFallbackBackground; }
     void SetDrawOnlyText(bool New) { bDrawOnlyText = New; }
     bool GetDrawOnlyText() const { return bDrawOnlyText; }
+    void SetTextWrapping(bool wrap) { bWrapText = wrap; }
 
     void SetFallbackColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled);
     void SetFallbackTextColors(COLORREF normal, COLORREF hover, COLORREF pressed, COLORREF selected, COLORREF disabled);

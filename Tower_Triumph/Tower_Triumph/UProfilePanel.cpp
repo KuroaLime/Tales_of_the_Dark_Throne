@@ -1,104 +1,73 @@
 ﻿#include "UProfilePanel.h"
-#include <string>
+#include "StarlightUI.h"
+#include <algorithm>
 
-UProfilePanel::UProfilePanel() : currentCharacter(nullptr)
-{
-    bgImage = nullptr;
-    nameLabel = nullptr;
-    levelLabel = nullptr;
-}
-
+UProfilePanel::UProfilePanel() : currentCharacter(nullptr), panelBounds{} {}
 void UProfilePanel::Setup(int x, int y)
 {
-    Loc.x = x;
-    Loc.y = y;
-
-    bgImage = new UImage();
-    bgImage->SetFrameFromFile({ L"Resource/Map/UI/CharacterUI_Character.bmp" });
-    if (!bgImage->GetBitmap().empty()) {
-        BITMAP info = bgImage->GetMapInfo()[0];
-        bgImage->SetSize(info.bmWidth, info.bmHeight);
-        Size = bgImage->GetSize();
-    }
-    bgImage->SetTransColor(RGB(255, 174, 201));
-    bgImage->SetLocation(Loc.x, Loc.y); 
-    AddChild(bgImage);
-
-    nameLabel = new UTextLabel();
-    nameLabel->SetFont(24, FW_BOLD, L"Arial");
-    nameLabel->SetLocation(Loc.x-83, Loc.y + 135);
-    nameLabel->SetSize(250, 40);
-    nameLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    AddChild(nameLabel);
-
-    levelLabel = new UTextLabel();
-    levelLabel->SetFont(26, FW_NORMAL, L"Arial");
-    levelLabel->SetLocation(Loc.x-78, Loc.y + 90);
-    levelLabel->SetSize(250, 40);
-    levelLabel->SetAlign(DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    AddChild(levelLabel);
+    SetPanelBounds({ x - 125, y - 199, x + 125, y + 199 });
 }
-
+void UProfilePanel::SetPanelBounds(const RECT& bounds)
+{
+    panelBounds = bounds;
+    SetLocation((bounds.left + bounds.right) / 2, (bounds.top + bounds.bottom) / 2);
+    SetSize(bounds.right - bounds.left, bounds.bottom - bounds.top);
+}
 void UProfilePanel::SetCharacter(Character* character)
 {
     currentCharacter = character;
-    if (currentCharacter) {
-        nameLabel->SetText(currentCharacter->GetName());
-        levelLabel->SetText(L"Lv. " + std::to_wstring(currentCharacter->GetLevel()) + L"  EXP: " + std::to_wstring(currentCharacter->GetExp()));
-    } else {
-        nameLabel->SetText(L"");
-        levelLabel->SetText(L"");
-    }
 }
-
-void UProfilePanel::Draw(HDC hMemDC, HDC hMemDC1)
+void UProfilePanel::Draw(HDC hMemDC, HDC)
 {
     if (!bVisible) return;
-    
-    UContainerWidget::Draw(hMemDC, hMemDC1);
-
-    if (currentCharacter) {
-        HBITMAP hIllustration = currentCharacter->GetIllustration();
-        const BITMAP* info = currentCharacter->GetIllustrationInfo();
-        
-        bool isFallback = false;
-        if (!hIllustration || !info) {
-            hIllustration = currentCharacter->GetSpriteIdle();
-            isFallback = true;
+    StarlightUI::Surface(hMemDC, panelBounds);
+    const RECT portraitBounds = { panelBounds.left + 18, panelBounds.top + 18,
+        panelBounds.right - 18, panelBounds.bottom - 132 };
+    if (!currentCharacter)
+    {
+        StarlightUI::Text(hMemDC, L"캐릭터를 선택하세요.", portraitBounds, 17,
+            StarlightUI::Muted, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        return;
+    }
+    HBITMAP portrait = currentCharacter->GetIllustration();
+    const bool fallback = !portrait || !currentCharacter->GetIllustrationInfo();
+    if (fallback) portrait = currentCharacter->GetSpriteIdle();
+    if (portrait)
+    {
+        BITMAP bitmap{};
+        GetObject(portrait, sizeof(bitmap), &bitmap);
+        int width = bitmap.bmWidth, height = bitmap.bmHeight;
+        if (fallback && !CharacterSpriteLayout::IdlePose::HasDimensions(width, height))
+        {
+            width /= CHARACTER_SHEET_COL;
+            height /= CHARACTER_SHEET_ROW;
         }
-
-        if (hIllustration) {
-            HDC hSpriteDC = CreateCompatibleDC(hMemDC);
-            HBITMAP hOld = (HBITMAP)SelectObject(hSpriteDC, hIllustration);
-            
-            BITMAP bm;
-            GetObject(hIllustration, sizeof(BITMAP), &bm);
-
-            int srcW = bm.bmWidth;
-            int srcH = bm.bmHeight;
-            if (isFallback && !CharacterSpriteLayout::IdlePose::HasDimensions(bm.bmWidth, bm.bmHeight)) {
-                srcW = bm.bmWidth / CHARACTER_SHEET_COL;
-                srcH = bm.bmHeight / CHARACTER_SHEET_ROW;
-            }
-
-            int drawW = srcW;
-            int drawH = srcH;
-
-            float scale = 1.0f;
-            if (drawW > 240) scale = 240.0f / drawW;
-            if (drawH * scale > 300) scale = 300.0f / drawH;
-            
-            drawW = (int)(drawW * scale);
-            drawH = (int)(drawH * scale);
-
-            int drawX = Loc.x - drawW / 2;
-            int drawY = Loc.y - 260; 
-
-            COLORREF transColor = isFallback ? CHARACTER_TRANSPARENT_COLOR : currentCharacter->GetIllustrationTransparentColor();
-            TransparentBlt(hMemDC, drawX, drawY, drawW, drawH, hSpriteDC, 0, 0, srcW, srcH, transColor);
-
-            SelectObject(hSpriteDC, hOld);
-            DeleteDC(hSpriteDC);
+        if (width > 0 && height > 0)
+        {
+            const double scale = (std::min)(double(portraitBounds.right - portraitBounds.left) / width,
+                double(portraitBounds.bottom - portraitBounds.top) / height);
+            const int drawW = (std::max)(1, int(width * scale));
+            const int drawH = (std::max)(1, int(height * scale));
+            HDC spriteDC = CreateCompatibleDC(hMemDC);
+            HGDIOBJ oldBitmap = SelectObject(spriteDC, portrait);
+            const int oldMode = SetStretchBltMode(hMemDC, COLORONCOLOR);
+            TransparentBlt(hMemDC, (portraitBounds.left + portraitBounds.right - drawW) / 2,
+                (portraitBounds.top + portraitBounds.bottom - drawH) / 2, drawW, drawH,
+                spriteDC, 0, 0, width, height,
+                fallback ? CHARACTER_TRANSPARENT_COLOR : currentCharacter->GetIllustrationTransparentColor());
+            SetStretchBltMode(hMemDC, oldMode);
+            SelectObject(spriteDC, oldBitmap);
+            DeleteDC(spriteDC);
         }
     }
+    const UINT centered = DT_CENTER | DT_VCENTER | DT_SINGLELINE;
+    StarlightUI::Text(hMemDC, currentCharacter->GetName(),
+        { panelBounds.left + 10, panelBounds.bottom - 118, panelBounds.right - 10, panelBounds.bottom - 78 },
+        22, StarlightUI::Ink, centered);
+    StarlightUI::Text(hMemDC, L"Lv. " + std::to_wstring(currentCharacter->GetLevel()),
+        { panelBounds.left + 12, panelBounds.bottom - 75, panelBounds.right - 12, panelBounds.bottom - 47 },
+        19, StarlightUI::Gold, centered);
+    StarlightUI::Text(hMemDC, L"EXP: " + std::to_wstring(currentCharacter->GetExp()),
+        { panelBounds.left + 12, panelBounds.bottom - 44, panelBounds.right - 12, panelBounds.bottom - 16 },
+        17, StarlightUI::Muted, centered);
 }

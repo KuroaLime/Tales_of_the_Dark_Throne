@@ -203,6 +203,10 @@
     <ClInclude Include="TeamManager.h" />
     <ClInclude Include="Title_Stage.h" />
     <ClInclude Include="UButton.h" />
+    <ClInclude Include="StarlightUI.h" />
+    <ClInclude Include="StageTransition.h" />
+    <ClInclude Include="UIFrameTransition.h" />
+    <ClInclude Include="MaintenanceFeedback.h" />
     <ClInclude Include="UCanvasPanel.h" />
     <ClInclude Include="UContainerWidget.h" />
     <ClInclude Include="UImage.h" />
@@ -247,6 +251,15 @@
     <Image Include="Source\SMap\background\SeaRuinsScene.bmp" />
     <Image Include="Source\SMap\background\LavaScene.bmp" />
     <Image Include="Source\SMap\background\HallScene.bmp" />
+    <Image Include="Source\SMap\landmarks\Camp.bmp" />
+    <Image Include="Source\SMap\landmarks\Graveyard.bmp" />
+    <Image Include="Source\SMap\landmarks\Heaven.bmp" />
+    <Image Include="Source\SMap\landmarks\Hall.bmp" />
+    <Image Include="Source\SMap\landmarks\Sea.bmp" />
+    <Image Include="Source\SMap\landmarks\Lava.bmp" />
+    <Image Include="Source\SMap\landmarks\MarkerOpen.bmp" />
+    <Image Include="Source\SMap\landmarks\MarkerClosed.bmp" />
+    <Image Include="Source\SMap\landmarks\CleanMap.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,6 +9,8 @@ private:
     UButton* btnYes;
     UButton* btnNo;
     std::wstring message;
+    RECT panelRect;
+    RECT clientBounds;
 
 public:
     UExitConfirmPopup();

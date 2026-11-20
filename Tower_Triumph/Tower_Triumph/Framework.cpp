@@ -5,12 +5,14 @@
 #include <vector>
 #include <ctime>
 #include <string>
+#include <chrono>
 
 #include "CStage.h"
 #include "Title_Stage.h"
 #include "Map_Stage.h"
 #include "Battle_Stage.h"
 #include "Maintenance_Stage.h"
+#include "StageTransition.h"
 
 #pragma comment(lib, "msimg32.lib")
 
@@ -113,6 +115,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 CStage* g_Stage = nullptr;
 int g_curStageNum = 1000;
 
+namespace
+{
+    StageTransition stageTransition;
+    std::chrono::steady_clock::time_point transitionTick;
+
+    bool CaptureStageForTransition(HWND window)
+    {
+        RECT viewport{};
+        if (!g_Stage || !GetClientRect(window, &viewport)) return false;
+        const int width = viewport.right - viewport.left;
+        const int height = viewport.bottom - viewport.top;
+        if (width <= 0 || height <= 0) return false;
+        HDC screen = GetDC(window);
+        if (!screen) return false;
+        HDC scene = CreateCompatibleDC(screen);
+        HDC scratch = CreateCompatibleDC(screen);
+        HBITMAP bitmap = CreateCompatibleBitmap(screen, width, height);
+        HGDIOBJ previous = scene && bitmap ? SelectObject(scene, bitmap) : nullptr;
+        const bool ready = scene && scratch && bitmap && previous && previous != HGDI_ERROR;
+        bool captured = false;
+        if (ready)
+        {
+            FillRect(scene, &viewport, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
+            g_Stage->Draw(scene, scratch); // DrawCursor deliberately excluded.
+            captured = stageTransition.Capture(scene, width, height);
+        }
+        if (scene && previous && previous != HGDI_ERROR) SelectObject(scene, previous);
+        if (bitmap) DeleteObject(bitmap);
+        if (scratch) DeleteDC(scratch);
+        if (scene) DeleteDC(scene);
+        ReleaseDC(window, screen);
+        return captured;
+    }
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
     InitializeRuntimeAssetRoot();
@@ -166,7 +203,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 void ChangeStage(HWND hWnd, int NextStage)
 {
-    if (g_curStageNum == NextStage)
+    if (g_curStageNum == NextStage || stageTransition.IsActive())
     {
         return;
     }
@@ -199,6 +236,11 @@ void ChangeStage(HWND hWnd, int NextStage)
         return;
     }
 
+    const bool mapMaintenance = (g_curStageNum == MAP_STAGE && NextStage == MAINTENANCE_STAGE) ||
+        (g_curStageNum == MAINTENANCE_STAGE && NextStage == MAP_STAGE);
+    const bool captured = mapMaintenance && CaptureStageForTransition(hWnd);
+    if (!captured) stageTransition.Cancel();
+
     delete g_Stage;
     g_Stage = nextStage;
     g_curStageNum = NextStage;
@@ -206,6 +248,13 @@ void ChangeStage(HWND hWnd, int NextStage)
     if (g_Stage != nullptr)
     {
         g_Stage->Init(hWnd, g_hInst);
+    }
+    // Init and all stage callbacks remain synchronous and execute exactly once.
+    // Loading time is not counted against the visible 300ms transition.
+    if (captured)
+    {
+        stageTransition.Start();
+        transitionTick = std::chrono::steady_clock::now();
     }
 }
 
@@ -245,7 +294,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_MOUSEMOVE:
     case WM_KEYDOWN:
     case WM_CHAR:
+    case WM_CANCELMODE:
+    case WM_CAPTURECHANGED:
+    case WM_KILLFOCUS:
     {
+        if (uMsg == WM_KILLFOCUS || uMsg == WM_CANCELMODE)
+            stageTransition.Cancel();
+        if (stageTransition.BlocksInput(uMsg)) return 0;
         if (g_Stage != nullptr)
         {
             int NextStage = g_Stage->Input(hWnd, uMsg, wParam, lParam);
@@ -259,7 +314,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
+    case WM_SETCURSOR:
+        if (g_Stage && g_Stage->HandleSetCursor(hWnd, wParam, lParam))
+            return TRUE;
+        break;
+
     case WM_COMMAND:
+        break;
+
+    case WM_SIZE:
+        // A snapshot must never be stretched onto a differently sized viewport.
+        stageTransition.Cancel();
         break;
 
     case WM_TIMER:
@@ -276,8 +341,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         if (g_Stage != nullptr)
         {
+            if (stageTransition.IsActive())
+            {
+                const auto now = std::chrono::steady_clock::now();
+                stageTransition.Advance(std::chrono::duration<double>(now - transitionTick).count());
+                transitionTick = now;
+            }
             g_Stage->Update(hWnd);
             g_Stage->Draw(hMemDC, hMemDC1);
+            stageTransition.Composite(hMemDC, rects.right - rects.left, rects.bottom - rects.top);
+            g_Stage->DrawCursor(hMemDC, hMemDC1);
         }
 
         SelectObject(hMemDC, hOldBit);
@@ -319,6 +392,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
     {
         KillTimer(hWnd, 1);
+
+        stageTransition.Cancel();
 
         delete g_Stage;
         g_Stage = nullptr;

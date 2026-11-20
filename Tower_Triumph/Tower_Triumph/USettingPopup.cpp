@@ -1,67 +1,49 @@
 #include "USettingPopup.h"
+#include "StarlightUI.h"
 
 USettingPopup::USettingPopup()
+    : btnClose(nullptr), btnSoundToggle(nullptr), bSoundOn(true), panelRect{}, clientBounds{}
 {
-	bSoundOn = true;
-	btnClose = nullptr;
-	btnSoundToggle = nullptr;
-	bVisible = false; 
+    bVisible = false;
 }
 
 void USettingPopup::Init()
 {
 }
 
-void USettingPopup::Setup(HINSTANCE hInst, RECT clientRect)
+void USettingPopup::Setup(HINSTANCE, RECT clientRect)
 {
-	int width = 400;
-	int height = 300;
-	SetLocation(clientRect.right / 2, clientRect.bottom / 2);
-	Size.sX = width;
-	Size.sY = height;
+    clientBounds = clientRect;
+    panelRect = StarlightUI::Centered(clientRect, 480, 300);
+    SetLocation((panelRect.left + panelRect.right) / 2, (panelRect.top + panelRect.bottom) / 2);
+    SetSize(panelRect.right - panelRect.left, panelRect.bottom - panelRect.top);
 
-	btnSoundToggle = new UButton();
-	btnSoundToggle->SetLocation(clientRect.right / 2, clientRect.bottom / 2 - 20);
-	btnSoundToggle->SetText(L"사운드: 켜짐");
-	btnSoundToggle->SetOnClick([this]() {
-		this->bSoundOn = !this->bSoundOn;
-		this->btnSoundToggle->SetText(this->bSoundOn ? L"사운드: 켜짐" : L"사운드: 꺼짐");
-	});
-	AddChild(btnSoundToggle);
+    btnSoundToggle = new UButton();
+    btnSoundToggle->SetLocation(Loc.x, panelRect.top + 142);
+    btnSoundToggle->SetSize(Size.sX - 64, 54);
+    btnSoundToggle->SetText(bSoundOn ? L"사운드: 켜짐" : L"사운드: 꺼짐");
+    StarlightUI::StyleButton(btnSoundToggle);
+    btnSoundToggle->SetSelected(bSoundOn);
+    btnSoundToggle->SetOnClick([this]() {
+        bSoundOn = !bSoundOn;
+        btnSoundToggle->SetText(bSoundOn ? L"사운드: 켜짐" : L"사운드: 꺼짐");
+        btnSoundToggle->SetSelected(bSoundOn);
+    });
+    AddChild(btnSoundToggle);
 
-	btnClose = new UButton();
-	btnClose->SetLocation(clientRect.right / 2, clientRect.bottom / 2 + 80);
-	btnClose->SetText(L"CLOSE");
-	btnClose->SetOnClick([this]() {
-		this->SetVisible(false);
-	});
-	AddChild(btnClose);
+    btnClose = new UButton();
+    btnClose->SetLocation(panelRect.right - 102, panelRect.bottom - 54);
+    btnClose->SetSize(140, 44);
+    btnClose->SetText(L"CLOSE");
+    StarlightUI::StyleButton(btnClose);
+    btnClose->SetOnClick([this]() { SetVisible(false); });
+    AddChild(btnClose);
 }
 
 void USettingPopup::Draw(HDC hMemDC, HDC hMemDC1)
 {
-	if (!bVisible) return;
-
-	if (bBitmap.empty()) {
-		HBRUSH bgBrush = CreateSolidBrush(RGB(60, 45, 30)); 
-		HPEN borderPen = CreatePen(PS_SOLID, 4, RGB(180, 140, 70));
-
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hMemDC, bgBrush);
-		HPEN oldPen = (HPEN)SelectObject(hMemDC, borderPen);
-
-		RECT r = { Loc.x - Size.sX / 2, Loc.y - Size.sY / 2, Loc.x + Size.sX / 2, Loc.y + Size.sY / 2 };
-		RoundRect(hMemDC, r.left, r.top, r.right, r.bottom, 10, 10);
-
-		SelectObject(hMemDC, oldBrush);
-		SelectObject(hMemDC, oldPen);
-		DeleteObject(bgBrush);
-		DeleteObject(borderPen);
-
-		SetBkMode(hMemDC, TRANSPARENT);
-		SetTextColor(hMemDC, RGB(255, 220, 100));
-		RECT titleRect = { r.left, r.top + 10, r.right, r.top + 40 };
-		DrawTextW(hMemDC, L"- SETTINGS -", -1, &titleRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	}
-
-	UContainerWidget::Draw(hMemDC, hMemDC1);
+    if (!bVisible) return;
+    StarlightUI::Dim(hMemDC, clientBounds);
+    StarlightUI::Panel(hMemDC, panelRect, L"설정", L"- SETTINGS -");
+    UContainerWidget::Draw(hMemDC, hMemDC1);
 }

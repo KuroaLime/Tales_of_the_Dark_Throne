@@ -202,6 +202,38 @@ void Title_Stage::Comp_NextStage(int ID)
 int Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     static int CLK_X, CLK_Y;
+    if (uMsg == WM_KEYDOWN && (lParam & (1LL << 30))) return -2;
+    if (uMsg == WM_KEYDOWN || uMsg == WM_CANCELMODE || uMsg == WM_CAPTURECHANGED || uMsg == WM_KILLFOCUS || uMsg == WM_LBUTTONDOWN)
+        mainHUD.CancelPress();
+    if (hWnd && uMsg == WM_LBUTTONDOWN) SetCapture(hWnd);
+    if (hWnd && uMsg == WM_KILLFOCUS && GetCapture() == hWnd) ReleaseCapture();
+
+    // Settings is modal, including clicks outside its frame. Escape closes
+    // settings before the title screen is allowed to process a quit request.
+    if (settingPopup && settingPopup->GetVisible())
+    {
+        CLK_X = LOWORD(lParam); CLK_Y = HIWORD(lParam);
+        if (uMsg == WM_MOUSEMOVE)
+        {
+            if (menuGroup) menuGroup->UpdateMouseHover(-100000, -100000);
+            settingPopup->UpdateMouseHover(CLK_X, CLK_Y);
+        }
+        else if (uMsg == WM_LBUTTONDOWN)
+        {
+            if (auto* button = dynamic_cast<UButton*>(settingPopup->FindWidgetUnderMouse(CLK_X, CLK_Y)))
+                button->SetIsPressed(true);
+        }
+        else if (uMsg == WM_LBUTTONUP)
+        {
+            auto* button = dynamic_cast<UButton*>(settingPopup->FindWidgetUnderMouse(CLK_X, CLK_Y));
+            const bool activate = button && button->GetIsPressed();
+            mainHUD.CancelPress();
+            if (hWnd && GetCapture() == hWnd) ReleaseCapture();
+            if (activate) button->Click();
+        }
+        else if (uMsg == WM_KEYDOWN && wParam == VK_ESCAPE) settingPopup->SetVisible(false);
+        return -2;
+    }
 
     switch (uMsg)
     {
@@ -226,12 +258,12 @@ int Title_Stage::Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONUP:
         CLK_X = LOWORD(lParam);
         CLK_Y = HIWORD(lParam);
-        if (UWidget* w = mainHUD.FindWidgetUnderMouse(CLK_X, CLK_Y))
         {
-            if (UButton* btn = dynamic_cast<UButton*>(w))
-            {
-                btn->Click();
-            }
+            UButton* button = dynamic_cast<UButton*>(mainHUD.FindWidgetUnderMouse(CLK_X, CLK_Y));
+            const bool activate = button && button->GetIsPressed();
+            mainHUD.CancelPress();
+            if (hWnd && GetCapture() == hWnd) ReleaseCapture();
+            if (activate) button->Click();
         }
 
         if (btnStart) btnStart->SetIsPressed(false);

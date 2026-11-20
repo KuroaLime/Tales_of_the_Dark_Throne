@@ -27,6 +27,7 @@ void UContainerWidget::Draw(HDC hMemDC, HDC hMemDC1) {
 	}
 }
 void UContainerWidget::Update() {
+	if (!bVisible) return;
 	if (AniCount > 0) {
 		CurAni = (CurAni + 1) % AniCount;
 	}
@@ -35,10 +36,13 @@ void UContainerWidget::Update() {
 		Contents[i]->Update();
 	}
 }
+void UContainerWidget::CancelPress() {
+	for (auto child : Contents) child->CancelPress();
+}
 void UContainerWidget::UpdateMouseHover(int MouseX, int MouseY) {
 	if (!bVisible) {
 		IsPointed = false;
-		for (auto child : Contents) child->UpdateMouseHover(MouseX, MouseY);
+		for (auto child : Contents) child->UpdateMouseHover(-100000, -100000);
 		return;
 	}
 

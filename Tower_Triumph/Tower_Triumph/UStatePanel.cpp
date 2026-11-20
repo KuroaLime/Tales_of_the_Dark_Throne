@@ -1,81 +1,57 @@
 #include "UStatePanel.h"
-#include <string>
+#include "StarlightUI.h"
+#include <algorithm>
 
-UStatePanel::UStatePanel()
-    : bgImage(nullptr),
-      weaponLabel(nullptr), armorLabel(nullptr), accessoryLabel(nullptr),
-      strLabel(nullptr), intLabel(nullptr), defLabel(nullptr), spdLabel(nullptr),
-      currentCharacter(nullptr)
-{
-}
-
-void UStatePanel::SetupLabel(UTextLabel*& label, int x, int y, int w, int h, int fontSize, int weight, int align)
-{
-    label = new UTextLabel();
-    label->SetFont(fontSize, weight, L"Arial");
-    label->SetColor(RGB(245, 245, 245));
-    label->SetAlign(align);
-    label->SetLocation(x, y);
-    label->SetSize(w, h);
-    AddChild(label);
-}
-
+UStatePanel::UStatePanel() : currentCharacter(nullptr), panelBounds{} {}
 void UStatePanel::Setup(int x, int y)
 {
-    Loc.x = x;
-    Loc.y = y;
-
-    bgImage = new UImage();
-    bgImage->SetFrameFromFile({ L"Resource/Map/UI/CharacterUI_State.bmp" });
-    if (!bgImage->GetBitmap().empty())
-    {
-        BITMAP info = bgImage->GetMapInfo()[0];
-        bgImage->SetSize(info.bmWidth, info.bmHeight);
-        Size = bgImage->GetSize();
-    }
-    else
-    {
-        Size.sX = 352;
-        Size.sY = 392;
-    }
-    bgImage->SetTransColor(RGB(255, 174, 201));
-    bgImage->SetLocation(Loc.x, Loc.y);
-    AddChild(bgImage);
-
-    SetupLabel(weaponLabel, Loc.x, Loc.y - 156, 260, 28, 20, FW_BOLD, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    SetupLabel(armorLabel, Loc.x, Loc.y - 109, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    SetupLabel(accessoryLabel, Loc.x, Loc.y - 84, 260, 28, 20, FW_NORMAL, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    
-    SetupLabel(strLabel, Loc.x - 55, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    SetupLabel(intLabel, Loc.x - 55, Loc.y + 148, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    SetupLabel(defLabel, Loc.x + 105, Loc.y + 123, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-    SetupLabel(spdLabel, Loc.x + 105, Loc.y + 148, 130, 26, 17, FW_BOLD, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    SetPanelBounds({ x - 236, y - 199, x + 236, y + 199 });
 }
-
+void UStatePanel::SetPanelBounds(const RECT& bounds)
+{
+    panelBounds = bounds;
+    SetLocation((bounds.left + bounds.right) / 2, (bounds.top + bounds.bottom) / 2);
+    SetSize(bounds.right - bounds.left, bounds.bottom - bounds.top);
+}
 void UStatePanel::SetCharacter(Character* character)
 {
     currentCharacter = character;
-    if (!currentCharacter)
+}
+void UStatePanel::Draw(HDC hMemDC, HDC)
+{
+    if (!bVisible) return;
+    StarlightUI::Surface(hMemDC, panelBounds);
+    StarlightUI::Text(hMemDC, L"장비", { panelBounds.left + 18, panelBounds.top + 16,
+        panelBounds.right - 18, panelBounds.top + 43 }, 19, StarlightUI::Gold);
+    const CharacterEquipment equipment = currentCharacter ? currentCharacter->GetEquipment() : CharacterEquipment();
+    const int ids[] = { currentCharacter ? equipment.WeaponID : -1,
+        currentCharacter ? equipment.ArmorID : -1, currentCharacter ? equipment.AccessoryID : -1 };
+    const wchar_t* slots[] = { L"Weapon", L"Armor", L"Accessory" };
+    for (int i = 0; i < 3; ++i)
     {
-        weaponLabel->SetText(L"Weapon: Empty");
-        armorLabel->SetText(L"Armor: Empty");
-        accessoryLabel->SetText(L"Accessory: Empty");
-        strLabel->SetText(L"STR: 0");
-        intLabel->SetText(L"INT: 0");
-        defLabel->SetText(L"DEF: 0");
-        spdLabel->SetText(L"SPD: 0");
-        return;
+        const int y = panelBounds.top + 50 + i * 44;
+        StarlightUI::Text(hMemDC, slots[i], { panelBounds.left + 18, y,
+            panelBounds.left + 120, y + 32 }, 16, StarlightUI::Muted, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+        StarlightUI::Text(hMemDC, ids[i] >= 0 ? ItemData::GetName(ids[i]) : L"Empty",
+            { panelBounds.left + 126, y, panelBounds.right - 18, y + 32 }, 18,
+            StarlightUI::Ink, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
     }
-
-    CharacterEquipment equip = currentCharacter->GetEquipment();
-
-    weaponLabel->SetText(L"Weapon: " + (equip.WeaponID >= 0 ? ItemData::GetName(equip.WeaponID) : std::wstring(L"Empty")));
-    armorLabel->SetText(L"Armor: " + (equip.ArmorID >= 0 ? ItemData::GetName(equip.ArmorID) : std::wstring(L"Empty")));
-    accessoryLabel->SetText(L"Accessory: " + (equip.AccessoryID >= 0 ? ItemData::GetName(equip.AccessoryID) : std::wstring(L"Empty")));
-
-    CharacterStat stat = currentCharacter->GetStat();
-    strLabel->SetText(L"STR: " + std::to_wstring(stat.STR));
-    intLabel->SetText(L"INT: " + std::to_wstring(stat.INT));
-    defLabel->SetText(L"DEF: " + std::to_wstring(stat.DEF));
-    spdLabel->SetText(L"SPD: " + std::to_wstring(stat.SPD));
+    const int statsTop = (std::max)(int(panelBounds.top) + 232, int(panelBounds.bottom) - 162);
+    StarlightUI::Text(hMemDC, L"능력치", { panelBounds.left + 18, statsTop - 32,
+        panelBounds.right - 18, statsTop - 5 }, 19, StarlightUI::Gold);
+    const CharacterStat stat = currentCharacter ? currentCharacter->GetStat() : CharacterStat();
+    const int values[] = { currentCharacter ? stat.STR : 0, currentCharacter ? stat.INT : 0,
+        currentCharacter ? stat.DEF : 0, currentCharacter ? stat.SPD : 0 };
+    const wchar_t* names[] = { L"STR", L"INT", L"DEF", L"SPD" };
+    const int width = (panelBounds.right - panelBounds.left - 48) / 2;
+    for (int i = 0; i < 4; ++i)
+    {
+        const int x = panelBounds.left + 18 + (i % 2) * (width + 12);
+        const int y = statsTop + (i / 2) * 74;
+        RECT cell = { x, y, x + width, y + 62 };
+        StarlightUI::Surface(hMemDC, cell);
+        StarlightUI::Text(hMemDC, names[i], { x + 12, y + 6, x + width - 12, y + 26 }, 15, StarlightUI::Muted);
+        StarlightUI::Text(hMemDC, std::to_wstring(values[i]),
+            { x + 12, y + 26, x + width - 12, y + 56 }, 23, StarlightUI::Ink);
+    }
 }

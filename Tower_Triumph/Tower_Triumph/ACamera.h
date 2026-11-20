@@ -11,8 +11,9 @@ protected:
 
 	float currentZoom;
 	float targetZoom;
+	const float defaultZoom;
 public:
-	ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY);
+	ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY, float initialZoom = 1.5f);
 	virtual void Reset();
 	virtual void Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT);
 	

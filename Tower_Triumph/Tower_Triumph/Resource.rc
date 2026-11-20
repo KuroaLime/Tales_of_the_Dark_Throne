@@ -22,6 +22,16 @@ IDB_CELESTIAL_SCENE     BITMAP                  "Source\\SMap\\background\\Celes
 IDB_SEA_RUINS_SCENE     BITMAP                  "Source\\SMap\\background\\SeaRuinsScene.bmp"
 IDB_LAVA_SCENE          BITMAP                  "Source\\SMap\\background\\LavaScene.bmp"
 IDB_HALL_SCENE          BITMAP                  "Source\\SMap\\background\\HallScene.bmp"
+IDB_UI_STARLIGHT_CREST  BITMAP                  "Source\\UI\\StarlightCrest.bmp"
+IDB_MAP_CAMP             BITMAP                  "Source\\SMap\\landmarks\\Camp.bmp"
+IDB_MAP_GRAVEYARD        BITMAP                  "Source\\SMap\\landmarks\\Graveyard.bmp"
+IDB_MAP_HEAVEN           BITMAP                  "Source\\SMap\\landmarks\\Heaven.bmp"
+IDB_MAP_HALL             BITMAP                  "Source\\SMap\\landmarks\\Hall.bmp"
+IDB_MAP_SEA              BITMAP                  "Source\\SMap\\landmarks\\Sea.bmp"
+IDB_MAP_LAVA             BITMAP                  "Source\\SMap\\landmarks\\Lava.bmp"
+IDB_MAP_MARKER_OPEN      BITMAP                  "Source\\SMap\\landmarks\\MarkerOpen.bmp"
+IDB_MAP_MARKER_CLOSED    BITMAP                  "Source\\SMap\\landmarks\\MarkerClosed.bmp"
+IDB_MAP_CLEAN            BITMAP                  "Source\\SMap\\landmarks\\CleanMap.bmp"
 
 #endif    // Korean (Korea) resources
 /////////////////////////////////////////////////////////////////////////////

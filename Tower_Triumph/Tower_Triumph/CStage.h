@@ -36,7 +36,10 @@ public:
     virtual void Init(HWND hWnd, HINSTANCE const g_hInst) = 0;
     virtual void Update(HWND hWnd) = 0;
     virtual void Draw(HDC hMemDC, HDC hMemDC1) = 0;
+    // Kept outside scene snapshots so the pointer stays live during transitions.
+    virtual void DrawCursor(HDC hMemDC, HDC hMemDC1) {}
     virtual int Input(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
+    virtual bool HandleSetCursor(HWND hWnd, WPARAM wParam, LPARAM lParam) { return false; }
 
     virtual void Comp_NextStage(int ID) = 0;
     virtual void BackgroundMove(int x, int y) = 0;

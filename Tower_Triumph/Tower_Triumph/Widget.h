@@ -24,6 +24,7 @@ public:
 	virtual void Init();
 	virtual void Draw(HDC hMemDC, HDC hMemDC1);
 	virtual void Update();
+	virtual void CancelPress() {}
 	virtual UWidget* FindWidgetUnderMouse(int MouseX, int MouseY);
 	
 	virtual void SetFrame(const HINSTANCE& g_hInst, std::vector<WORD> FrameStr);
@@ -48,6 +49,6 @@ public:
 	std::vector<BITMAP>& GetMapInfo() { return bMapinfo; }
 
 	bool GetVisible() const { return bVisible; }
-	void SetVisible(bool bNew) { bVisible = bNew; }
+	virtual void SetVisible(bool bNew) { bVisible = bNew; }
 };
 

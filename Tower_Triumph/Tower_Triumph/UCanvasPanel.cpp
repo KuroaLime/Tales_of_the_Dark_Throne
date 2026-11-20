@@ -22,12 +22,16 @@ void UCanvasPanel::UpdateMouseHover(int MouseX, int MouseY) {
 		if (!bFoundTop) {
 			Containers[i]->UpdateMouseHover(MouseX, MouseY);
 			if (Containers[i]->FindWidgetUnderMouse(MouseX, MouseY)) {
+				bFoundTop = true;
 			}
 		}
 		else {
 			Containers[i]->UpdateMouseHover(-9999, -9999);
 		}
 	}
+}
+void UCanvasPanel::CancelPress() {
+	for (auto container : Containers) container->CancelPress();
 }
 
 UWidget* UCanvasPanel::FindWidgetUnderMouse(int MouseX, int MouseY) {

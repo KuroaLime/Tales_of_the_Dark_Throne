@@ -1,5 +1,4 @@
-﻿#pragma once
-
+#pragma once
 #include "UContainerWidget.h"
 #include "UButton.h"
 #include "Character.h"
@@ -11,113 +10,58 @@
 #include "UCharacterInfoPopup.h"
 #include "UInventoryPopup.h"
 #include "UTextLabel.h"
-
-#include <vector>
 #include <string>
+#include <vector>
 
-class UMainMenuPopup;
-
-enum class EMenuTab {
-    CharacterInfo,
-    Inventory
-};
-
-enum class EInventoryState {
-    Normal,
-    TargetSelect
-};
-
+enum class EMenuTab { CharacterInfo, Inventory };
+enum class EInventoryState { Normal, TargetSelect };
 class UMainMenuPopup : public UContainerWidget
 {
 private:
-    EMenuTab currentTab;
-    EInventoryState invState;
-
+    EMenuTab currentTab = EMenuTab::CharacterInfo;
+    EInventoryState invState = EInventoryState::Normal;
+    RECT panelBounds{}, detailBounds{};
     std::vector<Character*> teamMembers;
-    Character* selectedCharacter;
-    int selectedItemID;
-
-    UButton* btnOpenChar;
-    UButton* btnOpenInv;
-    UButton* btnExit;
-    UButton* btnClose;
-    UButton* btnOpenCharDetail;
-    UButton* btnOpenInvDetail;
-
-    UContainerWidget* navLayer;
-    UContainerWidget* charLayer;
-    UContainerWidget* invLayer;
-
-    UTextLabel* guideLabel;
-    UTextLabel* invTitleLabel;
-    UTextLabel* invGuideLabel;
-    UTextLabel* invEmptyLabel;
-
-    std::vector<UButton*> charSelectButtons;
-    std::vector<UButton*> itemIconButtons;
-    std::vector<UButton*> equipSlotButtons;
-
-    UContainerWidget* itemActionPanel;
-    UButton* btnItemAction1;
-    UButton* btnItemAction2;
-
-    UContainerWidget* targetSelectPanel;
-    std::vector<UButton*> targetButtons;
-
-    UProfilePanel* profilePanel;
-    UStatePanel* statePanel;
-
-    HBITMAP hBgBitmap;
-    BITMAP bgInfo;
-
-    UExitConfirmPopup* exitPopup;
-    UCharacterInfoPopup* charPopup;
-    UInventoryPopup* invPopup;
-
-    bool bShowTooltip;
-    std::wstring tooltipTitle;
-    std::wstring tooltipDesc;
-    Location tooltipLoc;
-
-private:
-    void DrawCharacterInfo(HDC hMemDC);
-    void DrawInventory(HDC hMemDC);
-
+    Character* selectedCharacter = nullptr;
+    int selectedItemID = -1, inspectedItemID = -1;
+    UButton *btnOpenChar = nullptr, *btnOpenInv = nullptr, *btnExit = nullptr, *btnClose = nullptr;
+    UButton *btnOpenCharDetail = nullptr, *btnOpenInvDetail = nullptr, *btnInspectAction = nullptr;
+    UContainerWidget *navLayer = nullptr, *charLayer = nullptr, *invLayer = nullptr;
+    UTextLabel *guideLabel = nullptr, *invTitleLabel = nullptr, *invGuideLabel = nullptr, *invEmptyLabel = nullptr;
+    std::vector<UButton*> charSelectButtons, itemIconButtons;
+    std::vector<int> itemButtonIDs;
+    UContainerWidget* targetSelectPanel = nullptr;
+    UProfilePanel* profilePanel = nullptr;
+    UStatePanel* statePanel = nullptr;
+    UExitConfirmPopup* exitPopup = nullptr;
+    UCharacterInfoPopup* charPopup = nullptr;
+    UInventoryPopup* invPopup = nullptr;
     void UpdateCharList();
     void UpdateInventoryGrid();
-    void UpdateEquipmentSlots();
-
+    void InspectItem(int itemID);
     void ShowActionMenu(int itemID, int x, int y);
     void ShowTargetSelection();
     void HideSubMenus();
-
-    void DrawSubMenuBackgrounds(HDC hMemDC);
-    void DrawTooltip(HDC hMemDC);
     void RefreshFriendStylePanels();
     void CloseSubPopups();
-
-    std::wstring GetEquipName(int itemID) const;
+    void DrawInventory(HDC hdc);
+    UContainerWidget* ActiveModal() const;
     std::wstring MakeItemTooltip(int itemID) const;
     std::wstring MakeItemButtonText(int itemID, int count) const;
-
 public:
     UMainMenuPopup();
-    virtual ~UMainMenuPopup();
-
-    virtual void Init() override;
-    virtual void Draw(HDC hMemDC, HDC hMemDC1) override;
+    virtual ~UMainMenuPopup() = default;
+    virtual void Init() override {}
+    virtual void Draw(HDC hdc, HDC scratch) override;
     virtual void Update() override;
-
-    void Setup(HINSTANCE hInst, RECT clientRect);
-    void SetBackgroundImage(HBITMAP hBitmap);
+    virtual void UpdateMouseHover(int x, int y) override;
+    virtual UWidget* FindWidgetUnderMouse(int x, int y) override;
+    void Setup(HINSTANCE instance, RECT clientRect);
     void SetTeamData(const std::vector<Character*>& team);
-
     void SelectTab(EMenuTab tab);
     void ShowNavigation();
     void OpenCharacterPopup();
     void OpenInventoryPopup();
     bool HandleBack();
     void SelectCharacter(Character* character);
-    void ShowTooltip(const std::wstring& title, const std::wstring& desc, Location loc);
-    void HideTooltip();
 };

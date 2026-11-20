@@ -25,6 +25,7 @@ void UWidget::Draw(HDC hMemDC, HDC hMemDC1) {
 void UWidget::Update() {
 }
 UWidget* UWidget::FindWidgetUnderMouse(int MouseX, int MouseY) {
+	if (!bVisible) return nullptr;
 	if (ContainsPoint(MouseX, MouseY)) {
 		return this;
 	}

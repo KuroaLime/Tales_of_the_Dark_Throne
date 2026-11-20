@@ -1,0 +1,14 @@
+{
+  "source": "popup-panel.png",
+  "crop": {
+    "resizedWidth": 320,
+    "left": 93,
+    "top": 0,
+    "width": 134,
+    "height": 51
+  },
+  "runtime": "Tower_Triumph/Tower_Triumph/Source/UI/StarlightCrest.bmp",
+  "format": "32-bit premultiplied BGRA, top-down, BI_RGB",
+  "sourceSha256": "b05a545df0ad3a8ab085435acf70709f9437300654e1bfba3391b7706c8fb468",
+  "sha256": "28b44f0719324c8ccb949ea8aae31757a7a9e7334da0b1dd64d2d712fa520738"
+}

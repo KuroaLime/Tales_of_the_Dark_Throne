@@ -1,14 +1,15 @@
 #include "ACamera.h"
 
-ACamera::ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY) {
+ACamera::ACamera(int N_CamX, int N_CamY, int PointIndexX, int PointIndexY, float initialZoom)
+    : defaultZoom(initialZoom) {
     g_CamX = (float)N_CamX;
     g_CamY = (float)N_CamY;
 
     PointGridX = (float)PointIndexX;
     PointGridY = (float)PointIndexY;
 
-    currentZoom = 1.5f;
-    targetZoom = 1.5f;
+    currentZoom = defaultZoom;
+    targetZoom = defaultZoom;
 }
 void ACamera::Reset() {
     g_CamX = 0;
@@ -16,8 +17,8 @@ void ACamera::Reset() {
 
     PointGridX = 0;
     PointGridY = 0;
-    currentZoom = 1.5f;
-    targetZoom = 1.5f;
+    currentZoom = defaultZoom;
+    targetZoom = defaultZoom;
 }
 void ACamera::Update(int TILE_W, int TILE_H, int TILE_SIZE, int WIN_WIDTH, int WIN_HEIGHT) {
     currentZoom += (targetZoom - currentZoom) * 0.1f;
