@@ -1,5 +1,29 @@
 # Battle presentation checks
 
+## Battle facing and mirrored sprite edges
+
+Battle placement explicitly starts allies facing right and enemies facing left,
+including party members returning from a previous battle. Movement and target
+facing continue to use the existing direction updates.
+
+`Character::DrawAtFoot` starts negative-width GDI copies at `sourceWidth - 1`.
+The reused mirror surface is cleared to the magenta key, and only a successful
+copy is composited. Invalid source bounds are rejected. Black remains opaque
+because enemy artwork contains intentional dark pixels.
+
+```powershell
+./tests/build_main_stage_isolated.ps1
+./tests/run_character_checks.ps1
+./tests/run_character_mirror_checks.ps1 -BuildOnly
+```
+
+The mirror regression uses public Character APIs and production objects with
+synthetic color-key sprites. It checks complete output pixels in both directions,
+including changing crop sizes and reused mirror storage. `-BuildOnly` compiles
+and links without executing; runtime pixel assertions have not been run on this
+host under its existing application-control restriction. On an allowed host,
+omit `-BuildOnly` to execute the offscreen checks.
+
 ## World-map landmarks and maintenance UI
 
 World-map buildings are separate transparent sprites over the clean landscape.

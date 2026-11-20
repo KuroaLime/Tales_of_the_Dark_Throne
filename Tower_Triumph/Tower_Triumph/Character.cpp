@@ -1422,6 +1422,10 @@ void Character::DrawAtFoot(HDC hMemDC, HDC hMemDC1, int footX, int footY, int re
 	const auto cached = SpriteLayouts.find(sprite);
 	if (cached != SpriteLayouts.end() && index >= 0 && index < static_cast<int>(cached->second.frames.size()))
 		sourceFrame = cached->second.frames[index];
+	// Invalid frame metadata must never sample outside the loaded bitmap.
+	if (sourceFrame.source.left < 0 || sourceFrame.source.top < 0 ||
+		sourceFrame.source.right > info->bmWidth || sourceFrame.source.bottom > info->bmHeight)
+		return;
 
 	const bool flipped = IsNeedFlip();
 	const int scaleReferenceHeight = bUseAuthoredMonsterLayout ? EnemySpriteLayout::ReferenceFrameHeight :
@@ -1432,6 +1436,7 @@ void Character::DrawAtFoot(HDC hMemDC, HDC hMemDC1, int footX, int footY, int re
 	const int sourceHeight = sourceFrame.source.bottom - sourceFrame.source.top;
 	if (destination.width <= 0 || destination.height <= 0 || sourceWidth <= 0 || sourceHeight <= 0) return;
 	HBITMAP oldBitmap = static_cast<HBITMAP>(SelectObject(hMemDC1, sprite));
+	if (!oldBitmap || oldBitmap == HGDI_ERROR) return;
 	if (!flipped)
 	{
 		TransparentBlt(hMemDC, destination.x, destination.y, destination.width, destination.height,
@@ -1460,11 +1465,23 @@ void Character::DrawAtFoot(HDC hMemDC, HDC hMemDC1, int footX, int footY, int re
 			if (flipDC)
 			{
 				HBITMAP oldFlip = static_cast<HBITMAP>(SelectObject(flipDC, hFlipScratch));
-				StretchBlt(flipDC, sourceWidth, 0, -sourceWidth, sourceHeight, hMemDC1,
-					sourceFrame.source.left, sourceFrame.source.top, sourceWidth, sourceHeight, SRCCOPY);
-				TransparentBlt(hMemDC, destination.x, destination.y, destination.width, destination.height,
-					flipDC, 0, 0, sourceWidth, sourceHeight, CHARACTER_TRANSPARENT_COLOR);
-				SelectObject(flipDC, oldFlip);
+				if (oldFlip && oldFlip != HGDI_ERROR)
+				{
+					const RECT scratchBounds{ 0, 0, sourceWidth, sourceHeight };
+					SetDCBrushColor(flipDC, CHARACTER_TRANSPARENT_COLOR);
+					SetStretchBltMode(flipDC, COLORONCOLOR);
+					// Clear reused pixels, then start at the last pixel (width - 1).
+					// Starting at width leaves column zero black/stale and clips the
+					// opposite edge when GDI copies with a negative destination width.
+					if (FillRect(flipDC, &scratchBounds, static_cast<HBRUSH>(GetStockObject(DC_BRUSH))) &&
+						StretchBlt(flipDC, sourceWidth - 1, 0, -sourceWidth, sourceHeight, hMemDC1,
+							sourceFrame.source.left, sourceFrame.source.top, sourceWidth, sourceHeight, SRCCOPY))
+					{
+						TransparentBlt(hMemDC, destination.x, destination.y, destination.width, destination.height,
+							flipDC, 0, 0, sourceWidth, sourceHeight, CHARACTER_TRANSPARENT_COLOR);
+					}
+					SelectObject(flipDC, oldFlip);
+				}
 				DeleteDC(flipDC);
 			}
 		}

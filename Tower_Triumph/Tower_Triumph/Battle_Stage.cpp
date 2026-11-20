@@ -434,6 +434,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         c->SyncWorldPixelToGrid(TILE_SIZE);
         c->ResetBattleAnimation();
         c->ResetTurnState();
+        c->SetDirection(EDirection::Right);
     }
 
     for (auto c : enemyTeam)
@@ -499,6 +500,7 @@ void Battle_Stage::Init(HWND hWnd, HINSTANCE const g_hInst)
         }
 
         e->SyncWorldPixelToGrid(TILE_SIZE);
+        e->SetDirection(EDirection::Left);
 
         enemyTeam.push_back(e);
     }
